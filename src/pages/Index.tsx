@@ -1,13 +1,11 @@
 import { useState, useRef } from "react";
-import { Logo } from "@/components/Logo";
-import { IndustrySelector } from "@/components/IndustrySelector";
-import { AnalysisGrid } from "@/components/AnalysisGrid";
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Hero } from "@/components/Hero";
+import { AnalysisSection } from "@/components/AnalysisSection";
+import { HomeButton } from "@/components/HomeButton";
 import { useToast } from "@/components/ui/use-toast";
 import { generateAnalysis } from "@/utils/groq";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { HomeButton } from "@/components/HomeButton";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
@@ -52,7 +50,6 @@ const Index = () => {
           : `Found ${results.length} recommendations for ${selectedIndustry}`,
       });
 
-      // Scroll to analysis grid after a short delay to ensure content is rendered
       if (isMobile && analysisGridRef.current) {
         setTimeout(() => {
           analysisGridRef.current?.scrollIntoView({ 
@@ -75,12 +72,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Logo />
-          {!isMobile && <HomeButton />}
-        </div>
-      </header>
+      <Header isMobile={isMobile} />
 
       <main className="container mx-auto px-4 py-8">
         {isMobile && (
@@ -89,80 +81,18 @@ const Index = () => {
           </div>
         )}
 
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">
-            AI Assistant Placement Analyzer
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Discover the optimal AI Assistant placement strategy for your business
-          </p>
+        <Hero
+          selectedIndustry={selectedIndustry}
+          setSelectedIndustry={setSelectedIndustry}
+          isLoading={isLoading}
+          handleAnalyze={handleAnalyze}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-8">
-            {/* Left bullet points */}
-            <div className="space-y-4 text-left">
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Identify ideal AI assistant placement opportunities</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Maximize industry-specific customer engagement potential</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Optimize business workflows with tailored insights</p>
-              </div>
-            </div>
-
-            {/* Industry selector */}
-            <div className="flex flex-col items-center gap-4">
-              <IndustrySelector
-                value={selectedIndustry}
-                onSelect={setSelectedIndustry}
-              />
-              <Button
-                onClick={handleAnalyze}
-                disabled={isLoading}
-                className="bg-[#f65228] hover:bg-[#f65228]/90"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  "Analyze Industry"
-                )}
-              </Button>
-            </div>
-
-            {/* Right bullet points */}
-            <div className="space-y-4 text-left">
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Boost efficiency through data-driven AI strategies</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Discover high-impact AI use case solutions</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#f65228] mt-2"></div>
-                <p className="text-sm text-gray-600">Transform operations with actionable AI recommendations</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div ref={analysisGridRef}>
-          {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
-        </div>
-
-        {isMobile && analyses.length > 0 && (
-          <div className="mt-8 flex justify-center">
-            <HomeButton />
-          </div>
-        )}
+        <AnalysisSection
+          analyses={analyses}
+          isMobile={isMobile}
+          analysisGridRef={analysisGridRef}
+        />
       </main>
     </div>
   );
