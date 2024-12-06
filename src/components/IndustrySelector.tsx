@@ -74,7 +74,7 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
             <SelectValue placeholder="Select your industry" />
           </SelectTrigger>
           <SelectContent 
-            className="bg-white border shadow-lg"
+            className="bg-white border shadow-lg max-h-[300px] overflow-y-auto touch-pan-y"
             position="popper"
             sideOffset={5}
           >
