@@ -28,17 +28,17 @@ export const AnalysisCard = ({
       <CardContent>
         <div className="space-y-4">
           <div>
-            <Badge variant="secondary" className="mb-2">Function</Badge>
+            <Badge variant="secondary" className="mb-2 bg-[#f65228] text-white hover:bg-[#f65228]/90">Function</Badge>
             <p className="text-sm text-gray-600">{botFunction}</p>
           </div>
           
           <div>
-            <Badge variant="secondary" className="mb-2">Explanation</Badge>
+            <Badge variant="secondary" className="mb-2 bg-[#f65228] text-white hover:bg-[#f65228]/90">Explanation</Badge>
             <p className="text-sm text-gray-600">{explanation}</p>
           </div>
           
           <div>
-            <Badge variant="secondary" className="mb-2">Marketing Strategy</Badge>
+            <Badge variant="secondary" className="mb-2 bg-[#f65228] text-white hover:bg-[#f65228]/90">Marketing Strategy</Badge>
             <p className="text-sm text-gray-600">{marketingStrategy}</p>
           </div>
 
