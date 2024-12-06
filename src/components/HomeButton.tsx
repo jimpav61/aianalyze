@@ -8,7 +8,7 @@ export const HomeButton = () => {
       className="bg-[#f65228] hover:bg-[#f65228]/90 text-white"
     >
       <ExternalLink className="mr-2 h-4 w-4" />
-      Find out more today
+      Find Out More Today
     </Button>
   );
 };
