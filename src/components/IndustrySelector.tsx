@@ -6,6 +6,7 @@ const industries = [
   "Adult Care-Giver Agency",
   "Agriculture",
   "Automotive",
+  "Beauty Salon",
   "Child Daycare Services",
   "Construction",
   "Education",
@@ -16,6 +17,7 @@ const industries = [
   "Food & Beverage",
   "Government",
   "Healthcare",
+  "Holistic Medicine",
   "Hospitality",
   "Insurance",
   "Legal Services",
@@ -28,11 +30,12 @@ const industries = [
   "Professional Services",
   "Real Estate",
   "Retail",
+  "Spas",
   "Technology",
   "Telecommunications",
   "Transportation",
   "Utilities",
-  "Other" // Moved to the end of the list
+  "Other" // Kept at the end of the list
 ];
 
 interface IndustrySelectorProps {
