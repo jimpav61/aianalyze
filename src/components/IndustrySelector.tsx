@@ -24,7 +24,6 @@ const industries = [
   "Media",
   "Mining",
   "Non-Profit",
-  "Other",
   "Pharmaceuticals",
   "Professional Services",
   "Real Estate",
@@ -32,7 +31,8 @@ const industries = [
   "Technology",
   "Telecommunications",
   "Transportation",
-  "Utilities"
+  "Utilities",
+  "Other" // Moved to the end of the list
 ];
 
 interface IndustrySelectorProps {
@@ -79,7 +79,7 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
               <SelectItem 
                 key={industry} 
                 value={industry}
-                className="hover:bg-gray-100"
+                className={`hover:bg-gray-100 ${industry === "Other" ? "text-gray-600" : ""}`}
               >
                 {industry}
               </SelectItem>
