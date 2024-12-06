@@ -10,9 +10,17 @@ export const generateAnalysis = async (industry: string) => {
       .select('*')
       .eq('industry', industry);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching analysis:', error);
+      throw error;
+    }
 
-    if (!data) return [];
+    if (!data || data.length === 0) {
+      console.log('No analysis found for industry:', industry);
+      return [];
+    }
+
+    console.log('Fetched analysis data:', data);
 
     // Transform the data to match our frontend format
     return data.map((item: Analysis) => ({
@@ -25,7 +33,7 @@ export const generateAnalysis = async (industry: string) => {
       marketingStrategy: item.marketing_strategy,
     }));
   } catch (error) {
-    console.error('Error fetching analysis:', error);
+    console.error('Error in generateAnalysis:', error);
     throw error;
   }
 };

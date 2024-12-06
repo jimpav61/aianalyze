@@ -24,9 +24,20 @@ const Index = () => {
 
     setIsLoading(true);
     try {
+      console.log('Analyzing industry:', selectedIndustry);
       const results = await generateAnalysis(selectedIndustry);
+      console.log('Analysis results:', results);
       setAnalyses(results);
+      
+      if (results.length === 0) {
+        toast({
+          title: "No analysis available",
+          description: "No bot recommendations found for this industry",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
+      console.error('Error in handleAnalyze:', error);
       toast({
         title: "Error generating analysis",
         description: "Please try again later",
