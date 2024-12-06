@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export const HomeButton = () => {
   return (
@@ -7,8 +7,8 @@ export const HomeButton = () => {
       onClick={() => window.location.href = 'https://chatsites.ai'}
       className="bg-[#f65228] hover:bg-[#f65228]/90 text-white"
     >
-      <Home className="mr-2 h-4 w-4" />
-      Home
+      <ExternalLink className="mr-2 h-4 w-4" />
+      Take me to website
     </Button>
   );
 };

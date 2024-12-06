@@ -1,5 +1,5 @@
 import { AnalysisGrid } from "./AnalysisGrid";
-import { HomeButton } from "./HomeButton";
+import { ContactForm } from "./ContactForm";
 
 interface AnalysisSectionProps {
   analyses: any[];
@@ -8,17 +8,20 @@ interface AnalysisSectionProps {
 }
 
 export const AnalysisSection = ({ analyses, isMobile, analysisGridRef }: AnalysisSectionProps) => {
-  return (
-    <>
-      <div ref={analysisGridRef}>
-        {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
-      </div>
+  if (analyses.length === 0) return null;
 
-      {isMobile && analyses.length > 0 && (
-        <div className="mt-8 flex justify-center">
+  return (
+    <div ref={analysisGridRef} className="mt-12">
+      <AnalysisGrid analyses={analyses} />
+      {isMobile ? (
+        <div className="mt-8">
+          <ContactForm />
+        </div>
+      ) : (
+        <div className="mt-8 flex justify-end">
           <HomeButton />
         </div>
       )}
-    </>
+    </div>
   );
 };

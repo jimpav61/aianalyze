@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { AnalysisSection } from "@/components/AnalysisSection";
 import { HomeButton } from "@/components/HomeButton";
+import { ContactForm } from "@/components/ContactForm";
 import { useToast } from "@/components/ui/use-toast";
 import { generateAnalysis } from "@/utils/groq";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -93,6 +94,12 @@ const Index = () => {
           isMobile={isMobile}
           analysisGridRef={analysisGridRef}
         />
+
+        {!isMobile && analyses.length === 0 && (
+          <div className="mt-16">
+            <ContactForm />
+          </div>
+        )}
       </main>
     </div>
   );
