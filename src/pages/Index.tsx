@@ -78,12 +78,6 @@ const Index = () => {
       <Header isMobile={isMobile} />
 
       <main className="container mx-auto px-4 py-8">
-        {isMobile && !hasSubmitted && (
-          <div className="mb-8 flex justify-end">
-            <HomeButton />
-          </div>
-        )}
-
         <Hero
           selectedIndustry={selectedIndustry}
           setSelectedIndustry={setSelectedIndustry}
@@ -97,15 +91,16 @@ const Index = () => {
           analysisGridRef={analysisGridRef}
         />
 
-        {hasSubmitted && (
-          <div className="mt-8 flex justify-center">
+        {!isMobile && !hasSubmitted && analyses.length === 0 && (
+          <div className="mt-16 space-y-8">
+            <ContactForm />
             <HomeButton />
           </div>
         )}
 
-        {!isMobile && !hasSubmitted && analyses.length === 0 && (
-          <div className="mt-16">
-            <ContactForm />
+        {hasSubmitted && (
+          <div className="mt-8 flex justify-center">
+            <HomeButton />
           </div>
         )}
       </main>
