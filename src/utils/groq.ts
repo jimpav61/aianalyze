@@ -5,10 +5,12 @@ type Analysis = Database['public']['Tables']['analyses']['Row'];
 
 export const generateAnalysis = async (industry: string) => {
   try {
+    console.log('Fetching analysis for industry:', industry);
+    
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
-      .eq('industry', industry);
+      .ilike('industry', `%${industry}%`);
 
     if (error) {
       console.error('Error fetching analysis:', error);
@@ -22,7 +24,6 @@ export const generateAnalysis = async (industry: string) => {
 
     console.log('Fetched analysis data:', data);
 
-    // Transform the data to match our frontend format
     return data.map((item: Analysis) => ({
       id: item.id,
       department: item.department,
