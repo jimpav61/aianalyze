@@ -1,5 +1,15 @@
 import { supabase } from "@/integrations/supabase/client";
 
+interface Analysis {
+  id: string;
+  department: string;
+  bot_function: string;
+  savings: number;
+  profit_increase: number;
+  explanation: string;
+  marketing_strategy: string;
+}
+
 export const generateAnalysis = async (industry: string) => {
   try {
     const { data, error } = await supabase
@@ -9,8 +19,10 @@ export const generateAnalysis = async (industry: string) => {
 
     if (error) throw error;
 
+    if (!data) return [];
+
     // Transform the data to match our frontend format
-    return data.map((item) => ({
+    return data.map((item: Analysis) => ({
       id: item.id,
       department: item.department,
       function: item.bot_function,
