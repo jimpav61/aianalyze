@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { generateAnalysis } from "@/utils/groq";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
   const [analyses, setAnalyses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleAnalyze = async () => {
     if (!selectedIndustry) {
@@ -43,7 +45,9 @@ const Index = () => {
       setAnalyses(results);
       toast({
         title: "Analysis complete",
-        description: `Found ${results.length} recommendations for ${selectedIndustry}`,
+        description: isMobile 
+          ? `Found ${results.length} recommendations for ${selectedIndustry}. Scroll down to view them!`
+          : `Found ${results.length} recommendations for ${selectedIndustry}`,
       });
     } catch (error) {
       console.error('Error in handleAnalyze:', error);
