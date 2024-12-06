@@ -12,6 +12,9 @@ export const generateAnalysis = async (industry: string) => {
       return [];
     }
 
+    // Add more specific logging for the Supabase query
+    console.log('Executing Supabase query for industry:', industry);
+    
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
