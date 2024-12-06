@@ -48,7 +48,7 @@ export const AnalysisCard = ({
               <span className="text-sm font-medium">Savings: {savings}</span>
             </div>
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#f65228]" />
+              <TrendingUp className="w-4 h-4 text-green-500" />
               <span className="text-sm font-medium">Profit: {profit}</span>
             </div>
           </div>
