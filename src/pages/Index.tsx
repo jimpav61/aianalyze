@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Logo } from "@/components/Logo";
 import { IndustrySelector } from "@/components/IndustrySelector";
 import { AnalysisGrid } from "@/components/AnalysisGrid";
@@ -14,6 +14,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const analysisGridRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
     if (!selectedIndustry) {
@@ -49,6 +50,16 @@ const Index = () => {
           ? <span>Found {results.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
           : `Found ${results.length} recommendations for ${selectedIndustry}`,
       });
+
+      // Scroll to analysis grid after a short delay to ensure content is rendered
+      if (isMobile && analysisGridRef.current) {
+        setTimeout(() => {
+          analysisGridRef.current?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100);
+      }
     } catch (error) {
       console.error('Error in handleAnalyze:', error);
       toast({
@@ -135,7 +146,9 @@ const Index = () => {
           </div>
         </div>
 
-        {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
+        <div ref={analysisGridRef}>
+          {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
+        </div>
       </main>
     </div>
   );
