@@ -59,22 +59,28 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
   };
 
   return (
-    <div className="w-full max-w-xs space-y-2 relative z-50">
-      <Select 
-        value={showCustomInput ? "Other" : value} 
-        onValueChange={handleSelectChange}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select your industry" />
-        </SelectTrigger>
-        <SelectContent className="max-h-[300px] overflow-y-auto">
-          {industries.map((industry) => (
-            <SelectItem key={industry} value={industry}>
-              {industry}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <div className="w-full max-w-xs space-y-2">
+      <div className="relative">
+        <Select 
+          value={showCustomInput ? "Other" : value} 
+          onValueChange={handleSelectChange}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select your industry" />
+          </SelectTrigger>
+          <SelectContent 
+            className="max-h-[300px] overflow-y-auto z-[100]"
+            position="popper"
+            sideOffset={5}
+          >
+            {industries.map((industry) => (
+              <SelectItem key={industry} value={industry}>
+                {industry}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {showCustomInput && (
         <Input
