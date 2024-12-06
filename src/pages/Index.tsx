@@ -92,7 +92,7 @@ const Index = () => {
         />
 
         {!isMobile && !hasSubmitted && analyses.length === 0 && (
-          <div className="mt-16 space-y-8">
+          <div className="mt-16 flex flex-col items-center space-y-12">
             <ContactForm />
             <HomeButton />
           </div>
