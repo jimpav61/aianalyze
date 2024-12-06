@@ -5,26 +5,32 @@ type Analysis = Database['public']['Tables']['analyses']['Row'];
 
 export const generateAnalysis = async (industry: string) => {
   try {
-    console.log('Fetching analysis for industry:', industry);
+    console.log('Starting analysis generation for industry:', industry);
     
+    if (!industry) {
+      console.error('No industry provided');
+      return [];
+    }
+
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
       .ilike('industry', `%${industry}%`);
 
     if (error) {
-      console.error('Error fetching analysis:', error);
+      console.error('Supabase error:', error);
       throw error;
     }
 
-    if (!data || data.length === 0) {
-      console.log('No analysis found for industry:', industry);
+    if (!data) {
+      console.log('No data returned from Supabase');
       return [];
     }
 
-    console.log('Fetched analysis data:', data);
+    console.log(`Found ${data.length} analyses for industry:`, industry);
+    console.log('Raw data:', data);
 
-    return data.map((item: Analysis) => ({
+    const formattedData = data.map((item: Analysis) => ({
       id: item.id,
       department: item.department,
       function: item.bot_function,
@@ -33,6 +39,9 @@ export const generateAnalysis = async (industry: string) => {
       explanation: item.explanation,
       marketingStrategy: item.marketing_strategy,
     }));
+
+    console.log('Formatted data:', formattedData);
+    return formattedData;
   } catch (error) {
     console.error('Error in generateAnalysis:', error);
     throw error;

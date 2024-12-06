@@ -17,30 +17,39 @@ const Index = () => {
     if (!selectedIndustry) {
       toast({
         title: "Please select an industry",
+        description: "An industry must be selected to generate analysis",
         variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
+    setAnalyses([]); // Clear previous results
+
     try {
-      console.log('Analyzing industry:', selectedIndustry);
+      console.log('Starting analysis for industry:', selectedIndustry);
       const results = await generateAnalysis(selectedIndustry);
-      console.log('Analysis results:', results);
-      setAnalyses(results);
+      console.log('Analysis completed. Results:', results);
       
-      if (results.length === 0) {
+      if (!results || results.length === 0) {
         toast({
           title: "No analysis available",
-          description: "No bot recommendations found for this industry",
+          description: `No bot recommendations found for ${selectedIndustry}`,
           variant: "destructive",
         });
+        return;
       }
+
+      setAnalyses(results);
+      toast({
+        title: "Analysis complete",
+        description: `Found ${results.length} recommendations for ${selectedIndustry}`,
+      });
     } catch (error) {
       console.error('Error in handleAnalyze:', error);
       toast({
         title: "Error generating analysis",
-        description: "Please try again later",
+        description: "There was a problem generating the analysis. Please try again.",
         variant: "destructive",
       });
     } finally {
