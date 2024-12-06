@@ -12,6 +12,7 @@ const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
   const [analyses, setAnalyses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const analysisGridRef = useRef<HTMLDivElement>(null);
@@ -44,6 +45,7 @@ const Index = () => {
       }
 
       setAnalyses(results);
+      setHasSubmitted(true);
       toast({
         title: "Analysis complete",
         description: isMobile 
@@ -76,7 +78,7 @@ const Index = () => {
       <Header isMobile={isMobile} />
 
       <main className="container mx-auto px-4 py-8">
-        {isMobile && (
+        {isMobile && !hasSubmitted && (
           <div className="mb-8 flex justify-end">
             <HomeButton />
           </div>
@@ -95,7 +97,13 @@ const Index = () => {
           analysisGridRef={analysisGridRef}
         />
 
-        {!isMobile && analyses.length === 0 && (
+        {hasSubmitted && (
+          <div className="mt-8 flex justify-center">
+            <HomeButton />
+          </div>
+        )}
+
+        {!isMobile && !hasSubmitted && analyses.length === 0 && (
           <div className="mt-16">
             <ContactForm />
           </div>
