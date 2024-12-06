@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { generateAnalysis } from "@/utils/groq";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { HomeButton } from "@/components/HomeButton";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
@@ -75,12 +76,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Logo />
+          {!isMobile && <HomeButton />}
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {isMobile && (
+          <div className="mb-8 flex justify-end">
+            <HomeButton />
+          </div>
+        )}
+
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
             AI Assistant Placement Analyzer
@@ -149,6 +157,12 @@ const Index = () => {
         <div ref={analysisGridRef}>
           {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
         </div>
+
+        {isMobile && analyses.length > 0 && (
+          <div className="mt-8 flex justify-center">
+            <HomeButton />
+          </div>
+        )}
       </main>
     </div>
   );
