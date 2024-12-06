@@ -65,16 +65,20 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
           value={showCustomInput ? "Other" : value} 
           onValueChange={handleSelectChange}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select your industry" />
           </SelectTrigger>
           <SelectContent 
-            className="max-h-[300px] overflow-y-auto z-[100]"
+            className="bg-white border shadow-lg"
             position="popper"
             sideOffset={5}
           >
             {industries.map((industry) => (
-              <SelectItem key={industry} value={industry}>
+              <SelectItem 
+                key={industry} 
+                value={industry}
+                className="hover:bg-gray-100"
+              >
                 {industry}
               </SelectItem>
             ))}
