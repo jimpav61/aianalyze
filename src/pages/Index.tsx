@@ -68,10 +68,10 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
-            AI Bot Placement Analyzer
+            AI Assistant Placement Analyzer
           </h1>
           <p className="text-gray-600 mb-8">
-            Discover the optimal AI bot placement strategy for your business
+            Discover the optimal AI Assistant placement strategy for your business
           </p>
 
           <div className="flex flex-col items-center gap-4">
