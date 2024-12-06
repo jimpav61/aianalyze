@@ -1,42 +1,7 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-const industries = [
-  "Adult Care-Giver Agency",
-  "Agriculture",
-  "Automotive",
-  "Beauty Salon",
-  "Child Daycare Services",
-  "Construction",
-  "Education",
-  "Energy",
-  "Entertainment",
-  "Environmental Services",
-  "Finance",
-  "Food & Beverage",
-  "Government",
-  "Healthcare",
-  "Holistic Medicine",
-  "Hospitality",
-  "Insurance",
-  "Legal Services",
-  "Logistics",
-  "Manufacturing",
-  "Media",
-  "Mining",
-  "Non-Profit",
-  "Pharmaceuticals",
-  "Professional Services",
-  "Real Estate",
-  "Retail",
-  "Spas",
-  "Technology",
-  "Telecommunications",
-  "Transportation",
-  "Utilities",
-  "Other" // Kept at the end of the list
-];
+import { CustomIndustryInput } from "./CustomIndustryInput";
+import { industries } from "@/constants/industries";
 
 interface IndustrySelectorProps {
   onSelect: (value: string) => void;
@@ -57,8 +22,7 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
     }
   };
 
-  const handleCustomInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleCustomInputChange = (value: string) => {
     setCustomIndustry(value);
     onSelect(value);
   };
@@ -92,12 +56,9 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
       </div>
 
       {showCustomInput && (
-        <Input
-          type="text"
-          placeholder="Enter your industry"
+        <CustomIndustryInput
           value={customIndustry}
           onChange={handleCustomInputChange}
-          className="w-full"
         />
       )}
     </div>
