@@ -1,14 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
-interface Analysis {
-  id: string;
-  department: string;
-  bot_function: string;
-  savings: number;
-  profit_increase: number;
-  explanation: string;
-  marketing_strategy: string;
-}
+type Analysis = Database['public']['Tables']['analyses']['Row'];
 
 export const generateAnalysis = async (industry: string) => {
   try {
