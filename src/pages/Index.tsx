@@ -46,7 +46,7 @@ const Index = () => {
       toast({
         title: "Analysis complete",
         description: isMobile 
-          ? `Found ${results.length} recommendations for ${selectedIndustry}. Scroll down to view them!`
+          ? <span>Found {results.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
           : `Found ${results.length} recommendations for ${selectedIndustry}`,
       });
     } catch (error) {
