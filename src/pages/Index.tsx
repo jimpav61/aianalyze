@@ -5,36 +5,11 @@ import { AnalysisGrid } from "@/components/AnalysisGrid";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-
-// Mock data - replace with actual API call
-const mockAnalyses = {
-  "Retail": [
-    {
-      id: "1",
-      department: "Customer Service",
-      function: "24/7 Customer Support Bot",
-      savings: "$50,000/year",
-      profit: "+15%",
-    },
-    {
-      id: "2",
-      department: "Sales",
-      function: "Product Recommendation Bot",
-      savings: "$30,000/year",
-      profit: "+20%",
-    },
-    {
-      id: "3",
-      department: "Inventory",
-      function: "Stock Management Bot",
-      savings: "$40,000/year",
-      profit: "+10%",
-    },
-  ],
-};
+import { generateAnalysis } from "@/utils/groq";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
+  const [analyses, setAnalyses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -48,9 +23,18 @@ const Index = () => {
     }
 
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsLoading(false);
+    try {
+      const results = await generateAnalysis(selectedIndustry);
+      setAnalyses(results);
+    } catch (error) {
+      toast({
+        title: "Error generating analysis",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -78,7 +62,7 @@ const Index = () => {
             <Button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className="bg-chatsites hover:bg-chatsites/90"
+              className="bg-[#f65228] hover:bg-[#f65228]/90"
             >
               {isLoading ? (
                 <>
@@ -92,9 +76,7 @@ const Index = () => {
           </div>
         </div>
 
-        {selectedIndustry && mockAnalyses[selectedIndustry] && (
-          <AnalysisGrid analyses={mockAnalyses[selectedIndustry]} />
-        )}
+        {analyses.length > 0 && <AnalysisGrid analyses={analyses} />}
       </main>
     </div>
   );

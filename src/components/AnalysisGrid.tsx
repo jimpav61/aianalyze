@@ -6,6 +6,8 @@ interface Analysis {
   function: string;
   savings: string;
   profit: string;
+  explanation: string;
+  marketingStrategy: string;
 }
 
 interface AnalysisGridProps {
