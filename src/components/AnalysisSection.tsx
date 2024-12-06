@@ -1,5 +1,6 @@
 import { AnalysisGrid } from "./AnalysisGrid";
 import { ContactForm } from "./ContactForm";
+import { HomeButton } from "./HomeButton";
 
 interface AnalysisSectionProps {
   analyses: any[];
