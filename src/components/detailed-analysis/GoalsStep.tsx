@@ -7,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { objectiveOptions, timelineOptions, budgetOptions } from "./constants/dropdownOptions";
+import { createHandlers } from "./utils/dropdownHandlers";
 
 interface GoalsStepProps {
   formData: {
@@ -20,50 +22,8 @@ interface GoalsStepProps {
   ) => void;
 }
 
-const objectiveOptions = [
-  { value: "cost_reduction", label: "Reduce operational costs" },
-  { value: "customer_satisfaction", label: "Improve customer satisfaction" },
-  { value: "efficiency", label: "Increase operational efficiency" },
-  { value: "automation", label: "Automate repetitive tasks" },
-  { value: "scalability", label: "Improve scalability" },
-  { value: "quality", label: "Enhance service quality" },
-];
-
-const timelineOptions = [
-  { value: "1-3", label: "1-3 months" },
-  { value: "3-6", label: "3-6 months" },
-  { value: "6-12", label: "6-12 months" },
-  { value: "12+", label: "12+ months" },
-];
-
-const budgetOptions = [
-  { value: "100-1000", label: "$100 - $1,000" },
-  { value: "1000-5000", label: "$1,000 - $5,000" },
-  { value: "5000-10000", label: "$5,000 - $10,000" },
-  { value: "10000+", label: "$10,000+" },
-];
-
 export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
-  const handleObjectiveChange = (value: string) => {
-    const selectedObjective = objectiveOptions.find((o) => o.value === value);
-    handleInputChange({
-      target: { name: "objectives", value: selectedObjective?.label || "" },
-    } as React.ChangeEvent<HTMLInputElement>);
-  };
-
-  const handleTimelineChange = (value: string) => {
-    const selectedTimeline = timelineOptions.find((t) => t.value === value);
-    handleInputChange({
-      target: { name: "timeline", value: selectedTimeline?.label || "" },
-    } as React.ChangeEvent<HTMLInputElement>);
-  };
-
-  const handleBudgetChange = (value: string) => {
-    const selectedBudget = budgetOptions.find((b) => b.value === value);
-    handleInputChange({
-      target: { name: "budget", value: selectedBudget?.label || "" },
-    } as React.ChangeEvent<HTMLInputElement>);
-  };
+  const { handleObjectiveChange, handleTimelineChange, handleBudgetChange } = createHandlers(handleInputChange);
 
   return (
     <div className="space-y-4">
