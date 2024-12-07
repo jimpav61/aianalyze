@@ -1,6 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -20,14 +19,14 @@ interface OperationsStepProps {
 }
 
 const commonPainPoints = [
-  "Long customer wait times",
-  "High operational costs",
-  "Inconsistent customer service",
-  "Limited 24/7 support",
-  "Manual repetitive tasks",
-  "High employee turnover",
-  "Communication gaps",
-  "Scalability challenges"
+  { value: "long_wait_times", label: "Long customer wait times" },
+  { value: "high_costs", label: "High operational costs" },
+  { value: "inconsistent_service", label: "Inconsistent customer service" },
+  { value: "limited_support", label: "Limited 24/7 support" },
+  { value: "manual_tasks", label: "Manual repetitive tasks" },
+  { value: "high_turnover", label: "High employee turnover" },
+  { value: "communication_gaps", label: "Communication gaps" },
+  { value: "scalability", label: "Scalability challenges" }
 ];
 
 export const OperationsStep = ({
@@ -35,8 +34,9 @@ export const OperationsStep = ({
   handleInputChange,
 }: OperationsStepProps) => {
   const handlePainPointChange = (value: string) => {
+    const selectedPoint = commonPainPoints.find(point => point.value === value);
     handleInputChange({
-      target: { name: "painPoints", value }
+      target: { name: "painPoints", value: selectedPoint?.label || "" }
     } as React.ChangeEvent<HTMLInputElement>);
   };
 
@@ -81,14 +81,17 @@ export const OperationsStep = ({
       </div>
       <div className="space-y-2">
         <Label htmlFor="painPoints">Current Pain Points</Label>
-        <Select value={formData.painPoints} onValueChange={handlePainPointChange}>
+        <Select 
+          value={commonPainPoints.find(point => point.label === formData.painPoints)?.value} 
+          onValueChange={handlePainPointChange}
+        >
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select your main pain point" />
           </SelectTrigger>
           <SelectContent>
             {commonPainPoints.map((point) => (
-              <SelectItem key={point} value={point}>
-                {point}
+              <SelectItem key={point.value} value={point.value}>
+                {point.label}
               </SelectItem>
             ))}
           </SelectContent>

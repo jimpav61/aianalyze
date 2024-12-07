@@ -28,24 +28,23 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = (data: DetailedFormData) => {
-    console.log("Analysis data received:", analysis);
-    console.log("Form data received:", data);
+    console.log("Analysis data in dialog:", analysis);
     
-    if (!analysis || analysis.savings === undefined || analysis.profit_increase === undefined) {
+    if (!analysis) {
       toast({
         title: "Missing Analysis Data",
-        description: "Please complete the initial analysis first to see potential savings and profit increase.",
+        description: "Please complete the initial analysis first.",
         variant: "destructive",
       });
       return;
     }
     
     setFormData(data);
+    setShowReport(true);
     toast({
       title: "Analysis Complete",
       description: "Your detailed analysis report is ready.",
     });
-    setShowReport(true);
   };
 
   const handleClose = () => {
@@ -70,15 +69,7 @@ export const DetailedAnalysisDialog = ({
           formData && analysis && (
             <DetailedReport 
               data={formData} 
-              analysis={{
-                industry: analysis.industry,
-                department: analysis.department,
-                bot_function: analysis.bot_function,
-                savings: analysis.savings,
-                profit_increase: analysis.profit_increase,
-                explanation: analysis.explanation,
-                marketing_strategy: analysis.marketing_strategy
-              }} 
+              analysis={analysis}
             />
           )
         )}
