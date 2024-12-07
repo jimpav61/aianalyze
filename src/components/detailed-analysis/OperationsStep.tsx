@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -88,7 +89,7 @@ export const OperationsStep = ({
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select your main pain point" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {commonPainPoints.map((point) => (
               <SelectItem key={point.value} value={point.value}>
                 {point.label}

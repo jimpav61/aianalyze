@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -76,7 +75,7 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select implementation timeline" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {timelineOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -96,7 +95,7 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
           <SelectTrigger className="w-full bg-white">
             <SelectValue placeholder="Select estimated budget" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {budgetOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
