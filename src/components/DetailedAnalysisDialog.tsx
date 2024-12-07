@@ -15,13 +15,16 @@ interface DetailedAnalysisDialogProps {
   onClose: () => void;
   industry?: string;
   analysis?: {
-    industry: string;
+    id: string;
+    industry?: string;
     department: string;
-    bot_function: string;
-    savings: number;
-    profit_increase: number;
+    function?: string;
+    bot_function?: string;
+    savings: string | number;
+    profit_increase: string | number;
     explanation: string;
-    marketing_strategy: string;
+    marketing_strategy?: string;
+    marketingStrategy?: string;
   };
 }
 
@@ -49,16 +52,26 @@ export const DetailedAnalysisDialog = ({
       });
       return;
     }
+
+    // Map the analysis data to match the expected format
+    const mappedAnalysis = {
+      industry: analysis.industry || industry,
+      department: analysis.department,
+      bot_function: analysis.bot_function || analysis.function,
+      savings: Number(analysis.savings),
+      profit_increase: Number(analysis.profit_increase),
+      explanation: analysis.explanation,
+      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy,
+    };
     
     setFormData(data);
     setShowReport(true);
     
-    // Show toast notification without affecting the dialog state
     setTimeout(() => {
       toast({
         title: "Analysis Complete",
         description: "Your detailed analysis report is ready.",
-        duration: 3000, // Set a specific duration for the toast
+        duration: 3000,
       });
     }, 100);
   };
@@ -91,7 +104,15 @@ export const DetailedAnalysisDialog = ({
             formData && analysis && (
               <DetailedReport 
                 data={formData} 
-                analysis={analysis}
+                analysis={{
+                  industry: analysis.industry || industry || '',
+                  department: analysis.department,
+                  bot_function: analysis.bot_function || analysis.function || '',
+                  savings: Number(analysis.savings),
+                  profit_increase: Number(analysis.profit_increase),
+                  explanation: analysis.explanation,
+                  marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || '',
+                }}
               />
             )
           )}
