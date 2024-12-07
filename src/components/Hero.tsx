@@ -1,6 +1,8 @@
 import { IndustrySelector } from "./IndustrySelector";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
+import { DetailedAnalysisDialog } from "./DetailedAnalysisDialog";
+import { useState } from "react";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -15,6 +17,8 @@ export const Hero = ({
   isLoading,
   handleAnalyze,
 }: HeroProps) => {
+  const [showDetailedDialog, setShowDetailedDialog] = useState(false);
+
   return (
     <div className="max-w-4xl mx-auto text-center mb-12">
       <div className="space-y-4 mb-8">
@@ -67,6 +71,13 @@ export const Hero = ({
                 "Get Free Analysis"
               )}
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowDetailedDialog(true)}
+              className="w-full"
+            >
+              Request Detailed Report
+            </Button>
             <p className="text-xs text-gray-500 mt-2">
               Get instant insights and unlock a detailed report
             </p>
@@ -96,6 +107,12 @@ export const Hero = ({
           </p>
         </div>
       </div>
+
+      <DetailedAnalysisDialog
+        isOpen={showDetailedDialog}
+        onClose={() => setShowDetailedDialog(false)}
+        industry={selectedIndustry}
+      />
     </div>
   );
 };
