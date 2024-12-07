@@ -4,7 +4,7 @@ export const generateAnalysis = async (industry: string) => {
   console.log('Starting analysis for industry:', industry);
   
   try {
-    // Fetch data with explicit ordering
+    console.log('Fetching data from Supabase for industry:', industry);
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
@@ -23,27 +23,32 @@ export const generateAnalysis = async (industry: string) => {
       return [];
     }
 
-    // Validate and transform each item
-    const transformedData = data.map(item => {
-      // Validate required fields
-      if (!item.department || !item.bot_function) {
-        console.warn('Missing required fields for item:', item);
-        return null;
-      }
+    console.log('Number of records found:', data.length);
 
-      // Transform the data ensuring all fields are properly formatted
-      return {
-        id: item.id || crypto.randomUUID(),
-        department: item.department,
-        function: item.bot_function,
-        savings: typeof item.savings === 'number' ? item.savings.toString() : '0',
-        profit_increase: typeof item.profit_increase === 'number' ? item.profit_increase.toString() : '0',
+    // Transform and validate each item
+    const transformedData = data.map((item, index) => {
+      console.log(`Processing item ${index + 1}:`, item);
+
+      // Ensure all required fields are present and properly formatted
+      const transformed = {
+        id: item.id || `generated-${crypto.randomUUID()}`,
+        department: item.department || 'Unknown Department',
+        function: item.bot_function || 'Unknown Function',
+        savings: (item.savings !== null && item.savings !== undefined) 
+          ? item.savings.toString() 
+          : '0',
+        profit_increase: (item.profit_increase !== null && item.profit_increase !== undefined) 
+          ? item.profit_increase.toString() 
+          : '0',
         explanation: item.explanation || 'No explanation provided',
         marketingStrategy: item.marketing_strategy || 'No marketing strategy provided'
       };
-    }).filter(item => item !== null); // Remove any invalid items
 
-    console.log('Transformed data:', transformedData);
+      console.log(`Transformed item ${index + 1}:`, transformed);
+      return transformed;
+    });
+
+    console.log('Final transformed data:', transformedData);
     return transformedData;
   } catch (error) {
     console.error('Error in generateAnalysis:', error);
