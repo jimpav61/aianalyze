@@ -35,9 +35,16 @@ export const ContactForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const { error } = await supabase.functions.invoke('sendemail', {
-        body: values
+      console.log('Submitting form with values:', values);
+      
+      const { data, error } = await supabase.functions.invoke('sendemail', {
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+
+      console.log('Response:', { data, error });
 
       if (error) throw error;
 
