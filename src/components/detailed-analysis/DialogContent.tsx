@@ -18,6 +18,8 @@ export const DialogContent = ({
   industry, 
   analysis 
 }: DialogContentProps) => {
+  console.log("DialogContent - Render:", { showReport, formData, industry, analysis });
+  
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
 
   if (!showReport) {
@@ -37,10 +39,18 @@ export const DialogContent = ({
     );
   }
 
-  return formData ? (
+  if (!formData) {
+    console.error("DialogContent - No form data available for report");
+    return null;
+  }
+
+  const processedAnalysis = getProcessedAnalysis();
+  console.log("DialogContent - Processed analysis for report:", processedAnalysis);
+
+  return (
     <DetailedReport 
       data={formData} 
-      analysis={getProcessedAnalysis()}
+      analysis={processedAnalysis}
     />
-  ) : null;
+  );
 };

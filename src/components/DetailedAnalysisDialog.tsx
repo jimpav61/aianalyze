@@ -15,20 +15,30 @@ export const DetailedAnalysisDialog = ({
   const [showReport, setShowReport] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
-  console.log("DetailedAnalysisDialog - Initial props:", { industry, analysis });
+  console.log("DetailedAnalysisDialog - Initial render:", { industry, analysis, showReport, formData });
 
   const handleSubmit = (data: DetailedFormData) => {
-    console.log("DetailedAnalysisDialog - handleSubmit called with:", { data, analysis });
+    console.log("DetailedAnalysisDialog - handleSubmit called with:", data);
+    console.log("DetailedAnalysisDialog - Current analysis:", analysis);
+    
+    if (!data) {
+      console.error("DetailedAnalysisDialog - No form data provided");
+      toast({
+        title: "Error",
+        description: "Form data is missing",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setFormData(data);
     setShowReport(true);
     
-    setTimeout(() => {
-      toast({
-        title: "Analysis Complete",
-        description: "Your detailed analysis report is ready.",
-        duration: 3000,
-      });
-    }, 100);
+    toast({
+      title: "Analysis Complete",
+      description: "Your detailed analysis report is ready.",
+      duration: 3000,
+    });
   };
 
   const handleClose = () => {
