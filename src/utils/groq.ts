@@ -1,10 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export const generateAnalysis = async (industry: string) => {
-  console.log('Starting analysis for industry:', industry);
+  console.log('generateAnalysis - Starting analysis for industry:', industry);
   
   try {
-    console.log('Fetching data from Supabase for industry:', industry);
+    console.log('generateAnalysis - Fetching data from Supabase');
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
@@ -12,46 +12,62 @@ export const generateAnalysis = async (industry: string) => {
       .order('department');
     
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('generateAnalysis - Supabase error:', error);
       throw error;
     }
 
-    console.log('Raw data from Supabase:', data);
+    console.log('generateAnalysis - Raw data from Supabase:', data);
     
     if (!data || data.length === 0) {
-      console.log('No analysis found for industry:', industry);
+      console.log('generateAnalysis - No data found for industry:', industry);
       return [];
     }
 
-    console.log('Number of records found:', data.length);
+    console.log('generateAnalysis - Processing', data.length, 'records');
 
     // Transform and validate each item
     const transformedData = data.map((item, index) => {
-      console.log(`Processing item ${index + 1}:`, item);
+      console.log(`generateAnalysis - Processing item ${index + 1}:`, item);
 
-      // Ensure all required fields are present and properly formatted
+      if (!item) {
+        console.warn('generateAnalysis - Invalid item:', item);
+        return null;
+      }
+
+      // Validate required fields
+      const requiredFields = ['department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
+      const missingFields = requiredFields.filter(field => !item[field] && item[field] !== 0);
+      
+      if (missingFields.length > 0) {
+        console.warn(`generateAnalysis - Missing required fields for item ${index + 1}:`, missingFields);
+        return null;
+      }
+
+      // Transform the data with strict type checking
       const transformed = {
         id: item.id || `generated-${crypto.randomUUID()}`,
-        department: item.department || 'Unknown Department',
-        function: item.bot_function || 'Unknown Function',
-        savings: (item.savings !== null && item.savings !== undefined) 
-          ? item.savings.toString() 
-          : '0',
-        profit_increase: (item.profit_increase !== null && item.profit_increase !== undefined) 
-          ? item.profit_increase.toString() 
-          : '0',
-        explanation: item.explanation || 'No explanation provided',
-        marketingStrategy: item.marketing_strategy || 'No marketing strategy provided'
+        department: String(item.department),
+        function: String(item.bot_function),
+        savings: String(item.savings || 0),
+        profit_increase: String(item.profit_increase || 0),
+        explanation: String(item.explanation),
+        marketingStrategy: String(item.marketing_strategy)
       };
 
-      console.log(`Transformed item ${index + 1}:`, transformed);
+      console.log(`generateAnalysis - Transformed item ${index + 1}:`, transformed);
       return transformed;
-    });
+    }).filter(Boolean); // Remove null items
 
-    console.log('Final transformed data:', transformedData);
+    console.log('generateAnalysis - Final transformed data:', transformedData);
+    
+    if (transformedData.length === 0) {
+      console.warn('generateAnalysis - No valid items after transformation');
+      return [];
+    }
+
     return transformedData;
   } catch (error) {
-    console.error('Error in generateAnalysis:', error);
+    console.error('generateAnalysis - Error:', error);
     throw error;
   }
 };

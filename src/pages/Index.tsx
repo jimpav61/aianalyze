@@ -18,7 +18,10 @@ const Index = () => {
   const analysisGridRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
+    console.log('Index - handleAnalyze started with industry:', selectedIndustry);
+    
     if (!selectedIndustry) {
+      console.log('Index - No industry selected');
       toast({
         title: "Please select an industry",
         description: "An industry must be selected to generate analysis",
@@ -31,11 +34,12 @@ const Index = () => {
     setAnalyses([]); // Clear previous results
 
     try {
-      console.log('Starting analysis for industry:', selectedIndustry);
+      console.log('Index - Calling generateAnalysis');
       const results = await generateAnalysis(selectedIndustry);
-      console.log('Analysis completed. Results:', results);
+      console.log('Index - Analysis results received:', results);
       
       if (!results || results.length === 0) {
+        console.log('Index - No results returned');
         toast({
           title: "No analysis available",
           description: `No bot recommendations found for ${selectedIndustry}`,
@@ -44,15 +48,8 @@ const Index = () => {
         return;
       }
 
-      // Transform the data to match the expected format
-      const transformedResults = results.map(result => ({
-        ...result,
-        profit_increase: Number(result.profit_increase),
-        savings: Number(result.savings)
-      }));
-
-      console.log('Transformed results:', transformedResults);
-      setAnalyses(transformedResults);
+      console.log('Index - Setting analyses state with:', results);
+      setAnalyses(results);
       setHasSubmitted(true);
       
       toast({
@@ -71,7 +68,7 @@ const Index = () => {
         }, 100);
       }
     } catch (error) {
-      console.error('Error in handleAnalyze:', error);
+      console.error('Index - Error in handleAnalyze:', error);
       toast({
         title: "Error generating analysis",
         description: "There was a problem generating the analysis. Please try again.",
@@ -81,6 +78,13 @@ const Index = () => {
       setIsLoading(false);
     }
   };
+
+  console.log('Index - Current state:', { 
+    selectedIndustry, 
+    analysesLength: analyses.length, 
+    isLoading, 
+    hasSubmitted 
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
