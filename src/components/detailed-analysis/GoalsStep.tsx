@@ -1,5 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface GoalsStepProps {
   formData: {
@@ -10,18 +17,51 @@ interface GoalsStepProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+const commonObjectives = [
+  "Improve Customer Service Efficiency",
+  "Reduce Operational Costs",
+  "Increase Sales Conversion Rates",
+  "Enhance Customer Experience",
+  "Automate Repetitive Tasks",
+  "24/7 Customer Support Coverage",
+  "Reduce Response Time",
+  "Scale Support Operations",
+  "Multilingual Customer Support",
+  "Lead Generation and Qualification"
+];
+
 export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
+  const handleObjectiveSelect = (value: string) => {
+    // Create a synthetic event to match the handleInputChange interface
+    const syntheticEvent = {
+      target: {
+        name: 'objectives',
+        value: value
+      }
+    } as React.ChangeEvent<HTMLInputElement>;
+    
+    handleInputChange(syntheticEvent);
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="objectives">Key Objectives</Label>
-        <Input
-          id="objectives"
-          name="objectives"
-          value={formData.objectives}
-          onChange={handleInputChange}
-          placeholder="What are your main goals?"
-        />
+        <Select 
+          value={formData.objectives} 
+          onValueChange={handleObjectiveSelect}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select your key objective" />
+          </SelectTrigger>
+          <SelectContent>
+            {commonObjectives.map((objective) => (
+              <SelectItem key={objective} value={objective}>
+                {objective}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="timeline">Implementation Timeline</Label>
