@@ -31,16 +31,6 @@ export const DetailedAnalysisForm = ({
   
   console.log("DetailedAnalysisForm - Initial props:", { industry, analysis });
 
-  // Validate analysis data
-  if (analysis && typeof analysis === 'object') {
-    const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
-    const missingFields = requiredFields.filter(field => !(field in analysis));
-    
-    if (missingFields.length > 0) {
-      console.error("DetailedAnalysisForm - Missing required analysis fields:", missingFields);
-    }
-  }
-
   const [formData, setFormData] = useState<DetailedFormData>({
     companyName: "",
     phoneNumber: "",
@@ -54,7 +44,7 @@ export const DetailedAnalysisForm = ({
     objectives: "",
     timeline: "",
     budget: "",
-    additionalInfo: "",
+    additionalInfo: "", // This is optional
   });
 
   const handleInputChange = (
@@ -68,16 +58,16 @@ export const DetailedAnalysisForm = ({
   };
 
   const validateStep = (step: number) => {
-    console.log("DetailedAnalysisForm - Validating step:", step);
+    console.log("DetailedAnalysisForm - Validating step:", step, "Current form data:", formData);
     
     const requiredFields: { [key: number]: string[] } = {
       1: ["companyName", "email"],
       2: ["serviceChannels", "monthlyInteractions"],
-      3: ["objectives", "timeline", "budget"],
+      3: ["objectives", "timeline", "budget"], // additionalInfo is not required
     };
 
     const missingFields = requiredFields[step].filter(
-      (field) => !formData[field as keyof DetailedFormData]
+      (field) => !formData[field as keyof DetailedFormData]?.trim()
     );
 
     if (missingFields.length > 0) {
@@ -133,9 +123,15 @@ export const DetailedAnalysisForm = ({
       return;
     }
 
+    // Only validate required fields in step 3, additionalInfo is optional
     if (validateStep(3)) {
-      console.log("DetailedAnalysisForm - Form validation passed, submitting");
-      onSubmit(formData);
+      // Ensure additionalInfo is at least an empty string if undefined
+      const finalFormData = {
+        ...formData,
+        additionalInfo: formData.additionalInfo || ""
+      };
+      console.log("DetailedAnalysisForm - Form validation passed, submitting with data:", finalFormData);
+      onSubmit(finalFormData);
     }
   };
 
