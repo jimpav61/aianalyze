@@ -42,30 +42,6 @@ export const DetailedAnalysisDialog = ({
 
   const handleSubmit = (data: DetailedFormData) => {
     console.log("DetailedAnalysisDialog - handleSubmit called with:", { data, analysis });
-    
-    if (!analysis || typeof analysis !== 'object') {
-      console.error("DetailedAnalysisDialog - Missing or invalid analysis data:", analysis);
-      toast({
-        title: "Missing Analysis Data",
-        description: "Please complete the initial analysis first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Create a properly typed analysis object
-    const processedAnalysis: AnalysisData = {
-      industry: analysis.industry || industry || "Unknown Industry",
-      department: analysis.department || "General",
-      bot_function: analysis.bot_function || analysis.function || "General Automation",
-      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || 0,
-      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || 0,
-      explanation: analysis.explanation || "Custom implementation strategy",
-      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || "Custom Strategy",
-    };
-
-    console.log("DetailedAnalysisDialog - Processed analysis:", processedAnalysis);
-    
     setFormData(data);
     setShowReport(true);
     
@@ -85,28 +61,36 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
-  const getProcessedAnalysis = (analysis: DetailedAnalysisDialogProps['analysis']): AnalysisData => {
+  const getProcessedAnalysis = (): AnalysisData => {
+    console.log("DetailedAnalysisDialog - Processing analysis data:", analysis);
+    
+    const defaultAnalysis: AnalysisData = {
+      industry: industry || "Unknown Industry",
+      department: "General",
+      bot_function: "General Automation",
+      savings: 0,
+      profit_increase: 0,
+      explanation: "Custom implementation strategy",
+      marketing_strategy: "Custom Strategy",
+    };
+
     if (!analysis) {
-      return {
-        industry: industry || "Unknown Industry",
-        department: "General",
-        bot_function: "General Automation",
-        savings: 0,
-        profit_increase: 0,
-        explanation: "Custom implementation strategy",
-        marketing_strategy: "Custom Strategy",
-      };
+      console.log("DetailedAnalysisDialog - Using default analysis");
+      return defaultAnalysis;
     }
 
-    return {
-      industry: analysis.industry || industry || "Unknown Industry",
-      department: analysis.department || "General",
-      bot_function: analysis.bot_function || analysis.function || "General Automation",
-      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || 0,
-      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || 0,
-      explanation: analysis.explanation || "Custom implementation strategy",
-      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || "Custom Strategy",
+    const processedAnalysis: AnalysisData = {
+      industry: analysis.industry || industry || defaultAnalysis.industry,
+      department: analysis.department || defaultAnalysis.department,
+      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
+      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || defaultAnalysis.savings,
+      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || defaultAnalysis.profit_increase,
+      explanation: analysis.explanation || defaultAnalysis.explanation,
+      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || defaultAnalysis.marketing_strategy,
     };
+
+    console.log("DetailedAnalysisDialog - Processed analysis:", processedAnalysis);
+    return processedAnalysis;
   };
 
   return (
@@ -130,7 +114,7 @@ export const DetailedAnalysisDialog = ({
             formData && (
               <DetailedReport 
                 data={formData} 
-                analysis={getProcessedAnalysis(analysis)}
+                analysis={getProcessedAnalysis()}
               />
             )
           )}
