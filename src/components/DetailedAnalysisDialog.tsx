@@ -66,13 +66,13 @@ export const DetailedAnalysisDialog = ({
     
     // Create a properly typed default analysis object
     const defaultAnalysis: AnalysisData = {
-      industry: industry || "Unknown Industry",
+      industry: "Unknown Industry",
       department: "General",
       bot_function: "General Automation",
       savings: 0,
       profit_increase: 0,
       explanation: "Custom implementation strategy",
-      marketing_strategy: "Custom Strategy",
+      marketing_strategy: "Custom marketing strategy",
     };
 
     // If no analysis is provided, return the default
@@ -81,13 +81,22 @@ export const DetailedAnalysisDialog = ({
       return defaultAnalysis;
     }
 
-    // Ensure all required fields have values, falling back to defaults
+    // Ensure all numeric values are properly converted
+    const processedSavings = typeof analysis.savings === 'string' 
+      ? parseFloat(analysis.savings) || 0 
+      : (analysis.savings || 0);
+
+    const processedProfitIncrease = typeof analysis.profit_increase === 'string'
+      ? parseFloat(analysis.profit_increase) || 0
+      : (analysis.profit_increase || 0);
+
+    // Process all fields with proper fallbacks
     const processedAnalysis: AnalysisData = {
       industry: analysis.industry || industry || defaultAnalysis.industry,
       department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function || defaultAnalysis.bot_function,
-      savings: Number(analysis.savings) || defaultAnalysis.savings,
-      profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
+      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
+      savings: processedSavings,
+      profit_increase: processedProfitIncrease,
       explanation: analysis.explanation || defaultAnalysis.explanation,
       marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || defaultAnalysis.marketing_strategy,
     };
