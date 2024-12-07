@@ -63,16 +63,59 @@ export const DetailedAnalysisDialog = ({
     }));
   };
 
-  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const validateStep = (step: number) => {
+    switch (step) {
+      case 1:
+        if (!formData.companyName || !formData.email) {
+          toast({
+            title: "Required Fields Missing",
+            description: "Please fill out company name and email before proceeding.",
+            variant: "destructive",
+          });
+          return false;
+        }
+        break;
+      case 2:
+        if (!formData.serviceChannels || !formData.monthlyInteractions) {
+          toast({
+            title: "Required Fields Missing",
+            description: "Please fill out service channels and monthly interactions before proceeding.",
+            variant: "destructive",
+          });
+          return false;
+        }
+        break;
+      case 3:
+        if (!formData.objectives || !formData.timeline) {
+          toast({
+            title: "Required Fields Missing",
+            description: "Please fill out objectives and timeline before submitting.",
+            variant: "destructive",
+          });
+          return false;
+        }
+        break;
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+
   const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    toast({
-      title: "Analysis Complete",
-      description: "Your detailed analysis report is ready.",
-    });
-    setShowReport(true);
+    if (validateStep(3)) {
+      console.log("Form submitted:", formData);
+      toast({
+        title: "Analysis Complete",
+        description: "Your detailed analysis report is ready.",
+      });
+      setShowReport(true);
+    }
   };
 
   const handleClose = () => {
