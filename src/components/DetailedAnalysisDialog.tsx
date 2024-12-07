@@ -28,8 +28,6 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = (data: DetailedFormData) => {
-    console.log("Analysis data in dialog:", analysis);
-    
     if (!analysis) {
       toast({
         title: "Missing Analysis Data",
@@ -62,7 +60,11 @@ export const DetailedAnalysisDialog = ({
               <DialogTitle>Detailed Analysis Request</DialogTitle>
             </DialogHeader>
             <div className="mt-4">
-              <DetailedAnalysisForm onSubmit={handleSubmit} />
+              <DetailedAnalysisForm 
+                onSubmit={handleSubmit} 
+                industry={industry}
+                analysis={analysis}
+              />
             </div>
           </>
         ) : (

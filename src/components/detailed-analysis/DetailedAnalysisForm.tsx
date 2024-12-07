@@ -5,13 +5,19 @@ import { OperationsStep } from "./OperationsStep";
 import { GoalsStep } from "./GoalsStep";
 import { FormStepNavigator } from "./FormStepNavigator";
 import { useToast } from "@/components/ui/use-toast";
-import { DetailedFormData } from "@/types/analysis";
+import { DetailedFormData, AnalysisData } from "@/types/analysis";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
+  industry?: string;
+  analysis?: AnalysisData;
 }
 
-export const DetailedAnalysisForm = ({ onSubmit }: DetailedAnalysisFormProps) => {
+export const DetailedAnalysisForm = ({ 
+  onSubmit, 
+  industry,
+  analysis 
+}: DetailedAnalysisFormProps) => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<DetailedFormData>({
@@ -73,6 +79,15 @@ export const DetailedAnalysisForm = ({ onSubmit }: DetailedAnalysisFormProps) =>
   const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = () => {
+    if (!analysis) {
+      toast({
+        title: "Missing Analysis Data",
+        description: "Please complete the initial analysis first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (validateStep(3)) {
       onSubmit(formData);
     }
