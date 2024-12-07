@@ -56,7 +56,7 @@ export const Hero = ({
         </div>
       </div>
 
-      <p className="text-gray-600 text-lg font-medium mb-8">OR contact us below</p>
+      <p className="text-gray-600 text-lg font-medium mb-8">or contact us below</p>
 
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
