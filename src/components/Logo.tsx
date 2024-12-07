@@ -1,10 +1,11 @@
-import { Brain } from "lucide-react";
-
 export const Logo = () => {
   return (
     <div className="flex items-center gap-2">
-      <Brain className="w-8 h-8 text-chatsites" />
-      <span className="text-2xl font-bold text-chatsites">ChatSites</span>
+      <img 
+        src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" 
+        alt="ChatSites Logo" 
+        className="h-16"
+      />
     </div>
   );
 };

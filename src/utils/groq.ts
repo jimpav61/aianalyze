@@ -1,29 +1,64 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export const generateAnalysis = async (industry: string) => {
-  console.log('Starting analysis for industry:', industry);
+  console.log('generateAnalysis - Starting analysis for industry:', industry);
   
   try {
+    console.log('generateAnalysis - Fetching data from Supabase');
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
-      .eq('industry', industry);
+      .eq('industry', industry)
+      .order('department');
     
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('generateAnalysis - Supabase error:', error);
       throw error;
     }
 
-    console.log('Analysis data retrieved:', data);
+    console.log('generateAnalysis - Raw data from Supabase:', data);
     
     if (!data || data.length === 0) {
-      console.log('No analysis found for industry:', industry);
+      console.log('generateAnalysis - No data found for industry:', industry);
       return [];
     }
 
-    return data;
+    console.log('generateAnalysis - Processing', data.length, 'records');
+
+    // Transform and validate each item
+    const transformedData = data.map((item, index) => {
+      console.log(`generateAnalysis - Processing item ${index + 1}:`, item);
+
+      if (!item) {
+        console.warn('generateAnalysis - Invalid item:', item);
+        return null;
+      }
+
+      // Transform the data with strict type checking
+      const transformed = {
+        id: item.id || `generated-${crypto.randomUUID()}`,
+        department: String(item.department || ''),
+        function: String(item.bot_function || ''),
+        savings: String(item.savings || 0),
+        profit_increase: String(item.profit_increase || 0),
+        explanation: String(item.explanation || ''),
+        marketingStrategy: String(item.marketing_strategy || '')
+      };
+
+      console.log(`generateAnalysis - Transformed item ${index + 1}:`, transformed);
+      return transformed;
+    }).filter(Boolean); // Remove null items
+
+    console.log('generateAnalysis - Final transformed data:', transformedData);
+    
+    if (transformedData.length === 0) {
+      console.warn('generateAnalysis - No valid items after transformation');
+      return [];
+    }
+
+    return transformedData;
   } catch (error) {
-    console.error('Error in generateAnalysis:', error);
+    console.error('generateAnalysis - Error:', error);
     throw error;
   }
 };
