@@ -7,10 +7,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
+import { CompanyBasicsStep } from "./detailed-analysis/CompanyBasicsStep";
+import { OperationsStep } from "./detailed-analysis/OperationsStep";
+import { GoalsStep } from "./detailed-analysis/GoalsStep";
 
 interface DetailedAnalysisDialogProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export const DetailedAnalysisDialog = ({
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     companyName: "",
+    phoneNumber: "",
     employees: "",
     revenue: "",
     serviceChannels: "",
@@ -65,6 +67,7 @@ export const DetailedAnalysisDialog = ({
     setStep(1);
     setFormData({
       companyName: "",
+      phoneNumber: "",
       employees: "",
       revenue: "",
       serviceChannels: "",
@@ -79,102 +82,21 @@ export const DetailedAnalysisDialog = ({
     switch (step) {
       case 1:
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleInputChange}
-                placeholder="Enter your company name"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="employees">Number of Employees</Label>
-              <Input
-                id="employees"
-                name="employees"
-                type="number"
-                value={formData.employees}
-                onChange={handleInputChange}
-                placeholder="e.g., 50"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="revenue">Annual Revenue (USD)</Label>
-              <Input
-                id="revenue"
-                name="revenue"
-                type="number"
-                value={formData.revenue}
-                onChange={handleInputChange}
-                placeholder="e.g., 1000000"
-              />
-            </div>
-          </div>
+          <CompanyBasicsStep
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
         );
       case 2:
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="serviceChannels">Current Service Channels</Label>
-              <Input
-                id="serviceChannels"
-                name="serviceChannels"
-                value={formData.serviceChannels}
-                onChange={handleInputChange}
-                placeholder="e.g., Email, Phone, Chat"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="monthlyInteractions">Monthly Customer Interactions</Label>
-              <Input
-                id="monthlyInteractions"
-                name="monthlyInteractions"
-                type="number"
-                value={formData.monthlyInteractions}
-                onChange={handleInputChange}
-                placeholder="e.g., 1000"
-              />
-            </div>
-          </div>
+          <OperationsStep
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
         );
       case 3:
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="objectives">Key Objectives</Label>
-              <Input
-                id="objectives"
-                name="objectives"
-                value={formData.objectives}
-                onChange={handleInputChange}
-                placeholder="What are your main goals?"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="timeline">Implementation Timeline</Label>
-              <Input
-                id="timeline"
-                name="timeline"
-                value={formData.timeline}
-                onChange={handleInputChange}
-                placeholder="e.g., 3 months"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="budget">Estimated Budget (USD)</Label>
-              <Input
-                id="budget"
-                name="budget"
-                type="number"
-                value={formData.budget}
-                onChange={handleInputChange}
-                placeholder="e.g., 50000"
-              />
-            </div>
-          </div>
+          <GoalsStep formData={formData} handleInputChange={handleInputChange} />
         );
       default:
         return null;
@@ -187,16 +109,13 @@ export const DetailedAnalysisDialog = ({
         <DialogHeader>
           <DialogTitle>Detailed Analysis for {industry}</DialogTitle>
           <DialogDescription>
-            Step {step} of 3: {step === 1 ? "Company Basics" : step === 2 ? "Operations" : "Goals"}
+            Step {step} of 3:{" "}
+            {step === 1 ? "Company Basics" : step === 2 ? "Operations" : "Goals"}
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">{renderStep()}</div>
         <DialogFooter className="flex justify-between">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={step === 1}
-          >
+          <Button variant="outline" onClick={handleBack} disabled={step === 1}>
             Back
           </Button>
           <Button onClick={handleNext}>
