@@ -1,11 +1,16 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { useState } from "react";
 import { CompanyBasicsStep } from "./detailed-analysis/CompanyBasicsStep";
 import { OperationsStep } from "./detailed-analysis/OperationsStep";
 import { GoalsStep } from "./detailed-analysis/GoalsStep";
 import { DetailedReport } from "./DetailedReport";
 import { useToast } from "./ui/use-toast";
+import { FormStepNavigator } from "./detailed-analysis/FormStepNavigator";
 
 interface DetailedAnalysisDialogProps {
   isOpen: boolean;
@@ -57,13 +62,8 @@ export const DetailedAnalysisDialog = ({
     }));
   };
 
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handleBack = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
+  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = () => {
     console.log("Form submitted:", formData);
@@ -124,22 +124,12 @@ export const DetailedAnalysisDialog = ({
                 />
               )}
 
-              <div className="flex justify-between mt-6">
-                {currentStep > 1 && (
-                  <Button variant="outline" onClick={handleBack}>
-                    Back
-                  </Button>
-                )}
-                {currentStep < 3 ? (
-                  <Button className="ml-auto" onClick={handleNext}>
-                    Next
-                  </Button>
-                ) : (
-                  <Button className="ml-auto" onClick={handleSubmit}>
-                    Submit
-                  </Button>
-                )}
-              </div>
+              <FormStepNavigator
+                currentStep={currentStep}
+                onNext={handleNext}
+                onBack={handleBack}
+                onSubmit={handleSubmit}
+              />
             </div>
           </>
         ) : (
