@@ -13,42 +13,38 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
   const implementationPhases = [
     {
       phase: "Phase 1: Discovery & Planning",
-      duration: "2-3 weeks",
       activities: [
-        "Detailed requirements gathering",
-        "Technical architecture planning",
-        "Integration points identification",
-        "Resource allocation planning"
+        "Comprehensive requirements gathering and stakeholder interviews to ensure alignment with business objectives",
+        "Detailed technical architecture planning including infrastructure assessment and capacity planning",
+        "Thorough integration points identification and API compatibility analysis",
+        "Strategic resource allocation planning and team structure definition"
       ]
     },
     {
       phase: "Phase 2: Development & Integration",
-      duration: "4-6 weeks",
       activities: [
-        "AI model customization",
-        "API integrations setup",
-        "User interface development",
-        "Initial testing and optimization"
+        "Custom AI model development and training with industry-specific data sets",
+        "Secure API integrations setup with existing systems and third-party services",
+        "Intuitive user interface development with focus on user experience",
+        "Comprehensive testing and performance optimization for scalability"
       ]
     },
     {
       phase: "Phase 3: Testing & Training",
-      duration: "2-3 weeks",
       activities: [
-        "System testing and QA",
-        "Staff training sessions",
-        "Documentation completion",
-        "Performance optimization"
+        "Rigorous system testing including load testing, security audits, and quality assurance",
+        "In-depth staff training sessions covering all system features and best practices",
+        "Detailed documentation creation including user guides and technical specifications",
+        "Advanced performance optimization for maximum efficiency"
       ]
     },
     {
       phase: "Phase 4: Deployment & Support",
-      duration: "Ongoing",
       activities: [
-        "Production deployment",
-        "Monitoring and maintenance",
-        "Performance tracking",
-        "Continuous improvement"
+        "Carefully planned production deployment with minimal disruption",
+        "24/7 monitoring and proactive maintenance to ensure optimal performance",
+        "Continuous performance tracking and analytics for ROI measurement",
+        "Ongoing system improvements based on user feedback and usage patterns"
       ]
     }
   ];
@@ -71,7 +67,7 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
             </div>
             <div>
               <p className="font-medium">Budget Allocation:</p>
-              <p className="text-gray-600">${Number(data.budget).toLocaleString()}</p>
+              <p className="text-gray-600">{data.budget}</p>
             </div>
           </div>
         </div>
@@ -82,7 +78,6 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
             <div key={index} className="border rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
                 <h4 className="font-medium text-primary">{phase.phase}</h4>
-                <span className="text-sm text-gray-500">{phase.duration}</span>
               </div>
               <ul className="list-disc list-inside space-y-1">
                 {phase.activities.map((activity, actIndex) => (
@@ -96,11 +91,11 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
         <div className="bg-blue-50 p-4 rounded-lg">
           <h3 className="font-medium text-lg mb-2">Expected Outcomes</h3>
           <ul className="list-disc list-inside space-y-2 text-gray-600">
-            <li>Improved operational efficiency and reduced manual workload</li>
-            <li>Enhanced customer satisfaction through faster response times</li>
-            <li>Significant cost savings in customer service operations</li>
-            <li>Scalable solution that grows with your business needs</li>
-            <li>Measurable ROI through detailed analytics and reporting</li>
+            <li>Improved operational efficiency through automated workflows, reducing manual workload by up to 40% and enabling staff to focus on high-value tasks</li>
+            <li>Enhanced customer satisfaction with 24/7 availability, instant response times, and personalized interactions leading to increased customer retention</li>
+            <li>Substantial cost savings in customer service operations through reduced handling time and optimized resource allocation</li>
+            <li>Future-proof scalable solution that adapts to growing business needs with built-in analytics and learning capabilities</li>
+            <li>Quantifiable ROI through comprehensive analytics, including customer satisfaction scores, resolution rates, and operational cost reduction metrics</li>
           </ul>
         </div>
 
