@@ -20,6 +20,10 @@ export const DetailedAnalysisForm = ({
 }: DetailedAnalysisFormProps) => {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
+  
+  console.log("Analysis data in form:", analysis); // Debug log
+  console.log("Industry in form:", industry); // Debug log
+
   const [formData, setFormData] = useState<DetailedFormData>({
     companyName: "",
     phoneNumber: "",
@@ -79,6 +83,8 @@ export const DetailedAnalysisForm = ({
   const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const handleSubmit = () => {
+    console.log("Submitting form with analysis:", analysis); // Debug log
+    
     if (!analysis) {
       toast({
         title: "Missing Analysis Data",
