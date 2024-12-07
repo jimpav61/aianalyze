@@ -64,6 +64,7 @@ export const DetailedAnalysisDialog = ({
   const getProcessedAnalysis = (): AnalysisData => {
     console.log("DetailedAnalysisDialog - Processing analysis data:", analysis);
     
+    // Create a properly typed default analysis object
     const defaultAnalysis: AnalysisData = {
       industry: industry || "Unknown Industry",
       department: "General",
@@ -74,18 +75,20 @@ export const DetailedAnalysisDialog = ({
       marketing_strategy: "Custom Strategy",
     };
 
+    // If no analysis is provided, return the default
     if (!analysis) {
       console.log("DetailedAnalysisDialog - Using default analysis");
       return defaultAnalysis;
     }
 
+    // Convert the incoming analysis to the required format
     const processedAnalysis: AnalysisData = {
       industry: analysis.industry || industry || defaultAnalysis.industry,
-      department: analysis.department || defaultAnalysis.department,
+      department: analysis.department,
       bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
-      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || defaultAnalysis.savings,
-      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || defaultAnalysis.profit_increase,
-      explanation: analysis.explanation || defaultAnalysis.explanation,
+      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : (analysis.savings || 0),
+      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : (analysis.profit_increase || 0),
+      explanation: analysis.explanation,
       marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || defaultAnalysis.marketing_strategy,
     };
 
