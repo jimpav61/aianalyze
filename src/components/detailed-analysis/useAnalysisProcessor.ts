@@ -20,14 +20,15 @@ export const useAnalysisProcessor = ({ industry, analysis }: Pick<DetailedAnalys
       return defaultAnalysis;
     }
 
+    // Map the fields correctly, ensuring we handle the 'function' to 'bot_function' mapping
     const processedAnalysis: AnalysisData = {
-      industry: analysis.industry || defaultAnalysis.industry,
+      industry: industry || defaultAnalysis.industry, // Use the passed industry
       department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.bot_function || defaultAnalysis.bot_function,
-      savings: typeof analysis.savings === 'number' ? analysis.savings : defaultAnalysis.savings,
-      profit_increase: typeof analysis.profit_increase === 'number' ? analysis.profit_increase : defaultAnalysis.profit_increase,
+      bot_function: analysis.function || analysis.bot_function || defaultAnalysis.bot_function, // Handle both field names
+      savings: Number(analysis.savings) || defaultAnalysis.savings,
+      profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
       explanation: analysis.explanation || defaultAnalysis.explanation,
-      marketing_strategy: analysis.marketing_strategy || defaultAnalysis.marketing_strategy
+      marketing_strategy: analysis.marketingStrategy || analysis.marketing_strategy || defaultAnalysis.marketing_strategy // Handle both field names
     };
 
     console.log("useAnalysisProcessor - Processed analysis:", processedAnalysis);
