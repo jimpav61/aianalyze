@@ -22,7 +22,7 @@ interface DetailedReportProps {
     budget: string;
     additionalInfo: string;
   };
-  analysis?: {
+  analysis: {
     industry: string;
     department: string;
     bot_function: string;
@@ -34,6 +34,9 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
+  console.log("Detailed Report received analysis:", analysis);
+  console.log("Detailed Report received data:", data);
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
       <ReportHeader />
@@ -43,7 +46,7 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
         AI Implementation Analysis Report
       </h1>
 
-      <CompanyInformation data={data} industry={analysis?.industry} />
+      <CompanyInformation data={data} industry={analysis.industry} />
       <AnalysisResults analysis={analysis} />
       <CurrentOperations data={data} />
       <ImplementationPlan data={data} />

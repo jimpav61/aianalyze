@@ -28,7 +28,10 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = (data: DetailedFormData) => {
-    if (!analysis?.savings || !analysis?.profit_increase) {
+    console.log("Analysis data received:", analysis);
+    console.log("Form data received:", data);
+    
+    if (!analysis || analysis.savings === undefined || analysis.profit_increase === undefined) {
       toast({
         title: "Missing Analysis Data",
         description: "Please complete the initial analysis first to see potential savings and profit increase.",
@@ -37,7 +40,6 @@ export const DetailedAnalysisDialog = ({
       return;
     }
     
-    console.log("Form submitted:", data);
     setFormData(data);
     toast({
       title: "Analysis Complete",
@@ -65,8 +67,19 @@ export const DetailedAnalysisDialog = ({
             </div>
           </>
         ) : (
-          formData && (
-            <DetailedReport data={formData} analysis={analysis} />
+          formData && analysis && (
+            <DetailedReport 
+              data={formData} 
+              analysis={{
+                industry: analysis.industry,
+                department: analysis.department,
+                bot_function: analysis.bot_function,
+                savings: analysis.savings,
+                profit_increase: analysis.profit_increase,
+                explanation: analysis.explanation,
+                marketing_strategy: analysis.marketing_strategy
+              }} 
+            />
           )
         )}
       </DialogContent>
