@@ -18,10 +18,10 @@ const Index = () => {
   const analysisGridRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
-    console.log('Index - handleAnalyze started with industry:', selectedIndustry);
+    console.log('Starting analysis for industry:', selectedIndustry);
     
     if (!selectedIndustry) {
-      console.log('Index - No industry selected');
+      console.log('No industry selected');
       toast({
         title: "Please select an industry",
         description: "An industry must be selected to generate analysis",
@@ -34,12 +34,12 @@ const Index = () => {
     setAnalyses([]); // Clear previous results
 
     try {
-      console.log('Index - Calling generateAnalysis');
+      console.log('Fetching analysis data...');
       const results = await generateAnalysis(selectedIndustry);
-      console.log('Index - Analysis results received:', results);
+      console.log('Analysis results:', results);
       
       if (!results || results.length === 0) {
-        console.log('Index - No results returned');
+        console.log('No results returned');
         toast({
           title: "No analysis available",
           description: `No bot recommendations found for ${selectedIndustry}`,
@@ -48,15 +48,26 @@ const Index = () => {
         return;
       }
 
-      console.log('Index - Setting analyses state with:', results);
-      setAnalyses(results);
+      // Transform and validate the data
+      const validatedResults = results.map(result => ({
+        id: result.id || crypto.randomUUID(),
+        department: result.department || 'General',
+        function: result.bot_function || 'Not specified',
+        savings: result.savings?.toString() || '0',
+        profit_increase: result.profit_increase?.toString() || '0',
+        explanation: result.explanation || 'No explanation provided',
+        marketingStrategy: result.marketing_strategy || 'No strategy provided'
+      }));
+
+      console.log('Validated results:', validatedResults);
+      setAnalyses(validatedResults);
       setHasSubmitted(true);
       
       toast({
         title: "Analysis complete",
         description: isMobile 
-          ? <span>Found {results.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
-          : `Found ${results.length} recommendations for ${selectedIndustry}`,
+          ? <span>Found {validatedResults.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
+          : `Found ${validatedResults.length} recommendations for ${selectedIndustry}`,
       });
 
       if (isMobile && analysisGridRef.current) {
@@ -68,7 +79,7 @@ const Index = () => {
         }, 100);
       }
     } catch (error) {
-      console.error('Index - Error in handleAnalyze:', error);
+      console.error('Error in handleAnalyze:', error);
       toast({
         title: "Error generating analysis",
         description: "There was a problem generating the analysis. Please try again.",
@@ -79,7 +90,7 @@ const Index = () => {
     }
   };
 
-  console.log('Index - Current state:', { 
+  console.log('Current state:', { 
     selectedIndustry, 
     analysesLength: analyses.length, 
     isLoading, 

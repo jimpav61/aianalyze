@@ -47,11 +47,11 @@ export const generateAnalysis = async (industry: string) => {
       const transformed = {
         id: item.id || `generated-${crypto.randomUUID()}`,
         department: String(item.department),
-        function: String(item.bot_function),
+        bot_function: String(item.bot_function),
         savings: String(item.savings || 0),
         profit_increase: String(item.profit_increase || 0),
         explanation: String(item.explanation),
-        marketingStrategy: String(item.marketing_strategy)
+        marketing_strategy: String(item.marketing_strategy)
       };
 
       console.log(`generateAnalysis - Transformed item ${index + 1}:`, transformed);
