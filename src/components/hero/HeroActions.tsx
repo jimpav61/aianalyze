@@ -15,7 +15,6 @@ export const HeroActions = ({
   setSelectedIndustry,
   isLoading,
   handleAnalyze,
-  onRequestDetailedReport
 }: HeroActionsProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
@@ -39,13 +38,6 @@ export const HeroActions = ({
         ) : (
           "Get Free Analysis"
         )}
-      </Button>
-      <Button
-        variant="outline"
-        onClick={onRequestDetailedReport}
-        className="w-full"
-      >
-        Request Detailed Report
       </Button>
       <p className="text-sm font-bold text-gray-600 mt-4">
         Get instant insights and unlock a detailed report sent to your email
