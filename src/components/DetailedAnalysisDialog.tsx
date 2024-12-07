@@ -1,31 +1,34 @@
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
 import { useState } from "react";
-import { useToast } from "./ui/use-toast";
 import { CompanyBasicsStep } from "./detailed-analysis/CompanyBasicsStep";
 import { OperationsStep } from "./detailed-analysis/OperationsStep";
 import { GoalsStep } from "./detailed-analysis/GoalsStep";
+import { DetailedReport } from "./DetailedReport";
+import { useToast } from "./ui/use-toast";
 
 interface DetailedAnalysisDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  industry?: string;
+  analysis: {
+    industry: string;
+    department: string;
+    bot_function: string;
+    savings: number;
+    profit_increase: number;
+    explanation: string;
+    marketing_strategy: string;
+  };
 }
 
 export const DetailedAnalysisDialog = ({
   isOpen,
   onClose,
-  industry,
+  analysis,
 }: DetailedAnalysisDialogProps) => {
-  const [step, setStep] = useState(1);
   const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [showReport, setShowReport] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
     phoneNumber: "",
@@ -33,39 +36,42 @@ export const DetailedAnalysisDialog = ({
     employees: "",
     revenue: "",
     serviceChannels: "",
-    monthlyInteractions: "",
-    objectives: "",
+    currentTools: "",
+    painPoints: "",
+    goals: "",
     timeline: "",
     budget: "",
+    additionalInfo: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleNext = () => {
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      handleSubmit();
-    }
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
+    setCurrentStep((prev) => prev - 1);
   };
 
   const handleSubmit = () => {
-    console.log("Submitting detailed analysis form:", formData);
+    console.log("Form submitted:", formData);
     toast({
-      title: "Detailed analysis request submitted!",
-      description: "We'll analyze your information and get back to you soon.",
+      title: "Analysis Complete",
+      description: "Your detailed analysis report is ready.",
     });
-    onClose();
-    setStep(1);
+    setShowReport(true);
+  };
+
+  const handleClose = () => {
     setFormData({
       companyName: "",
       phoneNumber: "",
@@ -73,57 +79,68 @@ export const DetailedAnalysisDialog = ({
       employees: "",
       revenue: "",
       serviceChannels: "",
-      monthlyInteractions: "",
-      objectives: "",
+      currentTools: "",
+      painPoints: "",
+      goals: "",
       timeline: "",
       budget: "",
+      additionalInfo: "",
     });
-  };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <CompanyBasicsStep
-            formData={formData}
-            handleInputChange={handleInputChange}
-          />
-        );
-      case 2:
-        return (
-          <OperationsStep
-            formData={formData}
-            handleInputChange={handleInputChange}
-          />
-        );
-      case 3:
-        return (
-          <GoalsStep formData={formData} handleInputChange={handleInputChange} />
-        );
-      default:
-        return null;
-    }
+    setCurrentStep(1);
+    setShowReport(false);
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Detailed Analysis for {industry}</DialogTitle>
-          <DialogDescription>
-            Step {step} of 3:{" "}
-            {step === 1 ? "Company Basics" : step === 2 ? "Operations" : "Goals"}
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">{renderStep()}</div>
-        <DialogFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleBack} disabled={step === 1}>
-            Back
-          </Button>
-          <Button onClick={handleNext}>
-            {step === 3 ? "Submit" : "Next"}
-          </Button>
-        </DialogFooter>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[900px]">
+        {!showReport ? (
+          <>
+            <DialogHeader>
+              <DialogTitle>Detailed Analysis Request</DialogTitle>
+            </DialogHeader>
+
+            <div className="mt-4">
+              {currentStep === 1 && (
+                <CompanyBasicsStep
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                />
+              )}
+              {currentStep === 2 && (
+                <OperationsStep
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                />
+              )}
+              {currentStep === 3 && (
+                <GoalsStep
+                  formData={formData}
+                  handleInputChange={handleInputChange}
+                />
+              )}
+
+              <div className="flex justify-between mt-6">
+                {currentStep > 1 && (
+                  <Button variant="outline" onClick={handleBack}>
+                    Back
+                  </Button>
+                )}
+                {currentStep < 3 ? (
+                  <Button className="ml-auto" onClick={handleNext}>
+                    Next
+                  </Button>
+                ) : (
+                  <Button className="ml-auto" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <DetailedReport data={formData} analysis={analysis} />
+        )}
       </DialogContent>
     </Dialog>
   );
