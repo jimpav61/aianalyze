@@ -20,18 +20,29 @@ export const useAnalysisProcessor = ({ industry, analysis }: Pick<DetailedAnalys
       return defaultAnalysis;
     }
 
-    // Map the fields correctly, ensuring we handle the 'function' to 'bot_function' mapping
+    // Map the fields correctly, handling both camelCase and snake_case variations
     const processedAnalysis: AnalysisData = {
-      industry: industry || defaultAnalysis.industry, // Use the passed industry
+      industry: industry || defaultAnalysis.industry,
       department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.function || analysis.bot_function || defaultAnalysis.bot_function, // Handle both field names
+      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
       savings: Number(analysis.savings) || defaultAnalysis.savings,
       profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
       explanation: analysis.explanation || defaultAnalysis.explanation,
-      marketing_strategy: analysis.marketing_strategy || defaultAnalysis.marketing_strategy
+      marketing_strategy: analysis.marketingStrategy || analysis.marketing_strategy || defaultAnalysis.marketing_strategy
     };
 
+    console.log("useAnalysisProcessor - Raw analysis:", analysis);
     console.log("useAnalysisProcessor - Processed analysis:", processedAnalysis);
+
+    // Validate all required fields are present
+    const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
+    const missingFields = requiredFields.filter(field => !processedAnalysis[field as keyof AnalysisData]);
+    
+    if (missingFields.length > 0) {
+      console.error("useAnalysisProcessor - Missing required fields:", missingFields);
+      console.error("useAnalysisProcessor - Current values:", processedAnalysis);
+    }
+
     return processedAnalysis;
   };
 
