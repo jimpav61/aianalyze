@@ -81,13 +81,13 @@ export const DetailedAnalysisDialog = ({
       return defaultAnalysis;
     }
 
-    // Convert the incoming analysis to the required format with fallbacks for all fields
+    // Ensure all required fields have values, falling back to defaults
     const processedAnalysis: AnalysisData = {
       industry: analysis.industry || industry || defaultAnalysis.industry,
       department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
-      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) || 0 : (analysis.savings || 0),
-      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) || 0 : (analysis.profit_increase || 0),
+      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function || defaultAnalysis.bot_function,
+      savings: Number(analysis.savings) || defaultAnalysis.savings,
+      profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
       explanation: analysis.explanation || defaultAnalysis.explanation,
       marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || defaultAnalysis.marketing_strategy,
     };
