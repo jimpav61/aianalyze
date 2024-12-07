@@ -18,6 +18,12 @@ export const Hero = ({
   handleAnalyze,
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
+  const [currentAnalysis, setCurrentAnalysis] = useState(null);
+
+  const handleRequestDetailedReport = () => {
+    console.log("Hero - Opening detailed dialog with industry:", selectedIndustry);
+    setShowDetailedDialog(true);
+  };
 
   return (
     <div className="max-w-4xl mx-auto text-center mb-12">
@@ -32,7 +38,7 @@ export const Hero = ({
             setSelectedIndustry={setSelectedIndustry}
             isLoading={isLoading}
             handleAnalyze={handleAnalyze}
-            onRequestDetailedReport={() => setShowDetailedDialog(true)}
+            onRequestDetailedReport={handleRequestDetailedReport}
           />
           
           <BenefitsList position="right" />

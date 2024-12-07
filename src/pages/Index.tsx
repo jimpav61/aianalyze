@@ -44,8 +44,18 @@ const Index = () => {
         return;
       }
 
-      setAnalyses(results);
+      // Transform the data to match the expected format
+      const transformedResults = results.map(result => ({
+        ...result,
+        bot_function: result.function || result.bot_function,
+        profit_increase: Number(result.profit_increase),
+        savings: Number(result.savings)
+      }));
+
+      console.log('Transformed results:', transformedResults);
+      setAnalyses(transformedResults);
       setHasSubmitted(true);
+      
       toast({
         title: "Analysis complete",
         description: isMobile 
