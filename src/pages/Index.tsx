@@ -92,6 +92,7 @@ const Index = () => {
           setSelectedIndustry={setSelectedIndustry}
           isLoading={isLoading}
           handleAnalyze={handleAnalyze}
+          analyses={analyses}
         />
 
         <AnalysisSection

@@ -9,6 +9,7 @@ interface HeroProps {
   setSelectedIndustry: (industry: string) => void;
   isLoading: boolean;
   handleAnalyze: () => void;
+  analyses?: any[]; // Add analyses prop
 }
 
 export const Hero = ({
@@ -16,12 +17,22 @@ export const Hero = ({
   setSelectedIndustry,
   isLoading,
   handleAnalyze,
+  analyses = [], // Add analyses with default empty array
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
-  const [currentAnalysis, setCurrentAnalysis] = useState(null);
+  const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
 
   const handleRequestDetailedReport = () => {
-    console.log("Hero - Opening detailed dialog with industry:", selectedIndustry);
+    console.log("Hero - Opening detailed dialog with:", {
+      industry: selectedIndustry,
+      analyses: analyses
+    });
+
+    // Get the first analysis if available
+    const firstAnalysis = analyses && analyses.length > 0 ? analyses[0] : null;
+    console.log("Hero - Selected analysis:", firstAnalysis);
+
+    setCurrentAnalysis(firstAnalysis);
     setShowDetailedDialog(true);
   };
 
@@ -56,6 +67,7 @@ export const Hero = ({
         isOpen={showDetailedDialog}
         onClose={() => setShowDetailedDialog(false)}
         industry={selectedIndustry}
+        analysis={currentAnalysis}
       />
     </div>
   );
