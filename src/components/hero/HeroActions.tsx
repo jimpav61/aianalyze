@@ -48,7 +48,7 @@ export const HeroActions = ({
         Request Detailed Report
       </Button>
       <p className="text-xs text-gray-500 mt-2">
-        Get instant insights and unlock a detailed report
+        Get instant insights and unlock a detailed report sent to your email
       </p>
     </div>
   );
