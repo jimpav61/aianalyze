@@ -20,11 +20,10 @@ export const useAnalysisProcessor = ({ industry, analysis }: Pick<DetailedAnalys
       return defaultAnalysis;
     }
 
-    // Map the fields correctly, handling both camelCase and snake_case variations
     const processedAnalysis: AnalysisData = {
-      industry: industry || defaultAnalysis.industry,
+      industry: analysis.industry || industry || defaultAnalysis.industry,
       department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
+      bot_function: analysis.bot_function || defaultAnalysis.bot_function,
       savings: Number(analysis.savings) || defaultAnalysis.savings,
       profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
       explanation: analysis.explanation || defaultAnalysis.explanation,

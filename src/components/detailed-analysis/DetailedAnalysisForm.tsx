@@ -44,7 +44,24 @@ export const DetailedAnalysisForm = ({
   };
 
   const handleFormSubmit = () => {
-    handleSubmit(analysis);
+    if (!analysis) {
+      console.error("DetailedAnalysisForm - Missing analysis data");
+      return;
+    }
+
+    // Ensure all required fields are present
+    const processedAnalysis = {
+      industry: industry || analysis.industry,
+      department: analysis.department,
+      bot_function: analysis.bot_function,
+      savings: analysis.savings,
+      profit_increase: analysis.profit_increase,
+      explanation: analysis.explanation,
+      marketing_strategy: analysis.marketing_strategy
+    };
+
+    console.log("DetailedAnalysisForm - Submitting with processed analysis:", processedAnalysis);
+    handleSubmit(processedAnalysis);
   };
 
   return (
