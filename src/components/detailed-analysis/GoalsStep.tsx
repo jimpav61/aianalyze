@@ -32,7 +32,6 @@ const commonObjectives = [
 
 export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
   const handleObjectiveSelect = (value: string) => {
-    // Create a synthetic event to match the handleInputChange interface
     const syntheticEvent = {
       target: {
         name: 'objectives',
@@ -51,10 +50,10 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
           value={formData.objectives} 
           onValueChange={handleObjectiveSelect}
         >
-          <SelectTrigger className="w-full bg-white">
+          <SelectTrigger className="w-full bg-white border-gray-200">
             <SelectValue placeholder="Select your key objective" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {commonObjectives.map((objective) => (
               <SelectItem key={objective} value={objective}>
                 {objective}

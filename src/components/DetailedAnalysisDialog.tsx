@@ -109,6 +109,15 @@ export const DetailedAnalysisDialog = ({
 
   const handleSubmit = () => {
     if (validateStep(3)) {
+      if (!analysis) {
+        toast({
+          title: "Missing Analysis Data",
+          description: "Please complete the initial analysis first.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       console.log("Form submitted:", formData);
       toast({
         title: "Analysis Complete",
