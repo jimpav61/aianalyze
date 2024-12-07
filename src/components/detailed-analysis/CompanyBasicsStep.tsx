@@ -7,6 +7,7 @@ interface CompanyBasicsStepProps {
     employees: string;
     revenue: string;
     phoneNumber: string;
+    email: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -25,6 +26,17 @@ export const CompanyBasicsStep = ({
           value={formData.companyName}
           onChange={handleInputChange}
           placeholder="Enter your company name"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="your@email.com"
         />
       </div>
       <div className="space-y-2">

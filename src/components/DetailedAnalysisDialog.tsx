@@ -29,6 +29,7 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState({
     companyName: "",
     phoneNumber: "",
+    email: "",
     employees: "",
     revenue: "",
     serviceChannels: "",
@@ -68,6 +69,7 @@ export const DetailedAnalysisDialog = ({
     setFormData({
       companyName: "",
       phoneNumber: "",
+      email: "",
       employees: "",
       revenue: "",
       serviceChannels: "",
