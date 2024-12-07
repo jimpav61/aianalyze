@@ -52,11 +52,11 @@ const Index = () => {
       const validatedResults = results.map(result => ({
         id: result.id || crypto.randomUUID(),
         department: result.department || 'General',
-        function: result.bot_function || 'Not specified',
+        function: result.function || 'Not specified',
         savings: result.savings?.toString() || '0',
         profit_increase: result.profit_increase?.toString() || '0',
         explanation: result.explanation || 'No explanation provided',
-        marketingStrategy: result.marketing_strategy || 'No strategy provided'
+        marketingStrategy: result.marketingStrategy || 'No strategy provided'
       }));
 
       console.log('Validated results:', validatedResults);
