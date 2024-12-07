@@ -39,9 +39,9 @@ export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
         </div>
         <div className="p-4 bg-white rounded-lg border">
           <p className="text-sm text-gray-600">Projected Profit Increase</p>
-          <p className="text-2xl font-bold text-primary flex items-center gap-1">
+          <p className="text-2xl font-bold flex items-center gap-1">
             <ArrowUp className="w-6 h-6 text-success" />
-            {analysis && formatPercentage(analysis.profit_increase)}
+            <span className="text-success">{analysis && formatPercentage(analysis.profit_increase)}</span>
             <Percent className="w-5 h-5 text-success" />
           </p>
         </div>
