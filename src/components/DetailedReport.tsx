@@ -34,8 +34,12 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
-  console.log("Detailed Report received analysis:", analysis);
-  console.log("Detailed Report received data:", data);
+  console.log("DetailedReport - Received props:", { data, analysis });
+
+  if (!data || !analysis) {
+    console.error("DetailedReport - Missing required data");
+    return null;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">

@@ -21,8 +21,7 @@ export const DetailedAnalysisForm = ({
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   
-  console.log("Analysis data in form:", analysis); // Debug log
-  console.log("Industry in form:", industry); // Debug log
+  console.log("DetailedAnalysisForm - Initial props:", { industry, analysis });
 
   const [formData, setFormData] = useState<DetailedFormData>({
     companyName: "",
@@ -51,6 +50,8 @@ export const DetailedAnalysisForm = ({
   };
 
   const validateStep = (step: number) => {
+    console.log("DetailedAnalysisForm - Validating step:", step);
+    
     const requiredFields: { [key: number]: string[] } = {
       1: ["companyName", "email"],
       2: ["serviceChannels", "monthlyInteractions"],
@@ -62,6 +63,7 @@ export const DetailedAnalysisForm = ({
     );
 
     if (missingFields.length > 0) {
+      console.warn("DetailedAnalysisForm - Missing required fields:", missingFields);
       toast({
         title: "Required Fields Missing",
         description: `Please fill out the following fields: ${missingFields
@@ -75,17 +77,22 @@ export const DetailedAnalysisForm = ({
   };
 
   const handleNext = () => {
+    console.log("DetailedAnalysisForm - Attempting to move to next step");
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => prev + 1);
     }
   };
 
-  const handleBack = () => setCurrentStep((prev) => prev - 1);
+  const handleBack = () => {
+    console.log("DetailedAnalysisForm - Moving to previous step");
+    setCurrentStep((prev) => prev - 1);
+  };
 
   const handleSubmit = () => {
-    console.log("Submitting form with analysis:", analysis); // Debug log
+    console.log("DetailedAnalysisForm - Attempting to submit form", { formData, analysis });
     
     if (!analysis) {
+      console.error("DetailedAnalysisForm - Missing analysis data on submit");
       toast({
         title: "Missing Analysis Data",
         description: "Please complete the initial analysis first.",
@@ -95,6 +102,7 @@ export const DetailedAnalysisForm = ({
     }
 
     if (validateStep(3)) {
+      console.log("DetailedAnalysisForm - Form validation passed, submitting");
       onSubmit(formData);
     }
   };

@@ -27,11 +27,13 @@ export const DetailedAnalysisDialog = ({
   const [showReport, setShowReport] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
+  console.log("DetailedAnalysisDialog - Initial props:", { industry, analysis });
+
   const handleSubmit = (data: DetailedFormData) => {
-    console.log("Analysis data in dialog:", analysis); // Debug log
-    console.log("Industry in dialog:", industry); // Debug log
+    console.log("DetailedAnalysisDialog - handleSubmit called with:", { data, analysis });
     
     if (!analysis) {
+      console.error("DetailedAnalysisDialog - Missing analysis data");
       toast({
         title: "Missing Analysis Data",
         description: "Please complete the initial analysis first.",
@@ -49,6 +51,7 @@ export const DetailedAnalysisDialog = ({
   };
 
   const handleClose = () => {
+    console.log("DetailedAnalysisDialog - Closing dialog");
     setFormData(null);
     setShowReport(false);
     onClose();
