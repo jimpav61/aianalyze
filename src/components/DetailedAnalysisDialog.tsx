@@ -10,7 +10,8 @@ import { useToast } from "./ui/use-toast";
 interface DetailedAnalysisDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  analysis: {
+  industry?: string;
+  analysis?: {
     industry: string;
     department: string;
     bot_function: string;
@@ -24,6 +25,7 @@ interface DetailedAnalysisDialogProps {
 export const DetailedAnalysisDialog = ({
   isOpen,
   onClose,
+  industry,
   analysis,
 }: DetailedAnalysisDialogProps) => {
   const { toast } = useToast();
@@ -36,9 +38,10 @@ export const DetailedAnalysisDialog = ({
     employees: "",
     revenue: "",
     serviceChannels: "",
+    monthlyInteractions: "",
     currentTools: "",
     painPoints: "",
-    goals: "",
+    objectives: "",
     timeline: "",
     budget: "",
     additionalInfo: "",
@@ -79,9 +82,10 @@ export const DetailedAnalysisDialog = ({
       employees: "",
       revenue: "",
       serviceChannels: "",
+      monthlyInteractions: "",
       currentTools: "",
       painPoints: "",
-      goals: "",
+      objectives: "",
       timeline: "",
       budget: "",
       additionalInfo: "",
