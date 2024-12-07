@@ -85,6 +85,30 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
+  const getProcessedAnalysis = (analysis: DetailedAnalysisDialogProps['analysis']): AnalysisData => {
+    if (!analysis) {
+      return {
+        industry: industry || "Unknown Industry",
+        department: "General",
+        bot_function: "General Automation",
+        savings: 0,
+        profit_increase: 0,
+        explanation: "Custom implementation strategy",
+        marketing_strategy: "Custom Strategy",
+      };
+    }
+
+    return {
+      industry: analysis.industry || industry || "Unknown Industry",
+      department: analysis.department || "General",
+      bot_function: analysis.bot_function || analysis.function || "General Automation",
+      savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || 0,
+      profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || 0,
+      explanation: analysis.explanation || "Custom implementation strategy",
+      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || "Custom Strategy",
+    };
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
@@ -103,18 +127,10 @@ export const DetailedAnalysisDialog = ({
               </div>
             </>
           ) : (
-            formData && analysis && (
+            formData && (
               <DetailedReport 
                 data={formData} 
-                analysis={{
-                  industry: analysis.industry || industry || "Unknown Industry",
-                  department: analysis.department || "General",
-                  bot_function: analysis.bot_function || analysis.function || "General Automation",
-                  savings: typeof analysis.savings === 'string' ? parseFloat(analysis.savings) : analysis.savings || 0,
-                  profit_increase: typeof analysis.profit_increase === 'string' ? parseFloat(analysis.profit_increase) : analysis.profit_increase || 0,
-                  explanation: analysis.explanation || "Custom implementation strategy",
-                  marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || "Custom Strategy",
-                }}
+                analysis={getProcessedAnalysis(analysis)}
               />
             )
           )}
