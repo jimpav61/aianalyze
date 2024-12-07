@@ -1,38 +1,16 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "./ui/dialog";
+import { Dialog, DialogContent } from "./ui/dialog";
 import { useState } from "react";
-import { DetailedAnalysisForm } from "./detailed-analysis/DetailedAnalysisForm";
-import { DetailedReport } from "./DetailedReport";
 import { useToast } from "./ui/use-toast";
-import { DetailedFormData, AnalysisData } from "@/types/analysis";
-
-interface DetailedAnalysisDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  industry?: string;
-  analysis?: {
-    id: string;
-    industry: string; // Made required
-    department: string;
-    function?: string;
-    bot_function: string; // Made required
-    savings: number; // Changed type to number
-    profit_increase: number; // Changed type to number
-    explanation: string;
-    marketing_strategy: string; // Made required
-  } | null;
-}
+import { DetailedFormData } from "@/types/analysis";
+import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
+import { DetailedAnalysisProps } from "./detailed-analysis/types";
 
 export const DetailedAnalysisDialog = ({
   isOpen,
   onClose,
   industry,
   analysis,
-}: DetailedAnalysisDialogProps) => {
+}: DetailedAnalysisProps) => {
   const { toast } = useToast();
   const [showReport, setShowReport] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
@@ -60,64 +38,17 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
-  const getProcessedAnalysis = (): AnalysisData => {
-    console.log("DetailedAnalysisDialog - Processing analysis data:", analysis);
-    
-    const defaultAnalysis: AnalysisData = {
-      industry: industry || "Unknown Industry",
-      department: "General",
-      bot_function: "General Automation",
-      savings: 0,
-      profit_increase: 0,
-      explanation: "Custom implementation strategy",
-      marketing_strategy: "Custom marketing strategy",
-    };
-
-    if (!analysis) {
-      console.log("DetailedAnalysisDialog - Using default analysis");
-      return defaultAnalysis;
-    }
-
-    // Process all fields with proper fallbacks
-    const processedAnalysis: AnalysisData = {
-      industry: analysis.industry,
-      department: analysis.department,
-      bot_function: analysis.bot_function,
-      savings: typeof analysis.savings === 'number' ? analysis.savings : 0,
-      profit_increase: typeof analysis.profit_increase === 'number' ? analysis.profit_increase : 0,
-      explanation: analysis.explanation,
-      marketing_strategy: analysis.marketing_strategy
-    };
-
-    console.log("DetailedAnalysisDialog - Processed analysis:", processedAnalysis);
-    return processedAnalysis;
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto">
-          {!showReport ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Detailed Analysis Request</DialogTitle>
-              </DialogHeader>
-              <div className="mt-4">
-                <DetailedAnalysisForm 
-                  onSubmit={handleSubmit} 
-                  industry={industry}
-                  analysis={analysis}
-                />
-              </div>
-            </>
-          ) : (
-            formData && (
-              <DetailedReport 
-                data={formData} 
-                analysis={getProcessedAnalysis()}
-              />
-            )
-          )}
+          <CustomDialogContent
+            showReport={showReport}
+            formData={formData}
+            onSubmit={handleSubmit}
+            industry={industry}
+            analysis={analysis}
+          />
         </div>
       </DialogContent>
     </Dialog>
