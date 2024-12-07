@@ -10,14 +10,15 @@ interface DetailedReportProps {
     employees: string;
     revenue: string;
     serviceChannels: string;
+    monthlyInteractions: string;
     currentTools: string;
     painPoints: string;
-    goals: string;
+    objectives: string;
     timeline: string;
     budget: string;
     additionalInfo: string;
   };
-  analysis: {
+  analysis?: {
     industry: string;
     department: string;
     bot_function: string;
@@ -70,7 +71,7 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
           </div>
           <div>
             <p className="font-medium">Industry:</p>
-            <p className="text-gray-600">{analysis.industry}</p>
+            <p className="text-gray-600">{analysis?.industry}</p>
           </div>
           <div>
             <p className="font-medium">Contact Email:</p>
@@ -98,24 +99,24 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
           <div className="p-4 bg-white rounded-lg border">
             <p className="text-sm text-gray-600">Projected Annual Savings</p>
             <p className="text-2xl font-bold text-success">
-              {formatCurrency(analysis.savings)}
+              {analysis && formatCurrency(analysis.savings)}
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg border">
             <p className="text-sm text-gray-600">Projected Profit Increase</p>
             <p className="text-2xl font-bold text-primary">
-              {formatCurrency(analysis.profit_increase)}
+              {analysis && formatCurrency(analysis.profit_increase)}
             </p>
           </div>
         </div>
         <div className="space-y-4">
           <div>
             <h3 className="font-medium">Recommended Implementation:</h3>
-            <p className="text-gray-600">{analysis.explanation}</p>
+            <p className="text-gray-600">{analysis?.explanation}</p>
           </div>
           <div>
             <h3 className="font-medium">Marketing Strategy:</h3>
-            <p className="text-gray-600">{analysis.marketing_strategy}</p>
+            <p className="text-gray-600">{analysis?.marketing_strategy}</p>
           </div>
         </div>
       </Card>
@@ -127,6 +128,10 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
           <div>
             <p className="font-medium">Service Channels:</p>
             <p className="text-gray-600">{data.serviceChannels}</p>
+          </div>
+          <div>
+            <p className="font-medium">Monthly Interactions:</p>
+            <p className="text-gray-600">{data.monthlyInteractions}</p>
           </div>
           <div>
             <p className="font-medium">Current Tools:</p>
@@ -144,8 +149,8 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
         <h2 className="text-xl font-semibold mb-4">Implementation Plan</h2>
         <div className="space-y-4">
           <div>
-            <p className="font-medium">Goals:</p>
-            <p className="text-gray-600">{data.goals}</p>
+            <p className="font-medium">Objectives:</p>
+            <p className="text-gray-600">{data.objectives}</p>
           </div>
           <div>
             <p className="font-medium">Timeline:</p>
