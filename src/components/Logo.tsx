@@ -2,7 +2,7 @@ export const Logo = () => {
   return (
     <div className="flex items-center gap-2">
       <img 
-        src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
+        src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" 
         alt="ChatSites Logo" 
         className="h-16"
       />
