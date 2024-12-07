@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { ScrollArea } from "./ui/scroll-area";
 import { useState } from "react";
 import { CompanyBasicsStep } from "./detailed-analysis/CompanyBasicsStep";
 import { OperationsStep } from "./detailed-analysis/OperationsStep";
@@ -97,7 +98,7 @@ export const DetailedAnalysisDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[900px]">
+      <DialogContent className="sm:max-w-[900px] h-[80vh]">
         {!showReport ? (
           <>
             <DialogHeader>
@@ -105,24 +106,26 @@ export const DetailedAnalysisDialog = ({
             </DialogHeader>
 
             <div className="mt-4">
-              {currentStep === 1 && (
-                <CompanyBasicsStep
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                />
-              )}
-              {currentStep === 2 && (
-                <OperationsStep
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                />
-              )}
-              {currentStep === 3 && (
-                <GoalsStep
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                />
-              )}
+              <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
+                {currentStep === 1 && (
+                  <CompanyBasicsStep
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                  />
+                )}
+                {currentStep === 2 && (
+                  <OperationsStep
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                  />
+                )}
+                {currentStep === 3 && (
+                  <GoalsStep
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                  />
+                )}
+              </ScrollArea>
 
               <FormStepNavigator
                 currentStep={currentStep}
@@ -133,7 +136,9 @@ export const DetailedAnalysisDialog = ({
             </div>
           </>
         ) : (
-          <DetailedReport data={formData} analysis={analysis} />
+          <ScrollArea className="h-[calc(80vh-2rem)]">
+            <DetailedReport data={formData} analysis={analysis} />
+          </ScrollArea>
         )}
       </DialogContent>
     </Dialog>
