@@ -47,7 +47,7 @@ export const HeroActions = ({
       >
         Request Detailed Report
       </Button>
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-sm font-bold text-gray-600 mt-4">
         Get instant insights and unlock a detailed report sent to your email
       </p>
     </div>
