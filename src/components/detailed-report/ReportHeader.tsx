@@ -10,8 +10,9 @@ export const ReportHeader = () => {
         </div>
         <div className="text-right text-sm text-gray-600">
           <p>Contact us:</p>
-          <p>support@chatsites.ai</p>
-          <p>1-800-CHAT-BOT</p>
+          <p>info@chatsites.ai</p>
+          <p>+1 480 862 0288</p>
+          <p>chatsites.ai</p>
         </div>
       </div>
     </>
