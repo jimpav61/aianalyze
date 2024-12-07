@@ -4,6 +4,7 @@ export const generateAnalysis = async (industry: string) => {
   console.log('Starting analysis for industry:', industry);
   
   try {
+    // Fetch data with explicit ordering
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
@@ -22,16 +23,25 @@ export const generateAnalysis = async (industry: string) => {
       return [];
     }
 
-    // Transform the data to match the expected format in AnalysisCard
-    const transformedData = data.map(item => ({
-      id: item.id,
-      department: item.department,
-      function: item.bot_function,
-      savings: item.savings?.toString() || "0",
-      profit_increase: item.profit_increase?.toString() || "0",
-      explanation: item.explanation || "",
-      marketingStrategy: item.marketing_strategy || ""
-    }));
+    // Validate and transform each item
+    const transformedData = data.map(item => {
+      // Validate required fields
+      if (!item.department || !item.bot_function) {
+        console.warn('Missing required fields for item:', item);
+        return null;
+      }
+
+      // Transform the data ensuring all fields are properly formatted
+      return {
+        id: item.id || crypto.randomUUID(),
+        department: item.department,
+        function: item.bot_function,
+        savings: typeof item.savings === 'number' ? item.savings.toString() : '0',
+        profit_increase: typeof item.profit_increase === 'number' ? item.profit_increase.toString() : '0',
+        explanation: item.explanation || 'No explanation provided',
+        marketingStrategy: item.marketing_strategy || 'No marketing strategy provided'
+      };
+    }).filter(item => item !== null); // Remove any invalid items
 
     console.log('Transformed data:', transformedData);
     return transformedData;
