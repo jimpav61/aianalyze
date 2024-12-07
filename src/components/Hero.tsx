@@ -60,7 +60,7 @@ export const Hero = ({
             <Button
               onClick={handleAnalyze}
               disabled={isLoading}
-              className="bg-[#f65228] hover:bg-[#f65228]/90 w-full"
+              className="bg-[#f65228] hover:bg-[#f65228]/90 w-full animate-[fadeIn_0.5s_ease-out] animate-once"
             >
               {isLoading ? (
                 <>
