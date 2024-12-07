@@ -28,7 +28,7 @@ export const useAnalysisProcessor = ({ industry, analysis }: Pick<DetailedAnalys
       savings: Number(analysis.savings) || defaultAnalysis.savings,
       profit_increase: Number(analysis.profit_increase) || defaultAnalysis.profit_increase,
       explanation: analysis.explanation || defaultAnalysis.explanation,
-      marketing_strategy: analysis.marketingStrategy || analysis.marketing_strategy || defaultAnalysis.marketing_strategy
+      marketing_strategy: analysis.marketing_strategy || defaultAnalysis.marketing_strategy
     };
 
     console.log("useAnalysisProcessor - Raw analysis:", analysis);
