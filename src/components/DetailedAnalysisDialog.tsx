@@ -53,17 +53,6 @@ export const DetailedAnalysisDialog = ({
       return;
     }
 
-    // Map the analysis data to match the expected format
-    const mappedAnalysis = {
-      industry: analysis.industry || industry,
-      department: analysis.department,
-      bot_function: analysis.bot_function || analysis.function,
-      savings: Number(analysis.savings),
-      profit_increase: Number(analysis.profit_increase),
-      explanation: analysis.explanation,
-      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy,
-    };
-    
     setFormData(data);
     setShowReport(true);
     
@@ -81,6 +70,20 @@ export const DetailedAnalysisDialog = ({
     setFormData(null);
     setShowReport(false);
     onClose();
+  };
+
+  const getAnalysisData = () => {
+    if (!analysis) return null;
+    
+    return {
+      industry: analysis.industry || industry || 'Unknown Industry',
+      department: analysis.department,
+      bot_function: analysis.bot_function || analysis.function || 'General Automation',
+      savings: Number(analysis.savings) || 0,
+      profit_increase: Number(analysis.profit_increase) || 0,
+      explanation: analysis.explanation,
+      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || 'Custom Strategy',
+    };
   };
 
   return (
@@ -104,15 +107,7 @@ export const DetailedAnalysisDialog = ({
             formData && analysis && (
               <DetailedReport 
                 data={formData} 
-                analysis={{
-                  industry: analysis.industry || industry || '',
-                  department: analysis.department,
-                  bot_function: analysis.bot_function || analysis.function || '',
-                  savings: Number(analysis.savings),
-                  profit_increase: Number(analysis.profit_increase),
-                  explanation: analysis.explanation,
-                  marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || '',
-                }}
+                analysis={getAnalysisData()!}
               />
             )
           )}
