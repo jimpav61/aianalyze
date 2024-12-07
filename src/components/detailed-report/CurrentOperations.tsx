@@ -16,19 +16,19 @@ export const CurrentOperations = ({ data }: CurrentOperationsProps) => {
       <div className="space-y-4">
         <div>
           <p className="font-medium">Service Channels:</p>
-          <p className="text-gray-600">{data.serviceChannels}</p>
+          <p className="text-gray-600">{data.serviceChannels || "Not specified"}</p>
         </div>
         <div>
           <p className="font-medium">Monthly Interactions:</p>
-          <p className="text-gray-600">{data.monthlyInteractions}</p>
+          <p className="text-gray-600">{data.monthlyInteractions || "Not specified"}</p>
         </div>
         <div>
           <p className="font-medium">Current Tools:</p>
-          <p className="text-gray-600">{data.currentTools}</p>
+          <p className="text-gray-600">{data.currentTools || "Not specified"}</p>
         </div>
         <div>
           <p className="font-medium">Pain Points:</p>
-          <p className="text-gray-600">{data.painPoints}</p>
+          <p className="text-gray-600">{data.painPoints || "Not specified"}</p>
         </div>
       </div>
     </Card>
