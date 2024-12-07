@@ -16,16 +16,15 @@ interface DetailedAnalysisDialogProps {
   industry?: string;
   analysis?: {
     id: string;
-    industry?: string;
+    industry: string; // Made required
     department: string;
     function?: string;
-    bot_function?: string;
-    savings: string | number;
-    profit_increase: string | number;
+    bot_function: string; // Made required
+    savings: number; // Changed type to number
+    profit_increase: number; // Changed type to number
     explanation: string;
-    marketing_strategy?: string;
-    marketingStrategy?: string;
-  };
+    marketing_strategy: string; // Made required
+  } | null;
 }
 
 export const DetailedAnalysisDialog = ({
@@ -64,9 +63,8 @@ export const DetailedAnalysisDialog = ({
   const getProcessedAnalysis = (): AnalysisData => {
     console.log("DetailedAnalysisDialog - Processing analysis data:", analysis);
     
-    // Create a properly typed default analysis object
     const defaultAnalysis: AnalysisData = {
-      industry: "Unknown Industry",
+      industry: industry || "Unknown Industry",
       department: "General",
       bot_function: "General Automation",
       savings: 0,
@@ -75,30 +73,20 @@ export const DetailedAnalysisDialog = ({
       marketing_strategy: "Custom marketing strategy",
     };
 
-    // If no analysis is provided, return the default
     if (!analysis) {
       console.log("DetailedAnalysisDialog - Using default analysis");
       return defaultAnalysis;
     }
 
-    // Ensure all numeric values are properly converted
-    const processedSavings = typeof analysis.savings === 'string' 
-      ? parseFloat(analysis.savings) || 0 
-      : (analysis.savings || 0);
-
-    const processedProfitIncrease = typeof analysis.profit_increase === 'string'
-      ? parseFloat(analysis.profit_increase) || 0
-      : (analysis.profit_increase || 0);
-
     // Process all fields with proper fallbacks
     const processedAnalysis: AnalysisData = {
-      industry: analysis.industry || industry || defaultAnalysis.industry,
-      department: analysis.department || defaultAnalysis.department,
-      bot_function: analysis.bot_function || analysis.function || defaultAnalysis.bot_function,
-      savings: processedSavings,
-      profit_increase: processedProfitIncrease,
-      explanation: analysis.explanation || defaultAnalysis.explanation,
-      marketing_strategy: analysis.marketing_strategy || analysis.marketingStrategy || defaultAnalysis.marketing_strategy,
+      industry: analysis.industry,
+      department: analysis.department,
+      bot_function: analysis.bot_function,
+      savings: typeof analysis.savings === 'number' ? analysis.savings : 0,
+      profit_increase: typeof analysis.profit_increase === 'number' ? analysis.profit_increase : 0,
+      explanation: analysis.explanation,
+      marketing_strategy: analysis.marketing_strategy
     };
 
     console.log("DetailedAnalysisDialog - Processed analysis:", processedAnalysis);
