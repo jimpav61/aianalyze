@@ -15,22 +15,22 @@ export const generateAnalysis = async (industry: string) => {
       throw error;
     }
 
-    console.log('Analysis data retrieved:', data);
+    console.log('Raw data from Supabase:', data);
     
     if (!data || data.length === 0) {
       console.log('No analysis found for industry:', industry);
       return [];
     }
 
-    // Transform the data to match the expected format
+    // Transform the data to match the expected format in AnalysisCard
     const transformedData = data.map(item => ({
       id: item.id,
       department: item.department,
       function: item.bot_function,
-      savings: item.savings.toString(),
-      profit_increase: item.profit_increase.toString(),
-      explanation: item.explanation,
-      marketingStrategy: item.marketing_strategy
+      savings: item.savings?.toString() || "0",
+      profit_increase: item.profit_increase?.toString() || "0",
+      explanation: item.explanation || "",
+      marketingStrategy: item.marketing_strategy || ""
     }));
 
     console.log('Transformed data:', transformedData);
