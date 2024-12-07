@@ -19,17 +19,22 @@ export const OperationsStep = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="serviceChannels">Current Service Channels</Label>
+        <Label htmlFor="serviceChannels" className="flex items-center">
+          Current Service Channels <span className="text-red-500 ml-1">*</span>
+        </Label>
         <Input
           id="serviceChannels"
           name="serviceChannels"
           value={formData.serviceChannels}
           onChange={handleInputChange}
           placeholder="e.g., Email, Phone, Chat"
+          className={!formData.serviceChannels ? "border-red-300" : ""}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="monthlyInteractions">Monthly Customer Interactions</Label>
+        <Label htmlFor="monthlyInteractions" className="flex items-center">
+          Monthly Customer Interactions <span className="text-red-500 ml-1">*</span>
+        </Label>
         <Input
           id="monthlyInteractions"
           name="monthlyInteractions"
@@ -37,6 +42,7 @@ export const OperationsStep = ({
           value={formData.monthlyInteractions}
           onChange={handleInputChange}
           placeholder="e.g., 1000"
+          className={!formData.monthlyInteractions ? "border-red-300" : ""}
         />
       </div>
       <div className="space-y-2">

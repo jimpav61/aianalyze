@@ -41,37 +41,25 @@ export const DetailedAnalysisForm = ({ onSubmit }: DetailedAnalysisFormProps) =>
   };
 
   const validateStep = (step: number) => {
-    switch (step) {
-      case 1:
-        if (!formData.companyName || !formData.email) {
-          toast({
-            title: "Required Fields Missing",
-            description: "Please fill out company name and email before proceeding.",
-            variant: "destructive",
-          });
-          return false;
-        }
-        break;
-      case 2:
-        if (!formData.serviceChannels || !formData.monthlyInteractions) {
-          toast({
-            title: "Required Fields Missing",
-            description: "Please fill out service channels and monthly interactions before proceeding.",
-            variant: "destructive",
-          });
-          return false;
-        }
-        break;
-      case 3:
-        if (!formData.objectives || !formData.timeline) {
-          toast({
-            title: "Required Fields Missing",
-            description: "Please fill out objectives and timeline before submitting.",
-            variant: "destructive",
-          });
-          return false;
-        }
-        break;
+    const requiredFields: { [key: number]: string[] } = {
+      1: ["companyName", "email"],
+      2: ["serviceChannels", "monthlyInteractions"],
+      3: ["objectives", "timeline", "budget"],
+    };
+
+    const missingFields = requiredFields[step].filter(
+      (field) => !formData[field as keyof DetailedFormData]
+    );
+
+    if (missingFields.length > 0) {
+      toast({
+        title: "Required Fields Missing",
+        description: `Please fill out the following fields: ${missingFields
+          .map((f) => f.replace(/([A-Z])/g, " $1").toLowerCase())
+          .join(", ")}`,
+        variant: "destructive",
+      });
+      return false;
     }
     return true;
   };

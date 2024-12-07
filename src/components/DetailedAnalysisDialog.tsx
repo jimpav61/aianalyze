@@ -28,10 +28,10 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = (data: DetailedFormData) => {
-    if (!analysis) {
+    if (!analysis?.savings || !analysis?.profit_increase) {
       toast({
         title: "Missing Analysis Data",
-        description: "Please complete the initial analysis first.",
+        description: "Please complete the initial analysis first to see potential savings and profit increase.",
         variant: "destructive",
       });
       return;

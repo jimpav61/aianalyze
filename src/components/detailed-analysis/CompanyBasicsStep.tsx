@@ -19,17 +19,22 @@ export const CompanyBasicsStep = ({
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="companyName">Company Name</Label>
+        <Label htmlFor="companyName" className="flex items-center">
+          Company Name <span className="text-red-500 ml-1">*</span>
+        </Label>
         <Input
           id="companyName"
           name="companyName"
           value={formData.companyName}
           onChange={handleInputChange}
           placeholder="Enter your company name"
+          className={!formData.companyName ? "border-red-300" : ""}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="flex items-center">
+          Email <span className="text-red-500 ml-1">*</span>
+        </Label>
         <Input
           id="email"
           name="email"
@@ -37,6 +42,7 @@ export const CompanyBasicsStep = ({
           value={formData.email}
           onChange={handleInputChange}
           placeholder="your@email.com"
+          className={!formData.email ? "border-red-300" : ""}
         />
       </div>
       <div className="space-y-2">
