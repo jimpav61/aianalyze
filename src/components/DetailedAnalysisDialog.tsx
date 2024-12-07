@@ -52,10 +52,15 @@ export const DetailedAnalysisDialog = ({
     
     setFormData(data);
     setShowReport(true);
-    toast({
-      title: "Analysis Complete",
-      description: "Your detailed analysis report is ready.",
-    });
+    
+    // Show toast notification without affecting the dialog state
+    setTimeout(() => {
+      toast({
+        title: "Analysis Complete",
+        description: "Your detailed analysis report is ready.",
+        duration: 3000, // Set a specific duration for the toast
+      });
+    }, 100);
   };
 
   const handleClose = () => {
