@@ -47,7 +47,6 @@ const Index = () => {
       // Transform the data to match the expected format
       const transformedResults = results.map(result => ({
         ...result,
-        bot_function: result.function || result.bot_function,
         profit_increase: Number(result.profit_increase),
         savings: Number(result.savings)
       }));
