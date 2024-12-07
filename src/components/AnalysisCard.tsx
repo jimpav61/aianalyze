@@ -45,11 +45,11 @@ export const AnalysisCard = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-green-500" />
-              <span className="text-sm font-medium">Savings: ${savings.toLocaleString()}</span>
+              <span className="text-sm font-medium">Savings: ${savings}</span>
             </div>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-green-500" />
-              <span className="text-sm font-medium">Profit: {profit_increase}%</span>
+              <span className="text-sm font-medium">Profit: {profit_increase}</span>
             </div>
           </div>
         </div>

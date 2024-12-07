@@ -5,7 +5,7 @@ interface Analysis {
   department: string;
   function: string;
   savings: string;
-  profit: string;
+  profit_increase: string;
   explanation: string;
   marketingStrategy: string;
 }
