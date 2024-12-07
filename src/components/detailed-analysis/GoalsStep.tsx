@@ -20,6 +20,15 @@ interface GoalsStepProps {
   ) => void;
 }
 
+const objectiveOptions = [
+  { value: "cost_reduction", label: "Reduce operational costs" },
+  { value: "customer_satisfaction", label: "Improve customer satisfaction" },
+  { value: "efficiency", label: "Increase operational efficiency" },
+  { value: "automation", label: "Automate repetitive tasks" },
+  { value: "scalability", label: "Improve scalability" },
+  { value: "quality", label: "Enhance service quality" },
+];
+
 const timelineOptions = [
   { value: "1-3", label: "1-3 months" },
   { value: "3-6", label: "3-6 months" },
@@ -35,6 +44,13 @@ const budgetOptions = [
 ];
 
 export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
+  const handleObjectiveChange = (value: string) => {
+    const selectedObjective = objectiveOptions.find((o) => o.value === value);
+    handleInputChange({
+      target: { name: "objectives", value: selectedObjective?.label || "" },
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   const handleTimelineChange = (value: string) => {
     const selectedTimeline = timelineOptions.find((t) => t.value === value);
     handleInputChange({
@@ -55,14 +71,21 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
         <Label htmlFor="objectives" className="flex items-center">
           Key Objectives <span className="text-red-500 ml-1">*</span>
         </Label>
-        <Textarea
-          id="objectives"
-          name="objectives"
-          value={formData.objectives}
-          onChange={handleInputChange}
-          placeholder="What are your main goals for implementing AI?"
-          className={`min-h-[100px] ${!formData.objectives ? "border-red-300" : ""}`}
-        />
+        <Select
+          value={objectiveOptions.find((o) => o.label === formData.objectives)?.value}
+          onValueChange={handleObjectiveChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select key objective" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {objectiveOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="timeline" className="flex items-center">

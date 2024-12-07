@@ -28,8 +28,6 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = (data: DetailedFormData) => {
-    console.log("Analysis data in dialog:", analysis);
-    
     if (!analysis) {
       toast({
         title: "Missing Analysis Data",
