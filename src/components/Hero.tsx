@@ -54,13 +54,6 @@ export const Hero = ({
           
           <BenefitsList position="right" />
         </div>
-
-        <div className="text-center max-w-2xl mx-auto">
-          <p className="text-sm text-gray-600">
-            Complete the analysis to receive your free initial report. Want deeper insights? 
-            Fill out our detailed assessment form after your analysis to get a comprehensive implementation strategy.
-          </p>
-        </div>
       </div>
 
       <DetailedAnalysisDialog
