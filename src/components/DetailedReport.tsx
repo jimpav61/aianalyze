@@ -36,8 +36,17 @@ interface DetailedReportProps {
 export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
   console.log("DetailedReport - Received props:", { data, analysis });
 
-  if (!data || !analysis) {
-    console.error("DetailedReport - Missing required data");
+  if (!data || !analysis || typeof analysis !== 'object') {
+    console.error("DetailedReport - Missing or invalid data:", { data, analysis });
+    return null;
+  }
+
+  // Validate required analysis fields
+  const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
+  const missingFields = requiredFields.filter(field => !(field in analysis));
+  
+  if (missingFields.length > 0) {
+    console.error("DetailedReport - Missing required analysis fields:", missingFields);
     return null;
   }
 

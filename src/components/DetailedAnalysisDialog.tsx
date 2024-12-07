@@ -14,7 +14,15 @@ interface DetailedAnalysisDialogProps {
   isOpen: boolean;
   onClose: () => void;
   industry?: string;
-  analysis?: AnalysisData;
+  analysis?: {
+    industry: string;
+    department: string;
+    bot_function: string;
+    savings: number;
+    profit_increase: number;
+    explanation: string;
+    marketing_strategy: string;
+  };
 }
 
 export const DetailedAnalysisDialog = ({
@@ -32,8 +40,8 @@ export const DetailedAnalysisDialog = ({
   const handleSubmit = (data: DetailedFormData) => {
     console.log("DetailedAnalysisDialog - handleSubmit called with:", { data, analysis });
     
-    if (!analysis) {
-      console.error("DetailedAnalysisDialog - Missing analysis data");
+    if (!analysis || typeof analysis !== 'object') {
+      console.error("DetailedAnalysisDialog - Missing or invalid analysis data:", analysis);
       toast({
         title: "Missing Analysis Data",
         description: "Please complete the initial analysis first.",
