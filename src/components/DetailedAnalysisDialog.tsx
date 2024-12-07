@@ -67,28 +67,30 @@ export const DetailedAnalysisDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[900px] h-[80vh]">
-        {!showReport ? (
-          <>
-            <DialogHeader>
-              <DialogTitle>Detailed Analysis Request</DialogTitle>
-            </DialogHeader>
-            <div className="mt-4">
-              <DetailedAnalysisForm 
-                onSubmit={handleSubmit} 
-                industry={industry}
+      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="flex-1 overflow-y-auto">
+          {!showReport ? (
+            <>
+              <DialogHeader>
+                <DialogTitle>Detailed Analysis Request</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4">
+                <DetailedAnalysisForm 
+                  onSubmit={handleSubmit} 
+                  industry={industry}
+                  analysis={analysis}
+                />
+              </div>
+            </>
+          ) : (
+            formData && analysis && (
+              <DetailedReport 
+                data={formData} 
                 analysis={analysis}
               />
-            </div>
-          </>
-        ) : (
-          formData && analysis && (
-            <DetailedReport 
-              data={formData} 
-              analysis={analysis}
-            />
-          )
-        )}
+            )
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
