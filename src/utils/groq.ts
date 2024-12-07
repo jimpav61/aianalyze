@@ -34,24 +34,15 @@ export const generateAnalysis = async (industry: string) => {
         return null;
       }
 
-      // Validate required fields
-      const requiredFields = ['department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
-      const missingFields = requiredFields.filter(field => !item[field] && item[field] !== 0);
-      
-      if (missingFields.length > 0) {
-        console.warn(`generateAnalysis - Missing required fields for item ${index + 1}:`, missingFields);
-        return null;
-      }
-
       // Transform the data with strict type checking
       const transformed = {
         id: item.id || `generated-${crypto.randomUUID()}`,
-        department: String(item.department),
-        function: String(item.bot_function), // Changed from bot_function to function
+        department: String(item.department || ''),
+        function: String(item.bot_function || ''),
         savings: String(item.savings || 0),
         profit_increase: String(item.profit_increase || 0),
-        explanation: String(item.explanation),
-        marketingStrategy: String(item.marketing_strategy) // Changed from marketing_strategy to marketingStrategy
+        explanation: String(item.explanation || ''),
+        marketingStrategy: String(item.marketing_strategy || '')
       };
 
       console.log(`generateAnalysis - Transformed item ${index + 1}:`, transformed);

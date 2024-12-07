@@ -42,32 +42,22 @@ const Index = () => {
         console.log('No results returned');
         toast({
           title: "No analysis available",
-          description: `No bot recommendations found for ${selectedIndustry}`,
+          description: `No recommendations found for ${selectedIndustry}`,
           variant: "destructive",
         });
         return;
       }
 
-      // Transform and validate the data
-      const validatedResults = results.map(result => ({
-        id: result.id || crypto.randomUUID(),
-        department: result.department || 'General',
-        function: result.function || 'Not specified',
-        savings: result.savings?.toString() || '0',
-        profit_increase: result.profit_increase?.toString() || '0',
-        explanation: result.explanation || 'No explanation provided',
-        marketingStrategy: result.marketingStrategy || 'No strategy provided'
-      }));
-
-      console.log('Validated results:', validatedResults);
-      setAnalyses(validatedResults);
+      // Use the transformed data directly since it's already in the correct format
+      console.log('Setting analyses with results:', results);
+      setAnalyses(results);
       setHasSubmitted(true);
       
       toast({
         title: "Analysis complete",
         description: isMobile 
-          ? <span>Found {validatedResults.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
-          : `Found ${validatedResults.length} recommendations for ${selectedIndustry}`,
+          ? <span>Found {results.length} recommendations for {selectedIndustry}. <span className="text-[#f65228]">Scroll down to view them!</span></span>
+          : `Found ${results.length} recommendations for ${selectedIndustry}`,
       });
 
       if (isMobile && analysisGridRef.current) {
