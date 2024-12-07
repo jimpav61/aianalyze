@@ -7,7 +7,8 @@ export const generateAnalysis = async (industry: string) => {
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
-      .eq('industry', industry);
+      .eq('industry', industry)
+      .order('department');
     
     if (error) {
       console.error('Supabase error:', error);
@@ -21,7 +22,19 @@ export const generateAnalysis = async (industry: string) => {
       return [];
     }
 
-    return data;
+    // Transform the data to match the expected format
+    const transformedData = data.map(item => ({
+      id: item.id,
+      department: item.department,
+      function: item.bot_function,
+      savings: item.savings.toString(),
+      profit_increase: item.profit_increase.toString(),
+      explanation: item.explanation,
+      marketingStrategy: item.marketing_strategy
+    }));
+
+    console.log('Transformed data:', transformedData);
+    return transformedData;
   } catch (error) {
     console.error('Error in generateAnalysis:', error);
     throw error;
