@@ -5,10 +5,13 @@ export const Calendar = () => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
-      cal?.namespace({
-        "hide-branding": true,
-        "hide-gdpr-banner": true,
-      });
+      // Using type assertion to handle the Cal API types
+      if (cal && 'namespace' in cal) {
+        cal.namespace({
+          "hide-branding": "1",
+          "hide-gdpr-banner": "1",
+        });
+      }
     })();
   }, []);
 
@@ -18,8 +21,8 @@ export const Calendar = () => {
       style={{ width: "100%", height: "100%", minHeight: "600px" }}
       config={{
         layout: "month_view",
-        hideEventTypeDetails: false,
-        hideLandingPageDetails: false,
+        hideEventTypeDetails: "1",
+        hideLandingPageDetails: "1",
         theme: "light",
       }}
     />
