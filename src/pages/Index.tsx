@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { AnalysisContainer } from "@/components/AnalysisContainer";
+import { Footer } from "@/components/Footer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
@@ -11,6 +12,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <AnalysisContainer />
       </main>
+      <Footer />
     </div>
   );
 };
