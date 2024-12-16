@@ -35,18 +35,6 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
           },
         });
 
-        // Handle booking failures with the correct event name
-        cal("on", {
-          action: "booking_failed",
-          callback: (error: any) => {
-            console.error('Booking failed:', error);
-            toast({
-              title: "Booking Failed",
-              description: "There was an error processing your booking. Please try again.",
-              variant: "destructive",
-            });
-          },
-        });
       } catch (error) {
         console.error('Error initializing Cal API:', error);
         toast({
