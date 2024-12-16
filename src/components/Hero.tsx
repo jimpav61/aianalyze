@@ -21,10 +21,9 @@ export const Hero = ({
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
-  const [isAnalysisReady, setIsAnalysisReady] = useState(false);
 
   useEffect(() => {
-    if (analyses && analyses.length > 0 && isAnalysisReady) {
+    if (analyses && analyses.length > 0) {
       const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
@@ -40,25 +39,12 @@ export const Hero = ({
         allAnalyses: analyses
       });
       setShowDetailedDialog(true);
-      setIsAnalysisReady(false); // Reset for next analysis
     }
-  }, [analyses, isAnalysisReady, selectedIndustry]);
-
-  const handleRequestDetailedReport = () => {
-    console.log("Hero - Opening detailed dialog with:", {
-      industry: selectedIndustry,
-      analyses: analyses
-    });
-
-    if (analyses && analyses.length > 0) {
-      setIsAnalysisReady(true);
-    }
-  };
+  }, [analyses, selectedIndustry]);
 
   const handleAnalyzeClick = async () => {
     try {
       await handleAnalyze();
-      handleRequestDetailedReport();
     } catch (error) {
       console.error("Error during analysis:", error);
     }
