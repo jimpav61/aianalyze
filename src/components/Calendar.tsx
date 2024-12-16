@@ -29,7 +29,7 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
         
         // Listen for successful booking completion
         cal("on", {
-          action: "BOOKING_COMPLETED",
+          action: "bookingSuccessful",
           callback: () => {
             console.log('Booking completed successfully');
             onSubmit?.();
