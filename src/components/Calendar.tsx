@@ -1,6 +1,6 @@
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "./ui/use-toast";
 
 interface CalendarProps {
   calLink: string;
@@ -35,9 +35,9 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
           },
         });
 
-        // Handle booking errors with the correct event name
+        // Handle booking failures with the correct event name
         cal("on", {
-          action: "bookingError",
+          action: "bookingFailed",
           callback: (error: any) => {
             console.error('Booking failed:', error);
             toast({
