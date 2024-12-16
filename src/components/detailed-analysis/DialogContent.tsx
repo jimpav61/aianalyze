@@ -4,7 +4,6 @@ import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
 import { useAnalysisProcessor } from "./useAnalysisProcessor";
-import { Button } from "../ui/button";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;
@@ -57,14 +56,6 @@ export const DialogContent = ({
         analysis={processedAnalysis}
         analyses={[processedAnalysis]}
       />
-      <div className="flex justify-center">
-        <Button 
-          onClick={onBookDemo}
-          className="bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-        >
-          Book a Demo with Us
-        </Button>
-      </div>
     </div>
   );
 };
