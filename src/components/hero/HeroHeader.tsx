@@ -5,7 +5,7 @@ export const HeroHeader = () => {
         Discover the AI Roadmap Your Business Needs Today
       </h1>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-        Discover how AI assistants can revolutionize your operations and boost profitability with our industry-specific analysis
+        In just minutes, see how AI can revolutionize your operations and drive growth
       </p>
     </div>
   );
