@@ -9,7 +9,7 @@ interface HeroProps {
   setSelectedIndustry: (industry: string) => void;
   isLoading: boolean;
   handleAnalyze: () => void;
-  analyses?: any[]; // Add analyses prop
+  analyses?: any[];
 }
 
 export const Hero = ({
@@ -17,7 +17,7 @@ export const Hero = ({
   setSelectedIndustry,
   isLoading,
   handleAnalyze,
-  analyses = [], // Add analyses with default empty array
+  analyses = [],
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
@@ -28,7 +28,6 @@ export const Hero = ({
       analyses: analyses
     });
 
-    // Get the first analysis if available
     const firstAnalysis = analyses && analyses.length > 0 ? analyses[0] : null;
     console.log("Hero - Selected analysis:", firstAnalysis);
 
@@ -41,9 +40,8 @@ export const Hero = ({
       <HeroHeader />
 
       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           <BenefitsList position="left" />
-          
           <HeroActions
             selectedIndustry={selectedIndustry}
             setSelectedIndustry={setSelectedIndustry}
@@ -51,8 +49,6 @@ export const Hero = ({
             handleAnalyze={handleAnalyze}
             onRequestDetailedReport={handleRequestDetailedReport}
           />
-          
-          <BenefitsList position="right" />
         </div>
       </div>
 
