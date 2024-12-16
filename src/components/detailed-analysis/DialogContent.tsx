@@ -4,11 +4,13 @@ import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
 import { useAnalysisProcessor } from "./useAnalysisProcessor";
+import { Button } from "../ui/button";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;
   formData: DetailedFormData | null;
   onSubmit: (data: DetailedFormData) => void;
+  onBookDemo: () => void;
 }
 
 export const DialogContent = ({ 
@@ -16,7 +18,8 @@ export const DialogContent = ({
   formData, 
   onSubmit, 
   industry, 
-  analysis 
+  analysis,
+  onBookDemo
 }: DialogContentProps) => {
   console.log("DialogContent - Render:", { showReport, formData, industry, analysis });
   
@@ -48,9 +51,20 @@ export const DialogContent = ({
   console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
   return (
-    <DetailedReport 
-      data={formData} 
-      analysis={processedAnalysis}
-    />
+    <div className="space-y-6">
+      <DetailedReport 
+        data={formData} 
+        analysis={processedAnalysis}
+        analyses={[processedAnalysis]}
+      />
+      <div className="flex justify-center">
+        <Button 
+          onClick={onBookDemo}
+          className="bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+        >
+          Book a Demo with Us
+        </Button>
+      </div>
+    </div>
   );
 };

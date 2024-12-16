@@ -10,6 +10,7 @@ import { Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useToast } from "./ui/use-toast";
+import { AnalysisGrid } from "./AnalysisGrid";
 
 interface DetailedReportProps {
   data: {
@@ -36,11 +37,12 @@ interface DetailedReportProps {
     explanation: string;
     marketing_strategy: string;
   };
+  analyses: any[];
 }
 
-export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
+export const DetailedReport = ({ data, analysis, analyses }: DetailedReportProps) => {
   const { toast } = useToast();
-  console.log("DetailedReport - Received props:", { data, analysis });
+  console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
   if (!data || !analysis || typeof analysis !== 'object') {
     console.error("DetailedReport - Missing or invalid data:", { data, analysis });
@@ -117,6 +119,12 @@ export const DetailedReport = ({ data, analysis }: DetailedReportProps) => {
         </h1>
 
         <CompanyInformation data={data} industry={analysis.industry} />
+        
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">AI Implementation Options</h2>
+          <AnalysisGrid analyses={analyses} />
+        </div>
+
         <AnalysisResults analysis={analysis} />
         <CurrentOperations data={data} />
         <ImplementationPlan data={data} />
