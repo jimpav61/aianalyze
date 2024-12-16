@@ -29,7 +29,8 @@ export const Hero = ({
     });
 
     if (analyses && analyses.length > 0) {
-      const firstAnalysis = {
+      // Pass the first analysis as the primary analysis
+      const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
         bot_function: analyses[0].function,
@@ -38,8 +39,11 @@ export const Hero = ({
         explanation: analyses[0].explanation,
         marketing_strategy: analyses[0].marketingStrategy
       };
-      console.log("Hero - Selected analysis:", firstAnalysis);
-      setCurrentAnalysis(firstAnalysis);
+      console.log("Hero - Selected primary analysis:", primaryAnalysis);
+      setCurrentAnalysis({
+        ...primaryAnalysis,
+        allAnalyses: analyses // Pass all analyses
+      });
       setShowDetailedDialog(true);
     }
   };

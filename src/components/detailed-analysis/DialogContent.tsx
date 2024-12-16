@@ -49,8 +49,8 @@ export const DialogContent = ({
   const processedAnalysis = getProcessedAnalysis();
   console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
-  // Create an array of analyses for the grid
-  const analysesForGrid = [{
+  // Use all analyses from the analysis object if available
+  const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: processedAnalysis.department,
     function: processedAnalysis.bot_function,
