@@ -1,8 +1,9 @@
 import { Button } from "../ui/button";
 import { Download, CalendarDays } from "lucide-react";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useState } from "react";
 
 interface ReportActionsProps {
   companyName: string;
@@ -11,6 +12,7 @@ interface ReportActionsProps {
 
 export const ReportActions = ({ companyName, onBookDemo }: ReportActionsProps) => {
   const { toast } = useToast();
+  const [hasDownloaded, setHasDownloaded] = useState(false);
 
   const handleDownloadPDF = async () => {
     const element = document.getElementById('detailed-report');
@@ -38,6 +40,7 @@ export const ReportActions = ({ companyName, onBookDemo }: ReportActionsProps) =
       pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
       pdf.save(`${companyName}-AI-Implementation-Analysis.pdf`);
 
+      setHasDownloaded(true);
       toast({
         title: "Success",
         description: "Your report has been downloaded successfully.",

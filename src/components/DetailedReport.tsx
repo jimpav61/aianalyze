@@ -7,6 +7,8 @@ import { ImplementationPlan } from "./detailed-report/ImplementationPlan";
 import { ReportFooter } from "./detailed-report/ReportFooter";
 import { AnalysisGrid } from "./AnalysisGrid";
 import { ReportActions } from "./detailed-report/ReportActions";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface DetailedReportProps {
   data: {
@@ -38,7 +40,20 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
+  const { toast } = useToast();
   console.log("DetailedReport - Received props:", { data, analysis, analyses });
+
+  useEffect(() => {
+    const downloadReminderTimeout = setTimeout(() => {
+      toast({
+        title: "Don't forget your report!",
+        description: "Download your personalized AI implementation analysis report to review it later.",
+        duration: 10000,
+      });
+    }, 30000); // Show reminder after 30 seconds
+
+    return () => clearTimeout(downloadReminderTimeout);
+  }, [toast]);
 
   if (!data || !analysis || typeof analysis !== 'object') {
     console.error("DetailedReport - Missing or invalid data:", { data, analysis });
@@ -56,7 +71,10 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   return (
     <div className="relative">
-      <ReportActions companyName={data.companyName} onBookDemo={onBookDemo} />
+      <ReportActions 
+        companyName={data.companyName} 
+        onBookDemo={onBookDemo}
+      />
 
       <div id="detailed-report" className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
         <ReportHeader />
