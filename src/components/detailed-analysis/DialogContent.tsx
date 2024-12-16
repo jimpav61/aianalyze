@@ -49,12 +49,23 @@ export const DialogContent = ({
   const processedAnalysis = getProcessedAnalysis();
   console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
+  // Create an array of analyses for the grid
+  const analysesForGrid = [{
+    id: crypto.randomUUID(),
+    department: processedAnalysis.department,
+    function: processedAnalysis.bot_function,
+    savings: processedAnalysis.savings.toString(),
+    profit_increase: processedAnalysis.profit_increase.toString(),
+    explanation: processedAnalysis.explanation,
+    marketingStrategy: processedAnalysis.marketing_strategy
+  }];
+
   return (
     <div className="space-y-6">
       <DetailedReport 
         data={formData} 
         analysis={processedAnalysis}
-        analyses={[processedAnalysis]}
+        analyses={analysesForGrid}
         onBookDemo={onBookDemo}
       />
     </div>

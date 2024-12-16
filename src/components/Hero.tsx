@@ -28,10 +28,20 @@ export const Hero = ({
       analyses: analyses
     });
 
-    const firstAnalysis = analyses && analyses.length > 0 ? analyses[0] : null;
-    console.log("Hero - Selected analysis:", firstAnalysis);
-
-    setCurrentAnalysis(firstAnalysis);
+    // Set the first analysis as the current analysis if available
+    if (analyses && analyses.length > 0) {
+      const firstAnalysis = {
+        industry: selectedIndustry,
+        department: analyses[0].department,
+        bot_function: analyses[0].function,
+        savings: Number(analyses[0].savings),
+        profit_increase: Number(analyses[0].profit_increase),
+        explanation: analyses[0].explanation,
+        marketing_strategy: analyses[0].marketingStrategy
+      };
+      console.log("Hero - Selected analysis:", firstAnalysis);
+      setCurrentAnalysis(firstAnalysis);
+    }
     setShowDetailedDialog(true);
   };
 

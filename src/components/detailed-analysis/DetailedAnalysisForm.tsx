@@ -6,6 +6,7 @@ import { GoalsStep } from "./GoalsStep";
 import { FormStepNavigator } from "./FormStepNavigator";
 import { DetailedFormData } from "@/types/analysis";
 import { useDetailedAnalysisForm } from "@/hooks/useDetailedAnalysisForm";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -28,6 +29,7 @@ export const DetailedAnalysisForm = ({
 }: DetailedAnalysisFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const { formData, handleInputChange, validateStep, handleSubmit } = useDetailedAnalysisForm(onSubmit);
+  const { toast } = useToast();
   
   console.log("DetailedAnalysisForm - Initial props:", { industry, analysis });
 
@@ -46,6 +48,11 @@ export const DetailedAnalysisForm = ({
   const handleFormSubmit = () => {
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
+      toast({
+        title: "Error",
+        description: "Unable to generate report. Please try again.",
+        variant: "destructive",
+      });
       return;
     }
 
