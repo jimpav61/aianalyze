@@ -7,7 +7,6 @@ interface HeroActionsProps {
   setSelectedIndustry: (industry: string) => void;
   isLoading: boolean;
   handleAnalyze: () => void;
-  onRequestDetailedReport: () => void;
 }
 
 export const HeroActions = ({
@@ -18,9 +17,6 @@ export const HeroActions = ({
 }: HeroActionsProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="text-sm font-medium text-gray-600 mb-2">
-        Select your industry to get started
-      </div>
       <IndustrySelector
         value={selectedIndustry}
         onSelect={setSelectedIndustry}
@@ -39,7 +35,7 @@ export const HeroActions = ({
           "Start Your Free Analysis Now"
         )}
       </Button>
-      <p className="text-sm font-bold text-gray-600 mt-4">
+      <p className="text-sm font-bold text-gray-600">
         Get instant insights and unlock a detailed report sent to your email
       </p>
     </div>
