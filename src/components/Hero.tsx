@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DetailedAnalysisDialog } from "./DetailedAnalysisDialog";
 import { HeroHeader } from "./hero/HeroHeader";
 import { BenefitsList } from "./hero/BenefitsList";
@@ -21,15 +21,10 @@ export const Hero = ({
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
+  const [isAnalysisReady, setIsAnalysisReady] = useState(false);
 
-  const handleRequestDetailedReport = () => {
-    console.log("Hero - Opening detailed dialog with:", {
-      industry: selectedIndustry,
-      analyses: analyses
-    });
-
-    if (analyses && analyses.length > 0) {
-      // Pass the first analysis as the primary analysis
+  useEffect(() => {
+    if (analyses && analyses.length > 0 && isAnalysisReady) {
       const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
@@ -39,22 +34,31 @@ export const Hero = ({
         explanation: analyses[0].explanation,
         marketing_strategy: analyses[0].marketingStrategy
       };
-      console.log("Hero - Selected primary analysis:", primaryAnalysis);
+      
       setCurrentAnalysis({
         ...primaryAnalysis,
-        allAnalyses: analyses // Pass all analyses
+        allAnalyses: analyses
       });
       setShowDetailedDialog(true);
+      setIsAnalysisReady(false); // Reset for next analysis
+    }
+  }, [analyses, isAnalysisReady, selectedIndustry]);
+
+  const handleRequestDetailedReport = () => {
+    console.log("Hero - Opening detailed dialog with:", {
+      industry: selectedIndustry,
+      analyses: analyses
+    });
+
+    if (analyses && analyses.length > 0) {
+      setIsAnalysisReady(true);
     }
   };
 
   const handleAnalyzeClick = async () => {
     try {
       await handleAnalyze();
-      // Only open the dialog after analyses are loaded
-      setTimeout(() => {
-        handleRequestDetailedReport();
-      }, 100);
+      handleRequestDetailedReport();
     } catch (error) {
       console.error("Error during analysis:", error);
     }
