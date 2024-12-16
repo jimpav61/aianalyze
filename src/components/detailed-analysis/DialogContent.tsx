@@ -55,6 +55,7 @@ export const DialogContent = ({
         data={formData} 
         analysis={processedAnalysis}
         analyses={[processedAnalysis]}
+        onBookDemo={onBookDemo}
       />
     </div>
   );

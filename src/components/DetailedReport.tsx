@@ -6,7 +6,7 @@ import { CurrentOperations } from "./detailed-report/CurrentOperations";
 import { ImplementationPlan } from "./detailed-report/ImplementationPlan";
 import { ReportFooter } from "./detailed-report/ReportFooter";
 import { Button } from "./ui/button";
-import { Download } from "lucide-react";
+import { Download, CalendarDays } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useToast } from "./ui/use-toast";
@@ -38,9 +38,10 @@ interface DetailedReportProps {
     marketing_strategy: string;
   };
   analyses: any[];
+  onBookDemo?: () => void;
 }
 
-export const DetailedReport = ({ data, analysis, analyses }: DetailedReportProps) => {
+export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
   const { toast } = useToast();
   console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
@@ -100,7 +101,15 @@ export const DetailedReport = ({ data, analysis, analyses }: DetailedReportProps
 
   return (
     <div className="relative">
-      <div className="sticky top-0 z-10 bg-white pb-4 mb-4 flex justify-end">
+      <div className="sticky top-0 z-10 bg-white pb-4 mb-4 flex justify-end gap-4">
+        <Button
+          onClick={onBookDemo}
+          className="gap-2"
+          variant="outline"
+        >
+          <CalendarDays className="w-4 h-4" />
+          Book A Demo
+        </Button>
         <Button
           onClick={handleDownloadPDF}
           className="gap-2"
