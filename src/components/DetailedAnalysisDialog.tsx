@@ -37,6 +37,14 @@ export const DetailedAnalysisDialog = ({
     setShowReport(true);
   };
 
+  const handleBookingSubmit = () => {
+    console.log("DetailedAnalysisDialog - Booking submitted");
+    // This will trigger the download reminder in DetailedReport if report hasn't been downloaded
+    if (formData) {
+      setFormData({ ...formData });
+    }
+  };
+
   const handleClose = () => {
     console.log("DetailedAnalysisDialog - Closing dialog");
     setFormData(null);
@@ -52,7 +60,7 @@ export const DetailedAnalysisDialog = ({
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto">
           {showCalendar ? (
-            <Calendar calLink={calLink} />
+            <Calendar calLink={calLink} onSubmit={handleBookingSubmit} />
           ) : (
             <CustomDialogContent
               showReport={showReport}

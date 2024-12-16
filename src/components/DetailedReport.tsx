@@ -43,13 +43,17 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   const { toast } = useToast();
   const [hasDownloaded, setHasDownloaded] = useState(false);
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
+  const [hasSubmittedBooking, setHasSubmittedBooking] = useState(false);
   console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
   const handleBookDemo = () => {
     onBookDemo?.();
-    
-    // Show download reminder if report hasn't been downloaded
-    if (!hasDownloaded && !showingDownloadToast) {
+    setHasSubmittedBooking(true);
+  };
+
+  useEffect(() => {
+    // Show download reminder after booking form submission if report hasn't been downloaded
+    if (hasSubmittedBooking && !hasDownloaded && !showingDownloadToast) {
       setShowingDownloadToast(true);
       toast({
         title: "Download Your Report",
@@ -57,7 +61,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         duration: null, // Toast will stay until manually dismissed
       });
     }
-  };
+  }, [hasSubmittedBooking, hasDownloaded, showingDownloadToast, toast]);
 
   const handleDownloadComplete = () => {
     setHasDownloaded(true);

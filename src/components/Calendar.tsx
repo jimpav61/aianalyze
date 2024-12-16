@@ -1,33 +1,29 @@
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface CalendarProps {
-  calLink?: string;
+  calLink: string;
+  onSubmit?: () => void;
 }
 
-export const Calendar = ({ calLink = "chatsites/demo" }: CalendarProps) => {
+export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
-      // Check if cal exists and has namespace method before calling it
-      if (cal && 'namespace' in cal && typeof cal.namespace === 'function') {
-        cal.namespace({
-          "hide-branding": "1",
-          "hide-gdpr-banner": "1",
-        });
-      }
+      cal.on('bookingSuccessful', () => {
+        console.log('Booking submitted successfully');
+        onSubmit?.();
+      });
     })();
-  }, []);
+  }, [onSubmit]);
 
   return (
     <Cal
       calLink={calLink}
-      style={{ width: "100%", height: "100%", minHeight: "600px" }}
+      style={{ width: "100%", height: "100%", overflow: "scroll" }}
       config={{
         layout: "month_view",
-        hideEventTypeDetails: "1",
-        hideLandingPageDetails: "1",
-        theme: "light",
       }}
     />
   );
