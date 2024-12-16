@@ -57,12 +57,8 @@ export const DetailedAnalysisForm = ({
     }
 
     if (validateStep(3)) {
-      const finalFormData = {
-        ...formData,
-        additionalInfo: formData.additionalInfo || ""
-      };
-      console.log("Form validation passed, submitting with data:", finalFormData);
-      onSubmit(finalFormData);
+      console.log("DetailedAnalysisForm - Submitting form with data:", { formData, analysis });
+      onSubmit(formData);
     }
   };
 

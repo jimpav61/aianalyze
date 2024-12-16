@@ -41,8 +41,8 @@ export const DialogContent = ({
     );
   }
 
-  if (!formData) {
-    console.error("DialogContent - No form data available for report");
+  if (!formData || !analysis) {
+    console.error("DialogContent - Missing required data for report:", { formData, analysis });
     return null;
   }
 
