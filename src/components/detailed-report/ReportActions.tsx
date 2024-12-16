@@ -8,9 +8,10 @@ import { useState } from "react";
 interface ReportActionsProps {
   companyName: string;
   onBookDemo?: () => void;
+  onDownloadComplete?: () => void;
 }
 
-export const ReportActions = ({ companyName, onBookDemo }: ReportActionsProps) => {
+export const ReportActions = ({ companyName, onBookDemo, onDownloadComplete }: ReportActionsProps) => {
   const { toast } = useToast();
   const [hasDownloaded, setHasDownloaded] = useState(false);
 
@@ -41,6 +42,8 @@ export const ReportActions = ({ companyName, onBookDemo }: ReportActionsProps) =
       pdf.save(`${companyName}-AI-Implementation-Analysis.pdf`);
 
       setHasDownloaded(true);
+      onDownloadComplete?.();
+      
       toast({
         title: "Success",
         description: "Your report has been downloaded successfully.",

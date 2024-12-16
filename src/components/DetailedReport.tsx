@@ -7,7 +7,7 @@ import { ImplementationPlan } from "./detailed-report/ImplementationPlan";
 import { ReportFooter } from "./detailed-report/ReportFooter";
 import { AnalysisGrid } from "./AnalysisGrid";
 import { ReportActions } from "./detailed-report/ReportActions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface DetailedReportProps {
@@ -41,19 +41,26 @@ interface DetailedReportProps {
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
   const { toast } = useToast();
+  const [hasDownloaded, setHasDownloaded] = useState(false);
+  const [showingDownloadToast, setShowingDownloadToast] = useState(false);
   console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
-  useEffect(() => {
-    const downloadReminderTimeout = setTimeout(() => {
+  const handleBookDemo = () => {
+    if (!hasDownloaded && !showingDownloadToast) {
+      setShowingDownloadToast(true);
       toast({
-        title: "Don't forget your report!",
-        description: "Download your personalized AI implementation analysis report to review it later.",
-        duration: 10000,
+        title: "Download Your Report",
+        description: "Please download your personalized AI implementation analysis report before proceeding.",
+        duration: null, // Toast will stay until manually dismissed
       });
-    }, 30000); // Show reminder after 30 seconds
+    }
+    onBookDemo?.();
+  };
 
-    return () => clearTimeout(downloadReminderTimeout);
-  }, [toast]);
+  const handleDownloadComplete = () => {
+    setHasDownloaded(true);
+    setShowingDownloadToast(false);
+  };
 
   if (!data || !analysis || typeof analysis !== 'object') {
     console.error("DetailedReport - Missing or invalid data:", { data, analysis });
@@ -73,7 +80,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     <div className="relative">
       <ReportActions 
         companyName={data.companyName} 
-        onBookDemo={onBookDemo}
+        onBookDemo={handleBookDemo}
+        onDownloadComplete={handleDownloadComplete}
       />
 
       <div id="detailed-report" className="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
