@@ -17,6 +17,9 @@ export const HeroActions = ({
 }: HeroActionsProps) => {
   return (
     <div className="flex flex-col items-center gap-4">
+      <p className="text-sm font-bold text-gray-600">
+        Get instant insights and unlock a detailed report sent to your email
+      </p>
       <IndustrySelector
         value={selectedIndustry}
         onSelect={setSelectedIndustry}
@@ -35,9 +38,6 @@ export const HeroActions = ({
           "Start Your Free Analysis Now"
         )}
       </Button>
-      <p className="text-sm font-bold text-gray-600">
-        Get instant insights and unlock a detailed report sent to your email
-      </p>
     </div>
   );
 };

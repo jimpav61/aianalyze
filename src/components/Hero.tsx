@@ -52,7 +52,6 @@ export const Hero = ({
             setSelectedIndustry={setSelectedIndustry}
             isLoading={isLoading}
             handleAnalyze={handleAnalyzeClick}
-            onRequestDetailedReport={handleRequestDetailedReport}
           />
         </div>
       </div>
