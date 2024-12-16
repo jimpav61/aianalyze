@@ -6,9 +6,9 @@ interface BenefitsListProps {
 
 export const BenefitsList = ({ position }: BenefitsListProps) => {
   const benefits = [
-    "Instant AI Roadmap with 99.99% Reliability: Deliver personalized insights into how and where AI bots can transform your business, backed by cutting-edge technology for seamless, always-on performance.",
-    "24/7 Customer Engagement That Converts: Showcase products, schedule appointments, and interact with precision-driven AI to qualify leads and boost conversions—all while maintaining flexibility with human handoffs for peace of mind.",
-    "Tailored AI Solutions for Any Business Size or Niche: Whether you're a solopreneur, small business, or enterprise, our platform adapts to your needs, using industry-leading LLMs like OpenAI, Claude, Grok, and Gemini 2 to provide unmatched scalability and innovation."
+    "Instant AI Roadmap: Get actionable insights with 99.99% reliable performance.",
+    "24/7 Engagement That Converts: Qualify leads, boost sales, and seamlessly hand off to humans.",
+    "Tailored Solutions for Every Business: Scalable AI powered by OpenAI, Claude, Grok, and Gemini 2."
   ];
 
   return (
