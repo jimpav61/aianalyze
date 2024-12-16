@@ -28,7 +28,6 @@ export const Hero = ({
       analyses: analyses
     });
 
-    // Set the first analysis as the current analysis if available
     if (analyses && analyses.length > 0) {
       const firstAnalysis = {
         industry: selectedIndustry,
@@ -41,8 +40,8 @@ export const Hero = ({
       };
       console.log("Hero - Selected analysis:", firstAnalysis);
       setCurrentAnalysis(firstAnalysis);
+      setShowDetailedDialog(true);
     }
-    setShowDetailedDialog(true);
   };
 
   const handleAnalyzeClick = async () => {
