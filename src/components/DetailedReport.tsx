@@ -59,6 +59,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         title: "Download Your Report",
         description: "Please download your personalized AI implementation analysis report before proceeding.",
         duration: null, // Toast will stay until manually dismissed
+        className: "animate-bounce-slow bg-primary text-primary-foreground",
+        variant: "default",
       });
     }
   }, [hasSubmittedBooking, hasDownloaded, showingDownloadToast, toast]);
@@ -71,6 +73,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         title: "Thank you!",
         description: "Your report has been downloaded successfully.",
         duration: 3000,
+        className: "animate-fade-in",
       });
     }
   };
