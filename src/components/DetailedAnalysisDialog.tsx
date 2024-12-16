@@ -45,8 +45,7 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
-  // Replace 'your-cal-link' with your actual Cal.com link
-  const calLink = "your-username/meeting-name"; // Update this with your Cal.com link
+  const calLink = "chatsites/ai-discovery-call";
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
