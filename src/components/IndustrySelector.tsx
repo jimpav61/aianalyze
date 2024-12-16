@@ -35,7 +35,7 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
           onValueChange={handleSelectChange}
         >
           <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select your industry" />
+            <SelectValue placeholder="Select your industry to get started" />
           </SelectTrigger>
           <SelectContent 
             className="bg-white border shadow-lg max-h-[300px] overflow-y-auto touch-pan-y"
