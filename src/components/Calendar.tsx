@@ -11,9 +11,9 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
-      // Use the correct event name for Cal.com
+      // Use the correct event name for Cal.com (camelCase)
       cal("on", {
-        action: "BOOKING_SUCCESSFUL",
+        action: "bookingSuccessful",
         callback: () => {
           console.log('Booking submitted successfully');
           onSubmit?.();
