@@ -37,7 +37,7 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
 
         // Handle booking failures with the correct event name
         cal("on", {
-          action: "bookingFailed",
+          action: "booking_failed",
           callback: (error: any) => {
             console.error('Booking failed:', error);
             toast({
