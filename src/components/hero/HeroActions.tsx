@@ -37,7 +37,7 @@ export const HeroActions = ({
             Analyzing...
           </>
         ) : (
-          "Get Free Analysis"
+          "Start Your Free Analysis Now"
         )}
       </Button>
       <Button
