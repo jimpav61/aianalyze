@@ -49,8 +49,15 @@ export const Hero = ({
   };
 
   const handleAnalyzeClick = async () => {
-    await handleAnalyze();
-    handleRequestDetailedReport();
+    try {
+      await handleAnalyze();
+      // Only open the dialog after analyses are loaded
+      setTimeout(() => {
+        handleRequestDetailedReport();
+      }, 100);
+    } catch (error) {
+      console.error("Error during analysis:", error);
+    }
   };
 
   return (
