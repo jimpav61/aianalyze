@@ -17,7 +17,7 @@ export const Calendar = () => {
 
   return (
     <Cal
-      calLink="your-organization/demo"
+      calLink="chatsites/demo"
       style={{ width: "100%", height: "100%", minHeight: "600px" }}
       config={{
         layout: "month_view",
