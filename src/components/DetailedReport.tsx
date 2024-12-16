@@ -46,6 +46,9 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
   const handleBookDemo = () => {
+    onBookDemo?.();
+    
+    // Show download reminder if report hasn't been downloaded
     if (!hasDownloaded && !showingDownloadToast) {
       setShowingDownloadToast(true);
       toast({
@@ -54,12 +57,18 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         duration: null, // Toast will stay until manually dismissed
       });
     }
-    onBookDemo?.();
   };
 
   const handleDownloadComplete = () => {
     setHasDownloaded(true);
-    setShowingDownloadToast(false);
+    if (showingDownloadToast) {
+      setShowingDownloadToast(false);
+      toast({
+        title: "Thank you!",
+        description: "Your report has been downloaded successfully.",
+        duration: 3000,
+      });
+    }
   };
 
   if (!data || !analysis || typeof analysis !== 'object') {
