@@ -46,13 +46,13 @@ export const Hero = ({
 
       <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <BenefitsList position="left" />
           <HeroActions
             selectedIndustry={selectedIndustry}
             setSelectedIndustry={setSelectedIndustry}
             isLoading={isLoading}
             handleAnalyze={handleAnalyzeClick}
           />
+          <BenefitsList position="right" />
         </div>
       </div>
 
