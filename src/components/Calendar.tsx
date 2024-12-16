@@ -5,8 +5,7 @@ export const Calendar = () => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
-      // Using type assertion to handle the Cal API types
-      if (cal && 'namespace' in cal) {
+      if (cal && typeof cal.namespace === 'function') {
         cal.namespace({
           "hide-branding": "1",
           "hide-gdpr-banner": "1",
