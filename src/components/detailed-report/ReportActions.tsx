@@ -1,80 +1,138 @@
 import { Button } from "../ui/button";
-import { Download, CalendarDays } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Download, Mail } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useState } from "react";
+import { useToast } from "../ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ReportActionsProps {
   companyName: string;
+  email?: string;
   onBookDemo?: () => void;
   onDownloadComplete?: () => void;
 }
 
-export const ReportActions = ({ companyName, onBookDemo, onDownloadComplete }: ReportActionsProps) => {
+export const ReportActions = ({ 
+  companyName, 
+  email,
+  onBookDemo, 
+  onDownloadComplete 
+}: ReportActionsProps) => {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const { toast } = useToast();
-  const [hasDownloaded, setHasDownloaded] = useState(false);
 
-  const handleDownloadPDF = async () => {
-    const element = document.getElementById('detailed-report');
-    if (!element) return;
-
-    toast({
-      title: "Generating PDF",
-      description: "Please wait while we prepare your report...",
-    });
-
+  const handleDownload = async () => {
+    setIsDownloading(true);
     try {
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        logging: false,
-        useCORS: true
-      });
-      
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-      });
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save(`${companyName}-AI-Implementation-Analysis.pdf`);
+      const report = document.getElementById("detailed-report");
+      if (!report) {
+        throw new Error("Report element not found");
+      }
 
-      setHasDownloaded(true);
-      onDownloadComplete?.();
+      const canvas = await html2canvas(report);
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgData = canvas.toDataURL("image/png");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${companyName}-AI-Implementation-Analysis.pdf`);
       
+      onDownloadComplete?.();
       toast({
         title: "Success",
-        description: "Your report has been downloaded successfully.",
+        description: "Report downloaded successfully",
       });
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      console.error("Error downloading report:", error);
       toast({
         title: "Error",
-        description: "Failed to generate PDF. Please try again.",
+        description: "Failed to download report. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!email) {
+      toast({
+        title: "Error",
+        description: "No email address provided",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    try {
+      const report = document.getElementById("detailed-report");
+      if (!report) {
+        throw new Error("Report element not found");
+      }
+
+      const reportHtml = report.innerHTML;
+
+      const { data, error } = await supabase.functions.invoke("sendemail", {
+        body: {
+          companyName,
+          email,
+          reportHtml,
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Report sent to your email",
+      });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send email. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
   return (
-    <div className="sticky top-0 z-10 bg-white pb-4 mb-4 flex justify-end gap-4">
+    <div className="sticky top-0 z-50 flex justify-end gap-4 bg-white p-4 shadow-md">
       <Button
-        onClick={onBookDemo}
-        className="gap-2"
         variant="outline"
+        onClick={handleSendEmail}
+        disabled={isSendingEmail || !email}
       >
-        <CalendarDays className="w-4 h-4" />
-        Book A Demo
+        {isSendingEmail ? (
+          "Sending..."
+        ) : (
+          <>
+            <Mail className="mr-2 h-4 w-4" />
+            Email Report
+          </>
+        )}
       </Button>
       <Button
-        onClick={handleDownloadPDF}
-        className="gap-2"
+        variant="outline"
+        onClick={handleDownload}
+        disabled={isDownloading}
       >
-        <Download className="w-4 h-4" />
-        Download PDF
+        {isDownloading ? (
+          "Downloading..."
+        ) : (
+          <>
+            <Download className="mr-2 h-4 w-4" />
+            Download PDF
+          </>
+        )}
       </Button>
+      <Button onClick={onBookDemo}>Book a Demo</Button>
     </div>
   );
 };

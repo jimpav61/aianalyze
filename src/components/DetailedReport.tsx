@@ -44,7 +44,6 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   const [hasDownloaded, setHasDownloaded] = useState(false);
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
   const [hasSubmittedBooking, setHasSubmittedBooking] = useState(false);
-  console.log("DetailedReport - Received props:", { data, analysis, analyses });
 
   const handleBookDemo = () => {
     onBookDemo?.();
@@ -52,13 +51,12 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   };
 
   useEffect(() => {
-    // Show download reminder after booking form submission if report hasn't been downloaded
     if (hasSubmittedBooking && !hasDownloaded && !showingDownloadToast) {
       setShowingDownloadToast(true);
       toast({
         title: "Download Your Report",
         description: "Please download your personalized AI implementation analysis report before proceeding.",
-        duration: null, // Toast will stay until manually dismissed
+        duration: null,
         className: "animate-bounce-slow bg-primary text-primary-foreground",
         variant: "default",
       });
@@ -83,7 +81,6 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
-  // Validate required analysis fields
   const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
   const missingFields = requiredFields.filter(field => !(field in analysis));
   
@@ -95,7 +92,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   return (
     <div className="relative">
       <ReportActions 
-        companyName={data.companyName} 
+        companyName={data.companyName}
+        email={data.email}
         onBookDemo={handleBookDemo}
         onDownloadComplete={handleDownloadComplete}
       />

@@ -9,8 +9,9 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  name: string;
+  companyName: string;
   email: string;
+  reportHtml: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -21,7 +22,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const formData: EmailRequest = await req.json();
-    console.log("Received form data:", formData);
+    console.log("Received email request for:", formData.companyName);
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -30,14 +31,10 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Contact Form <onboarding@resend.dev>",
-        to: ["rick@chatsites.io", "jimmy@chatsites.io"],
-        subject: "New Contact Form Submission",
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${formData.name}</p>
-          <p><strong>Email:</strong> ${formData.email}</p>
-        `,
+        from: "AI Analysis <onboarding@resend.dev>",
+        to: [formData.email],
+        subject: `${formData.companyName} - AI Implementation Analysis Report`,
+        html: formData.reportHtml,
       }),
     });
 
