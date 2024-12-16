@@ -5,7 +5,8 @@ export const Calendar = () => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
-      if (cal && typeof cal.namespace === 'function') {
+      // Check if cal exists and has namespace method before calling it
+      if (cal && 'namespace' in cal && typeof cal.namespace === 'function') {
         cal.namespace({
           "hide-branding": "1",
           "hide-gdpr-banner": "1",
