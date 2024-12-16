@@ -35,6 +35,11 @@ export const Hero = ({
     setShowDetailedDialog(true);
   };
 
+  const handleAnalyzeClick = async () => {
+    await handleAnalyze();
+    handleRequestDetailedReport();
+  };
+
   return (
     <div className="max-w-4xl mx-auto text-center mb-12">
       <HeroHeader />
@@ -46,13 +51,13 @@ export const Hero = ({
             selectedIndustry={selectedIndustry}
             setSelectedIndustry={setSelectedIndustry}
             isLoading={isLoading}
-            handleAnalyze={handleAnalyze}
+            handleAnalyze={handleAnalyzeClick}
             onRequestDetailedReport={handleRequestDetailedReport}
           />
         </div>
       </div>
 
-      <p className="text-gray-600 text-lg font-medium mb-8">or contact us below</p>
+      <p className="text-gray-600 text-lg font-medium mb-8">Sample Report Preview</p>
 
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
