@@ -4,7 +4,6 @@ import { generateAnalysis } from "@/utils/groq";
 import { Hero } from "./Hero";
 import { AnalysisSection } from "./AnalysisSection";
 import { HomeButton } from "./HomeButton";
-import { ContactForm } from "./ContactForm";
 
 export const AnalysisContainer = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
@@ -91,8 +90,7 @@ export const AnalysisContainer = () => {
       />
 
       {!hasSubmitted && analyses.length === 0 && (
-        <div className="mt-16 flex flex-col items-center space-y-12">
-          <ContactForm />
+        <div className="mt-16 flex justify-center">
           <HomeButton />
         </div>
       )}
