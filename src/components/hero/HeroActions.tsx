@@ -18,7 +18,7 @@ export const HeroActions = ({
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-sm font-bold text-gray-600">
-        Get instant insights and unlock a detailed report sent to your email
+        Start your free trial here
       </p>
       <IndustrySelector
         value={selectedIndustry}

@@ -5,7 +5,7 @@ export const HeroHeader = () => {
         Free AI Business Analysis
       </h1>
       <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-        In just minutes, see how AI can revolutionize your operations and drive growth
+        See how AI can revolutionize your operations and drive growth
       </p>
     </div>
   );
