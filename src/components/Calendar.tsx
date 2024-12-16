@@ -27,10 +27,11 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
 
         console.log('Cal API initialized successfully');
         
+        // Listen for successful booking completion
         cal("on", {
-          action: "bookingSuccessful",
+          action: "BOOKING_COMPLETED",
           callback: () => {
-            console.log('Booking submitted successfully');
+            console.log('Booking completed successfully');
             onSubmit?.();
           },
         });
