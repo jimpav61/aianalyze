@@ -45,7 +45,7 @@ export const HeroActions = ({
         onClick={onRequestDetailedReport}
         className="w-full"
       >
-        Request Detailed Report
+        Book A Demo
       </Button>
       <p className="text-sm font-bold text-gray-600 mt-4">
         Get instant insights and unlock a detailed report sent to your email
