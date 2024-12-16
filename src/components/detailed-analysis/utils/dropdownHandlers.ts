@@ -3,7 +3,12 @@ import {
   objectiveOptions, 
   timelineOptions, 
   budgetOptions, 
-  commonPainPoints 
+  commonPainPoints,
+  employeeCountOptions,
+  revenueOptions,
+  serviceChannelOptions,
+  monthlyInteractionsOptions,
+  crmToolOptions
 } from '../constants/dropdownOptions';
 
 export const createDropdownHandler = (
@@ -26,4 +31,9 @@ export const createHandlers = (
   handleTimelineChange: createDropdownHandler('timeline', timelineOptions, handleInputChange),
   handleBudgetChange: createDropdownHandler('budget', budgetOptions, handleInputChange),
   handlePainPointChange: createDropdownHandler('painPoints', commonPainPoints, handleInputChange),
+  handleEmployeeChange: createDropdownHandler('employees', employeeCountOptions, handleInputChange),
+  handleRevenueChange: createDropdownHandler('revenue', revenueOptions, handleInputChange),
+  handleServiceChannelsChange: createDropdownHandler('serviceChannels', serviceChannelOptions, handleInputChange),
+  handleMonthlyInteractionsChange: createDropdownHandler('monthlyInteractions', monthlyInteractionsOptions, handleInputChange),
+  handleCurrentToolsChange: createDropdownHandler('currentTools', crmToolOptions, handleInputChange),
 });

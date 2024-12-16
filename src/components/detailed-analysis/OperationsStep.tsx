@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -7,7 +6,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { commonPainPoints } from "./constants/dropdownOptions";
+import { 
+  commonPainPoints, 
+  serviceChannelOptions, 
+  monthlyInteractionsOptions,
+  crmToolOptions 
+} from "./constants/dropdownOptions";
 import { createHandlers } from "./utils/dropdownHandlers";
 
 interface OperationsStepProps {
@@ -24,7 +28,12 @@ export const OperationsStep = ({
   formData,
   handleInputChange,
 }: OperationsStepProps) => {
-  const { handlePainPointChange } = createHandlers(handleInputChange);
+  const { 
+    handleServiceChannelsChange, 
+    handleMonthlyInteractionsChange,
+    handleCurrentToolsChange,
+    handlePainPointChange 
+  } = createHandlers(handleInputChange);
 
   return (
     <div className="space-y-4">
@@ -32,38 +41,59 @@ export const OperationsStep = ({
         <Label htmlFor="serviceChannels" className="flex items-center">
           Current Service Channels <span className="text-red-500 ml-1">*</span>
         </Label>
-        <Input
-          id="serviceChannels"
-          name="serviceChannels"
-          value={formData.serviceChannels}
-          onChange={handleInputChange}
-          placeholder="e.g., Email, Phone, Chat"
-          className={!formData.serviceChannels ? "border-red-300" : ""}
-        />
+        <Select 
+          value={serviceChannelOptions.find(opt => opt.label === formData.serviceChannels)?.value} 
+          onValueChange={handleServiceChannelsChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select service channels" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {serviceChannelOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="monthlyInteractions" className="flex items-center">
           Monthly Customer Interactions <span className="text-red-500 ml-1">*</span>
         </Label>
-        <Input
-          id="monthlyInteractions"
-          name="monthlyInteractions"
-          type="number"
-          value={formData.monthlyInteractions}
-          onChange={handleInputChange}
-          placeholder="e.g., 1000"
-          className={!formData.monthlyInteractions ? "border-red-300" : ""}
-        />
+        <Select 
+          value={monthlyInteractionsOptions.find(opt => opt.label === formData.monthlyInteractions)?.value} 
+          onValueChange={handleMonthlyInteractionsChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select monthly interactions range" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {monthlyInteractionsOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="currentTools">Current Tools & Software</Label>
-        <Input
-          id="currentTools"
-          name="currentTools"
-          value={formData.currentTools}
-          onChange={handleInputChange}
-          placeholder="e.g., Zendesk, Salesforce, etc."
-        />
+        <Select 
+          value={crmToolOptions.find(opt => opt.label === formData.currentTools)?.value} 
+          onValueChange={handleCurrentToolsChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select your CRM/tools" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {crmToolOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="painPoints">Current Pain Points</Label>

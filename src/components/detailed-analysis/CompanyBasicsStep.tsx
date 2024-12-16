@@ -1,5 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { employeeCountOptions, revenueOptions } from "./constants/dropdownOptions";
+import { createHandlers } from "./utils/dropdownHandlers";
 
 interface CompanyBasicsStepProps {
   formData: {
@@ -16,6 +25,8 @@ export const CompanyBasicsStep = ({
   formData,
   handleInputChange,
 }: CompanyBasicsStepProps) => {
+  const { handleEmployeeChange, handleRevenueChange } = createHandlers(handleInputChange);
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -58,25 +69,39 @@ export const CompanyBasicsStep = ({
       </div>
       <div className="space-y-2">
         <Label htmlFor="employees">Number of Employees</Label>
-        <Input
-          id="employees"
-          name="employees"
-          type="number"
-          value={formData.employees}
-          onChange={handleInputChange}
-          placeholder="e.g., 50"
-        />
+        <Select 
+          value={employeeCountOptions.find(opt => opt.label === formData.employees)?.value} 
+          onValueChange={handleEmployeeChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select number of employees" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {employeeCountOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="space-y-2">
         <Label htmlFor="revenue">Annual Revenue (USD)</Label>
-        <Input
-          id="revenue"
-          name="revenue"
-          type="number"
-          value={formData.revenue}
-          onChange={handleInputChange}
-          placeholder="e.g., 1000000"
-        />
+        <Select 
+          value={revenueOptions.find(opt => opt.label === formData.revenue)?.value} 
+          onValueChange={handleRevenueChange}
+        >
+          <SelectTrigger className="w-full bg-white">
+            <SelectValue placeholder="Select annual revenue range" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {revenueOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
