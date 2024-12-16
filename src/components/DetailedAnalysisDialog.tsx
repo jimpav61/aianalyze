@@ -45,12 +45,15 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
+  // Replace 'your-cal-link' with your actual Cal.com link
+  const calLink = "your-username/meeting-name"; // Update this with your Cal.com link
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto">
           {showCalendar ? (
-            <Calendar />
+            <Calendar calLink={calLink} />
           ) : (
             <CustomDialogContent
               showReport={showReport}

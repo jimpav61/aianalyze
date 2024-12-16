@@ -1,7 +1,11 @@
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
 
-export const Calendar = () => {
+interface CalendarProps {
+  calLink?: string;
+}
+
+export const Calendar = ({ calLink = "chatsites/demo" }: CalendarProps) => {
   useEffect(() => {
     (async function () {
       const cal = await getCalApi();
@@ -17,7 +21,7 @@ export const Calendar = () => {
 
   return (
     <Cal
-      calLink="chatsites/demo"
+      calLink={calLink}
       style={{ width: "100%", height: "100%", minHeight: "600px" }}
       config={{
         layout: "month_view",
