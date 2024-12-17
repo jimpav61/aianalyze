@@ -43,6 +43,7 @@ export const DialogContent = ({
     }
   };
 
+  // If we're not showing the report yet, show the form
   if (!showReport) {
     return (
       <>
@@ -60,14 +61,21 @@ export const DialogContent = ({
     );
   }
 
+  // For the report view, ensure we have all required data
   if (!formData || !analysis) {
     console.error("DialogContent - Missing required data for report:", { formData, analysis });
+    toast({
+      title: "Error",
+      description: "Unable to display report. Missing required data.",
+      variant: "destructive",
+    });
     return null;
   }
 
   const processedAnalysis = getProcessedAnalysis();
   console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
+  // Create the analyses grid data
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: processedAnalysis.department,
