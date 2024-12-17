@@ -71,6 +71,7 @@ export const DetailedAnalysisDialog = ({
       return;
     }
     setShowCalendar(true);
+    setShowReport(false);
   }, [formData, toast]);
 
   const handleBookingSubmit = useCallback(() => {
@@ -93,7 +94,7 @@ export const DetailedAnalysisDialog = ({
         />
       ) : (
         <DialogContent
-          showReport={!showFormOnly && showReport}
+          showReport={showReport && !showFormOnly}
           formData={formData}
           onSubmit={handleSubmit}
           industry={industry}

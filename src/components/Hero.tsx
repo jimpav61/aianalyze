@@ -40,21 +40,12 @@ export const Hero = ({
         allAnalyses: analyses
       });
       
-      // Show analysis card first
       setShowAnalysisCard(true);
-
-      // After 3 seconds, hide analysis card and show detailed form
-      const timer = setTimeout(() => {
-        setShowAnalysisCard(false);
-        setShowDetailedDialog(true);
-      }, 3000);
-
-      return () => clearTimeout(timer);
+      setShowDetailedDialog(true);
     }
   }, [analyses, selectedIndustry]);
 
   const handleAnalyzeClick = () => {
-    // Reset states before starting new analysis
     setShowAnalysisCard(false);
     setShowDetailedDialog(false);
     setCurrentAnalysis(null);
@@ -80,14 +71,14 @@ export const Hero = ({
       <p className="text-gray-600 text-lg font-medium mb-8">Sample Report Preview</p>
 
       <DetailedAnalysisDialog
-        isOpen={showAnalysisCard || showDetailedDialog}
+        isOpen={showDetailedDialog}
         onClose={() => {
           setShowAnalysisCard(false);
           setShowDetailedDialog(false);
         }}
         industry={selectedIndustry}
         analysis={currentAnalysis}
-        showFormOnly={showDetailedDialog}
+        showFormOnly={false}
       />
     </div>
   );
