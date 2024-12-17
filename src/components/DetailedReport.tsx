@@ -57,16 +57,23 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         title: "Don't Forget Your Report!",
         description: "Would you like to download or email your personalized AI implementation analysis report?",
         duration: null, // Toast will persist until dismissed
+        variant: "destructive",
         action: (
           <div className="flex gap-2 mt-2">
             <button
-              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]')?.click()}
+              onClick={() => {
+                document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]')?.click();
+                setShowingDownloadToast(false);
+              }}
               className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
             >
               Download PDF
             </button>
             <button
-              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]')?.click()}
+              onClick={() => {
+                document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]')?.click();
+                setShowingDownloadToast(false);
+              }}
               className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
             >
               Email Report
@@ -79,14 +86,12 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   const handleDownloadComplete = () => {
     setHasDownloaded(true);
-    if (showingDownloadToast) {
-      setShowingDownloadToast(false);
-      toast({
-        title: "Thank you!",
-        description: "Your report has been saved successfully.",
-        duration: 3000,
-      });
-    }
+    setShowingDownloadToast(false);
+    toast({
+      title: "Thank you!",
+      description: "Your report has been saved successfully.",
+      duration: 3000,
+    });
   };
 
   if (!data || !analysis || typeof analysis !== 'object') {
