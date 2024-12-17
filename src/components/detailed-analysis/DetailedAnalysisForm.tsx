@@ -60,7 +60,7 @@ export const DetailedAnalysisForm = ({
 
     if (validateStep(3)) {
       console.log("DetailedAnalysisForm - Form validation passed. Submitting data:", formData);
-      onSubmit(formData);
+      handleSubmit(analysis);
     } else {
       console.log("DetailedAnalysisForm - Form validation failed");
     }
