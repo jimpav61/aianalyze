@@ -1,20 +1,29 @@
-import React from "react";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
 const findAndClickButton = (selector: string) => {
   return new Promise<boolean>((resolve) => {
-    requestAnimationFrame(() => {
+    const tryClick = () => {
       const button = document.querySelector(selector);
       if (button instanceof HTMLButtonElement) {
         console.log(`Found button ${selector}, clicking...`);
-        button.click();
-        resolve(true);
+        try {
+          button.click();
+          resolve(true);
+        } catch (error) {
+          console.error(`Error clicking button ${selector}:`, error);
+          resolve(false);
+        }
       } else {
-        console.warn(`Button ${selector} not found`);
-        resolve(false);
+        // If button not found, retry after a short delay
+        setTimeout(() => {
+          console.log(`Retrying to find button ${selector}...`);
+          tryClick();
+        }, 100);
       }
-    });
+    };
+    
+    tryClick();
   });
 };
 
@@ -33,7 +42,9 @@ export const showReportReminder = () => {
             variant="default"
             className="w-full sm:w-auto"
             onClick={async (e) => {
-              e.preventDefault();
+              if (!e.defaultPrevented) {
+                e.preventDefault();
+              }
               e.stopPropagation();
               await findAndClickButton('[aria-label="Download PDF"]');
             }}
@@ -44,7 +55,9 @@ export const showReportReminder = () => {
             variant="default"
             className="w-full sm:w-auto"
             onClick={async (e) => {
-              e.preventDefault();
+              if (!e.defaultPrevented) {
+                e.preventDefault();
+              }
               e.stopPropagation();
               await findAndClickButton('[aria-label="Email Report"]');
             }}
@@ -72,11 +85,15 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
           variant="default"
           className="w-full sm:w-auto"
           onClick={(e) => {
-            e.preventDefault();
+            if (!e.defaultPrevented) {
+              e.preventDefault();
+            }
             e.stopPropagation();
             if (onBookDemo) {
-              console.log("Executing onBookDemo from toast");
-              onBookDemo();
+              setTimeout(() => {
+                console.log("Executing onBookDemo from toast");
+                onBookDemo();
+              }, 100);
             }
           }}
         >

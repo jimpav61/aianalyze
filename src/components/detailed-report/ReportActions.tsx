@@ -26,9 +26,10 @@ export const ReportActions = ({
     e.stopPropagation();
     console.log("ReportActions - Book Demo clicked");
     if (onBookDemo) {
-      requestAnimationFrame(() => {
+      setTimeout(() => {
+        console.log("Executing onBookDemo callback");
         onBookDemo();
-      });
+      }, 100);
     }
   };
   
