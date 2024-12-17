@@ -22,8 +22,16 @@ export const DetailedAnalysisDialog = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
+  console.log("DetailedAnalysisDialog - Current state:", {
+    showReport,
+    showCalendar,
+    hasFormData: !!formData,
+    showFormOnly,
+  });
+
   const handleSubmit = useCallback((data: DetailedFormData) => {
     console.log("DetailedAnalysisDialog - Form submitted with data:", data);
+    
     if (!data || !analysis) {
       console.error("DetailedAnalysisDialog - Missing required data:", { data, analysis });
       toast({
