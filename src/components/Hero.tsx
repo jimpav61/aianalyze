@@ -49,13 +49,15 @@ export const Hero = ({
         setShowDetailedDialog(true);
       }, 3000);
 
-      return () => {
-        clearTimeout(timer);
-      };
+      return () => clearTimeout(timer);
     }
   }, [analyses, selectedIndustry]);
 
   const handleAnalyzeClick = () => {
+    // Reset states before starting new analysis
+    setShowAnalysisCard(false);
+    setShowDetailedDialog(false);
+    setCurrentAnalysis(null);
     handleAnalyze();
   };
 

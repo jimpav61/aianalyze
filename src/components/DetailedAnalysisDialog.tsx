@@ -23,6 +23,7 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = useCallback((data: DetailedFormData) => {
+    console.log("DetailedAnalysisDialog - handleSubmit called with data:", data);
     if (!data) {
       toast({
         title: "Error",
@@ -47,6 +48,7 @@ export const DetailedAnalysisDialog = ({
 
   const handleClose = useCallback(() => {
     onClose();
+    // Reset states after dialog closes with a slight delay
     const timer = setTimeout(() => {
       setFormData(null);
       setShowReport(false);
@@ -86,7 +88,7 @@ export const DetailedAnalysisDialog = ({
             </>
           ) : (
             <CustomDialogContent
-              showReport={!showFormOnly && !showReport}
+              showReport={!showFormOnly && showReport}
               formData={formData}
               onSubmit={handleSubmit}
               industry={industry}
