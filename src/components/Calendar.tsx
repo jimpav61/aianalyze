@@ -54,8 +54,28 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
                 `;
                 reportClone.prepend(style);
 
-                console.log('Sending email with report to:', formData.email);
-                const { error } = await supabase.functions.invoke("sendemail", {
+                // Send booking confirmation email
+                console.log('Sending booking confirmation email to:', formData.email);
+                const { error: bookingEmailError } = await supabase.functions.invoke("sendemail", {
+                  body: {
+                    email: formData.email,
+                    companyName: formData.companyName,
+                    subject: `Booking Confirmation - AI Implementation Discovery Call`,
+                    reportHtml: `
+                      <h1>Booking Confirmation</h1>
+                      <p>Thank you for booking a discovery call with us. We look forward to discussing how we can help implement AI solutions for ${formData.companyName}.</p>
+                      <p>You will receive a calendar invitation shortly with the meeting details.</p>
+                    `
+                  },
+                });
+
+                if (bookingEmailError) {
+                  console.error('Error sending booking confirmation email:', bookingEmailError);
+                }
+
+                // Send detailed report email
+                console.log('Sending detailed report email to:', formData.email);
+                const { error: reportEmailError } = await supabase.functions.invoke("sendemail", {
                   body: {
                     email: formData.email,
                     companyName: formData.companyName,
@@ -64,8 +84,8 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
                   },
                 });
 
-                if (error) {
-                  console.error('Error sending report email:', error);
+                if (reportEmailError) {
+                  console.error('Error sending report email:', reportEmailError);
                   toast({
                     title: "Error",
                     description: "Failed to send the report email. Please try again later.",
@@ -74,14 +94,14 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
                 } else {
                   toast({
                     title: "Success",
-                    description: "Analysis report has been sent to your email.",
+                    description: "Booking confirmed and analysis report has been sent to your email.",
                   });
                 }
               } catch (error) {
-                console.error('Error sending report email:', error);
+                console.error('Error in booking callback:', error);
                 toast({
                   title: "Error",
-                  description: "Failed to send the report email. Please try again later.",
+                  description: "An error occurred while processing your booking. Please contact support.",
                   variant: "destructive",
                 });
               }
