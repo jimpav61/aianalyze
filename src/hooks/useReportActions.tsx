@@ -1,6 +1,5 @@
-import React from "react";
-import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useState, useCallback } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
 interface UseReportActionsProps {
@@ -13,16 +12,16 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
   const [hasBooked, setHasBooked] = useState(false);
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
 
-  const handleBookDemo = () => {
+  const handleBookDemo = useCallback(() => {
     console.log("useReportActions - handleBookDemo called");
     if (onBookDemo) {
       onBookDemo();
       setHasBooked(true);
       console.log("useReportActions - Demo booked successfully");
     }
-  };
+  }, [onBookDemo]);
 
-  const handleDownloadComplete = () => {
+  const handleDownloadComplete = useCallback(() => {
     console.log("useReportActions - handleDownloadComplete called");
     setHasDownloaded(true);
     setShowingDownloadToast(false);
@@ -32,7 +31,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
       toast({
         title: "Ready for the Next Step?",
         description: "Would you like to book a demo to discuss implementing these solutions?",
-        duration: 5000,
         action: (
           <Button 
             onClick={handleBookDemo}
@@ -44,9 +42,9 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
         ),
       });
     }
-  };
+  }, [hasBooked, handleBookDemo, toast]);
 
-  const showDownloadReminder = React.useCallback(() => {
+  const showDownloadReminder = useCallback(() => {
     console.log("useReportActions - showDownloadReminder called", {
       hasBooked,
       hasDownloaded,
@@ -59,9 +57,8 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
       toast({
         title: "Don't Forget Your Report!",
         description: "Would you like to download or email your personalized AI implementation analysis report?",
-        duration: null,
         action: (
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2">
             <Button
               onClick={() => {
                 console.log("useReportActions - Download PDF button clicked");
@@ -69,9 +66,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
                 if (downloadButton) {
                   downloadButton.click();
                   setShowingDownloadToast(false);
-                  console.log("useReportActions - Download initiated");
-                } else {
-                  console.error("useReportActions - Download button not found");
                 }
               }}
               variant="default"
@@ -86,9 +80,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
                 if (emailButton) {
                   emailButton.click();
                   setShowingDownloadToast(false);
-                  console.log("useReportActions - Email initiated");
-                } else {
-                  console.error("useReportActions - Email button not found");
                 }
               }}
               variant="default"

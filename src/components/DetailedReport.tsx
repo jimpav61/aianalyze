@@ -35,19 +35,14 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
       hasDownloaded,
       showingDownloadToast
     });
-    showDownloadReminder();
+    
+    if (showDownloadReminder) {
+      showDownloadReminder();
+    }
   }, [hasBooked, hasDownloaded, showingDownloadToast, showDownloadReminder]);
 
-  if (!data || !analysis || typeof analysis !== 'object') {
-    console.error("DetailedReport - Missing or invalid data:", { data, analysis });
-    return null;
-  }
-
-  const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
-  const missingFields = requiredFields.filter(field => !(field in analysis));
-  
-  if (missingFields.length > 0) {
-    console.error("DetailedReport - Missing required analysis fields:", missingFields);
+  if (!data || !analysis) {
+    console.error("DetailedReport - Missing required data:", { data, analysis });
     return null;
   }
 
