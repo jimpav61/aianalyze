@@ -11,6 +11,17 @@ interface CalendarProps {
   analysis?: any;
 }
 
+// Define proper types for the Cal API
+type CalApi = {
+  ns: {
+    [key: string]: (config: { debug?: boolean; calLink: string }) => void;
+  };
+  on: (config: {
+    action: string;
+    callback: () => Promise<void>;
+  }) => void;
+};
+
 export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProps) => {
   const { sendEmails } = useEmailHandler({ 
     formData, 
@@ -25,7 +36,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
   useEffect(() => {
     (async function initializeCalendar() {
       try {
-        const cal = await getCalApi();
+        const cal = await getCalApi() as unknown as CalApi;
         
         if (!cal) {
           console.error('Calendar API not initialized');
