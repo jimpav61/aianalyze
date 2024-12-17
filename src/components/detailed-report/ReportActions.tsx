@@ -31,19 +31,56 @@ export const ReportActions = ({
         throw new Error("Report element not found");
       }
 
+      // Set temporary styles for better PDF capture
+      const originalStyle = report.style.cssText;
+      report.style.maxHeight = 'none';
+      report.style.overflow = 'visible';
+      report.style.position = 'relative';
+
       const canvas = await html2canvas(report, {
-        scale: 2, // Increase quality
+        scale: 2,
         useCORS: true,
         logging: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        windowHeight: report.scrollHeight,
+        height: report.scrollHeight
       });
-      
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgData = canvas.toDataURL("image/png");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      // Restore original styles
+      report.style.cssText = originalStyle;
+      
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const totalPages = Math.ceil(imgHeight * ratio / pdfHeight);
+
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) {
+          pdf.addPage();
+        }
+        
+        pdf.addImage(
+          imgData,
+          'PNG',
+          imgX,
+          -(page * pdfHeight),
+          imgWidth * ratio,
+          imgHeight * ratio,
+          undefined,
+          'FAST'
+        );
+      }
+
       pdf.save(`${companyName}-AI-Implementation-Analysis.pdf`);
       
       onDownloadComplete?.();
@@ -86,27 +123,33 @@ export const ReportActions = ({
       // Add inline styles for email compatibility
       const style = document.createElement('style');
       style.textContent = `
-        .detailed-report {
+        body {
           font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
           max-width: 800px;
           margin: 0 auto;
           padding: 20px;
-          background-color: #ffffff;
-        }
-        .report-section {
-          margin-bottom: 20px;
-          padding: 15px;
-          border-radius: 8px;
-          background-color: #f8f9fa;
         }
         h1, h2, h3 {
-          color: #333;
-          margin-bottom: 15px;
+          color: #2563eb;
+          margin-top: 1.5em;
+          margin-bottom: 0.5em;
+        }
+        .card {
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          padding: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
         }
         p {
-          color: #666;
-          line-height: 1.6;
-          margin-bottom: 10px;
+          margin-bottom: 1rem;
         }
       `;
       reportClone.prepend(style);
@@ -115,8 +158,8 @@ export const ReportActions = ({
 
       const { data, error } = await supabase.functions.invoke("sendemail", {
         body: {
-          companyName,
           email,
+          companyName,
           reportHtml: reportClone.innerHTML,
           subject: `${companyName} - AI Implementation Analysis Report`
         },
@@ -127,6 +170,7 @@ export const ReportActions = ({
         throw error;
       }
 
+      onDownloadComplete?.();
       toast({
         title: "Success",
         description: "Report sent to your email. Please check your inbox (and spam folder).",

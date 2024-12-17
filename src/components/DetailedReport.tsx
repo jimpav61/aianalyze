@@ -54,11 +54,25 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     if (hasSubmittedBooking && !hasDownloaded && !showingDownloadToast) {
       setShowingDownloadToast(true);
       toast({
-        title: "Download Your Report",
-        description: "Please download your personalized AI implementation analysis report before proceeding.",
-        duration: null,
-        className: "animate-bounce-slow bg-primary text-primary-foreground",
-        variant: "default",
+        title: "Don't Forget Your Report!",
+        description: "Would you like to download or email your personalized AI implementation analysis report?",
+        duration: null, // Toast will persist until dismissed
+        action: (
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]')?.click()}
+              className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+            >
+              Download PDF
+            </button>
+            <button
+              onClick={() => document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]')?.click()}
+              className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+            >
+              Email Report
+            </button>
+          </div>
+        ),
       });
     }
   }, [hasSubmittedBooking, hasDownloaded, showingDownloadToast, toast]);
@@ -69,9 +83,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
       setShowingDownloadToast(false);
       toast({
         title: "Thank you!",
-        description: "Your report has been downloaded successfully.",
+        description: "Your report has been saved successfully.",
         duration: 3000,
-        className: "animate-fade-in",
       });
     }
   };
