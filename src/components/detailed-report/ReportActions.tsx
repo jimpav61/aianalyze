@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { EmailReportButton } from "./actions/EmailReportButton";
 import { DownloadReportButton } from "./actions/DownloadReportButton";
-import { Mail } from "lucide-react";
 
 interface ReportActionsProps {
   companyName: string;
@@ -24,7 +23,9 @@ export const ReportActions = ({
     e.preventDefault();
     e.stopPropagation();
     console.log("ReportActions - Book Demo clicked");
-    onBookDemo?.();
+    if (onBookDemo) {
+      onBookDemo();
+    }
   };
   
   return (

@@ -1,5 +1,5 @@
 import { Dialog, DialogContent } from "./ui/dialog";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "./ui/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
@@ -17,9 +17,9 @@ export const DetailedAnalysisDialog = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
-  console.log("DetailedAnalysisDialog - Initial render:", { industry, analysis, showReport, formData });
+  console.log("DetailedAnalysisDialog - Initial render:", { industry, analysis, showReport, showCalendar, formData });
 
-  const handleSubmit = (data: DetailedFormData) => {
+  const handleSubmit = useCallback((data: DetailedFormData) => {
     console.log("DetailedAnalysisDialog - handleSubmit called with:", data);
     console.log("DetailedAnalysisDialog - Current analysis:", analysis);
     
@@ -35,27 +35,27 @@ export const DetailedAnalysisDialog = ({
 
     setFormData(data);
     setShowReport(true);
-  };
+  }, [analysis, toast]);
 
-  const handleBookingSubmit = () => {
+  const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Booking submitted");
     if (formData) {
       setFormData({ ...formData });
     }
-  };
+  }, [formData]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
     setFormData(null);
     setShowReport(false);
     setShowCalendar(false);
     onClose();
-  };
+  }, [onClose]);
 
-  const handleBookDemo = () => {
+  const handleBookDemo = useCallback(() => {
     console.log("Setting showCalendar to true");
     setShowCalendar(true);
-  };
+  }, []);
 
   const calLink = "chatsites/ai-discovery-call";
 

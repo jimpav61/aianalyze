@@ -2,6 +2,29 @@ import React from "react";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
+const findAndClickButton = (selector: string, maxAttempts = 10, interval = 100) => {
+  let attempts = 0;
+  
+  const tryClick = () => {
+    const button = document.querySelector(selector);
+    if (button instanceof HTMLButtonElement) {
+      console.log(`Found and clicking ${selector}`);
+      button.click();
+      return true;
+    }
+    
+    attempts++;
+    if (attempts < maxAttempts) {
+      console.log(`Button ${selector} not found, attempt ${attempts}/${maxAttempts}`);
+      setTimeout(tryClick, interval);
+    } else {
+      console.warn(`Failed to find button ${selector} after ${maxAttempts} attempts`);
+    }
+  };
+  
+  tryClick();
+};
+
 export const showReportReminder = () => {
   console.log("Showing report reminder toast");
   
@@ -19,12 +42,7 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              const downloadButton = document.querySelector('[aria-label="Download PDF"]');
-              if (downloadButton instanceof HTMLButtonElement) {
-                downloadButton.click();
-              } else {
-                console.warn("Download button not found");
-              }
+              findAndClickButton('[aria-label="Download PDF"]');
             }}
           >
             Download PDF
@@ -35,12 +53,7 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              const emailButton = document.querySelector('[aria-label="Email Report"]');
-              if (emailButton instanceof HTMLButtonElement) {
-                emailButton.click();
-              } else {
-                console.warn("Email button not found");
-              }
+              findAndClickButton('[aria-label="Email Report"]');
             }}
           >
             Email Report
@@ -69,6 +82,7 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
             e.preventDefault();
             e.stopPropagation();
             if (onBookDemo) {
+              console.log("Executing onBookDemo from toast");
               onBookDemo();
             }
           }}
