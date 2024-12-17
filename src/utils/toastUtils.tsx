@@ -19,15 +19,12 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              requestAnimationFrame(() => {
-                console.log("Download button clicked from toast");
-                const downloadButton = document.querySelector('[aria-label="Download PDF"]');
-                if (downloadButton instanceof HTMLButtonElement) {
-                  downloadButton.click();
-                } else {
-                  console.warn("Download button not found or invalid");
-                }
-              });
+              const downloadButton = document.querySelector('[aria-label="Download PDF"]');
+              if (downloadButton instanceof HTMLButtonElement) {
+                downloadButton.click();
+              } else {
+                console.warn("Download button not found");
+              }
             }}
           >
             Download PDF
@@ -38,15 +35,12 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              requestAnimationFrame(() => {
-                console.log("Email button clicked from toast");
-                const emailButton = document.querySelector('[aria-label="Email Report"]');
-                if (emailButton instanceof HTMLButtonElement) {
-                  emailButton.click();
-                } else {
-                  console.warn("Email button not found or invalid");
-                }
-              });
+              const emailButton = document.querySelector('[aria-label="Email Report"]');
+              if (emailButton instanceof HTMLButtonElement) {
+                emailButton.click();
+              } else {
+                console.warn("Email button not found");
+              }
             }}
           >
             Email Report
@@ -74,12 +68,9 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            requestAnimationFrame(() => {
-              console.log("Book demo clicked from toast");
-              if (onBookDemo) {
-                onBookDemo();
-              }
-            });
+            if (onBookDemo) {
+              onBookDemo();
+            }
           }}
         >
           Book Demo

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { EmailReportButton } from "./actions/EmailReportButton";
 import { DownloadReportButton } from "./actions/DownloadReportButton";
+import { Mail } from "lucide-react";
 
 interface ReportActionsProps {
   companyName: string;
@@ -19,6 +20,13 @@ export const ReportActions = ({
 }: ReportActionsProps) => {
   console.log("ReportActions - Render", { companyName, email });
   
+  const handleBookDemo = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("ReportActions - Book Demo clicked");
+    onBookDemo?.();
+  };
+  
   return (
     <div className="sticky top-0 z-50 flex justify-end gap-4 bg-white p-4 shadow-md">
       <EmailReportButton
@@ -30,12 +38,7 @@ export const ReportActions = ({
         companyName={companyName}
         onComplete={onDownloadComplete}
       />
-      <Button 
-        onClick={() => {
-          console.log("ReportActions - Book Demo clicked");
-          onBookDemo?.();
-        }}
-      >
+      <Button onClick={handleBookDemo}>
         Book a Demo
       </Button>
     </div>
