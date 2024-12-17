@@ -7,13 +7,15 @@ interface ReportActionsProps {
   email?: string;
   onBookDemo?: () => void;
   onDownloadComplete?: () => void;
+  onEmailComplete?: () => void;
 }
 
 export const ReportActions = ({ 
   companyName, 
   email,
   onBookDemo, 
-  onDownloadComplete 
+  onDownloadComplete,
+  onEmailComplete
 }: ReportActionsProps) => {
   console.log("ReportActions - Render", { companyName, email });
   
@@ -22,7 +24,7 @@ export const ReportActions = ({
       <EmailReportButton
         email={email}
         companyName={companyName}
-        onComplete={onDownloadComplete}
+        onComplete={onEmailComplete}
       />
       <DownloadReportButton
         companyName={companyName}

@@ -23,23 +23,10 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   const {
     hasDownloaded,
     hasBooked,
-    showingDownloadToast,
+    hasEmailed,
     handleBookDemo,
-    handleDownloadComplete,
-    showDownloadReminder
+    handleReportAction
   } = useReportActions({ onBookDemo });
-
-  useEffect(() => {
-    console.log("DetailedReport - useEffect triggered", {
-      hasBooked,
-      hasDownloaded,
-      showingDownloadToast
-    });
-    
-    if (hasBooked && !hasDownloaded && !showingDownloadToast) {
-      showDownloadReminder();
-    }
-  }, [hasBooked, hasDownloaded, showingDownloadToast, showDownloadReminder]);
 
   if (!data || !analysis) {
     console.error("DetailedReport - Missing required data:", { data, analysis });
@@ -52,7 +39,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         companyName={data.companyName}
         email={data.email}
         onBookDemo={handleBookDemo}
-        onDownloadComplete={handleDownloadComplete}
+        onDownloadComplete={() => handleReportAction('download')}
+        onEmailComplete={() => handleReportAction('email')}
       />
       <ReportContent 
         data={data}
