@@ -84,8 +84,11 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
           <div className="flex gap-2 mt-2">
             <button
               onClick={() => {
-                document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]')?.click();
-                setShowingDownloadToast(false);
+                const downloadButton = document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]');
+                if (downloadButton) {
+                  downloadButton.click();
+                  setShowingDownloadToast(false);
+                }
               }}
               className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
             >
@@ -93,8 +96,11 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
             </button>
             <button
               onClick={() => {
-                document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]')?.click();
-                setShowingDownloadToast(false);
+                const emailButton = document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]');
+                if (emailButton) {
+                  emailButton.click();
+                  setShowingDownloadToast(false);
+                }
               }}
               className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
             >
