@@ -6,16 +6,16 @@ interface CalendarProps {
   onSubmit?: () => void;
 }
 
-// Define the type for the Cal API
-interface CalApi {
-  on: (args: { action: string; callback: () => void }) => void;
-  // Add other potential methods here if needed
-}
+// Define a more specific type that matches the actual Cal API structure
+type CalApiType = {
+  on: (args: { action: string; callback: (...args: any[]) => void }) => void;
+  // Add other methods as needed
+} & (ReturnType<typeof getCalApi> extends Promise<infer T> ? T : never);
 
 export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
   useEffect(() => {
     (async function () {
-      const cal = (await getCalApi()) as CalApi;
+      const cal = await getCalApi() as unknown as CalApiType;
       cal.on({
         action: "bookingSuccessful",
         callback: () => {
