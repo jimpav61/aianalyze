@@ -9,10 +9,10 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  name?: string;
   email: string;
-  companyName?: string;
-  reportHtml?: string;
+  companyName: string;
+  reportHtml: string;
+  subject: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,30 +22,40 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Received email request");
     const formData: EmailRequest = await req.json();
-    console.log("Received email request:", formData);
+    console.log("Email request data:", { 
+      to: formData.email, 
+      subject: formData.subject,
+      companyName: formData.companyName 
+    });
 
     if (!RESEND_API_KEY) {
       throw new Error("Missing RESEND_API_KEY");
     }
 
-    let emailContent = "";
-    let emailSubject = "";
+    // Wrap the report HTML in a proper email template
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${formData.subject}</title>
+        </head>
+        <body style="margin: 0; padding: 20px; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+          <div style="max-width: 800px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h1 style="color: #333; margin-bottom: 20px;">AI Implementation Analysis Report</h1>
+            <p style="color: #666; margin-bottom: 20px;">Dear ${formData.companyName},</p>
+            <p style="color: #666; margin-bottom: 20px;">Thank you for using our AI Implementation Analysis tool. Please find your detailed report below:</p>
+            ${formData.reportHtml}
+            <p style="color: #666; margin-top: 20px;">Best regards,<br>AI Implementation Team</p>
+          </div>
+        </body>
+      </html>
+    `;
 
-    if (formData.reportHtml) {
-      // This is a report email
-      emailContent = formData.reportHtml;
-      emailSubject = `${formData.companyName} - AI Implementation Analysis Report`;
-    } else {
-      // This is a contact form email
-      emailContent = `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${formData.name}</p>
-        <p><strong>Email:</strong> ${formData.email}</p>
-      `;
-      emailSubject = "New Contact Form Submission";
-    }
-
+    console.log("Sending email to Resend API");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -55,8 +65,8 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: "AI Analysis <onboarding@resend.dev>",
         to: [formData.email],
-        subject: emailSubject,
-        html: emailContent,
+        subject: formData.subject,
+        html: emailHtml,
       }),
     });
 
@@ -69,7 +79,7 @@ const handler = async (req: Request): Promise<Response> => {
       });
     } else {
       const error = await res.text();
-      console.error("Error sending email:", error);
+      console.error("Error from Resend API:", error);
       return new Response(JSON.stringify({ error }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
