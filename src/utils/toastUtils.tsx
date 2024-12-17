@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 
 const findAndClickButton = (selector: string) => {
   return new Promise<boolean>((resolve) => {
+    let attempts = 0;
+    const maxAttempts = 10;
+    
     const tryClick = () => {
       const button = document.querySelector(selector);
       if (button instanceof HTMLButtonElement) {
@@ -15,15 +18,17 @@ const findAndClickButton = (selector: string) => {
           resolve(false);
         }
       } else {
-        // If button not found, retry after a short delay
-        setTimeout(() => {
-          console.log(`Retrying to find button ${selector}...`);
-          tryClick();
-        }, 100);
+        attempts++;
+        if (attempts < maxAttempts) {
+          requestAnimationFrame(tryClick);
+        } else {
+          console.error(`Button ${selector} not found after ${maxAttempts} attempts`);
+          resolve(false);
+        }
       }
     };
     
-    tryClick();
+    requestAnimationFrame(tryClick);
   });
 };
 
@@ -41,12 +46,10 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={async (e) => {
-              if (!e.defaultPrevented) {
-                e.preventDefault();
-              }
+            onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
-              await findAndClickButton('[aria-label="Download PDF"]');
+              findAndClickButton('[aria-label="Download PDF"]');
             }}
           >
             Download PDF
@@ -54,12 +57,10 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={async (e) => {
-              if (!e.defaultPrevented) {
-                e.preventDefault();
-              }
+            onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
-              await findAndClickButton('[aria-label="Email Report"]');
+              findAndClickButton('[aria-label="Email Report"]');
             }}
           >
             Email Report
@@ -85,12 +86,12 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
           variant="default"
           className="w-full sm:w-auto"
           onClick={(e) => {
-            if (!e.defaultPrevented) {
-              e.preventDefault();
-            }
+            e.preventDefault();
             e.stopPropagation();
             if (onBookDemo) {
-              onBookDemo();
+              requestAnimationFrame(() => {
+                onBookDemo();
+              });
             }
           }}
         >

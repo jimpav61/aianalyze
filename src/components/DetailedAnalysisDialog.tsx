@@ -46,18 +46,25 @@ export const DetailedAnalysisDialog = ({
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
-    // Only reset states if we're actually closing the dialog
-    if (isOpen) {
-      setTimeout(() => {
+    if (!isOpen) return; // Don't do anything if dialog is already closed
+    
+    // Use RAF to ensure state updates happen in the correct order
+    requestAnimationFrame(() => {
+      onClose();
+      // Reset states after dialog is closed
+      requestAnimationFrame(() => {
         setFormData(null);
         setShowReport(false);
         setShowCalendar(false);
-        onClose();
-      }, 100);
-    }
+      });
+    });
   }, [isOpen, onClose]);
 
-  const handleBookDemo = useCallback(() => {
+  const handleBookDemo = useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     console.log("Setting showCalendar to true");
     setShowCalendar(true);
   }, []);

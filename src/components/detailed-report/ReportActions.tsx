@@ -20,13 +20,14 @@ export const ReportActions = ({
   console.log("ReportActions - Render", { companyName, email });
   
   const handleBookDemo = (e: React.MouseEvent) => {
-    if (!e.defaultPrevented) {
-      e.preventDefault();
-    }
-    e.stopPropagation();
     console.log("ReportActions - Book Demo clicked");
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (onBookDemo) {
-      onBookDemo();
+      requestAnimationFrame(() => {
+        onBookDemo();
+      });
     }
   };
   
