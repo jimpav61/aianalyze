@@ -49,13 +49,11 @@ export const DetailedAnalysisDialog = ({
   const handleClose = useCallback(() => {
     onClose();
     // Reset states after dialog closes with a slight delay
-    const timer = setTimeout(() => {
+    setTimeout(() => {
       setFormData(null);
       setShowReport(false);
       setShowCalendar(false);
     }, 300);
-
-    return () => clearTimeout(timer);
   }, [onClose]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {

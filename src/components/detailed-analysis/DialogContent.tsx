@@ -22,8 +22,6 @@ export const DialogContent = ({
   onBookDemo
 }: DialogContentProps) => {
   const { toast } = useToast();
-  console.log("DialogContent - Render state:", { showReport, formData, industry, analysis });
-  
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
 
   const handleFormSubmit = (data: DetailedFormData) => {
