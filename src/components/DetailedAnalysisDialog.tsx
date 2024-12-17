@@ -6,12 +6,17 @@ import { DialogContent as CustomDialogContent } from "./detailed-analysis/Dialog
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { Calendar } from "./Calendar";
 
+interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
+  showFormOnly?: boolean;
+}
+
 export const DetailedAnalysisDialog = ({
   isOpen,
   onClose,
   industry,
   analysis,
-}: DetailedAnalysisProps) => {
+  showFormOnly = false,
+}: ExtendedDetailedAnalysisProps) => {
   const { toast } = useToast();
   const [showReport, setShowReport] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -81,7 +86,7 @@ export const DetailedAnalysisDialog = ({
             </>
           ) : (
             <CustomDialogContent
-              showReport={showReport}
+              showReport={!showFormOnly && !showReport}
               formData={formData}
               onSubmit={handleSubmit}
               industry={industry}

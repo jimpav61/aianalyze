@@ -20,6 +20,7 @@ export const Hero = ({
   analyses = [],
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
+  const [showAnalysisCard, setShowAnalysisCard] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
 
   useEffect(() => {
@@ -38,11 +39,15 @@ export const Hero = ({
         ...primaryAnalysis,
         allAnalyses: analyses
       });
-      setShowDetailedDialog(true);
+      
+      // Show analysis card first
+      setShowAnalysisCard(true);
 
+      // After 3 seconds, hide analysis card and show detailed form
       const timer = setTimeout(() => {
-        setShowDetailedDialog(false);
-      }, 5000);
+        setShowAnalysisCard(false);
+        setShowDetailedDialog(true);
+      }, 3000);
 
       return () => {
         clearTimeout(timer);
@@ -73,10 +78,14 @@ export const Hero = ({
       <p className="text-gray-600 text-lg font-medium mb-8">Sample Report Preview</p>
 
       <DetailedAnalysisDialog
-        isOpen={showDetailedDialog}
-        onClose={() => setShowDetailedDialog(false)}
+        isOpen={showAnalysisCard || showDetailedDialog}
+        onClose={() => {
+          setShowAnalysisCard(false);
+          setShowDetailedDialog(false);
+        }}
         industry={selectedIndustry}
         analysis={currentAnalysis}
+        showFormOnly={showDetailedDialog}
       />
     </div>
   );
