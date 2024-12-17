@@ -32,7 +32,10 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
           action: "bookingSuccessful",
           callback: () => {
             console.log('Booking completed successfully');
-            onSubmit?.();
+            // Add a small delay to ensure state updates properly
+            setTimeout(() => {
+              onSubmit?.();
+            }, 100);
           },
         });
 

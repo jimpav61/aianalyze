@@ -25,10 +25,7 @@ export const ReportActions = ({
     e.stopPropagation();
     
     if (onBookDemo) {
-      // Ensure we're not in the middle of a state update
-      setTimeout(() => {
-        onBookDemo();
-      }, 0);
+      onBookDemo();
     }
   };
   

@@ -39,10 +39,10 @@ export const DetailedAnalysisDialog = ({
 
   const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Booking submitted");
-    if (formData) {
-      setFormData({ ...formData });
-    }
-  }, [formData]);
+    // Keep the report visible after booking
+    setShowCalendar(false);
+    setShowReport(true);
+  }, []);
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
