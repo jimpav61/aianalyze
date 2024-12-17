@@ -42,12 +42,26 @@ export const DetailedAnalysisDialog = ({
     requestAnimationFrame(() => {
       setShowCalendar(false);
       setShowReport(true);
+      toast({
+        title: "Success",
+        description: "Your demo has been scheduled successfully!",
+      });
     });
-  }, []);
+  }, [toast]);
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
     if (!isOpen) return;
+    
+    // Only allow closing if calendar is not shown
+    if (showCalendar) {
+      toast({
+        title: "Please complete booking",
+        description: "Schedule your demo before closing",
+        variant: "destructive",
+      });
+      return;
+    }
     
     onClose();
     // Reset states after dialog transition
@@ -58,7 +72,7 @@ export const DetailedAnalysisDialog = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, showCalendar, toast]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {
     console.log("DetailedAnalysisDialog - Book demo clicked");
@@ -79,7 +93,15 @@ export const DetailedAnalysisDialog = ({
       <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
         <div className="flex-1 overflow-y-auto">
           {showCalendar ? (
-            <Calendar calLink={calLink} onSubmit={handleBookingSubmit} />
+            <>
+              <div className="mb-4 text-center">
+                <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
+                <p className="text-muted-foreground">
+                  Choose a time that works best for you
+                </p>
+              </div>
+              <Calendar calLink={calLink} onSubmit={handleBookingSubmit} />
+            </>
           ) : (
             <CustomDialogContent
               showReport={showReport}
