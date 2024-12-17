@@ -46,8 +46,10 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
 
   const handleBookDemo = () => {
-    onBookDemo?.();
-    setHasBooked(true);
+    if (onBookDemo) {
+      onBookDemo();
+      setHasBooked(true);
+    }
   };
 
   const handleDownloadComplete = () => {
