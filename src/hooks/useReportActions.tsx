@@ -14,17 +14,21 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
 
   const handleBookDemo = () => {
+    console.log("useReportActions - handleBookDemo called");
     if (onBookDemo) {
       onBookDemo();
       setHasBooked(true);
+      console.log("useReportActions - Demo booked successfully");
     }
   };
 
   const handleDownloadComplete = () => {
+    console.log("useReportActions - handleDownloadComplete called");
     setHasDownloaded(true);
     setShowingDownloadToast(false);
     
     if (!hasBooked) {
+      console.log("useReportActions - Showing book demo toast");
       toast({
         title: "Ready for the Next Step?",
         description: "Would you like to book a demo to discuss implementing these solutions?",
@@ -42,8 +46,15 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
     }
   };
 
-  const showDownloadReminder = () => {
+  const showDownloadReminder = React.useCallback(() => {
+    console.log("useReportActions - showDownloadReminder called", {
+      hasBooked,
+      hasDownloaded,
+      showingDownloadToast
+    });
+
     if (hasBooked && !hasDownloaded && !showingDownloadToast) {
+      console.log("useReportActions - Showing download reminder toast");
       setShowingDownloadToast(true);
       toast({
         title: "Don't Forget Your Report!",
@@ -53,10 +64,14 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
           <div className="flex gap-2 mt-2">
             <Button
               onClick={() => {
+                console.log("useReportActions - Download PDF button clicked");
                 const downloadButton = document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]');
                 if (downloadButton) {
                   downloadButton.click();
                   setShowingDownloadToast(false);
+                  console.log("useReportActions - Download initiated");
+                } else {
+                  console.error("useReportActions - Download button not found");
                 }
               }}
               variant="default"
@@ -66,10 +81,14 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
             </Button>
             <Button
               onClick={() => {
+                console.log("useReportActions - Email Report button clicked");
                 const emailButton = document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]');
                 if (emailButton) {
                   emailButton.click();
                   setShowingDownloadToast(false);
+                  console.log("useReportActions - Email initiated");
+                } else {
+                  console.error("useReportActions - Email button not found");
                 }
               }}
               variant="default"
@@ -81,7 +100,7 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
         ),
       });
     }
-  };
+  }, [hasBooked, hasDownloaded, showingDownloadToast, toast]);
 
   return {
     hasDownloaded,

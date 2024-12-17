@@ -15,6 +15,8 @@ export const ReportActions = ({
   onBookDemo, 
   onDownloadComplete 
 }: ReportActionsProps) => {
+  console.log("ReportActions - Render", { companyName, email });
+  
   return (
     <div className="sticky top-0 z-50 flex justify-end gap-4 bg-white p-4 shadow-md">
       <EmailReportButton
@@ -26,7 +28,14 @@ export const ReportActions = ({
         companyName={companyName}
         onComplete={onDownloadComplete}
       />
-      <Button onClick={onBookDemo}>Book a Demo</Button>
+      <Button 
+        onClick={() => {
+          console.log("ReportActions - Book Demo clicked");
+          onBookDemo?.();
+        }}
+      >
+        Book a Demo
+      </Button>
     </div>
   );
 };

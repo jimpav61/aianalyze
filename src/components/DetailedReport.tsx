@@ -30,6 +30,11 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   } = useReportActions({ onBookDemo });
 
   useEffect(() => {
+    console.log("DetailedReport - useEffect triggered", {
+      hasBooked,
+      hasDownloaded,
+      showingDownloadToast
+    });
     showDownloadReminder();
   }, [hasBooked, hasDownloaded, showingDownloadToast, showDownloadReminder]);
 
