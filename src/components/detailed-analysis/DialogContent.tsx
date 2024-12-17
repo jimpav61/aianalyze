@@ -1,9 +1,7 @@
-import { DetailedAnalysisForm } from "./DetailedAnalysisForm";
-import { DetailedReport } from "../DetailedReport";
-import { DialogHeader, DialogTitle } from "../ui/dialog";
+import { FormView } from "./FormView";
+import { ReportView } from "./ReportView";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
-import { useAnalysisProcessor } from "./useAnalysisProcessor";
 import { useToast } from "@/hooks/use-toast";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
@@ -22,7 +20,6 @@ export const DialogContent = ({
   onBookDemo
 }: DialogContentProps) => {
   const { toast } = useToast();
-  const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
 
   console.log("DialogContent - Render state:", { 
     showReport, 
@@ -54,18 +51,11 @@ export const DialogContent = ({
   if (!showReport) {
     console.log("DialogContent - Showing form view");
     return (
-      <>
-        <DialogHeader>
-          <DialogTitle>Detailed Analysis Request</DialogTitle>
-        </DialogHeader>
-        <div className="mt-4">
-          <DetailedAnalysisForm 
-            onSubmit={handleFormSubmit} 
-            industry={industry}
-            analysis={analysis}
-          />
-        </div>
-      </>
+      <FormView 
+        onSubmit={handleFormSubmit}
+        industry={industry}
+        analysis={analysis}
+      />
     );
   }
 
@@ -80,36 +70,12 @@ export const DialogContent = ({
     return null;
   }
 
-  // Process analysis data for report
-  console.log("DialogContent - Processing analysis for report");
-  const processedAnalysis = getProcessedAnalysis();
-  console.log("DialogContent - Processed analysis:", processedAnalysis);
-
-  // Prepare analyses grid data
-  const analysesForGrid = analysis.allAnalyses || [{
-    id: crypto.randomUUID(),
-    department: processedAnalysis.department,
-    function: processedAnalysis.bot_function,
-    savings: processedAnalysis.savings.toString(),
-    profit_increase: processedAnalysis.profit_increase.toString(),
-    explanation: processedAnalysis.explanation,
-    marketingStrategy: processedAnalysis.marketing_strategy
-  }];
-
-  console.log("DialogContent - Rendering report with data:", {
-    formData,
-    processedAnalysis,
-    analysesForGrid
-  });
-
   return (
-    <div className="space-y-6">
-      <DetailedReport 
-        data={formData} 
-        analysis={processedAnalysis}
-        analyses={analysesForGrid}
-        onBookDemo={onBookDemo}
-      />
-    </div>
+    <ReportView 
+      formData={formData}
+      analysis={analysis}
+      onBookDemo={onBookDemo}
+      industry={industry}
+    />
   );
 };
