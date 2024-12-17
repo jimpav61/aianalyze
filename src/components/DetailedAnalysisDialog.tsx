@@ -100,7 +100,12 @@ export const DetailedAnalysisDialog = ({
                   Choose a time that works best for you
                 </p>
               </div>
-              <Calendar calLink={calLink} onSubmit={handleBookingSubmit} />
+              <Calendar 
+                calLink={calLink} 
+                onSubmit={handleBookingSubmit}
+                formData={formData || undefined}
+                analysis={analysis}
+              />
             </>
           ) : (
             <CustomDialogContent
