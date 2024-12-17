@@ -31,7 +31,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   useEffect(() => {
     showDownloadReminder();
-  }, [hasBooked, hasDownloaded, showingDownloadToast]);
+  }, [hasBooked, hasDownloaded, showingDownloadToast, showDownloadReminder]);
 
   if (!data || !analysis || typeof analysis !== 'object') {
     console.error("DetailedReport - Missing or invalid data:", { data, analysis });

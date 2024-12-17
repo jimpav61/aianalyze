@@ -1,5 +1,7 @@
+import React from "react";
 import { useState } from "react";
-import { useToast } from "./use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface UseReportActionsProps {
   onBookDemo?: () => void;
@@ -28,12 +30,13 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
         description: "Would you like to book a demo to discuss implementing these solutions?",
         duration: 5000,
         action: (
-          <button
+          <Button 
             onClick={handleBookDemo}
-            className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+            variant="default"
+            size="sm"
           >
             Book Demo
-          </button>
+          </Button>
         ),
       });
     }
@@ -48,7 +51,7 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
         duration: null,
         action: (
           <div className="flex gap-2 mt-2">
-            <button
+            <Button
               onClick={() => {
                 const downloadButton = document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]');
                 if (downloadButton) {
@@ -56,11 +59,12 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
                   setShowingDownloadToast(false);
                 }
               }}
-              className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+              variant="default"
+              size="sm"
             >
               Download PDF
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => {
                 const emailButton = document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]');
                 if (emailButton) {
@@ -68,10 +72,11 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
                   setShowingDownloadToast(false);
                 }
               }}
-              className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+              variant="default"
+              size="sm"
             >
               Email Report
-            </button>
+            </Button>
           </div>
         ),
       });
