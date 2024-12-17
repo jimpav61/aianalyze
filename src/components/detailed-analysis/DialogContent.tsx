@@ -24,10 +24,7 @@ export const DialogContent = ({
   const { toast } = useToast();
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
 
-  console.log("DialogContent - Render:", { showReport, formData, industry, analysis });
-
   const handleFormSubmit = (data: DetailedFormData) => {
-    console.log("DialogContent - Form submission handler called with data:", data);
     try {
       if (!analysis) {
         throw new Error("Missing analysis data");
@@ -61,12 +58,10 @@ export const DialogContent = ({
   }
 
   if (!formData || !analysis) {
-    console.error("DialogContent - Missing required data for report:", { formData, analysis });
     return null;
   }
 
   const processedAnalysis = getProcessedAnalysis();
-  console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
