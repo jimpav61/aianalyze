@@ -90,10 +90,7 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
             }
             e.stopPropagation();
             if (onBookDemo) {
-              setTimeout(() => {
-                console.log("Executing onBookDemo from toast");
-                onBookDemo();
-              }, 100);
+              onBookDemo();
             }
           }}
         >
