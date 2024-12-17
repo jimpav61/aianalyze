@@ -52,6 +52,11 @@ export const DetailedAnalysisDialog = ({
     onClose();
   };
 
+  const handleBookDemo = () => {
+    console.log("Setting showCalendar to true");
+    setShowCalendar(true);
+  };
+
   const calLink = "chatsites/ai-discovery-call";
 
   return (
@@ -67,10 +72,7 @@ export const DetailedAnalysisDialog = ({
               onSubmit={handleSubmit}
               industry={industry}
               analysis={analysis}
-              onBookDemo={() => {
-                console.log("Setting showCalendar to true");
-                setShowCalendar(true);
-              }}
+              onBookDemo={handleBookDemo}
             />
           )}
         </div>

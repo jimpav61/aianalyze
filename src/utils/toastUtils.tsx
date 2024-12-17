@@ -19,13 +19,15 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log("Download button clicked from toast");
-              const downloadButton = document.querySelector('[aria-label="Download PDF"]') as HTMLButtonElement;
-              if (downloadButton) {
-                downloadButton.click();
-              } else {
-                console.warn("Download button not found");
-              }
+              requestAnimationFrame(() => {
+                console.log("Download button clicked from toast");
+                const downloadButton = document.querySelector('[aria-label="Download PDF"]');
+                if (downloadButton instanceof HTMLButtonElement) {
+                  downloadButton.click();
+                } else {
+                  console.warn("Download button not found or invalid");
+                }
+              });
             }}
           >
             Download PDF
@@ -36,13 +38,15 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log("Email button clicked from toast");
-              const emailButton = document.querySelector('[aria-label="Email Report"]') as HTMLButtonElement;
-              if (emailButton) {
-                emailButton.click();
-              } else {
-                console.warn("Email button not found");
-              }
+              requestAnimationFrame(() => {
+                console.log("Email button clicked from toast");
+                const emailButton = document.querySelector('[aria-label="Email Report"]');
+                if (emailButton instanceof HTMLButtonElement) {
+                  emailButton.click();
+                } else {
+                  console.warn("Email button not found or invalid");
+                }
+              });
             }}
           >
             Email Report
@@ -70,10 +74,12 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Book demo clicked from toast");
-            if (onBookDemo) {
-              onBookDemo();
-            }
+            requestAnimationFrame(() => {
+              console.log("Book demo clicked from toast");
+              if (onBookDemo) {
+                onBookDemo();
+              }
+            });
           }}
         >
           Book Demo
