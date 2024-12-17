@@ -4,7 +4,7 @@ import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
 import { useAnalysisProcessor } from "./useAnalysisProcessor";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;
@@ -27,6 +27,9 @@ export const DialogContent = ({
   const handleFormSubmit = (data: DetailedFormData) => {
     console.log("DialogContent - Form submission handler called with data:", data);
     try {
+      if (!analysis) {
+        throw new Error("Missing analysis data");
+      }
       onSubmit(data);
     } catch (error) {
       console.error("DialogContent - Error submitting form:", error);

@@ -6,7 +6,7 @@ import { GoalsStep } from "./GoalsStep";
 import { FormStepNavigator } from "./FormStepNavigator";
 import { DetailedFormData } from "@/types/analysis";
 import { useDetailedAnalysisForm } from "@/hooks/useDetailedAnalysisForm";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
