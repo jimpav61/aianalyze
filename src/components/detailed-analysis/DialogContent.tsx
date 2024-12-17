@@ -24,14 +24,21 @@ export const DialogContent = ({
   const { toast } = useToast();
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
 
-  console.log("DialogContent - Initial render:", { showReport, formData, industry, analysis });
+  console.log("DialogContent - Render state:", { 
+    showReport, 
+    hasFormData: !!formData, 
+    hasAnalysis: !!analysis,
+    industry 
+  });
 
   const handleFormSubmit = (data: DetailedFormData) => {
     console.log("DialogContent - Form submission handler called with data:", data);
     try {
       if (!analysis) {
+        console.error("DialogContent - Missing analysis data for form submission");
         throw new Error("Missing analysis data");
       }
+      console.log("DialogContent - Calling parent onSubmit with form data");
       onSubmit(data);
     } catch (error) {
       console.error("DialogContent - Error submitting form:", error);
@@ -43,8 +50,9 @@ export const DialogContent = ({
     }
   };
 
-  // If we're not showing the report yet, show the form
+  // Show form if not in report view
   if (!showReport) {
+    console.log("DialogContent - Showing form view");
     return (
       <>
         <DialogHeader>
@@ -61,7 +69,7 @@ export const DialogContent = ({
     );
   }
 
-  // For the report view, ensure we have all required data
+  // Validate data for report view
   if (!formData || !analysis) {
     console.error("DialogContent - Missing required data for report:", { formData, analysis });
     toast({
@@ -72,10 +80,12 @@ export const DialogContent = ({
     return null;
   }
 
+  // Process analysis data for report
+  console.log("DialogContent - Processing analysis for report");
   const processedAnalysis = getProcessedAnalysis();
-  console.log("DialogContent - Processed analysis for report:", processedAnalysis);
+  console.log("DialogContent - Processed analysis:", processedAnalysis);
 
-  // Create the analyses grid data
+  // Prepare analyses grid data
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: processedAnalysis.department,
@@ -85,6 +95,12 @@ export const DialogContent = ({
     explanation: processedAnalysis.explanation,
     marketingStrategy: processedAnalysis.marketing_strategy
   }];
+
+  console.log("DialogContent - Rendering report with data:", {
+    formData,
+    processedAnalysis,
+    analysesForGrid
+  });
 
   return (
     <div className="space-y-6">

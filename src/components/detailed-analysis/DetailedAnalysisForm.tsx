@@ -44,7 +44,12 @@ export const DetailedAnalysisForm = ({
   });
   const { toast } = useToast();
 
-  console.log("DetailedAnalysisForm - Current state:", { currentStep, formData, industry, analysis });
+  console.log("DetailedAnalysisForm - Current state:", { 
+    currentStep, 
+    formData, 
+    industry, 
+    analysis 
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -54,10 +59,11 @@ export const DetailedAnalysisForm = ({
       ...prev,
       [name]: value,
     }));
+    console.log("DetailedAnalysisForm - Input changed:", { name, value });
   };
 
   const validateStep = (step: number) => {
-    console.log("Validating step:", step, "Current form data:", formData);
+    console.log("DetailedAnalysisForm - Validating step:", step);
     
     const requiredFields: { [key: number]: string[] } = {
       1: ["companyName", "email"],
@@ -70,7 +76,7 @@ export const DetailedAnalysisForm = ({
     );
 
     if (missingFields.length > 0) {
-      console.warn("Missing required fields:", missingFields);
+      console.warn("DetailedAnalysisForm - Missing required fields:", missingFields);
       toast({
         title: "Required Fields Missing",
         description: `Please fill out the following fields: ${missingFields
@@ -84,18 +90,20 @@ export const DetailedAnalysisForm = ({
   };
 
   const handleNext = () => {
-    console.log("Attempting to move to next step");
+    console.log("DetailedAnalysisForm - Attempting to move to next step");
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => prev + 1);
+      console.log("DetailedAnalysisForm - Moving to next step");
     }
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
+    console.log("DetailedAnalysisForm - Moving to previous step");
   };
 
   const handleSubmit = () => {
-    console.log("DetailedAnalysisForm - Form submission handler called");
+    console.log("DetailedAnalysisForm - Attempting to submit form");
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
       toast({
