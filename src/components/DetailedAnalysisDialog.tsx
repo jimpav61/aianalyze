@@ -17,13 +17,8 @@ export const DetailedAnalysisDialog = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
-  console.log("DetailedAnalysisDialog - Initial render:", { industry, analysis, showReport, showCalendar, formData });
-
   const handleSubmit = useCallback((data: DetailedFormData) => {
-    console.log("DetailedAnalysisDialog - handleSubmit called with:", data);
-    
     if (!data) {
-      console.error("DetailedAnalysisDialog - No form data provided");
       toast({
         title: "Error",
         description: "Form data is missing",
@@ -37,21 +32,16 @@ export const DetailedAnalysisDialog = ({
   }, [toast]);
 
   const handleBookingSubmit = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Booking submitted");
-    requestAnimationFrame(() => {
-      setShowCalendar(false);
-      setShowReport(true);
-      toast({
-        title: "Success",
-        description: "Your demo has been scheduled successfully!",
-      });
+    setShowCalendar(false);
+    setShowReport(true);
+    toast({
+      title: "Success",
+      description: "Your demo has been scheduled successfully!",
     });
   }, [toast]);
 
   const handleClose = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Closing dialog");
     onClose();
-    // Reset states after dialog transition
     const timer = setTimeout(() => {
       setFormData(null);
       setShowReport(false);
@@ -62,18 +52,13 @@ export const DetailedAnalysisDialog = ({
   }, [onClose]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {
-    console.log("DetailedAnalysisDialog - Book demo clicked");
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    requestAnimationFrame(() => {
-      setShowCalendar(true);
-      setShowReport(false);
-    });
+    setShowCalendar(true);
+    setShowReport(false);
   }, []);
-
-  const calLink = "chatsites/ai-discovery-call";
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -88,7 +73,7 @@ export const DetailedAnalysisDialog = ({
                 </p>
               </div>
               <Calendar 
-                calLink={calLink} 
+                calLink="chatsites/ai-discovery-call" 
                 onSubmit={handleBookingSubmit}
                 formData={formData || undefined}
                 analysis={analysis}

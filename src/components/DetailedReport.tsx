@@ -1,6 +1,5 @@
 import { ReportActions } from "./detailed-report/ReportActions";
 import { ReportContent } from "./detailed-report/ReportContent";
-import { useReportActions } from "@/hooks/useReportActions";
 import { DetailedFormData } from "@/types/analysis";
 
 interface DetailedReportProps {
@@ -19,11 +18,6 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
-  const {
-    handleBookDemo,
-    handleReportAction
-  } = useReportActions({ onBookDemo });
-
   if (!data || !analysis) {
     console.error("DetailedReport - Missing required data:", { data, analysis });
     return null;
@@ -34,9 +28,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
       <ReportActions 
         companyName={data.companyName}
         email={data.email}
-        onBookDemo={handleBookDemo}
-        onDownloadComplete={() => handleReportAction('download')}
-        onEmailComplete={() => handleReportAction('email')}
+        onBookDemo={onBookDemo}
       />
       <ReportContent 
         data={data}
