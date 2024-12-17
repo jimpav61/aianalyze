@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { DetailedFormData } from "@/types/analysis";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface EmailHandlerProps {
   formData?: DetailedFormData;
@@ -12,16 +12,29 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
   const { toast } = useToast();
 
   const sendEmails = async () => {
+    console.log("EmailHandler - Starting email send process", { 
+      hasFormData: !!formData, 
+      hasAnalysis: !!analysis 
+    });
+
     if (!formData?.email || !analysis) {
-      console.error('Missing required data for emails');
+      console.error('EmailHandler - Missing required data:', { 
+        hasEmail: !!formData?.email, 
+        hasAnalysis: !!analysis 
+      });
+      toast({
+        title: "Error",
+        description: "Unable to send confirmation emails. Please contact support.",
+        variant: "destructive",
+      });
       return false;
     }
 
     try {
       const reportElement = document.getElementById("detailed-report");
       if (!reportElement) {
-        console.error('Report element not found');
-        return false;
+        console.error('EmailHandler - Report element not found');
+        throw new Error('Report element not found');
       }
 
       // Clone and prepare report for email
@@ -36,7 +49,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
       reportClone.prepend(style);
 
       // Send booking confirmation
-      console.log('Sending booking confirmation to:', formData.email);
+      console.log('EmailHandler - Sending booking confirmation to:', formData.email);
       const { error: bookingEmailError } = await supabase.functions.invoke("sendemail", {
         body: {
           email: formData.email,
@@ -46,48 +59,30 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
             <h1>Booking Confirmation</h1>
             <p>Thank you for booking a discovery call with us. We look forward to discussing how we can help implement AI solutions for ${formData.companyName}.</p>
             <p>You will receive a calendar invitation shortly with the meeting details.</p>
+            <p>We've also attached your detailed analysis report below for reference.</p>
+            ${reportClone.innerHTML}
           `
         },
       });
 
       if (bookingEmailError) {
-        console.error('Booking email error:', bookingEmailError);
-        return false;
+        console.error('EmailHandler - Booking email error:', bookingEmailError);
+        throw bookingEmailError;
       }
 
-      // Send detailed report
-      console.log('Sending detailed report to:', formData.email);
-      const { error: reportEmailError } = await supabase.functions.invoke("sendemail", {
-        body: {
-          email: formData.email,
-          companyName: formData.companyName,
-          reportHtml: reportClone.innerHTML,
-          subject: `${formData.companyName} - AI Implementation Analysis Report`
-        },
-      });
-
-      if (reportEmailError) {
-        console.error('Report email error:', reportEmailError);
-        toast({
-          title: "Error",
-          description: "Failed to send the report email. Please try again later.",
-          variant: "destructive",
-        });
-        return false;
-      }
-
+      console.log('EmailHandler - Emails sent successfully');
       toast({
         title: "Success",
-        description: "Booking confirmed and analysis report has been sent to your email.",
+        description: "Booking confirmed! Check your email for details.",
       });
       
       onSuccess();
       return true;
     } catch (error) {
-      console.error('Email handling error:', error);
+      console.error('EmailHandler - Error sending emails:', error);
       toast({
         title: "Error",
-        description: "An error occurred while processing your booking. Please contact support.",
+        description: "Failed to send confirmation emails. Please contact support.",
         variant: "destructive",
       });
       return false;
