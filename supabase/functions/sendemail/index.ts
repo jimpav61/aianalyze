@@ -45,9 +45,6 @@ const handler = async (req: Request): Promise<Response> => {
         </head>
         <body style="margin: 0; padding: 20px; background-color: #f4f4f4; font-family: Arial, sans-serif;">
           <div style="max-width: 800px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <h1 style="color: #333; margin-bottom: 20px;">AI Implementation Analysis Report</h1>
-            <p style="color: #666; margin-bottom: 20px;">Dear ${formData.companyName},</p>
-            <p style="color: #666; margin-bottom: 20px;">Thank you for using our AI Implementation Analysis tool. Please find your detailed report below:</p>
             ${formData.reportHtml}
             <p style="color: #666; margin-top: 20px;">Best regards,<br>AI Implementation Team</p>
           </div>

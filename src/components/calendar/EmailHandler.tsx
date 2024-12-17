@@ -48,29 +48,33 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
       `;
       reportClone.prepend(style);
 
-      // Send booking confirmation
-      console.log('EmailHandler - Sending booking confirmation to:', formData.email);
-      const { error: bookingEmailError } = await supabase.functions.invoke("sendemail", {
+      // Send booking confirmation with report included
+      console.log('EmailHandler - Sending confirmation email to:', formData.email);
+      const { error: emailError } = await supabase.functions.invoke("sendemail", {
         body: {
           email: formData.email,
           companyName: formData.companyName,
           subject: `Booking Confirmation - AI Implementation Discovery Call`,
           reportHtml: `
-            <h1>Booking Confirmation</h1>
-            <p>Thank you for booking a discovery call with us. We look forward to discussing how we can help implement AI solutions for ${formData.companyName}.</p>
-            <p>You will receive a calendar invitation shortly with the meeting details.</p>
-            <p>We've also attached your detailed analysis report below for reference.</p>
-            ${reportClone.innerHTML}
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #2563eb; margin-bottom: 24px;">Booking Confirmation</h1>
+              <p style="margin-bottom: 16px;">Thank you for booking a discovery call with us. We look forward to discussing how we can help implement AI solutions for ${formData.companyName}.</p>
+              <p style="margin-bottom: 16px;">You will receive a calendar invitation shortly with the meeting details.</p>
+              <p style="margin-bottom: 24px;">We've attached your detailed analysis report below for reference.</p>
+              <div style="margin-top: 32px;">
+                ${reportClone.innerHTML}
+              </div>
+            </div>
           `
         },
       });
 
-      if (bookingEmailError) {
-        console.error('EmailHandler - Booking email error:', bookingEmailError);
-        throw bookingEmailError;
+      if (emailError) {
+        console.error('EmailHandler - Email error:', emailError);
+        throw emailError;
       }
 
-      console.log('EmailHandler - Emails sent successfully');
+      console.log('EmailHandler - Email sent successfully');
       toast({
         title: "Success",
         description: "Booking confirmed! Check your email for details.",
@@ -82,7 +86,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
       console.error('EmailHandler - Error sending emails:', error);
       toast({
         title: "Error",
-        description: "Failed to send confirmation emails. Please contact support.",
+        description: "Failed to send confirmation email. Please contact support.",
         variant: "destructive",
       });
       return false;
