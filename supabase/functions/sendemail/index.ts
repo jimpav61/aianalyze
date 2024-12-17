@@ -9,9 +9,10 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  companyName: string;
+  name?: string;
   email: string;
-  reportHtml: string;
+  companyName?: string;
+  reportHtml?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,7 +23,28 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const formData: EmailRequest = await req.json();
-    console.log("Received email request for:", formData.companyName);
+    console.log("Received email request:", formData);
+
+    if (!RESEND_API_KEY) {
+      throw new Error("Missing RESEND_API_KEY");
+    }
+
+    let emailContent = "";
+    let emailSubject = "";
+
+    if (formData.reportHtml) {
+      // This is a report email
+      emailContent = formData.reportHtml;
+      emailSubject = `${formData.companyName} - AI Implementation Analysis Report`;
+    } else {
+      // This is a contact form email
+      emailContent = `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${formData.name}</p>
+        <p><strong>Email:</strong> ${formData.email}</p>
+      `;
+      emailSubject = "New Contact Form Submission";
+    }
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -33,8 +55,8 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: "AI Analysis <onboarding@resend.dev>",
         to: [formData.email],
-        subject: `${formData.companyName} - AI Implementation Analysis Report`,
-        html: formData.reportHtml,
+        subject: emailSubject,
+        html: emailContent,
       }),
     });
 
