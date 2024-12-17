@@ -45,12 +45,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
   }, [hasBooked, handleBookDemo, toast]);
 
   const showDownloadReminder = useCallback(() => {
-    console.log("useReportActions - showDownloadReminder called", {
-      hasBooked,
-      hasDownloaded,
-      showingDownloadToast
-    });
-
     if (hasBooked && !hasDownloaded && !showingDownloadToast) {
       console.log("useReportActions - Showing download reminder toast");
       setShowingDownloadToast(true);
@@ -61,7 +55,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
           <div className="flex gap-2">
             <Button
               onClick={() => {
-                console.log("useReportActions - Download PDF button clicked");
                 const downloadButton = document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]');
                 if (downloadButton) {
                   downloadButton.click();
@@ -75,7 +68,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
             </Button>
             <Button
               onClick={() => {
-                console.log("useReportActions - Email Report button clicked");
                 const emailButton = document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]');
                 if (emailButton) {
                   emailButton.click();

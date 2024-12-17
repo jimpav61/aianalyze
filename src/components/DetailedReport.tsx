@@ -36,7 +36,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
       showingDownloadToast
     });
     
-    if (showDownloadReminder) {
+    if (hasBooked && !hasDownloaded && !showingDownloadToast) {
       showDownloadReminder();
     }
   }, [hasBooked, hasDownloaded, showingDownloadToast, showDownloadReminder]);
