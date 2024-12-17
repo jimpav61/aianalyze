@@ -31,7 +31,7 @@ const findAndClickButton = (selector: string) => {
       }
     };
     
-    requestAnimationFrame(tryClick);
+    tryClick();
   });
 };
 
@@ -52,8 +52,13 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              console.log("Download PDF button clicked in toast");
               requestAnimationFrame(() => {
-                findAndClickButton('[aria-label="Download PDF"]');
+                findAndClickButton('[aria-label="Download PDF"]').then(success => {
+                  if (!success) {
+                    console.warn("Failed to trigger PDF download");
+                  }
+                });
               });
             }}
           >
@@ -65,8 +70,13 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              console.log("Email Report button clicked in toast");
               requestAnimationFrame(() => {
-                findAndClickButton('[aria-label="Email Report"]');
+                findAndClickButton('[aria-label="Email Report"]').then(success => {
+                  if (!success) {
+                    console.warn("Failed to trigger email report");
+                  }
+                });
               });
             }}
           >
@@ -82,6 +92,11 @@ export const showReportReminder = () => {
 export const showBookingReminder = (onBookDemo?: () => void) => {
   console.log("Showing booking reminder toast");
   
+  if (!onBookDemo) {
+    console.warn("No booking callback provided to showBookingReminder");
+    return;
+  }
+  
   toast({
     title: "Ready for the Next Step?",
     description: (
@@ -95,11 +110,10 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (onBookDemo) {
-              requestAnimationFrame(() => {
-                onBookDemo();
-              });
-            }
+            console.log("Book Demo button clicked in toast");
+            requestAnimationFrame(() => {
+              onBookDemo();
+            });
           }}
         >
           Book Demo

@@ -8,7 +8,7 @@ interface CalendarProps {
 
 // Define a more specific type that matches the actual Cal API structure
 type CalApiType = {
-  on: (args: { action: string; callback: (...args: any[]) => void }) => void;
+  on: (event: { action: string; callback: (...args: any[]) => void }) => void;
   // Add other methods as needed
 } & (ReturnType<typeof getCalApi> extends Promise<infer T> ? T : never);
 
@@ -16,7 +16,7 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
   useEffect(() => {
     (async function initializeCalendar() {
       try {
-        console.log('Initializing calendar...');
+        console.log('Initializing calendar with link:', calLink);
         const cal = (await getCalApi()) as unknown as CalApiType;
         
         if (!cal || typeof cal.on !== 'function') {
@@ -24,22 +24,33 @@ export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
           return;
         }
 
+        // Register booking event handler
         cal.on({
           action: "bookingSuccessful",
           callback: (...args) => {
             console.log('Booking completed successfully', args);
             if (onSubmit) {
+              // Ensure we're running in the next animation frame
               requestAnimationFrame(() => {
                 onSubmit();
               });
             }
           },
         });
+
+        // Register error handler
+        cal.on({
+          action: "bookingFailed",
+          callback: (error) => {
+            console.error('Booking failed:', error);
+          },
+        });
+
       } catch (error) {
         console.error('Error initializing calendar:', error);
       }
     })();
-  }, [onSubmit]);
+  }, [onSubmit, calLink]);
 
   return (
     <Cal
