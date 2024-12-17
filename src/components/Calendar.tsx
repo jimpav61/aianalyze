@@ -14,19 +14,30 @@ type CalApiType = {
 
 export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
   useEffect(() => {
-    (async function () {
-      const cal = await getCalApi() as unknown as CalApiType;
-      cal.on({
-        action: "bookingSuccessful",
-        callback: () => {
-          console.log('Booking completed successfully');
-          if (onSubmit) {
-            requestAnimationFrame(() => {
-              onSubmit();
-            });
-          }
-        },
-      });
+    (async function initializeCalendar() {
+      try {
+        console.log('Initializing calendar...');
+        const cal = (await getCalApi()) as unknown as CalApiType;
+        
+        if (!cal || typeof cal.on !== 'function') {
+          console.error('Calendar API not properly initialized');
+          return;
+        }
+
+        cal.on({
+          action: "bookingSuccessful",
+          callback: (...args) => {
+            console.log('Booking completed successfully', args);
+            if (onSubmit) {
+              requestAnimationFrame(() => {
+                onSubmit();
+              });
+            }
+          },
+        });
+      } catch (error) {
+        console.error('Error initializing calendar:', error);
+      }
     })();
   }, [onSubmit]);
 
