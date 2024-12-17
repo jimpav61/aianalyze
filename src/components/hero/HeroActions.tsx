@@ -18,7 +18,7 @@ export const HeroActions = ({
   return (
     <div className="flex flex-col items-center gap-4">
       <p className="text-sm font-bold text-gray-600">
-        Start your free trial here
+        Start your <span className="uppercase">FREE</span> trial here
       </p>
       <IndustrySelector
         value={selectedIndustry}
