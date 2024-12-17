@@ -47,7 +47,6 @@ export const DialogContent = ({
     }
   };
 
-  // Show form if not in report view
   if (!showReport) {
     console.log("DialogContent - Showing form view");
     return (
@@ -59,7 +58,6 @@ export const DialogContent = ({
     );
   }
 
-  // Validate data for report view
   if (!formData || !analysis) {
     console.error("DialogContent - Missing required data for report:", { formData, analysis });
     toast({
@@ -70,6 +68,7 @@ export const DialogContent = ({
     return null;
   }
 
+  console.log("DialogContent - Showing report view");
   return (
     <ReportView 
       formData={formData}

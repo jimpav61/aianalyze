@@ -114,7 +114,7 @@ export const DetailedAnalysisForm = ({
       return;
     }
 
-    if (validateStep(3)) {
+    if (validateStep(currentStep)) {
       console.log("DetailedAnalysisForm - Form validation passed, submitting data:", formData);
       onSubmit(formData);
     }
