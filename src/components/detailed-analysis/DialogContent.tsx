@@ -1,4 +1,4 @@
-import { DetailedAnalysisForm } from "../detailed-analysis/DetailedAnalysisForm";
+import { DetailedAnalysisForm } from "./DetailedAnalysisForm";
 import { DetailedReport } from "../DetailedReport";
 import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { DetailedFormData } from "@/types/analysis";
@@ -23,6 +23,8 @@ export const DialogContent = ({
 }: DialogContentProps) => {
   const { toast } = useToast();
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
+
+  console.log("DialogContent - Render:", { showReport, formData, industry, analysis });
 
   const handleFormSubmit = (data: DetailedFormData) => {
     console.log("DialogContent - Form submission handler called with data:", data);

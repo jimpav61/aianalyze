@@ -5,7 +5,6 @@ import { OperationsStep } from "./OperationsStep";
 import { GoalsStep } from "./GoalsStep";
 import { FormStepNavigator } from "./FormStepNavigator";
 import { DetailedFormData } from "@/types/analysis";
-import { useDetailedAnalysisForm } from "@/hooks/useDetailedAnalysisForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface DetailedAnalysisFormProps {
@@ -28,26 +27,75 @@ export const DetailedAnalysisForm = ({
   analysis 
 }: DetailedAnalysisFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const { formData, handleInputChange, validateStep } = useDetailedAnalysisForm(onSubmit);
+  const [formData, setFormData] = useState<DetailedFormData>({
+    companyName: "",
+    phoneNumber: "",
+    email: "",
+    employees: "",
+    revenue: "",
+    serviceChannels: "",
+    monthlyInteractions: "",
+    currentTools: "",
+    painPoints: "",
+    objectives: "",
+    timeline: "",
+    budget: "",
+    additionalInfo: "",
+  });
   const { toast } = useToast();
-  
-  console.log("DetailedAnalysisForm - Current step:", currentStep, "Form data:", formData);
+
+  console.log("DetailedAnalysisForm - Initial props:", { industry, analysis });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const validateStep = (step: number) => {
+    console.log("Validating step:", step, "Current form data:", formData);
+    
+    const requiredFields: { [key: number]: string[] } = {
+      1: ["companyName", "email"],
+      2: ["serviceChannels", "monthlyInteractions"],
+      3: ["objectives", "timeline", "budget"],
+    };
+
+    const missingFields = requiredFields[step].filter(
+      (field) => !formData[field as keyof DetailedFormData]?.trim()
+    );
+
+    if (missingFields.length > 0) {
+      console.warn("Missing required fields:", missingFields);
+      toast({
+        title: "Required Fields Missing",
+        description: `Please fill out the following fields: ${missingFields
+          .map((f) => f.replace(/([A-Z])/g, " $1").toLowerCase())
+          .join(", ")}`,
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
 
   const handleNext = () => {
-    console.log("DetailedAnalysisForm - Attempting to move to next step from step:", currentStep);
+    console.log("Attempting to move to next step");
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => prev + 1);
-      console.log("DetailedAnalysisForm - Moving to next step");
     }
   };
 
   const handleBack = () => {
-    console.log("DetailedAnalysisForm - Moving back from step:", currentStep);
     setCurrentStep((prev) => prev - 1);
   };
 
-  const handleFormSubmit = () => {
-    console.log("DetailedAnalysisForm - Attempting form submission. Analysis data:", analysis);
+  const handleSubmit = () => {
+    console.log("DetailedAnalysisForm - Form submission handler called");
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
       toast({
@@ -59,10 +107,8 @@ export const DetailedAnalysisForm = ({
     }
 
     if (validateStep(3)) {
-      console.log("DetailedAnalysisForm - Form validation passed. Submitting data:", formData);
+      console.log("DetailedAnalysisForm - Form validation passed, submitting data:", formData);
       onSubmit(formData);
-    } else {
-      console.log("DetailedAnalysisForm - Form validation failed");
     }
   };
 
@@ -93,7 +139,7 @@ export const DetailedAnalysisForm = ({
         currentStep={currentStep}
         onNext={handleNext}
         onBack={handleBack}
-        onSubmit={handleFormSubmit}
+        onSubmit={handleSubmit}
       />
     </>
   );
