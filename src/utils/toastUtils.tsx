@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 const findAndClickButton = (selector: string) => {
   return new Promise<boolean>((resolve) => {
     let attempts = 0;
-    const maxAttempts = 10;
+    const maxAttempts = 20; // Increased max attempts
+    const interval = 100; // Add a small delay between attempts
     
     const tryClick = () => {
       const button = document.querySelector(selector);
@@ -20,7 +21,7 @@ const findAndClickButton = (selector: string) => {
       } else {
         attempts++;
         if (attempts < maxAttempts) {
-          requestAnimationFrame(tryClick);
+          setTimeout(tryClick, interval);
         } else {
           console.error(`Button ${selector} not found after ${maxAttempts} attempts`);
           resolve(false);
@@ -28,7 +29,8 @@ const findAndClickButton = (selector: string) => {
       }
     };
     
-    requestAnimationFrame(tryClick);
+    // Start the first attempt
+    tryClick();
   });
 };
 
@@ -49,7 +51,9 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              findAndClickButton('[aria-label="Download PDF"]');
+              setTimeout(() => {
+                findAndClickButton('[aria-label="Download PDF"]');
+              }, 100);
             }}
           >
             Download PDF
@@ -60,7 +64,9 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              findAndClickButton('[aria-label="Email Report"]');
+              setTimeout(() => {
+                findAndClickButton('[aria-label="Email Report"]');
+              }, 100);
             }}
           >
             Email Report
@@ -89,9 +95,9 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
             e.preventDefault();
             e.stopPropagation();
             if (onBookDemo) {
-              requestAnimationFrame(() => {
+              setTimeout(() => {
                 onBookDemo();
-              });
+              }, 100);
             }
           }}
         >
