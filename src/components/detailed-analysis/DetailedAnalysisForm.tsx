@@ -34,19 +34,20 @@ export const DetailedAnalysisForm = ({
   console.log("DetailedAnalysisForm - Current step:", currentStep, "Form data:", formData);
 
   const handleNext = () => {
-    console.log("Attempting to move to next step from step:", currentStep);
+    console.log("DetailedAnalysisForm - Attempting to move to next step from step:", currentStep);
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => prev + 1);
+      console.log("DetailedAnalysisForm - Moving to next step");
     }
   };
 
   const handleBack = () => {
-    console.log("Moving back from step:", currentStep);
+    console.log("DetailedAnalysisForm - Moving back from step:", currentStep);
     setCurrentStep((prev) => prev - 1);
   };
 
   const handleFormSubmit = () => {
-    console.log("Attempting form submission. Analysis data:", analysis);
+    console.log("DetailedAnalysisForm - Attempting form submission. Analysis data:", analysis);
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
       toast({
@@ -59,7 +60,7 @@ export const DetailedAnalysisForm = ({
 
     if (validateStep(3)) {
       console.log("DetailedAnalysisForm - Form validation passed. Submitting data:", formData);
-      onSubmit(formData);
+      handleSubmit(analysis);
     } else {
       console.log("DetailedAnalysisForm - Form validation failed");
     }

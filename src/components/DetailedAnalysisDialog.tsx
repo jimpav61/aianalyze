@@ -1,6 +1,6 @@
 import { Dialog, DialogContent } from "./ui/dialog";
 import { useState, useCallback } from "react";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
@@ -23,11 +23,12 @@ export const DetailedAnalysisDialog = ({
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
 
   const handleSubmit = useCallback((data: DetailedFormData) => {
-    console.log("DetailedAnalysisDialog - handleSubmit called with data:", data);
-    if (!data) {
+    console.log("DetailedAnalysisDialog - Form submitted with data:", data);
+    if (!data || !analysis) {
+      console.error("DetailedAnalysisDialog - Missing required data:", { data, analysis });
       toast({
         title: "Error",
-        description: "Form data is missing",
+        description: "Unable to process form submission. Please try again.",
         variant: "destructive",
       });
       return;
@@ -35,9 +36,11 @@ export const DetailedAnalysisDialog = ({
 
     setFormData(data);
     setShowReport(true);
-  }, [toast]);
+    console.log("DetailedAnalysisDialog - Report view enabled");
+  }, [toast, analysis]);
 
   const handleBookingSubmit = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Demo booking submitted");
     setShowCalendar(false);
     setShowReport(true);
     toast({
@@ -47,6 +50,7 @@ export const DetailedAnalysisDialog = ({
   }, [toast]);
 
   const handleClose = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
     setShowReport(false);
     setShowCalendar(false);
     setFormData(null);
@@ -54,6 +58,7 @@ export const DetailedAnalysisDialog = ({
   }, [onClose]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {
+    console.log("DetailedAnalysisDialog - Book demo requested");
     if (e) {
       e.preventDefault();
       e.stopPropagation();
