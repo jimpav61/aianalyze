@@ -1,10 +1,10 @@
-import { Dialog, DialogContent } from "./ui/dialog";
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
-import { Calendar } from "./Calendar";
+import { CalendarView } from "./detailed-analysis/CalendarView";
+import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -27,6 +27,7 @@ export const DetailedAnalysisDialog = ({
     showCalendar,
     hasFormData: !!formData,
     showFormOnly,
+    hasAnalysis: !!analysis,
   });
 
   const handleSubmit = useCallback((data: DetailedFormData) => {
@@ -75,37 +76,32 @@ export const DetailedAnalysisDialog = ({
     setShowReport(false);
   }, []);
 
+  const renderContent = () => {
+    if (showCalendar) {
+      return (
+        <CalendarView
+          onSubmit={handleBookingSubmit}
+          formData={formData || undefined}
+          analysis={analysis}
+        />
+      );
+    }
+
+    return (
+      <CustomDialogContent
+        showReport={!showFormOnly && showReport}
+        formData={formData}
+        onSubmit={handleSubmit}
+        industry={industry}
+        analysis={analysis}
+        onBookDemo={handleBookDemo}
+      />
+    );
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
-        <div className="flex-1 overflow-y-auto">
-          {showCalendar ? (
-            <>
-              <div className="mb-4 text-center">
-                <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
-                <p className="text-muted-foreground">
-                  Choose a time that works best for you
-                </p>
-              </div>
-              <Calendar 
-                calLink="chatsites/ai-discovery-call" 
-                onSubmit={handleBookingSubmit}
-                formData={formData || undefined}
-                analysis={analysis}
-              />
-            </>
-          ) : (
-            <CustomDialogContent
-              showReport={!showFormOnly && showReport}
-              formData={formData}
-              onSubmit={handleSubmit}
-              industry={industry}
-              analysis={analysis}
-              onBookDemo={handleBookDemo}
-            />
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+    <DialogWrapper isOpen={isOpen} onClose={handleClose}>
+      {renderContent()}
+    </DialogWrapper>
   );
 };
