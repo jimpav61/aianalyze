@@ -195,6 +195,7 @@ export const ReportActions = ({
         variant="outline"
         onClick={handleSendEmail}
         disabled={isSendingEmail || !email}
+        aria-label="Email Report"
       >
         {isSendingEmail ? (
           "Sending..."
@@ -209,6 +210,7 @@ export const ReportActions = ({
         variant="outline"
         onClick={handleDownload}
         disabled={isDownloading}
+        aria-label="Download PDF"
       >
         {isDownloading ? (
           "Downloading..."
