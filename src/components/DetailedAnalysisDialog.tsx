@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
+import { CustomDialogContent } from "./detailed-analysis/DialogContent";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { CalendarView } from "./detailed-analysis/CalendarView";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";

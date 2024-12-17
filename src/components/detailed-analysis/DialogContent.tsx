@@ -47,34 +47,24 @@ export const DialogContent = ({
     }
   };
 
-  if (!showReport) {
-    console.log("DialogContent - Showing form view");
+  if (showReport && formData && analysis) {
+    console.log("DialogContent - Showing report view");
     return (
-      <FormView 
-        onSubmit={handleFormSubmit}
-        industry={industry}
+      <ReportView 
+        formData={formData}
         analysis={analysis}
+        onBookDemo={onBookDemo}
+        industry={industry}
       />
     );
   }
 
-  if (!formData || !analysis) {
-    console.error("DialogContent - Missing required data for report:", { formData, analysis });
-    toast({
-      title: "Error",
-      description: "Unable to display report. Missing required data.",
-      variant: "destructive",
-    });
-    return null;
-  }
-
-  console.log("DialogContent - Showing report view");
+  console.log("DialogContent - Showing form view");
   return (
-    <ReportView 
-      formData={formData}
-      analysis={analysis}
-      onBookDemo={onBookDemo}
+    <FormView 
+      onSubmit={handleFormSubmit}
       industry={industry}
+      analysis={analysis}
     />
   );
 };
