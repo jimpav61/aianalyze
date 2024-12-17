@@ -4,6 +4,7 @@ import { DialogHeader, DialogTitle } from "../ui/dialog";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
 import { useAnalysisProcessor } from "./useAnalysisProcessor";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;
@@ -20,9 +21,24 @@ export const DialogContent = ({
   analysis,
   onBookDemo
 }: DialogContentProps) => {
-  console.log("DialogContent - Render:", { showReport, formData, industry, analysis });
+  const { toast } = useToast();
+  console.log("DialogContent - Render state:", { showReport, formData, industry, analysis });
   
   const { getProcessedAnalysis } = useAnalysisProcessor({ industry, analysis });
+
+  const handleFormSubmit = (data: DetailedFormData) => {
+    console.log("DialogContent - Form submission handler called with data:", data);
+    try {
+      onSubmit(data);
+    } catch (error) {
+      console.error("DialogContent - Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit the form. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (!showReport) {
     return (
@@ -32,7 +48,7 @@ export const DialogContent = ({
         </DialogHeader>
         <div className="mt-4">
           <DetailedAnalysisForm 
-            onSubmit={onSubmit} 
+            onSubmit={handleFormSubmit} 
             industry={industry}
             analysis={analysis}
           />
@@ -49,7 +65,6 @@ export const DialogContent = ({
   const processedAnalysis = getProcessedAnalysis();
   console.log("DialogContent - Processed analysis for report:", processedAnalysis);
 
-  // Use all analyses from the analysis object if available
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: processedAnalysis.department,
