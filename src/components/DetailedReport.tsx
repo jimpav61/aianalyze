@@ -42,22 +42,44 @@ interface DetailedReportProps {
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
   const { toast } = useToast();
   const [hasDownloaded, setHasDownloaded] = useState(false);
+  const [hasBooked, setHasBooked] = useState(false);
   const [showingDownloadToast, setShowingDownloadToast] = useState(false);
-  const [hasSubmittedBooking, setHasSubmittedBooking] = useState(false);
 
   const handleBookDemo = () => {
     onBookDemo?.();
-    setHasSubmittedBooking(true);
+    setHasBooked(true);
+  };
+
+  const handleDownloadComplete = () => {
+    setHasDownloaded(true);
+    setShowingDownloadToast(false);
+    
+    // Show booking reminder only if they haven't booked yet
+    if (!hasBooked) {
+      toast({
+        title: "Ready for the Next Step?",
+        description: "Would you like to book a demo to discuss implementing these solutions?",
+        duration: 5000,
+        action: (
+          <button
+            onClick={handleBookDemo}
+            className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium"
+          >
+            Book Demo
+          </button>
+        ),
+      });
+    }
   };
 
   useEffect(() => {
-    if (hasSubmittedBooking && !hasDownloaded && !showingDownloadToast) {
+    // If they've booked but haven't downloaded/emailed the report
+    if (hasBooked && !hasDownloaded && !showingDownloadToast) {
       setShowingDownloadToast(true);
       toast({
         title: "Don't Forget Your Report!",
         description: "Would you like to download or email your personalized AI implementation analysis report?",
         duration: null, // Toast will persist until dismissed
-        variant: "destructive",
         action: (
           <div className="flex gap-2 mt-2">
             <button
@@ -82,17 +104,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
         ),
       });
     }
-  }, [hasSubmittedBooking, hasDownloaded, showingDownloadToast, toast]);
-
-  const handleDownloadComplete = () => {
-    setHasDownloaded(true);
-    setShowingDownloadToast(false);
-    toast({
-      title: "Thank you!",
-      description: "Your report has been saved successfully.",
-      duration: 3000,
-    });
-  };
+  }, [hasBooked, hasDownloaded, showingDownloadToast, toast]);
 
   if (!data || !analysis || typeof analysis !== 'object') {
     console.error("DetailedReport - Missing or invalid data:", { data, analysis });
