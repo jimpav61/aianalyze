@@ -5,7 +5,6 @@ import { DetailedFormData } from "@/types/analysis";
 import { DialogContent as CustomDialogContent } from "./detailed-analysis/DialogContent";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { Calendar } from "./Calendar";
-import { showReportReminder } from "@/utils/toastUtils";
 
 export const DetailedAnalysisDialog = ({
   isOpen,
@@ -17,7 +16,6 @@ export const DetailedAnalysisDialog = ({
   const [showReport, setShowReport] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
-  const [hasBooked, setHasBooked] = useState(false);
 
   console.log("DetailedAnalysisDialog - Initial render:", { industry, analysis, showReport, showCalendar, formData });
 
@@ -44,7 +42,6 @@ export const DetailedAnalysisDialog = ({
     requestAnimationFrame(() => {
       setShowCalendar(false);
       setShowReport(true);
-      setHasBooked(true);
       toast({
         title: "Success",
         description: "Your demo has been scheduled successfully!",
@@ -65,11 +62,6 @@ export const DetailedAnalysisDialog = ({
       });
       return;
     }
-
-    // If user has booked but hasn't taken any report actions, show reminder
-    if (hasBooked && showReport) {
-      showReportReminder();
-    }
     
     onClose();
     // Reset states after dialog transition
@@ -77,11 +69,10 @@ export const DetailedAnalysisDialog = ({
       setFormData(null);
       setShowReport(false);
       setShowCalendar(false);
-      setHasBooked(false);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [isOpen, onClose, showCalendar, hasBooked, showReport, toast]);
+  }, [isOpen, onClose, showCalendar, toast]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {
     console.log("DetailedAnalysisDialog - Book demo clicked");
