@@ -1,6 +1,5 @@
-import Cal, { getCalApi } from "@calcom/embed-react";
 import { useEffect } from "react";
-import { useToast } from "./ui/use-toast";
+import Cal, { getCalApi } from "@calcom/embed-react";
 
 interface CalendarProps {
   calLink: string;
@@ -8,47 +7,22 @@ interface CalendarProps {
 }
 
 export const Calendar = ({ calLink, onSubmit }: CalendarProps) => {
-  const { toast } = useToast();
-
   useEffect(() => {
     (async function () {
-      try {
-        const cal = await getCalApi();
-        
-        if (!cal) {
-          console.error('Failed to initialize Cal API');
-          toast({
-            title: "Error",
-            description: "Failed to initialize calendar. Please try again.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        console.log('Cal API initialized successfully');
-        
-        // Listen for successful booking completion
-        cal("on", {
-          action: "bookingSuccessful",
-          callback: () => {
-            console.log('Booking completed successfully');
-            // Add a small delay to ensure state updates properly
-            setTimeout(() => {
-              onSubmit?.();
-            }, 100);
-          },
-        });
-
-      } catch (error) {
-        console.error('Error initializing Cal API:', error);
-        toast({
-          title: "Calendar Error",
-          description: "Failed to load the calendar. Please refresh the page.",
-          variant: "destructive",
-        });
-      }
+      const cal = await getCalApi();
+      cal.on({
+        action: "bookingSuccessful",
+        callback: () => {
+          console.log('Booking completed successfully');
+          if (onSubmit) {
+            requestAnimationFrame(() => {
+              onSubmit();
+            });
+          }
+        },
+      });
     })();
-  }, [onSubmit, toast]);
+  }, [onSubmit]);
 
   return (
     <Cal

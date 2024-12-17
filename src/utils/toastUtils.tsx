@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 const findAndClickButton = (selector: string) => {
   return new Promise<boolean>((resolve) => {
     let attempts = 0;
-    const maxAttempts = 20; // Increased max attempts
-    const interval = 100; // Add a small delay between attempts
+    const maxAttempts = 30;
+    const interval = 150;
     
     const tryClick = () => {
       const button = document.querySelector(selector);
       if (button instanceof HTMLButtonElement) {
         console.log(`Found button ${selector}, clicking...`);
         try {
-          button.click();
-          resolve(true);
+          requestAnimationFrame(() => {
+            button.click();
+            resolve(true);
+          });
         } catch (error) {
           console.error(`Error clicking button ${selector}:`, error);
           resolve(false);
@@ -23,14 +25,13 @@ const findAndClickButton = (selector: string) => {
         if (attempts < maxAttempts) {
           setTimeout(tryClick, interval);
         } else {
-          console.error(`Button ${selector} not found after ${maxAttempts} attempts`);
+          console.warn(`Button ${selector} not found after ${maxAttempts} attempts`);
           resolve(false);
         }
       }
     };
     
-    // Start the first attempt
-    tryClick();
+    requestAnimationFrame(tryClick);
   });
 };
 
@@ -51,9 +52,9 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setTimeout(() => {
+              requestAnimationFrame(() => {
                 findAndClickButton('[aria-label="Download PDF"]');
-              }, 100);
+              });
             }}
           >
             Download PDF
@@ -64,9 +65,9 @@ export const showReportReminder = () => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setTimeout(() => {
+              requestAnimationFrame(() => {
                 findAndClickButton('[aria-label="Email Report"]');
-              }, 100);
+              });
             }}
           >
             Email Report
@@ -95,9 +96,9 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
             e.preventDefault();
             e.stopPropagation();
             if (onBookDemo) {
-              setTimeout(() => {
+              requestAnimationFrame(() => {
                 onBookDemo();
-              }, 100);
+              });
             }
           }}
         >

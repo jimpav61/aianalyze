@@ -39,9 +39,10 @@ export const DetailedAnalysisDialog = ({
 
   const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Booking submitted");
-    // Keep the report visible after booking
-    setShowCalendar(false);
-    setShowReport(true);
+    requestAnimationFrame(() => {
+      setShowCalendar(false);
+      setShowReport(true);
+    });
   }, []);
 
   const handleClose = useCallback(() => {
@@ -49,12 +50,12 @@ export const DetailedAnalysisDialog = ({
     if (!isOpen) return;
     
     onClose();
-    // Only reset states when dialog is fully closed
+    // Reset states after dialog transition
     const timer = setTimeout(() => {
       setFormData(null);
       setShowReport(false);
       setShowCalendar(false);
-    }, 300); // Match dialog transition time
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [isOpen, onClose]);
@@ -65,7 +66,10 @@ export const DetailedAnalysisDialog = ({
       e.preventDefault();
       e.stopPropagation();
     }
-    setShowCalendar(true);
+    requestAnimationFrame(() => {
+      setShowCalendar(true);
+      setShowReport(false);
+    });
   }, []);
 
   const calLink = "chatsites/ai-discovery-call";
