@@ -45,8 +45,26 @@ export const DetailedAnalysisDialog = ({
 
     setFormData(data);
     setShowReport(true);
+    toast({
+      title: "Success",
+      description: "Your analysis report is ready!",
+    });
     console.log("DetailedAnalysisDialog - Report view enabled");
   }, [toast, analysis]);
+
+  const handleClose = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
+    setShowReport(false);
+    setShowCalendar(false);
+    setFormData(null);
+    onClose();
+  }, [onClose]);
+
+  const handleBookDemo = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Book demo requested");
+    setShowCalendar(true);
+    setShowReport(false);
+  }, []);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Demo booking submitted");
@@ -58,50 +76,24 @@ export const DetailedAnalysisDialog = ({
     });
   }, [toast]);
 
-  const handleClose = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
-    setShowReport(false);
-    setShowCalendar(false);
-    setFormData(null);
-    onClose();
-  }, [onClose]);
-
-  const handleBookDemo = useCallback((e?: React.MouseEvent) => {
-    console.log("DetailedAnalysisDialog - Book demo requested");
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setShowCalendar(true);
-    setShowReport(false);
-  }, []);
-
-  const renderContent = () => {
-    if (showCalendar) {
-      return (
+  return (
+    <DialogWrapper isOpen={isOpen} onClose={handleClose}>
+      {showCalendar ? (
         <CalendarView
           onSubmit={handleBookingSubmit}
           formData={formData || undefined}
           analysis={analysis}
         />
-      );
-    }
-
-    return (
-      <DialogContent
-        showReport={!showFormOnly && showReport}
-        formData={formData}
-        onSubmit={handleSubmit}
-        industry={industry}
-        analysis={analysis}
-        onBookDemo={handleBookDemo}
-      />
-    );
-  };
-
-  return (
-    <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-      {renderContent()}
+      ) : (
+        <DialogContent
+          showReport={!showFormOnly && showReport}
+          formData={formData}
+          onSubmit={handleSubmit}
+          industry={industry}
+          analysis={analysis}
+          onBookDemo={handleBookDemo}
+        />
+      )}
     </DialogWrapper>
   );
 };

@@ -18,10 +18,8 @@ export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportV
     industry 
   });
 
-  // Process analysis data for report
   const processedAnalysis = getProcessedAnalysis();
 
-  // Prepare analyses grid data
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: processedAnalysis.department,
