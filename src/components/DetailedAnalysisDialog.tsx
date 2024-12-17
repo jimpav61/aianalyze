@@ -62,9 +62,16 @@ export const DetailedAnalysisDialog = ({
 
   const handleBookDemo = useCallback(() => {
     console.log("DetailedAnalysisDialog - Book demo requested");
+    if (!formData) {
+      toast({
+        title: "Error",
+        description: "Please complete the form first.",
+        variant: "destructive",
+      });
+      return;
+    }
     setShowCalendar(true);
-    setShowReport(false);
-  }, []);
+  }, [formData, toast]);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Demo booking submitted");
