@@ -11,10 +11,6 @@ interface CalendarProps {
   analysis?: any;
 }
 
-type CalApiType = {
-  on: (event: { action: string; callback: (...args: any[]) => void }) => void;
-} & (ReturnType<typeof getCalApi> extends Promise<infer T> ? T : never);
-
 export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProps) => {
   const { sendEmails } = useEmailHandler({ 
     formData, 
@@ -29,17 +25,24 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
   useEffect(() => {
     (async function initializeCalendar() {
       try {
-        const cal = (await getCalApi()) as unknown as CalApiType;
+        const cal = await getCalApi();
         
-        if (!cal || typeof cal.on !== 'function') {
-          console.error('Calendar API not properly initialized');
+        if (!cal) {
+          console.error('Calendar API not initialized');
           return;
         }
 
+        // Configure Cal.com embed
+        cal.ns["30min"]({
+          debug: true,
+          calLink: calLink,
+        });
+
+        // Add event listener for successful bookings
         cal.on({
           action: "bookingSuccessful",
-          callback: async (...args) => {
-            console.log('Booking completed successfully', args);
+          callback: async () => {
+            console.log('Booking completed successfully');
             await sendEmails();
           },
         });
@@ -47,7 +50,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         console.error('Error initializing calendar:', error);
       }
     })();
-  }, [onSubmit, calLink, formData, analysis]);
+  }, [calLink, sendEmails]);
 
   return <CalendarConfig calLink={calLink} />;
 };
