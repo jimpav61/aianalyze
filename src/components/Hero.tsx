@@ -40,22 +40,18 @@ export const Hero = ({
       });
       setShowDetailedDialog(true);
 
-      // Set a timeout to close the dialog after 5 seconds
       const timer = setTimeout(() => {
         setShowDetailedDialog(false);
       }, 5000);
 
-      // Cleanup timeout on component unmount or when analyses change
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+      };
     }
   }, [analyses, selectedIndustry]);
 
-  const handleAnalyzeClick = async () => {
-    try {
-      await handleAnalyze();
-    } catch (error) {
-      console.error("Error during analysis:", error);
-    }
+  const handleAnalyzeClick = () => {
+    handleAnalyze();
   };
 
   return (
