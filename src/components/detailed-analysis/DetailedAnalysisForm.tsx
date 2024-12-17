@@ -44,6 +44,8 @@ export const DetailedAnalysisForm = ({
   });
   const { toast } = useToast();
 
+  console.log("DetailedAnalysisForm - Current state:", { currentStep, formData, industry, analysis });
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -55,6 +57,8 @@ export const DetailedAnalysisForm = ({
   };
 
   const validateStep = (step: number) => {
+    console.log("Validating step:", step, "Current form data:", formData);
+    
     const requiredFields: { [key: number]: string[] } = {
       1: ["companyName", "email"],
       2: ["serviceChannels", "monthlyInteractions"],
@@ -66,6 +70,7 @@ export const DetailedAnalysisForm = ({
     );
 
     if (missingFields.length > 0) {
+      console.warn("Missing required fields:", missingFields);
       toast({
         title: "Required Fields Missing",
         description: `Please fill out the following fields: ${missingFields
@@ -79,6 +84,7 @@ export const DetailedAnalysisForm = ({
   };
 
   const handleNext = () => {
+    console.log("Attempting to move to next step");
     if (validateStep(currentStep)) {
       setCurrentStep((prev) => prev + 1);
     }
@@ -89,7 +95,9 @@ export const DetailedAnalysisForm = ({
   };
 
   const handleSubmit = () => {
+    console.log("DetailedAnalysisForm - Form submission handler called");
     if (!analysis) {
+      console.error("DetailedAnalysisForm - Missing analysis data");
       toast({
         title: "Error",
         description: "Unable to generate report. Please try again.",
@@ -99,6 +107,7 @@ export const DetailedAnalysisForm = ({
     }
 
     if (validateStep(3)) {
+      console.log("DetailedAnalysisForm - Form validation passed, submitting data:", formData);
       onSubmit(formData);
     }
   };
