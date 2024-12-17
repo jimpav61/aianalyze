@@ -28,7 +28,7 @@ export const DetailedAnalysisForm = ({
   analysis 
 }: DetailedAnalysisFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const { formData, handleInputChange, validateStep, handleSubmit } = useDetailedAnalysisForm(onSubmit);
+  const { formData, handleInputChange, validateStep } = useDetailedAnalysisForm(onSubmit);
   const { toast } = useToast();
   
   console.log("DetailedAnalysisForm - Current step:", currentStep, "Form data:", formData);
