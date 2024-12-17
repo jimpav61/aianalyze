@@ -1,61 +1,101 @@
+import React from "react";
 import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 export const showReportReminder = () => {
   console.log("Showing report reminder toast");
-  toast({
-    title: "Don't Forget Your Report!",
-    description: (
-      <div className="flex flex-col space-y-2 max-w-[90vw] sm:max-w-md">
-        <p className="text-sm">Would you like to save your personalized AI implementation analysis?</p>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <button
-            onClick={() => {
-              const downloadButton = document.querySelector<HTMLButtonElement>('[aria-label="Download PDF"]');
-              if (downloadButton) {
-                downloadButton.click();
-              }
-            }}
-            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90"
-          >
-            Download PDF
-          </button>
-          <button
-            onClick={() => {
-              const emailButton = document.querySelector<HTMLButtonElement>('[aria-label="Email Report"]');
-              if (emailButton) {
-                emailButton.click();
-              }
-            }}
-            className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90"
-          >
-            Email Report
-          </button>
+  
+  // Use requestAnimationFrame to ensure DOM is ready
+  requestAnimationFrame(() => {
+    toast({
+      title: "Don't Forget Your Report!",
+      description: (
+        <div className="flex flex-col space-y-2 w-full max-w-[90vw] sm:max-w-md">
+          <p className="text-sm text-muted-foreground">
+            Would you like to save your personalized AI implementation analysis?
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button
+              variant="default"
+              className="w-full sm:w-auto"
+              onClick={(e) => {
+                e.preventDefault();
+                try {
+                  const downloadButton = document.querySelector<HTMLButtonElement>(
+                    '[aria-label="Download PDF"]'
+                  );
+                  if (downloadButton) {
+                    downloadButton.click();
+                  } else {
+                    console.warn("Download button not found");
+                  }
+                } catch (error) {
+                  console.error("Error clicking download button:", error);
+                }
+              }}
+            >
+              Download PDF
+            </Button>
+            <Button
+              variant="default"
+              className="w-full sm:w-auto"
+              onClick={(e) => {
+                e.preventDefault();
+                try {
+                  const emailButton = document.querySelector<HTMLButtonElement>(
+                    '[aria-label="Email Report"]'
+                  );
+                  if (emailButton) {
+                    emailButton.click();
+                  } else {
+                    console.warn("Email button not found");
+                  }
+                } catch (error) {
+                  console.error("Error clicking email button:", error);
+                }
+              }}
+            >
+              Email Report
+            </Button>
+          </div>
         </div>
-      </div>
-    ),
-    duration: 10000,
+      ),
+      duration: 10000,
+    });
   });
 };
 
 export const showBookingReminder = (onBookDemo?: () => void) => {
   console.log("Showing booking reminder toast");
-  toast({
-    title: "Ready for the Next Step?",
-    description: (
-      <div className="flex flex-col space-y-2 max-w-[90vw] sm:max-w-md">
-        <p className="text-sm">Would you like to discuss implementing these AI solutions?</p>
-        <button
-          onClick={() => {
-            if (onBookDemo) {
-              onBookDemo();
-            }
-          }}
-          className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90"
-        >
-          Book Demo
-        </button>
-      </div>
-    ),
-    duration: 10000,
+  
+  // Use requestAnimationFrame to ensure DOM is ready
+  requestAnimationFrame(() => {
+    toast({
+      title: "Ready for the Next Step?",
+      description: (
+        <div className="flex flex-col space-y-2 w-full max-w-[90vw] sm:max-w-md">
+          <p className="text-sm text-muted-foreground">
+            Would you like to discuss implementing these AI solutions?
+          </p>
+          <Button
+            variant="default"
+            className="w-full sm:w-auto"
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                if (onBookDemo) {
+                  onBookDemo();
+                }
+              } catch (error) {
+                console.error("Error executing book demo callback:", error);
+              }
+            }}
+          >
+            Book Demo
+          </Button>
+        </div>
+      ),
+      duration: 10000,
+    });
   });
 };
