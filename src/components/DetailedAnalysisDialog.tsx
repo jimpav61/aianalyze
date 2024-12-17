@@ -51,18 +51,6 @@ export const DetailedAnalysisDialog = ({
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
-    if (!isOpen) return;
-    
-    // Only prevent closing if calendar is shown
-    if (showCalendar) {
-      toast({
-        title: "Please complete booking",
-        description: "Schedule your demo before closing",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     onClose();
     // Reset states after dialog transition
     const timer = setTimeout(() => {
@@ -72,7 +60,7 @@ export const DetailedAnalysisDialog = ({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [isOpen, onClose, showCalendar, toast]);
+  }, [onClose]);
 
   const handleBookDemo = useCallback((e?: React.MouseEvent) => {
     console.log("DetailedAnalysisDialog - Book demo clicked");
