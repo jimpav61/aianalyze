@@ -20,9 +20,6 @@ interface DetailedReportProps {
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
   const {
-    hasDownloaded,
-    hasBooked,
-    hasEmailed,
     handleBookDemo,
     handleReportAction
   } = useReportActions({ onBookDemo });

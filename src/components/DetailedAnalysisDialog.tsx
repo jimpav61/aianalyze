@@ -21,7 +21,6 @@ export const DetailedAnalysisDialog = ({
 
   const handleSubmit = useCallback((data: DetailedFormData) => {
     console.log("DetailedAnalysisDialog - handleSubmit called with:", data);
-    console.log("DetailedAnalysisDialog - Current analysis:", analysis);
     
     if (!data) {
       console.error("DetailedAnalysisDialog - No form data provided");
@@ -35,7 +34,7 @@ export const DetailedAnalysisDialog = ({
 
     setFormData(data);
     setShowReport(true);
-  }, [analysis, toast]);
+  }, [toast]);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("DetailedAnalysisDialog - Booking submitted");

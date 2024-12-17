@@ -17,9 +17,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
   }, []);
 
   return {
-    hasDownloaded: false,
-    hasBooked: false,
-    hasEmailed: false,
     handleBookDemo,
     handleReportAction
   };
