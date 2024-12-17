@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Cal, { getCalApi } from "@calcom/embed-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DetailedFormData } from "@/types/analysis";
+import { useToast } from "./ui/use-toast";
 
 interface CalendarProps {
   calLink: string;
@@ -15,6 +16,8 @@ type CalApiType = {
 } & (ReturnType<typeof getCalApi> extends Promise<infer T> ? T : never);
 
 export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProps) => {
+  const { toast } = useToast();
+
   useEffect(() => {
     (async function initializeCalendar() {
       try {
@@ -32,23 +35,55 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
             
             if (formData?.email && analysis) {
               try {
-                const reportClone = document.getElementById("detailed-report");
-                if (reportClone) {
-                  const { error } = await supabase.functions.invoke("sendemail", {
-                    body: {
-                      email: formData.email,
-                      companyName: formData.companyName,
-                      reportHtml: reportClone.innerHTML,
-                      subject: `${formData.companyName} - AI Implementation Analysis Report`
-                    },
-                  });
+                const reportElement = document.getElementById("detailed-report");
+                if (!reportElement) {
+                  console.error('Report element not found');
+                  return;
+                }
 
-                  if (error) {
-                    console.error('Error sending report email:', error);
-                  }
+                // Clone the report element to modify it for email
+                const reportClone = reportElement.cloneNode(true) as HTMLElement;
+                
+                // Add inline styles for email
+                const style = document.createElement('style');
+                style.textContent = `
+                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                  h1, h2 { color: #2563eb; margin-top: 1.5em; }
+                  .card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.5rem; margin-bottom: 1.5rem; }
+                  .grid { display: grid; gap: 1rem; }
+                `;
+                reportClone.prepend(style);
+
+                console.log('Sending email with report to:', formData.email);
+                const { error } = await supabase.functions.invoke("sendemail", {
+                  body: {
+                    email: formData.email,
+                    companyName: formData.companyName,
+                    reportHtml: reportClone.innerHTML,
+                    subject: `${formData.companyName} - AI Implementation Analysis Report`
+                  },
+                });
+
+                if (error) {
+                  console.error('Error sending report email:', error);
+                  toast({
+                    title: "Error",
+                    description: "Failed to send the report email. Please try again later.",
+                    variant: "destructive",
+                  });
+                } else {
+                  toast({
+                    title: "Success",
+                    description: "Analysis report has been sent to your email.",
+                  });
                 }
               } catch (error) {
                 console.error('Error sending report email:', error);
+                toast({
+                  title: "Error",
+                  description: "Failed to send the report email. Please try again later.",
+                  variant: "destructive",
+                });
               }
             }
 
@@ -61,7 +96,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         console.error('Error initializing calendar:', error);
       }
     })();
-  }, [onSubmit, calLink, formData, analysis]);
+  }, [onSubmit, calLink, formData, analysis, toast]);
 
   return (
     <Cal
