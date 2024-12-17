@@ -22,7 +22,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
       onBookDemo();
       trackAction('book');
       
-      // Show report reminder after booking if they haven't downloaded or emailed
       if (!hasDownloaded && !hasEmailed && !showingToast) {
         setTimeout(() => {
           setShowingToast(true);
@@ -36,7 +35,6 @@ export const useReportActions = ({ onBookDemo }: UseReportActionsProps) => {
     console.log(`Handling report action: ${type}`);
     trackAction(type);
 
-    // Show booking reminder after download/email if they haven't booked
     if (!hasBooked && !showingToast) {
       setTimeout(() => {
         setShowingToast(true);

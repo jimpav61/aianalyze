@@ -39,7 +39,6 @@ export const DetailedAnalysisDialog = ({
 
   const handleBookingSubmit = () => {
     console.log("DetailedAnalysisDialog - Booking submitted");
-    // This will trigger the download reminder in DetailedReport if report hasn't been downloaded
     if (formData) {
       setFormData({ ...formData });
     }
@@ -68,7 +67,10 @@ export const DetailedAnalysisDialog = ({
               onSubmit={handleSubmit}
               industry={industry}
               analysis={analysis}
-              onBookDemo={() => setShowCalendar(true)}
+              onBookDemo={() => {
+                console.log("Setting showCalendar to true");
+                setShowCalendar(true);
+              }}
             />
           )}
         </div>

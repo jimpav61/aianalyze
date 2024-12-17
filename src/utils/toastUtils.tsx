@@ -16,16 +16,15 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={() => {
-              try {
-                const downloadButton = document.querySelector('[aria-label="Download PDF"]');
-                if (downloadButton && downloadButton instanceof HTMLButtonElement) {
-                  downloadButton.click();
-                } else {
-                  console.warn("Download button not found or not clickable");
-                }
-              } catch (error) {
-                console.error("Error clicking download button:", error);
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Download button clicked from toast");
+              const downloadButton = document.querySelector('[aria-label="Download PDF"]') as HTMLButtonElement;
+              if (downloadButton) {
+                downloadButton.click();
+              } else {
+                console.warn("Download button not found");
               }
             }}
           >
@@ -34,16 +33,15 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={() => {
-              try {
-                const emailButton = document.querySelector('[aria-label="Email Report"]');
-                if (emailButton && emailButton instanceof HTMLButtonElement) {
-                  emailButton.click();
-                } else {
-                  console.warn("Email button not found or not clickable");
-                }
-              } catch (error) {
-                console.error("Error clicking email button:", error);
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Email button clicked from toast");
+              const emailButton = document.querySelector('[aria-label="Email Report"]') as HTMLButtonElement;
+              if (emailButton) {
+                emailButton.click();
+              } else {
+                console.warn("Email button not found");
               }
             }}
           >
@@ -69,13 +67,12 @@ export const showBookingReminder = (onBookDemo?: () => void) => {
         <Button
           variant="default"
           className="w-full sm:w-auto"
-          onClick={() => {
-            try {
-              if (onBookDemo) {
-                onBookDemo();
-              }
-            } catch (error) {
-              console.error("Error executing book demo callback:", error);
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Book demo clicked from toast");
+            if (onBookDemo) {
+              onBookDemo();
             }
           }}
         >
