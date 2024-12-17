@@ -39,11 +39,11 @@ export const showReportReminder = () => {
   console.log("Showing report reminder toast");
   
   toast({
-    title: "Don't Forget Your Report!",
+    title: "Save Your Personalized Report",
     description: (
       <div className="flex flex-col space-y-2 w-full max-w-[90vw] sm:max-w-md">
         <p className="text-sm text-muted-foreground">
-          Would you like to save your personalized AI implementation analysis?
+          Don't forget to save your personalized AI implementation analysis!
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
           <Button
