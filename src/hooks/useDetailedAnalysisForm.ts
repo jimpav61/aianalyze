@@ -57,46 +57,9 @@ export const useDetailedAnalysisForm = (onSubmit: (data: DetailedFormData) => vo
     return true;
   };
 
-  const handleSubmit = (analysis: any) => {
-    console.log("Attempting to submit form", { formData, analysis });
-    
-    if (!analysis || typeof analysis !== 'object') {
-      console.error("Missing or invalid analysis data:", analysis);
-      toast({
-        title: "Missing Analysis Data",
-        description: "Please complete the initial analysis first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const requiredFields = ['industry', 'department', 'bot_function', 'savings', 'profit_increase', 'explanation', 'marketing_strategy'];
-    const missingFields = requiredFields.filter(field => !(field in analysis));
-    
-    if (missingFields.length > 0) {
-      console.error("Missing required analysis fields:", missingFields);
-      toast({
-        title: "Invalid Analysis Data",
-        description: "The analysis data is incomplete. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (validateStep(3)) {
-      const finalFormData = {
-        ...formData,
-        additionalInfo: formData.additionalInfo || ""
-      };
-      console.log("Form validation passed, submitting with data:", finalFormData);
-      onSubmit(finalFormData);
-    }
-  };
-
   return {
     formData,
     handleInputChange,
     validateStep,
-    handleSubmit,
   };
 };
