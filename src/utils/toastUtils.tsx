@@ -2,27 +2,20 @@ import React from "react";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
-const findAndClickButton = (selector: string, maxAttempts = 10, interval = 100) => {
-  let attempts = 0;
-  
-  const tryClick = () => {
-    const button = document.querySelector(selector);
-    if (button instanceof HTMLButtonElement) {
-      console.log(`Found and clicking ${selector}`);
-      button.click();
-      return true;
-    }
-    
-    attempts++;
-    if (attempts < maxAttempts) {
-      console.log(`Button ${selector} not found, attempt ${attempts}/${maxAttempts}`);
-      setTimeout(tryClick, interval);
-    } else {
-      console.warn(`Failed to find button ${selector} after ${maxAttempts} attempts`);
-    }
-  };
-  
-  tryClick();
+const findAndClickButton = (selector: string) => {
+  return new Promise<boolean>((resolve) => {
+    requestAnimationFrame(() => {
+      const button = document.querySelector(selector);
+      if (button instanceof HTMLButtonElement) {
+        console.log(`Found button ${selector}, clicking...`);
+        button.click();
+        resolve(true);
+      } else {
+        console.warn(`Button ${selector} not found`);
+        resolve(false);
+      }
+    });
+  });
 };
 
 export const showReportReminder = () => {
@@ -39,10 +32,10 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              findAndClickButton('[aria-label="Download PDF"]');
+              await findAndClickButton('[aria-label="Download PDF"]');
             }}
           >
             Download PDF
@@ -50,10 +43,10 @@ export const showReportReminder = () => {
           <Button
             variant="default"
             className="w-full sm:w-auto"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              findAndClickButton('[aria-label="Email Report"]');
+              await findAndClickButton('[aria-label="Email Report"]');
             }}
           >
             Email Report

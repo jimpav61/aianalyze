@@ -46,15 +46,19 @@ export const DetailedAnalysisDialog = ({
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing dialog");
-    setFormData(null);
-    setShowReport(false);
-    setShowCalendar(false);
-    onClose();
+    requestAnimationFrame(() => {
+      setFormData(null);
+      setShowReport(false);
+      setShowCalendar(false);
+      onClose();
+    });
   }, [onClose]);
 
   const handleBookDemo = useCallback(() => {
     console.log("Setting showCalendar to true");
-    setShowCalendar(true);
+    requestAnimationFrame(() => {
+      setShowCalendar(true);
+    });
   }, []);
 
   const calLink = "chatsites/ai-discovery-call";
