@@ -5,6 +5,7 @@ import { useEmailHandler } from "./calendar/EmailHandler";
 import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { CalendarProps } from "@/types/calendar";
+import { useCalendarScript } from "@/hooks/calendar/useCalendarScript";
 
 export const Calendar = ({ 
   calLink, 
@@ -13,8 +14,7 @@ export const Calendar = ({
   analysis 
 }: CalendarProps) => {
   const { toast } = useToast();
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [scriptError, setScriptError] = useState<string | null>(null);
+  const { isScriptLoaded, scriptError } = useCalendarScript();
   
   const { sendEmails } = useEmailHandler({ 
     formData, 
@@ -39,52 +39,6 @@ export const Calendar = ({
       });
     }
   };
-
-  useEffect(() => {
-    let attempts = 0;
-    const maxAttempts = 50;
-    const checkInterval = 200; // Increased interval
-    const initialDelay = 2000; // Added initial delay
-
-    const checkCalScript = () => {
-      console.log("Calendar - Checking Cal script availability");
-      if (typeof (window as any).Cal !== 'undefined') {
-        console.log("Calendar - Cal script loaded successfully");
-        setIsScriptLoaded(true);
-        setScriptError(null);
-      } else {
-        attempts++;
-        if (attempts < maxAttempts) {
-          setTimeout(checkCalScript, checkInterval);
-        } else {
-          console.error("Calendar - Failed to load Cal script after maximum attempts");
-          setScriptError('Failed to load calendar. Please refresh the page.');
-        }
-      }
-    };
-
-    // Add initial delay before starting checks
-    const timeoutId = setTimeout(() => {
-      try {
-        checkCalScript();
-      } catch (error) {
-        console.error("Calendar - Error during script check:", error);
-        setScriptError('Failed to load calendar. Please refresh the page.');
-      }
-    }, initialDelay);
-
-    return () => {
-      clearTimeout(timeoutId);
-      if ((window as any).Cal) {
-        try {
-          console.log("Calendar - Cleaning up Cal instance");
-          (window as any).Cal('destroy');
-        } catch (e) {
-          console.error('Calendar - Error destroying calendar:', e);
-        }
-      }
-    };
-  }, []);
 
   useCalendarInitialization({ 
     calLink, 

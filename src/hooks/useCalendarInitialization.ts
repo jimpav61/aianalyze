@@ -54,8 +54,6 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Increased delay to ensure Cal.com script is fully loaded
-    const timeoutId = setTimeout(initializeCalendar, 2000);
-    return () => clearTimeout(timeoutId);
+    initializeCalendar();
   }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);
 };
