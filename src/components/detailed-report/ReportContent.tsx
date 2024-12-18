@@ -1,9 +1,11 @@
-import { useEffect, useRef } from "react";
-import { CompanyInformation } from "./CompanyInformation";
+import { DetailedFormData } from "@/types/analysis";
 import { CurrentOperations } from "./CurrentOperations";
 import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
-import { DetailedFormData } from "@/types/analysis";
+import { CompanyInformation } from "./CompanyInformation";
+import { ReportHeader } from "./ReportHeader";
+import { ReportFooter } from "./ReportFooter";
+import { Button } from "../ui/button";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -12,16 +14,9 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      console.log("Report HTML Content:", contentRef.current.innerHTML);
-    }
-  }, []);
-
   return (
-    <div ref={contentRef} className="space-y-6">
+    <div className="space-y-6">
+      <ReportHeader />
       <CompanyInformation data={formData} industry={analysis?.industry} />
       <CurrentOperations data={formData} />
       <AnalysisResults analysis={analysis} />
@@ -31,6 +26,17 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget,
         additionalInfo: formData.additionalInfo
       }} />
+      {onBookDemo && (
+        <div className="flex justify-center mt-8">
+          <Button 
+            onClick={onBookDemo}
+            className="bg-primary hover:bg-primary/90 text-white"
+          >
+            Book a Demo
+          </Button>
+        </div>
+      )}
+      <ReportFooter />
     </div>
   );
 };
