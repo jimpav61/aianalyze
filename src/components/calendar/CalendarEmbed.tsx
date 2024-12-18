@@ -15,15 +15,23 @@ export const CalendarEmbed = ({
   });
 
   useEffect(() => {
-    // Initialize Calendly widget
     const calendlyUrl = `https://calendly.com/${calLink}`;
+    const element = document.getElementById('calendly-booking-placeholder');
+    
+    if (!element) {
+      console.error("CalendarEmbed - Could not find placeholder element");
+      return;
+    }
+
+    // Clear any existing content
+    element.innerHTML = '';
     
     // Create prefill object with form data
     const prefill = formData ? {
       name: formData.companyName,
       email: formData.email,
       customAnswers: {
-        a1: formData.phoneNumber
+        a1: formData.phoneNumber || '' // Ensure phone number is passed as custom answer
       }
     } : {};
 
@@ -36,23 +44,24 @@ export const CalendarEmbed = ({
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
       url: calendlyUrl,
-      parentElement: document.getElementById('calendly-booking-placeholder'),
+      parentElement: element,
       prefill,
       utm: {}
     });
 
     // Listen for booking success
-    const onEventScheduled = () => {
+    const handleEventScheduled = () => {
       console.log("CalendarEmbed - Booking successful");
       handleBookingSuccess();
     };
 
     // @ts-ignore - Calendly types are not available
-    window.addEventListener('calendly.event_scheduled', onEventScheduled);
+    window.addEventListener('calendly.event_scheduled', handleEventScheduled);
 
     return () => {
+      element.innerHTML = '';
       // @ts-ignore - Calendly types are not available
-      window.removeEventListener('calendly.event_scheduled', onEventScheduled);
+      window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
     };
   }, [calLink, handleBookingSuccess, formData]);
 
