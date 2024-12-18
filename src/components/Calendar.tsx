@@ -43,11 +43,12 @@ export const Calendar = ({
   useEffect(() => {
     let attempts = 0;
     const maxAttempts = 50;
-    const checkInterval = 100;
+    const checkInterval = 200; // Increased interval
+    const initialDelay = 2000; // Added initial delay
 
     const checkCalScript = () => {
       console.log("Calendar - Checking Cal script availability");
-      if ((window as any).Cal) {
+      if (typeof (window as any).Cal !== 'undefined') {
         console.log("Calendar - Cal script loaded successfully");
         setIsScriptLoaded(true);
         setScriptError(null);
@@ -62,14 +63,18 @@ export const Calendar = ({
       }
     };
 
-    try {
-      checkCalScript();
-    } catch (error) {
-      console.error("Calendar - Error during script check:", error);
-      setScriptError('Failed to load calendar. Please refresh the page.');
-    }
+    // Add initial delay before starting checks
+    const timeoutId = setTimeout(() => {
+      try {
+        checkCalScript();
+      } catch (error) {
+        console.error("Calendar - Error during script check:", error);
+        setScriptError('Failed to load calendar. Please refresh the page.');
+      }
+    }, initialDelay);
 
     return () => {
+      clearTimeout(timeoutId);
       if ((window as any).Cal) {
         try {
           console.log("Calendar - Cleaning up Cal instance");
