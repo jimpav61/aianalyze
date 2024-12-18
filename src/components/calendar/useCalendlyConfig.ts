@@ -10,9 +10,8 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: {
-        type: "custom",
-        value: formData?.phoneNumber || ''
+      customAnswers: {
+        a1: formData?.phoneNumber || ''
       }
     };
 
