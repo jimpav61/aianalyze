@@ -32,7 +32,7 @@ export const CompanyBasicsStep = ({
   console.log("CompanyBasicsStep - Rendering with formData:", formData);
 
   return (
-    <div className="space-y-6 bg-white/50 backdrop-blur-sm rounded-lg p-6">
+    <div className="space-y-6 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
       <CompanyFields
         companyName={formData.companyName}
         ownerName={formData.ownerName}
@@ -45,16 +45,20 @@ export const CompanyBasicsStep = ({
         email={formData.email}
         handleInputChange={handleInputChange}
       />
-      <div className="space-y-4 pt-4 border-t border-gray-100">
+      <div className="space-y-4 pt-4 border-t border-gray-200">
         <div className="space-y-2">
           <Label htmlFor="employees" className="text-gray-700">Number of Employees</Label>
           <Select value={formData.employees} onValueChange={handleEmployeeChange}>
-            <SelectTrigger id="employees" className="bg-white/80">
+            <SelectTrigger id="employees" className="bg-white">
               <SelectValue placeholder="Select employee count" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border shadow-lg">
               {employeeCountOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="hover:bg-gray-100"
+                >
                   {option.label}
                 </SelectItem>
               ))}
@@ -64,12 +68,16 @@ export const CompanyBasicsStep = ({
         <div className="space-y-2">
           <Label htmlFor="revenue" className="text-gray-700">Annual Revenue</Label>
           <Select value={formData.revenue} onValueChange={handleRevenueChange}>
-            <SelectTrigger id="revenue" className="bg-white/80">
+            <SelectTrigger id="revenue" className="bg-white">
               <SelectValue placeholder="Select revenue range" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border shadow-lg">
               {revenueOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="hover:bg-gray-100"
+                >
                   {option.label}
                 </SelectItem>
               ))}
