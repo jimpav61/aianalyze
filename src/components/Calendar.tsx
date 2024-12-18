@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { getCalApi } from "@calcom/embed-react";
 import { DetailedFormData } from "@/types/analysis";
 import { CalendarConfig } from "./calendar/CalendarConfig";
@@ -33,18 +33,39 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     }
   });
 
+  const calInitialized = useRef(false);
+
   useEffect(() => {
-    (async function initializeCalendar() {
+    let mounted = true;
+    let scriptElement: HTMLScriptElement | null = null;
+
+    async function initializeCalendar() {
       try {
+        // Add Cal.com embed script if not already present
+        if (!document.querySelector('script[src="https://cal.com/embed.js"]')) {
+          scriptElement = document.createElement('script');
+          scriptElement.src = 'https://cal.com/embed.js';
+          scriptElement.async = true;
+          document.body.appendChild(scriptElement);
+
+          // Wait for script to load
+          await new Promise((resolve) => {
+            if (scriptElement) {
+              scriptElement.onload = resolve;
+            }
+          });
+        }
+
+        if (!mounted) return;
+
         const cal = await getCalApi() as unknown as CalApi;
         
-        if (!cal) {
-          console.error('Calendar API not initialized');
+        if (!cal || calInitialized.current) {
           return;
         }
 
-        // Configure Cal.com embed
-        cal.ns["30min"]({
+        // Initialize Cal.com
+        cal.ns["bookingPage"]({
           debug: true,
           calLink: calLink,
         });
@@ -57,10 +78,23 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
             await sendEmails();
           },
         });
+
+        calInitialized.current = true;
       } catch (error) {
         console.error('Error initializing calendar:', error);
       }
-    })();
+    }
+
+    initializeCalendar();
+
+    return () => {
+      mounted = false;
+      calInitialized.current = false;
+      // Clean up script if we added it
+      if (scriptElement && document.body.contains(scriptElement)) {
+        document.body.removeChild(scriptElement);
+      }
+    };
   }, [calLink, sendEmails]);
 
   return <CalendarConfig calLink={calLink} />;
