@@ -5,15 +5,21 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const calendlyInitialized = useRef<boolean>(false);
 
   const getPrefillData = () => {
-    console.log("useCalendlyConfig - Creating prefill data with form data:", formData);
+    console.log("useCalendlyConfig - Starting prefill with raw form data:", formData);
     
+    // Try all possible Calendly field mappings for phone
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: formData?.phoneNumber || '' // Changed to use 'location' field which is a default Calendly field
+      location: formData?.phoneNumber || '',
+      customAnswers: {
+        a1: formData?.phoneNumber || '',
+        'phone-number': formData?.phoneNumber || '',
+        phone: formData?.phoneNumber || '',
+      }
     };
 
-    console.log("useCalendlyConfig - Final prefill data:", prefillData);
+    console.log("useCalendlyConfig - Created prefill data:", prefillData);
     return prefillData;
   };
 

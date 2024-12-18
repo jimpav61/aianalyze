@@ -31,10 +31,11 @@ export const CalendarEmbed = ({
 
   useEffect(() => {
     if (!calendarRef.current || calendlyInitialized.current || !calLink) {
-      console.log("CalendarEmbed - Skipping initialization:", {
+      console.log("CalendarEmbed - Initialization conditions:", {
         hasRef: !!calendarRef.current,
         isInitialized: calendlyInitialized.current,
-        hasCalLink: !!calLink
+        hasCalLink: !!calLink,
+        formData
       });
       return;
     }
@@ -42,10 +43,10 @@ export const CalendarEmbed = ({
     const calendlyUrl = `https://calendly.com/${calLink}`;
     const prefill = getPrefillData();
     
-    console.log("CalendarEmbed - Initializing with:", {
+    console.log("CalendarEmbed - Initializing Calendly with:", {
       url: calendlyUrl,
       prefill,
-      formData
+      rawFormData: formData
     });
 
     // @ts-ignore - Calendly types are not available
@@ -57,16 +58,26 @@ export const CalendarEmbed = ({
     calendlyInitialized.current = true;
 
     // @ts-ignore - Calendly types are not available
-    window.addEventListener('calendly.init', () => handleCalendlyInit(prefill));
-    // @ts-ignore - Calendly types are not available
-    window.addEventListener('calendly.event_scheduled', handleEventScheduled);
-
-    // @ts-ignore - Calendly types are not available
-    Calendly.initInlineWidget({
+    window.Calendly.initInlineWidget({
       url: calendlyUrl,
       parentElement: calendarRef.current,
       prefill,
       utm: {}
+    });
+
+    // Log after initialization
+    console.log("CalendarEmbed - Calendly widget initialized with prefill:", prefill);
+
+    // @ts-ignore - Calendly types are not available
+    window.addEventListener('calendly.init', () => {
+      console.log("CalendarEmbed - Calendly init event fired");
+      handleCalendlyInit(prefill);
+    });
+
+    // @ts-ignore - Calendly types are not available
+    window.addEventListener('calendly.event_scheduled', (e: any) => {
+      console.log("CalendarEmbed - Event scheduled with data:", e);
+      handleEventScheduled(e);
     });
 
     return () => {
