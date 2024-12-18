@@ -12,8 +12,9 @@ export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
   const { showSuccessToast } = useSuccessToast();
 
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
-    console.log("useCalendarHandling - Book demo requested");
+    console.log("useCalendarHandling - Book demo requested with form data:", formData);
     if (!formData) {
+      console.warn("useCalendarHandling - No form data available");
       return false;
     }
     setShowCalendar(true);
@@ -22,7 +23,7 @@ export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
   }, []);
 
   const handleBookingSubmit = useCallback(() => {
-    console.log("useCalendarHandling - Demo booking submitted");
+    console.log("useCalendarHandling - Booking submitted successfully");
     setShowCalendar(false);
     setShowReport(true);
     showSuccessToast();

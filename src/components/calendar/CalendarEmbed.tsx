@@ -27,7 +27,11 @@ export const CalendarEmbed = ({
       }
     } : {};
 
-    console.log("CalendarEmbed - Initializing with prefill data:", prefill);
+    console.log("CalendarEmbed - Initializing with:", {
+      url: calendlyUrl,
+      prefill,
+      formData
+    });
     
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
@@ -39,7 +43,10 @@ export const CalendarEmbed = ({
 
     // Listen for booking success
     // @ts-ignore - Calendly types are not available
-    window.addEventListener('calendly.event_scheduled', handleBookingSuccess);
+    window.addEventListener('calendly.event_scheduled', (e: any) => {
+      console.log("CalendarEmbed - Booking successful:", e);
+      handleBookingSuccess(e);
+    });
 
     return () => {
       // @ts-ignore - Calendly types are not available
