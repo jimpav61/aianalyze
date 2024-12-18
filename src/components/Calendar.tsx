@@ -27,7 +27,6 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
   useEffect(() => {
     let mounted = true;
-    let cal: any;
 
     async function initializeCalendar() {
       console.log('Calendar - Starting initialization');
@@ -38,7 +37,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
 
       try {
-        cal = await getCalApi();
+        const cal = await getCalApi();
         
         if (!cal) {
           console.error('Calendar - Cal API not initialized');
@@ -51,20 +50,18 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         }
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
-        
-        // Ensure the element is mounted before initialization
-        const element = document.getElementById('cal-booking-placeholder');
-        if (!element) {
-          console.error('Calendar - Booking placeholder not found');
-          return;
-        }
 
-        cal('ui', {
-          styles: { 
-            branding: { brandColor: '#000000' } 
-          },
-          hideEventTypeDetails: false,
-          layout: 'month_view'
+        cal('inline', {
+          elementOrSelector: '#cal-booking-placeholder',
+          calLink: calLink,
+          layout: 'month_view',
+          config: {
+            hideEventTypeDetails: false,
+            layout: 'month_view',
+            styles: { 
+              branding: { brandColor: '#000000' } 
+            },
+          }
         });
 
         cal('on', {
@@ -82,26 +79,20 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
     }
 
-    // Initialize with a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(initializeCalendar, 500);
+    // Initialize with a delay to ensure DOM is ready
+    const timeoutId = setTimeout(initializeCalendar, 1000);
 
     return () => {
       console.log('Calendar - Cleaning up');
       mounted = false;
       calInitialized.current = false;
       clearTimeout(timeoutId);
-      
-      // Cleanup Cal.com event listeners if initialized
-      if (cal) {
-        cal('destroy');
-      }
     };
   }, [calLink, sendEmails]);
 
   return (
-    <div className="w-full min-h-[600px]">
-      <CalendarConfig calLink={calLink} />
-      <div id="cal-booking-placeholder" className="min-h-[500px]" />
+    <div className="w-full h-[600px] flex flex-col">
+      <div id="cal-booking-placeholder" className="flex-1 min-h-[500px]" />
     </div>
   );
 };

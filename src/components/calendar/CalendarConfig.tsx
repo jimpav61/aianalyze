@@ -7,11 +7,7 @@ export const CalendarConfig = ({ calLink }: CalendarConfigProps) => {
     <div 
       id="cal-embed"
       data-cal-link={calLink}
-      style={{ 
-        width: '100%', 
-        height: '100%', 
-        minHeight: '500px' 
-      }} 
+      className="w-full h-full min-h-[500px]"
     />
   );
 };
