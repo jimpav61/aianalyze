@@ -31,13 +31,13 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
     }
 
     try {
+      console.log('EmailHandler - Preparing report for email');
       const reportElement = document.getElementById("detailed-report");
       if (!reportElement) {
         console.error('EmailHandler - Report element not found');
         throw new Error('Report element not found');
       }
 
-      // Clone and prepare report for email
       const reportClone = reportElement.cloneNode(true) as HTMLElement;
       const style = document.createElement('style');
       style.textContent = `
@@ -48,7 +48,6 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
       `;
       reportClone.prepend(style);
 
-      // Send booking confirmation with report included
       console.log('EmailHandler - Sending confirmation email to:', formData.email);
       const { error: emailError } = await supabase.functions.invoke("sendemail", {
         body: {

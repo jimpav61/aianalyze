@@ -15,6 +15,13 @@ export const Calendar = ({
   formData, 
   analysis 
 }: CalendarProps) => {
+  console.log('Calendar - Component mounted with props:', { 
+    calLink, 
+    hasOnSubmit: !!onSubmit,
+    hasFormData: !!formData,
+    hasAnalysis: !!analysis
+  });
+
   const { sendEmails } = useEmailHandler({ 
     formData, 
     analysis, 
@@ -27,8 +34,13 @@ export const Calendar = ({
   });
 
   const handleBookingSuccess = async () => {
-    console.log('Calendar - Booking completed successfully, sending emails');
-    await sendEmails();
+    console.log('Calendar - Booking completed successfully, initiating email send');
+    try {
+      await sendEmails();
+      console.log('Calendar - Full booking process completed successfully');
+    } catch (error) {
+      console.error('Calendar - Error in booking success handler:', error);
+    }
   };
 
   useCalendarInitialization({ 
