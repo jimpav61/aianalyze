@@ -8,7 +8,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     name: formData?.companyName || '',
     email: formData?.email || '',
     questions: {
-      a1: formData?.phoneNumber || '' // Calendly's phone field
+      a2: formData?.phoneNumber || '' // Updated from a1 to a2 to match new Calendly question ID
     }
   });
 
