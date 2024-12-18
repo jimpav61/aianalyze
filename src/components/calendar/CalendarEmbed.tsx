@@ -45,8 +45,8 @@ export const CalendarEmbed = ({
     
     console.log("CalendarEmbed - Detailed phone mapping:", {
       originalPhoneNumber: formData?.phoneNumber,
-      mappedField: 'a3',
-      prefillValue: prefill.customAnswers.a3,
+      mappedField: 'a4',
+      prefillValue: prefill.customAnswers.a4,
       allPrefillData: prefill,
       formDataComplete: formData
     });
