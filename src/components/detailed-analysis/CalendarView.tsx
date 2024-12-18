@@ -12,7 +12,7 @@ export const CalendarView = ({
   onSubmit, 
   formData, 
   analysis, 
-  calLink = "your-calendly-username/meeting-name" 
+  calLink = "jimmy-chatsites/ai-discovery-call" 
 }: CalendarViewProps) => {
   console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
   
