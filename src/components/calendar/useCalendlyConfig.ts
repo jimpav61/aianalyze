@@ -7,9 +7,6 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const getPrefillData = () => {
     console.log("useCalendlyConfig - Creating prefill data with form data:", formData);
     
-    // Split owner name into first and last name
-    const [firstName = '', lastName = ''] = (formData?.ownerName || '').split(' ');
-    
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
