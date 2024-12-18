@@ -6,6 +6,25 @@ interface UseCalendarInitializationProps {
   onBookingSuccess: () => Promise<void>;
 }
 
+// Define proper types for Cal.com configuration
+interface CalUIConfig {
+  theme: 'light' | 'dark';
+  styles: {
+    branding: {
+      brandColor: string;
+    };
+  };
+  hideEventTypeDetails: boolean;
+}
+
+interface CalInlineConfig {
+  elementOrSelector: string;
+  calLink: string;
+  config: {
+    hideEventTypeDetails: boolean;
+  };
+}
+
 export const useCalendarInitialization = ({ 
   calLink, 
   onBookingSuccess 
@@ -45,8 +64,8 @@ export const useCalendarInitialization = ({
         cal('ui', {
           theme: 'light',
           styles: { branding: { brandColor: '#000000' } },
-          hideEventTypeDetails: "false",
-        });
+          hideEventTypeDetails: false,
+        } as CalUIConfig);
 
         // Add a small delay between UI config and inline embedding
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -56,9 +75,9 @@ export const useCalendarInitialization = ({
           elementOrSelector: '#cal-booking-placeholder',
           calLink,
           config: {
-            hideEventTypeDetails: "false",
+            hideEventTypeDetails: false,
           }
-        });
+        } as CalInlineConfig);
 
         console.log('CalendarInit - Setting up booking callback');
         cal('on', {
