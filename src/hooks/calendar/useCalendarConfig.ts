@@ -5,29 +5,31 @@ interface CalendarUiConfig {
       brandColor?: string;
     };
   };
-  hideEventTypeDetails?: boolean;
+  hideEventTypeDetails?: string;
+}
+
+interface PrefillAndIframeAttrsConfig {
+  [key: string]: string | string[] | Record<string, string>;
 }
 
 interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
-  config?: {
-    hideEventTypeDetails?: boolean;
-  };
+  config?: PrefillAndIframeAttrsConfig;
 }
 
 export const useCalendarConfig = () => {
   const getUiConfig = (): CalendarUiConfig => ({
     theme: 'light',
     styles: { branding: { brandColor: '#000000' } },
-    hideEventTypeDetails: false,
+    hideEventTypeDetails: 'false',
   });
 
   const getInlineConfig = (calLink: string): CalendarInlineConfig => ({
     elementOrSelector: '#cal-booking-placeholder',
     calLink,
     config: {
-      hideEventTypeDetails: false,
+      hideEventTypeDetails: 'false'
     }
   });
 
