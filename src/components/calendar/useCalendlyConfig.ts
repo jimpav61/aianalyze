@@ -1,35 +1,50 @@
 import { useRef } from 'react';
 import { CalendarFormData } from '@/types/analysis';
 
+const PHONE_FIELD_MAPPINGS = {
+  location: true,  // Try Calendly's built-in location field
+  customAnswers: {
+    a1: true,
+    'phone-number': true,
+    phone: true,
+    'phone number': true,
+    'Phone Number': true,
+    'questions.1': true, // Additional Calendly field format
+    'questions.phone': true // Additional Calendly field format
+  }
+};
+
 export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const calendlyInitialized = useRef<boolean>(false);
 
   const getPrefillData = () => {
-    console.log("useCalendlyConfig - Starting prefill with raw form data:", {
-      fullFormData: formData,
-      phoneNumber: formData?.phoneNumber,
-      hasPhoneNumber: !!formData?.phoneNumber
-    });
+    const phoneNumber = formData?.phoneNumber || '';
     
-    // Try multiple approaches for phone number mapping
+    // Log initial form data
+    console.log('[PHONE_TEST] Initial form data:', {
+      hasFormData: !!formData,
+      phoneNumber,
+      formData
+    });
+
+    // Create prefill object with all possible phone mappings
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: formData?.phoneNumber || '',
-      customAnswers: {
-        a1: formData?.phoneNumber || '',
-        'phone-number': formData?.phoneNumber || '',
-        phone: formData?.phoneNumber || '',
-        'phone number': formData?.phoneNumber || '',
-        'Phone Number': formData?.phoneNumber || '',
-      }
+      location: phoneNumber, // Try location field
+      customAnswers: Object.keys(PHONE_FIELD_MAPPINGS.customAnswers).reduce((acc, key) => ({
+        ...acc,
+        [key]: phoneNumber
+      }), {})
     };
 
-    console.log("useCalendlyConfig - Created prefill data:", {
-      prefillData,
-      phoneInLocation: prefillData.location,
-      phoneInCustomAnswers: prefillData.customAnswers
+    // Log created prefill data
+    console.log('[PHONE_TEST] Created prefill data:', {
+      phoneNumber,
+      locationField: prefillData.location,
+      customAnswers: prefillData.customAnswers
     });
+
     return prefillData;
   };
 

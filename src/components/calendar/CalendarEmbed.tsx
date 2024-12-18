@@ -30,17 +30,18 @@ export const CalendarEmbed = ({
   });
 
   useEffect(() => {
-    console.log("CalendarEmbed - Effect triggered with formData:", {
-      formData,
+    // Log effect trigger
+    console.log('[PHONE_TEST] Effect triggered:', {
+      hasFormData: !!formData,
       phoneNumber: formData?.phoneNumber
     });
 
+    // Check initialization conditions
     if (!calendarRef.current || calendlyInitialized.current || !calLink) {
-      console.log("CalendarEmbed - Initialization conditions not met:", {
+      console.log('[PHONE_TEST] Initialization blocked:', {
         hasRef: !!calendarRef.current,
         isInitialized: calendlyInitialized.current,
         hasCalLink: !!calLink,
-        formData: formData,
         phoneNumber: formData?.phoneNumber
       });
       return;
@@ -49,22 +50,19 @@ export const CalendarEmbed = ({
     const calendlyUrl = `https://calendly.com/${calLink}`;
     const prefill = getPrefillData();
     
-    console.log("CalendarEmbed - Initializing Calendly with:", {
+    console.log('[PHONE_TEST] Initializing Calendly:', {
       url: calendlyUrl,
       prefill,
-      rawFormData: formData,
       phoneNumber: formData?.phoneNumber
     });
 
-    // @ts-ignore - Calendly types are not available
     if (!window.Calendly) {
-      console.error("CalendarEmbed - Calendly not loaded");
+      console.error('[PHONE_TEST] Calendly not loaded');
       return;
     }
 
     calendlyInitialized.current = true;
 
-    // @ts-ignore - Calendly types are not available
     window.Calendly.initInlineWidget({
       url: calendlyUrl,
       parentElement: calendarRef.current,
@@ -72,41 +70,33 @@ export const CalendarEmbed = ({
       utm: {}
     });
 
-    console.log("CalendarEmbed - Calendly widget initialized with prefill:", {
-      prefill,
-      phoneNumber: formData?.phoneNumber
-    });
-
-    // @ts-ignore - Calendly types are not available
+    // Event listeners for testing
     window.addEventListener('calendly.init', () => {
-      console.log("CalendarEmbed - Calendly init event fired with data:", {
+      console.log('[PHONE_TEST] Init event:', {
         prefill,
         phoneNumber: formData?.phoneNumber
       });
       handleCalendlyInit(prefill);
     });
 
-    // @ts-ignore - Calendly types are not available
     window.addEventListener('calendly.event_scheduled', (e: any) => {
-      console.log("CalendarEmbed - Event scheduled with complete data:", {
-        event: e,
-        formData,
+      console.log('[PHONE_TEST] Event scheduled:', {
         phoneNumber: formData?.phoneNumber,
         eventData: e?.data,
-        inviteeData: e?.data?.invitee
+        invitee: e?.data?.invitee,
+        questions: e?.data?.invitee?.questions,
+        customAnswers: e?.data?.invitee?.customAnswers
       });
       handleEventScheduled(e);
     });
 
     return () => {
-      console.log("CalendarEmbed - Cleanup triggered");
+      console.log('[PHONE_TEST] Cleanup');
       if (calendarRef.current) {
         calendarRef.current.innerHTML = '';
       }
       calendlyInitialized.current = false;
-      // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
-      // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.init', handleCalendlyInit);
     };
   }, [calLink, handleBookingSuccess, formData, getPrefillData, handleCalendlyInit, handleEventScheduled]);
