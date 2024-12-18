@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
+import { createCalendlyPrefill } from "@/utils/calendar";
 
 export const CalendarEmbed = ({ 
   calLink, 
@@ -27,13 +28,7 @@ export const CalendarEmbed = ({
     element.innerHTML = '';
     
     // Create prefill object with form data
-    const prefill = formData ? {
-      name: formData.companyName,
-      email: formData.email,
-      customAnswers: {
-        a1: formData.phoneNumber || '' // Map phone number to custom answer field
-      }
-    } : {};
+    const prefill = createCalendlyPrefill(formData);
 
     console.log("CalendarEmbed - Initializing with:", {
       url: calendlyUrl,
@@ -50,8 +45,8 @@ export const CalendarEmbed = ({
     });
 
     // Listen for booking success
-    const handleEventScheduled = () => {
-      console.log("CalendarEmbed - Booking successful");
+    const handleEventScheduled = (e: any) => {
+      console.log("CalendarEmbed - Booking successful", e);
       handleBookingSuccess();
     };
 

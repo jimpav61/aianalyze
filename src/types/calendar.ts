@@ -1,7 +1,12 @@
 export interface CalendarProps {
   calLink: string;
   onSubmit?: () => void;
-  formData?: any;
+  formData?: {
+    companyName?: string;
+    email?: string;
+    phoneNumber?: string;
+    [key: string]: any;
+  };
   analysis?: any;
 }
 
