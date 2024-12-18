@@ -26,6 +26,8 @@ export const useCalendarInitialization = ({
       return;
     }
 
+    let initTimeout: NodeJS.Timeout;
+
     const initializeCalendar = async () => {
       try {
         console.log("CalendarInit - Initializing calendar");
@@ -36,16 +38,22 @@ export const useCalendarInitialization = ({
           return;
         }
 
-        console.log("CalendarInit - Configuring calendar");
-        cal('ui', getUiConfig());
-        cal('inline', getInlineConfig(calLink));
-        cal('on', {
-          action: "bookingSuccessful",
-          callback: onBookingSuccess,
-        });
+        // Small delay to ensure DOM is ready
+        initTimeout = setTimeout(() => {
+          if (mounted.current) {
+            console.log("CalendarInit - Configuring calendar");
+            cal('ui', getUiConfig());
+            cal('inline', getInlineConfig(calLink));
+            cal('on', {
+              action: "bookingSuccessful",
+              callback: onBookingSuccess,
+            });
 
-        calInitialized.current = true;
-        console.log("CalendarInit - Calendar initialized successfully");
+            calInitialized.current = true;
+            console.log("CalendarInit - Calendar initialized successfully");
+          }
+        }, 100);
+
       } catch (error) {
         console.error('CalendarInit - Error initializing calendar:', error);
         calInitialized.current = false;
@@ -53,5 +61,9 @@ export const useCalendarInitialization = ({
     };
 
     initializeCalendar();
+
+    return () => {
+      clearTimeout(initTimeout);
+    };
   }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);
 };

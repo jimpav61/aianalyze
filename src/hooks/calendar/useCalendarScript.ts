@@ -5,49 +5,47 @@ export const useCalendarScript = () => {
   const [scriptError, setScriptError] = useState<string | null>(null);
 
   useEffect(() => {
-    let attempts = 0;
-    const maxAttempts = 50;
-    const checkInterval = 200;
-    const initialDelay = 1000;
-    let timeoutId: NodeJS.Timeout;
-    let intervalId: NodeJS.Timeout;
-
     const checkCalScript = () => {
-      console.log("CalendarScript - Checking Cal availability, attempt:", attempts + 1);
-      
       if (typeof (window as any).Cal !== 'undefined') {
         console.log("CalendarScript - Cal script loaded successfully");
         setIsScriptLoaded(true);
         setScriptError(null);
         return true;
       }
-      
-      attempts++;
-      if (attempts >= maxAttempts) {
-        console.error("CalendarScript - Failed to load Cal script after maximum attempts");
-        setScriptError('Failed to load calendar. Please refresh the page.');
-        return true;
-      }
-      
       return false;
     };
 
-    const startChecking = () => {
-      console.log("CalendarScript - Starting script check process");
-      intervalId = setInterval(() => {
-        const isDone = checkCalScript();
-        if (isDone) {
-          clearInterval(intervalId);
-        }
-      }, checkInterval);
-    };
+    // Check immediately in case the script is already loaded
+    if (checkCalScript()) {
+      return;
+    }
 
-    // Add initial delay before starting checks
-    timeoutId = setTimeout(startChecking, initialDelay);
+    // Set up a MutationObserver to watch for script load
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        if (checkCalScript()) {
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true
+    });
+
+    // Fallback timeout
+    const timeout = setTimeout(() => {
+      if (!isScriptLoaded) {
+        console.error("CalendarScript - Failed to load Cal script");
+        setScriptError('Failed to load calendar. Please refresh the page.');
+        observer.disconnect();
+      }
+    }, 10000);
 
     return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
+      observer.disconnect();
+      clearTimeout(timeout);
     };
   }, []);
 
