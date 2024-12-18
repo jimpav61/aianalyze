@@ -7,9 +7,8 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const getPrefillData = () => ({
     name: formData?.companyName || '',
     email: formData?.email || '',
-    questions: {
-      a1: formData?.phoneNumber || '' // Changed back to a1 to match Calendly's form field
-    }
+    phoneNumber: formData?.phoneNumber || '', // Map phone number directly
+    questions: {} // Keep questions object empty since we don't have custom questions
   });
 
   return {
