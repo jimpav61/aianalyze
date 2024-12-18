@@ -1,13 +1,32 @@
 declare global {
   interface Window {
-    Cal?: (...args: any[]) => void;
+    Calendly?: {
+      initInlineWidget: (config: {
+        url: string;
+        parentElement: HTMLElement;
+        prefill?: {
+          name?: string;
+          email?: string;
+          location?: string;
+          customAnswers?: {
+            [key: string]: string;
+          };
+        };
+        utm?: Record<string, string>;
+      }) => void;
+    };
   }
 }
 
 export interface CalendarProps {
   calLink: string;
   onSubmit?: () => void;
-  formData?: any;
+  formData?: {
+    companyName?: string;
+    email?: string;
+    phoneNumber?: string;
+    [key: string]: any;
+  };
   analysis?: any;
 }
 
@@ -25,6 +44,9 @@ export interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
   config: {
-    [key: string]: string;
+    hideEventTypeDetails: string;
   };
 }
+
+// This export is needed to make the file a module
+export {};
