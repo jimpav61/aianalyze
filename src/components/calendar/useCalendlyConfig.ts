@@ -7,8 +7,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const getPrefillData = () => ({
     name: formData?.companyName || '',
     email: formData?.email || '',
-    phoneNumber: formData?.phoneNumber || '', // Map phone number directly
-    questions: {} // Keep questions object empty since we don't have custom questions
+    phoneNumber: formData?.phoneNumber || ''
   });
 
   return {
