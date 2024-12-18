@@ -19,6 +19,6 @@ export interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
   config: {
-    [key: string]: string;
+    hideEventTypeDetails: string;
   };
 }
