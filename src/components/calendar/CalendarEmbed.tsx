@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 
@@ -13,8 +13,14 @@ export const CalendarEmbed = ({
     analysis, 
     onSubmit 
   });
+  
+  const calendlyInitialized = useRef(false);
 
   useEffect(() => {
+    if (calendlyInitialized.current) {
+      return; // Prevent multiple initializations
+    }
+
     const calendlyUrl = `https://calendly.com/${calLink}`;
     const element = document.getElementById('calendly-booking-placeholder');
     
@@ -30,9 +36,9 @@ export const CalendarEmbed = ({
     const prefill = {
       name: formData?.companyName || '',
       email: formData?.email || '',
-      phoneNumber: formData?.phoneNumber || '', // Using Calendly's native phone field
-      guests: [],
-      date: null
+      location: {
+        phoneNumber: formData?.phoneNumber || ''
+      }
     };
     
     console.log("CalendarEmbed - Initializing with config:", {
@@ -40,7 +46,7 @@ export const CalendarEmbed = ({
       prefill,
       phoneDetails: {
         originalNumber: formData?.phoneNumber,
-        prefillValue: prefill.phoneNumber
+        prefillValue: prefill.location.phoneNumber
       }
     });
 
@@ -58,6 +64,8 @@ export const CalendarEmbed = ({
       console.error("CalendarEmbed - Calendly not loaded");
       return;
     }
+
+    calendlyInitialized.current = true;
 
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
@@ -85,6 +93,7 @@ export const CalendarEmbed = ({
       if (element) {
         element.innerHTML = '';
       }
+      calendlyInitialized.current = false;
       // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
       // @ts-ignore - Calendly types are not available
