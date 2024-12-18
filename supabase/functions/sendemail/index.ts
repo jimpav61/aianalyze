@@ -42,7 +42,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "AI Analysis <onboarding@resend.dev>",
+        from: "jimmy@chatsites.io", // Using the verified email address
         to: [formData.email],
         subject: formData.subject,
         html: formData.reportHtml,
