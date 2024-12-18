@@ -56,11 +56,11 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
           calLink: calLink,
           layout: 'month_view',
           config: {
-            hideEventTypeDetails: false,
+            hideEventTypeDetails: 'false',
             layout: 'month_view',
-            styles: { 
+            styles: JSON.stringify({ 
               branding: { brandColor: '#000000' } 
-            },
+            })
           }
         });
 
@@ -79,8 +79,8 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
     }
 
-    // Initialize with a delay to ensure DOM is ready
-    const timeoutId = setTimeout(initializeCalendar, 1000);
+    // Initialize with a longer delay to ensure DOM and scripts are ready
+    const timeoutId = setTimeout(initializeCalendar, 2000);
 
     return () => {
       console.log('Calendar - Cleaning up');
@@ -91,8 +91,8 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
   }, [calLink, sendEmails]);
 
   return (
-    <div className="w-full h-[600px] flex flex-col">
-      <div id="cal-booking-placeholder" className="flex-1 min-h-[500px]" />
+    <div className="w-full h-[700px] flex flex-col">
+      <div id="cal-booking-placeholder" className="flex-1 min-h-[600px]" />
     </div>
   );
 };
