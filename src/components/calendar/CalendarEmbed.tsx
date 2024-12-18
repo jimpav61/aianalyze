@@ -32,12 +32,12 @@ export const CalendarEmbed = ({
     // Clear any existing content
     element.innerHTML = '';
     
-    // Create prefill object with form data - mapping phone to Calendly's question field
+    // Create prefill object with form data - mapping to Calendly's native phone question
     const prefill = {
       name: formData?.companyName || '',
       email: formData?.email || '',
-      customAnswers: {
-        a1: formData?.phoneNumber || '' // This maps to Calendly's phone field
+      questions: {
+        "1": formData?.phoneNumber || '' // This maps to Calendly's native phone field
       }
     };
     
@@ -46,7 +46,7 @@ export const CalendarEmbed = ({
       prefill,
       phoneDetails: {
         originalNumber: formData?.phoneNumber,
-        prefillValue: prefill.customAnswers.a1
+        prefillValue: prefill.questions["1"]
       }
     });
 
