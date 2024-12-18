@@ -22,9 +22,7 @@ export const CalendarEmbed = ({
     const prefill = formData ? {
       name: formData.companyName,
       email: formData.email,
-      customAnswers: {
-        a1: formData.phoneNumber || 'Not provided'
-      }
+      phoneNumber: formData.phoneNumber || '', // Changed from customAnswers to phoneNumber
     } : {};
 
     console.log("CalendarEmbed - Initializing with:", {
