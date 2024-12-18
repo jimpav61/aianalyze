@@ -15,9 +15,7 @@ interface PrefillAndIframeAttrsConfig {
 interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
-  config?: {
-    hideEventTypeDetails?: boolean;
-  };
+  config?: PrefillAndIframeAttrsConfig;
 }
 
 export const useCalendarConfig = () => {
@@ -31,7 +29,7 @@ export const useCalendarConfig = () => {
     elementOrSelector: '#cal-booking-placeholder',
     calLink,
     config: {
-      hideEventTypeDetails: false
+      hideEventTypeDetails: 'false'
     }
   });
 
