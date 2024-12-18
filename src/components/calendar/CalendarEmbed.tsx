@@ -30,10 +30,8 @@ export const CalendarEmbed = ({
     const prefill = {
       name: formData?.companyName || '',
       email: formData?.email || '',
+      phoneNumber: formData?.phoneNumber || '', // Using Calendly's native phone field
       guests: [],
-      customAnswers: {
-        a1: formData?.phoneNumber || ''
-      },
       date: null
     };
     
@@ -42,8 +40,7 @@ export const CalendarEmbed = ({
       prefill,
       phoneDetails: {
         originalNumber: formData?.phoneNumber,
-        mappedField: 'a1',
-        prefillValue: prefill.customAnswers.a1
+        prefillValue: prefill.phoneNumber
       }
     });
 
