@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { DetailedFormData } from '@/types/analysis';
+import { CalendarFormData } from '@/types/analysis';
 
-export const useCalendlyConfig = (formData?: DetailedFormData) => {
+export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const calendlyInitialized = useRef(false);
 
   const getPrefillData = () => ({

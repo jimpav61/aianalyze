@@ -1,37 +1,36 @@
+import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useEmailHandler } from "@/components/calendar/EmailHandler";
+import { CalendarFormData } from "@/types/analysis";
 
 interface UseBookingSuccessProps {
-  formData?: any;
+  formData?: CalendarFormData;
   analysis?: any;
   onSubmit?: () => void;
 }
 
-export const useBookingSuccess = ({ formData, analysis, onSubmit }: UseBookingSuccessProps) => {
+export const useBookingSuccess = ({ 
+  formData, 
+  analysis, 
+  onSubmit 
+}: UseBookingSuccessProps) => {
   const { toast } = useToast();
-  const { sendEmails } = useEmailHandler({ 
-    formData, 
-    analysis, 
-    onSuccess: () => {
-      if (onSubmit) {
-        requestAnimationFrame(onSubmit);
-      }
-    }
-  });
 
-  const handleBookingSuccess = async () => {
-    console.log('Booking successful, sending emails');
-    try {
-      await sendEmails();
-    } catch (error) {
-      console.error('Error sending emails:', error);
-      toast({
-        title: 'Error',
-        description: 'There was an issue completing your booking. Our team will contact you shortly.',
-        variant: 'destructive',
-      });
+  const handleBookingSuccess = useCallback(() => {
+    console.log("useBookingSuccess - Booking successful with data:", {
+      formData,
+      analysis
+    });
+
+    toast({
+      title: "Success!",
+      description: "Your demo has been scheduled. Check your email for confirmation.",
+      duration: 2000, // 2 seconds
+    });
+
+    if (onSubmit) {
+      onSubmit();
     }
-  };
+  }, [formData, analysis, onSubmit, toast]);
 
   return { handleBookingSuccess };
 };

@@ -3,13 +3,18 @@ import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendlyConfig } from "./useCalendlyConfig";
 import { useCalendlyEvents } from "./useCalendlyEvents";
+import { CalendarFormData } from "@/types/analysis";
+
+interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
+  formData?: CalendarFormData;
+}
 
 export const CalendarEmbed = ({ 
   calLink, 
   onSubmit, 
   formData, 
   analysis 
-}: CalendarProps) => {
+}: CalendarEmbedProps) => {
   const { handleBookingSuccess } = useBookingSuccess({ 
     formData, 
     analysis, 
