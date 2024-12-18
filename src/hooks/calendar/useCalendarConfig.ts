@@ -1,20 +1,4 @@
-interface CalendarUiConfig {
-  theme: 'light' | 'dark';
-  styles: {
-    branding: {
-      brandColor: string;
-    };
-  };
-  hideEventTypeDetails: boolean;
-}
-
-interface CalendarInlineConfig {
-  elementOrSelector: string;
-  calLink: string;
-  config: {
-    [key: string]: string;
-  };
-}
+import { CalendarUiConfig, CalendarInlineConfig } from "@/types/calendar";
 
 export const useCalendarConfig = () => {
   const getUiConfig = (): CalendarUiConfig => ({
