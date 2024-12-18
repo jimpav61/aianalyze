@@ -22,6 +22,7 @@ export const useCalendarInitialization = ({
 
   useEffect(() => {
     if (!isScriptLoaded) {
+      console.log('CalendarInit - Script not loaded yet');
       return;
     }
 
@@ -34,9 +35,12 @@ export const useCalendarInitialization = ({
       try {
         console.log('CalendarInit - Starting initialization');
         
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
         const cal = await initializeApi();
+        
+        if (!cal) {
+          console.error('CalendarInit - Cal API not available');
+          return;
+        }
 
         if (calInitialized.current) {
           console.log('CalendarInit - Already initialized, skipping');
@@ -46,8 +50,6 @@ export const useCalendarInitialization = ({
         console.log('CalendarInit - Configuring UI');
         cal('ui', getUiConfig());
 
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
         console.log('CalendarInit - Setting up inline calendar');
         cal('inline', getInlineConfig(calLink));
 
@@ -73,16 +75,8 @@ export const useCalendarInitialization = ({
       }
     };
 
-    const safeInitialize = async () => {
-      try {
-        await initializeCalendar();
-      } catch (error) {
-        console.error('CalendarInit - Fatal error during initialization:', error);
-        calInitialized.current = false;
-      }
-    };
-
-    const timeoutId = setTimeout(safeInitialize, 500);
+    // Add a small delay to ensure the script is fully loaded
+    const timeoutId = setTimeout(initializeCalendar, 1000);
 
     return () => {
       clearTimeout(timeoutId);

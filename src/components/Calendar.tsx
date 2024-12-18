@@ -19,6 +19,7 @@ export const Calendar = ({
 }: CalendarProps) => {
   const { toast } = useToast();
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [scriptError, setScriptError] = useState<string | null>(null);
   
   console.log('Calendar - Component mounted with props:', { 
     calLink, 
@@ -57,12 +58,18 @@ export const Calendar = ({
     const checkCalScript = () => {
       if ((window as any).Cal) {
         setIsScriptLoaded(true);
+        setScriptError(null);
       } else {
         setTimeout(checkCalScript, 100);
       }
     };
 
-    checkCalScript();
+    try {
+      checkCalScript();
+    } catch (error) {
+      console.error('Calendar - Error checking Cal script:', error);
+      setScriptError('Failed to load calendar. Please refresh the page.');
+    }
 
     return () => {
       if ((window as any).Cal) {
@@ -81,7 +88,6 @@ export const Calendar = ({
     isScriptLoaded 
   });
 
-  // Add error boundary for Cal.com script errors
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
       if (event.message === 'Script error.' && !event.filename) {
@@ -93,6 +99,22 @@ export const Calendar = ({
     window.addEventListener('error', handleError);
     return () => window.removeEventListener('error', handleError);
   }, []);
+
+  if (scriptError) {
+    return (
+      <div className="w-full h-[700px] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{scriptError}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!isScriptLoaded) {
     return (

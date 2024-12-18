@@ -1,28 +1,26 @@
 interface CalendarUiConfig {
-  theme?: 'light' | 'dark';
-  styles?: {
-    branding?: {
-      brandColor?: string;
+  theme: 'light' | 'dark';
+  styles: {
+    branding: {
+      brandColor: string;
     };
   };
-  hideEventTypeDetails?: boolean;
-}
-
-interface PrefillAndIframeAttrsConfig {
-  [key: string]: string | string[] | Record<string, string>;
+  hideEventTypeDetails: boolean;
 }
 
 interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
-  config?: PrefillAndIframeAttrsConfig;
+  config: {
+    [key: string]: string;
+  };
 }
 
 export const useCalendarConfig = () => {
   const getUiConfig = (): CalendarUiConfig => ({
     theme: 'light',
-    styles: { branding: { brandColor: '#000000' } },
-    hideEventTypeDetails: false,
+    styles: { branding: { brandColor: '#2563eb' } },
+    hideEventTypeDetails: false
   });
 
   const getInlineConfig = (calLink: string): CalendarInlineConfig => ({
