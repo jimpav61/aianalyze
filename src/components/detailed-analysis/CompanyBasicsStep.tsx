@@ -21,18 +21,24 @@ export const CompanyBasicsStep = ({
 
   return (
     <div className="space-y-4">
-      <CompanyFields
-        companyName={formData.companyName}
-        ownerName={formData.ownerName}
-        employees={formData.employees}
-        revenue={formData.revenue}
-        handleInputChange={handleInputChange}
-      />
-      <ContactFields
-        phoneNumber={formData.phoneNumber}
-        email={formData.email}
-        handleInputChange={handleInputChange}
-      />
+      <div className="space-y-2">
+        <div className="space-y-4">
+          <CompanyFields
+            companyName={formData.companyName}
+            ownerName={formData.ownerName}
+            employees={formData.employees}
+            revenue={formData.revenue}
+            handleInputChange={handleInputChange}
+          />
+        </div>
+        <div className="space-y-4">
+          <ContactFields
+            phoneNumber={formData.phoneNumber}
+            email={formData.email}
+            handleInputChange={handleInputChange}
+          />
+        </div>
+      </div>
     </div>
   );
 };

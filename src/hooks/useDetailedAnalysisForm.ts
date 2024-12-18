@@ -6,6 +6,7 @@ export const useDetailedAnalysisForm = (onSubmit: (data: DetailedFormData) => vo
   const { toast } = useToast();
   const [formData, setFormData] = useState<DetailedFormData>({
     companyName: "",
+    ownerName: "",
     phoneNumber: "",
     email: "",
     employees: "",
@@ -34,7 +35,7 @@ export const useDetailedAnalysisForm = (onSubmit: (data: DetailedFormData) => vo
     console.log("Validating step:", step, "Current form data:", formData);
     
     const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "email"],
+      1: ["companyName", "ownerName", "email"],
       2: ["serviceChannels", "monthlyInteractions"],
       3: ["objectives", "timeline", "budget"],
     };
