@@ -1,4 +1,3 @@
-import { useCalendarInitialization } from "@/hooks/useCalendarInitialization";
 import { useEffect, useRef } from "react";
 
 interface CalendarContentProps {
@@ -11,23 +10,39 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
 
   useEffect(() => {
     const element = placeholderRef.current;
-    if (element) {
-      console.log("CalendarContent - Placeholder mounted and ready");
-      element.innerHTML = '';
-    }
+    if (!element) return;
+
+    console.log("CalendarContent - Initializing calendar with link:", calLink);
+    
+    // Clear any existing content
+    element.innerHTML = '';
+    
+    // Initialize Calendly widget
+    const calendlyUrl = `https://calendly.com/${calLink}`;
+    
+    // @ts-ignore - Calendly types are not available
+    Calendly.initInlineWidget({
+      url: calendlyUrl,
+      parentElement: element,
+      prefill: {},
+      utm: {}
+    });
+
+    // Listen for booking success
+    const handleEventScheduled = () => {
+      console.log("CalendarContent - Booking successful");
+      onBookingSuccess();
+    };
+
+    // @ts-ignore - Calendly types are not available
+    window.addEventListener('calendly.event_scheduled', handleEventScheduled);
     
     return () => {
-      if (element) {
-        element.innerHTML = '';
-      }
+      element.innerHTML = '';
+      // @ts-ignore - Calendly types are not available
+      window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
     };
-  }, []);
-
-  useCalendarInitialization({ 
-    calLink, 
-    onBookingSuccess,
-    isScriptLoaded: true
-  });
+  }, [calLink, onBookingSuccess]);
 
   return (
     <div className="w-full h-[700px] flex flex-col">
