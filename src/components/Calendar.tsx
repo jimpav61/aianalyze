@@ -1,13 +1,8 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { CalendarProps } from "@/types/calendar";
-import { useCalendarScript } from "@/hooks/calendar/useCalendarScript";
-import { useCalCleanup } from "@/hooks/calendar/useCalCleanup";
-import { useCalApi } from "@/hooks/calendar/useCalApi";
 import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
-import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitialization";
-import { useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 export const Calendar = ({ 
@@ -18,12 +13,10 @@ export const Calendar = ({
 }: CalendarProps) => {
   console.log("Calendar - Rendering with link:", calLink);
   
-  const { isScriptLoaded, scriptError } = useCalendarScript();
-  const mounted = useRef(true);
-  const { calInitialized, calApiRef } = useCalApi();
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [scriptError, setScriptError] = useState<string | null>(null);
+  const initAttempted = useRef(false);
   const errorShown = useRef(false);
-  
-  useCalCleanup(mounted, calApiRef, calInitialized);
   
   const { handleBookingSuccess } = useBookingSuccess({ 
     formData, 
@@ -31,11 +24,29 @@ export const Calendar = ({
     onSubmit 
   });
 
-  useCalendarInitialization({ 
-    calLink, 
-    onBookingSuccess: handleBookingSuccess,
-    isScriptLoaded
-  });
+  useEffect(() => {
+    if (initAttempted.current) return;
+    
+    const script = document.createElement('script');
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    
+    script.onload = () => {
+      setIsScriptLoaded(true);
+      initAttempted.current = true;
+    };
+    
+    script.onerror = () => {
+      setScriptError('Failed to load calendar script - please refresh the page');
+      initAttempted.current = true;
+    };
+    
+    document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     if (scriptError && !errorShown.current) {
@@ -48,6 +59,30 @@ export const Calendar = ({
       errorShown.current = true;
     }
   }, [scriptError]);
+
+  useEffect(() => {
+    if (!isScriptLoaded) return;
+
+    // Initialize Calendly widget
+    const calendlyUrl = `https://calendly.com/${calLink}`;
+    
+    // @ts-ignore - Calendly types are not available
+    Calendly.initInlineWidget({
+      url: calendlyUrl,
+      parentElement: document.getElementById('calendly-booking-placeholder'),
+      prefill: {},
+      utm: {}
+    });
+
+    // Listen for booking success
+    // @ts-ignore - Calendly types are not available
+    window.addEventListener('calendly.event_scheduled', handleBookingSuccess);
+
+    return () => {
+      // @ts-ignore - Calendly types are not available
+      window.removeEventListener('calendly.event_scheduled', handleBookingSuccess);
+    };
+  }, [isScriptLoaded, calLink, handleBookingSuccess]);
 
   if (scriptError) {
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
@@ -62,7 +97,7 @@ export const Calendar = ({
   return (
     <div className="w-full h-[700px] flex flex-col">
       <div 
-        id="cal-booking-placeholder" 
+        id="calendly-booking-placeholder" 
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
         style={{ minWidth: '320px' }}
       />

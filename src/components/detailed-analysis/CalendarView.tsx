@@ -8,7 +8,12 @@ interface CalendarViewProps {
   calLink?: string;
 }
 
-export const CalendarView = ({ onSubmit, formData, analysis, calLink = "chatsites/ai-discovery-call" }: CalendarViewProps) => {
+export const CalendarView = ({ 
+  onSubmit, 
+  formData, 
+  analysis, 
+  calLink = "your-calendly-username/meeting-name" 
+}: CalendarViewProps) => {
   console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
   
   return (
