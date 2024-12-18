@@ -28,16 +28,14 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     let mounted = true;
     let cal: any = null;
 
-    async function initializeCalendar() {
-      console.log('Calendar - Starting initialization');
-      
+    const initializeCalendar = async () => {
       if (!mounted) {
         console.log('Calendar - Component unmounted, stopping initialization');
         return;
       }
 
       try {
-        // Add a small delay to ensure DOM is ready
+        // Wait for DOM to be ready
         await new Promise(resolve => setTimeout(resolve, 100));
         
         cal = await getCalApi();
@@ -54,19 +52,22 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
 
-        // Load the calendar UI
+        // Initialize UI first
         cal('ui', {
+          theme: 'light',
           styles: { branding: { brandColor: '#000000' } },
           hideEventTypeDetails: false,
-          layout: 'month_view'
         });
 
-        // Initialize the inline calendar
+        // Short delay before inline initialization
+        await new Promise(resolve => setTimeout(resolve, 50));
+
+        // Initialize inline calendar
         cal('inline', {
           elementOrSelector: '#cal-booking-placeholder',
           calLink: calLink,
           config: {
-            hideEventTypeDetails: 'false'
+            hideEventTypeDetails: false,
           }
         });
 
@@ -84,14 +85,15 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       } catch (error) {
         console.error('Calendar - Error initializing calendar:', error);
       }
-    }
+    };
 
-    // Initialize with a shorter initial delay
-    const timeoutId = setTimeout(initializeCalendar, 500);
+    // Initialize with a shorter delay
+    const timeoutId = setTimeout(initializeCalendar, 300);
 
     return () => {
       console.log('Calendar - Cleaning up');
       mounted = false;
+      clearTimeout(timeoutId);
       if (cal) {
         try {
           cal('destroy');
@@ -100,7 +102,6 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         }
       }
       calInitialized.current = false;
-      clearTimeout(timeoutId);
     };
   }, [calLink, sendEmails]);
 
