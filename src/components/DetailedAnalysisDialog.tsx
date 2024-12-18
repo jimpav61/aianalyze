@@ -5,6 +5,7 @@ import { DialogContent } from "./detailed-analysis/DialogContent";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { CalendarView } from "./detailed-analysis/CalendarView";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
+import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -18,9 +19,15 @@ export const DetailedAnalysisDialog = ({
   showFormOnly = false,
 }: ExtendedDetailedAnalysisProps) => {
   const { toast } = useToast();
-  const [showReport, setShowReport] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
+  
+  const {
+    showCalendar,
+    showReport,
+    setShowReport,
+    handleBookDemo,
+    handleBookingSubmit
+  } = useCalendarHandling({ onClose });
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
@@ -50,40 +57,25 @@ export const DetailedAnalysisDialog = ({
       description: "Your analysis report is ready!",
     });
     console.log("DetailedAnalysisDialog - Report view enabled");
-  }, [toast, analysis]);
+  }, [toast, analysis, setShowReport]);
 
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
     setShowReport(false);
-    setShowCalendar(false);
     setFormData(null);
     onClose();
   }, [onClose]);
 
-  const handleBookDemo = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Book demo requested");
-    if (!formData) {
+  const onBookDemo = useCallback(() => {
+    const success = handleBookDemo(formData);
+    if (!success) {
       toast({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
       });
-      return;
     }
-    setShowCalendar(true);
-    setShowReport(false);
-  }, [formData, toast]);
-
-  const handleBookingSubmit = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Demo booking submitted");
-    setShowCalendar(false);
-    setShowReport(true);
-    toast({
-      title: "Success",
-      description: "Your demo has been scheduled successfully! A confirmation email with your detailed analysis report will be sent to your inbox shortly.",
-      duration: 5000,
-    });
-  }, [toast]);
+  }, [formData, handleBookDemo, toast]);
 
   return (
     <DialogWrapper isOpen={isOpen} onClose={handleClose}>
@@ -100,7 +92,7 @@ export const DetailedAnalysisDialog = ({
           onSubmit={handleSubmit}
           industry={industry}
           analysis={analysis}
-          onBookDemo={handleBookDemo}
+          onBookDemo={onBookDemo}
         />
       )}
     </DialogWrapper>

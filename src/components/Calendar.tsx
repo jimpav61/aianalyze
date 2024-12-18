@@ -27,6 +27,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
   useEffect(() => {
     let mounted = true;
+    let cal: any;
 
     async function initializeCalendar() {
       console.log('Calendar - Starting initialization');
@@ -37,7 +38,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
 
       try {
-        const cal = await getCalApi();
+        cal = await getCalApi();
         
         if (!cal) {
           console.error('Calendar - Cal API not initialized');
@@ -51,7 +52,6 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
         
-        // Initialize Cal.com
         cal('ui', {
           styles: { 
             branding: { brandColor: '#000000' } 
@@ -60,7 +60,6 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
           layout: 'month_view'
         });
 
-        // Add event listener for successful bookings
         cal('on', {
           action: "bookingSuccessful",
           callback: async () => {
@@ -84,6 +83,11 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       mounted = false;
       calInitialized.current = false;
       clearTimeout(timeoutId);
+      
+      // Cleanup Cal.com event listeners if initialized
+      if (cal) {
+        cal('destroy');
+      }
     };
   }, [calLink, sendEmails]);
 
