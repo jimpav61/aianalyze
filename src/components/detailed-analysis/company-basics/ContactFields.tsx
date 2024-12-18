@@ -33,10 +33,14 @@ export const ContactFields = ({
     handleInputChange(event);
   };
 
+  const phoneError = validatePhoneNumber(phoneNumber);
+
   return (
     <>
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone Number</Label>
+        <Label htmlFor="phoneNumber" className="flex items-center">
+          Phone Number <span className="text-red-500 ml-1">*</span>
+        </Label>
         <Input
           id="phoneNumber"
           name="phoneNumber"
@@ -44,7 +48,11 @@ export const ContactFields = ({
           onChange={handlePhoneChange}
           placeholder="(555) 555-5555"
           maxLength={14}
+          className={!phoneNumber || phoneError ? "border-red-300" : ""}
         />
+        {phoneError && (
+          <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email" className="flex items-center">
