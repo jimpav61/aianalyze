@@ -54,7 +54,6 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         cal('inline', {
           elementOrSelector: '#cal-booking-placeholder',
           calLink: calLink,
-          layout: 'month_view',
           config: {
             hideEventTypeDetails: 'false',
             layout: 'month_view',
