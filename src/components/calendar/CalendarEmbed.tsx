@@ -28,7 +28,7 @@ export const CalendarEmbed = ({
   });
 
   useEffect(() => {
-    if (calendlyInitialized.current) {
+    if (calendlyInitialized.current || !calLink) {
       return;
     }
 
@@ -48,7 +48,7 @@ export const CalendarEmbed = ({
       prefill,
       phoneDetails: {
         originalNumber: formData?.phoneNumber,
-        prefillValue: prefill.phoneNumber // Updated to use direct phoneNumber field
+        prefillValue: prefill.a1 // Updated to use a1
       }
     });
 
