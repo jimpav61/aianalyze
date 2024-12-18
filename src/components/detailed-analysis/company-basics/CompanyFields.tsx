@@ -62,36 +62,6 @@ export const CompanyFields = ({
           className={!ownerName ? "border-red-300" : ""}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="employees">Number of Employees</Label>
-        <Select value={employees} onValueChange={handleEmployeeChange}>
-          <SelectTrigger id="employees">
-            <SelectValue placeholder="Select employee count" />
-          </SelectTrigger>
-          <SelectContent>
-            {employeeCountOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="revenue">Annual Revenue</Label>
-        <Select value={revenue} onValueChange={handleRevenueChange}>
-          <SelectTrigger id="revenue">
-            <SelectValue placeholder="Select revenue range" />
-          </SelectTrigger>
-          <SelectContent>
-            {revenueOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
     </>
   );
 };
