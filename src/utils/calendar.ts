@@ -5,7 +5,15 @@ interface FormData {
   [key: string]: any;
 }
 
-export const createCalendlyPrefill = (formData?: FormData) => {
+interface CalendlyPrefill {
+  name: string;
+  email: string;
+  customAnswers: {
+    a1: string;
+  };
+}
+
+export const createCalendlyPrefill = (formData?: FormData): CalendlyPrefill | Record<string, never> => {
   if (!formData) {
     console.log("createCalendlyPrefill - No form data provided");
     return {};
