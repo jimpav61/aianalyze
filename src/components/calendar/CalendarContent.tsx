@@ -10,7 +10,9 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
   const placeholderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("CalendarContent - Mounted with placeholder:", placeholderRef.current);
+    if (placeholderRef.current) {
+      console.log("CalendarContent - Placeholder mounted:", placeholderRef.current);
+    }
   }, []);
 
   useCalendarInitialization({ 
@@ -25,6 +27,7 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
         ref={placeholderRef}
         id="cal-booking-placeholder" 
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
+        style={{ minWidth: '320px' }}
       />
     </div>
   );

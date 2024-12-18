@@ -30,26 +30,41 @@ export const useCalendarInitialization = ({
       try {
         console.log("CalendarInit - Starting initialization");
         
-        // Wait for Cal to be fully loaded
+        // Ensure Cal is available
         if (!(window as any).Cal) {
-          console.log("CalendarInit - Cal not found in window");
+          console.error("CalendarInit - Cal not found in window");
           return;
         }
 
+        // Initialize Cal API
         const cal = await initializeApi();
+        if (!cal) {
+          console.error("CalendarInit - Failed to initialize Cal API");
+          return;
+        }
+
+        if (calInitialized.current) {
+          console.log("CalendarInit - Calendar already initialized");
+          return;
+        }
+
+        // Wait for placeholder element
+        const waitForPlaceholder = () => {
+          return new Promise<void>((resolve) => {
+            const check = () => {
+              const placeholder = document.getElementById('cal-booking-placeholder');
+              if (placeholder) {
+                resolve();
+              } else {
+                setTimeout(check, 100);
+              }
+            };
+            check();
+          });
+        };
+
+        await waitForPlaceholder();
         
-        if (!cal || calInitialized.current) {
-          console.log("CalendarInit - Calendar already initialized or API not available");
-          return;
-        }
-
-        // Ensure the DOM element exists
-        const placeholder = document.getElementById('cal-booking-placeholder');
-        if (!placeholder) {
-          console.error("CalendarInit - Placeholder element not found");
-          return;
-        }
-
         // Configure calendar
         console.log("CalendarInit - Configuring calendar");
         cal('ui', getUiConfig());
@@ -68,8 +83,8 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Small delay to ensure DOM and Cal API are ready
-    const initTimeout = setTimeout(initializeCalendar, 1000);
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(initializeCalendar, 500);
 
     return () => {
       clearTimeout(initTimeout);
