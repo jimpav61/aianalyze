@@ -12,6 +12,7 @@ import { createHandlers } from "../utils/dropdownHandlers";
 
 interface CompanyFieldsProps {
   companyName: string;
+  ownerName: string;
   employees: string;
   revenue: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,6 +20,7 @@ interface CompanyFieldsProps {
 
 export const CompanyFields = ({
   companyName,
+  ownerName,
   employees,
   revenue,
   handleInputChange,
@@ -38,6 +40,19 @@ export const CompanyFields = ({
           onChange={handleInputChange}
           placeholder="Enter your company name"
           className={!companyName ? "border-red-300" : ""}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="ownerName" className="flex items-center">
+          Owner Name <span className="text-red-500 ml-1">*</span>
+        </Label>
+        <Input
+          id="ownerName"
+          name="ownerName"
+          value={ownerName}
+          onChange={handleInputChange}
+          placeholder="Enter owner's name"
+          className={!ownerName ? "border-red-300" : ""}
         />
       </div>
       <div className="space-y-2">

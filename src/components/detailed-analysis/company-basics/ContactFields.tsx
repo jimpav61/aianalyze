@@ -37,20 +37,6 @@ export const ContactFields = ({
   return (
     <>
       <div className="space-y-2">
-        <Label htmlFor="email" className="flex items-center">
-          Email <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          value={email}
-          onChange={handleInputChange}
-          placeholder="your@email.com"
-          className={!email ? "border-red-300" : ""}
-        />
-      </div>
-      <div className="space-y-2">
         <Label htmlFor="phoneNumber">Phone Number</Label>
         <Input
           id="phoneNumber"
@@ -64,6 +50,20 @@ export const ContactFields = ({
         {phoneError && (
           <p className="text-sm text-red-500 mt-1">{phoneError}</p>
         )}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email" className="flex items-center">
+          Email <span className="text-red-500 ml-1">*</span>
+        </Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={email}
+          onChange={handleInputChange}
+          placeholder="your@email.com"
+          className={!email ? "border-red-300" : ""}
+        />
       </div>
     </>
   );
