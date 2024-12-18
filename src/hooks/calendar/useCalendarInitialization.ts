@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useCalendarApi } from "./useCalApi";
-import { useCalendarConfig } from "./useCalConfig";
+import { useCalApi } from "./useCalApi";
+import { useCalConfig } from "./useCalConfig";
 import { useCalendarCleanup } from "./useCalendarCleanup";
 
 interface UseCalendarInitializationProps {
@@ -14,8 +14,8 @@ export const useCalendarInitialization = ({
   onBookingSuccess,
   isScriptLoaded 
 }: UseCalendarInitializationProps) => {
-  const { calInitialized, calApiRef, initializeApi } = useCalendarApi();
-  const { getUiConfig, getInlineConfig } = useCalendarConfig();
+  const { calInitialized, calApiRef, initializeApi } = useCalApi();
+  const { getUiConfig, getInlineConfig } = useCalConfig();
 
   useEffect(() => {
     if (!isScriptLoaded) {
