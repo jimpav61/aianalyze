@@ -45,7 +45,7 @@ export const useCalendarInitialization = ({
         cal('ui', {
           theme: 'light',
           styles: { branding: { brandColor: '#000000' } },
-          hideEventTypeDetails: false,
+          hideEventTypeDetails: false as const,
         });
 
         // Add a small delay between UI config and inline embedding
