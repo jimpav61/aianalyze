@@ -5,7 +5,7 @@ import { ImplementationPlan } from "./ImplementationPlan";
 import { CompanyInformation } from "./CompanyInformation";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
-import { Button } from "../ui/button";
+import { ReportActions } from "./ReportActions";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -17,6 +17,12 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
   return (
     <div className="space-y-6">
       <ReportHeader />
+      <div className="flex justify-end mb-4">
+        <ReportActions 
+          reportRef={null}
+          onBookDemo={onBookDemo}
+        />
+      </div>
       <CompanyInformation data={formData} industry={analysis?.industry} />
       <CurrentOperations data={formData} />
       <AnalysisResults analysis={analysis} />
@@ -26,16 +32,6 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget,
         additionalInfo: formData.additionalInfo
       }} />
-      {onBookDemo && (
-        <div className="flex justify-center mt-8">
-          <Button 
-            onClick={onBookDemo}
-            className="bg-primary hover:bg-primary/90 text-white"
-          >
-            Book a Demo
-          </Button>
-        </div>
-      )}
       <ReportFooter />
     </div>
   );
