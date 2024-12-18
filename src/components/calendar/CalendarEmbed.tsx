@@ -42,15 +42,17 @@ export const CalendarEmbed = ({
     });
 
     // Listen for booking success
+    const onEventScheduled = () => {
+      console.log("CalendarEmbed - Booking successful");
+      handleBookingSuccess();
+    };
+
     // @ts-ignore - Calendly types are not available
-    window.addEventListener('calendly.event_scheduled', (e: any) => {
-      console.log("CalendarEmbed - Booking successful:", e);
-      handleBookingSuccess(e);
-    });
+    window.addEventListener('calendly.event_scheduled', onEventScheduled);
 
     return () => {
       // @ts-ignore - Calendly types are not available
-      window.removeEventListener('calendly.event_scheduled', handleBookingSuccess);
+      window.removeEventListener('calendly.event_scheduled', onEventScheduled);
     };
   }, [calLink, handleBookingSuccess, formData]);
 
