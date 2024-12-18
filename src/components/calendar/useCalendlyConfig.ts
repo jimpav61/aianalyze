@@ -8,7 +8,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     name: formData?.companyName || '',
     email: formData?.email || '',
     customAnswers: {
-      a1: formData?.phoneNumber || '' // Map phone number to customAnswers.a1
+      a2: formData?.phoneNumber || '' // Updated to use a2 for phone field based on Calendly form
     }
   });
 
