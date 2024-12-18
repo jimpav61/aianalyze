@@ -5,13 +5,17 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const calendlyInitialized = useRef(false);
 
   const getPrefillData = () => {
-    console.log("useCalendlyConfig - Creating prefill data with phone:", formData?.phoneNumber);
+    console.log("useCalendlyConfig - Creating prefill data with form data:", formData);
+    
+    // Split owner name into first and last name
+    const [firstName = '', lastName = ''] = (formData?.ownerName || '').split(' ');
     
     const prefillData = {
-      name: formData?.companyName || '',
+      firstName,
+      lastName,
       email: formData?.email || '',
       customAnswers: {
-        a4: formData?.phoneNumber || '' // Updated to a4 to test this field mapping
+        a1: formData?.phoneNumber || '' // Testing a1 for phone field
       }
     };
 

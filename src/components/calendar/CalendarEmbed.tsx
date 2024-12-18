@@ -43,10 +43,13 @@ export const CalendarEmbed = ({
     element.innerHTML = '';
     const prefill = getPrefillData();
     
-    console.log("CalendarEmbed - Detailed phone mapping:", {
+    console.log("CalendarEmbed - Detailed mapping:", {
+      originalName: formData?.ownerName,
+      firstName: prefill.firstName,
+      lastName: prefill.lastName,
       originalPhoneNumber: formData?.phoneNumber,
-      mappedField: 'a4',
-      prefillValue: prefill.customAnswers.a4,
+      mappedField: 'a1',
+      prefillValue: prefill.customAnswers.a1,
       allPrefillData: prefill,
       formDataComplete: formData
     });
