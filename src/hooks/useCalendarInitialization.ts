@@ -29,6 +29,13 @@ export const useCalendarInitialization = ({
     const initializeCalendar = async () => {
       try {
         console.log("CalendarInit - Starting initialization");
+        
+        // Wait for Cal to be fully loaded
+        if (!(window as any).Cal) {
+          console.log("CalendarInit - Cal not found in window");
+          return;
+        }
+
         const cal = await initializeApi();
         
         if (!cal || calInitialized.current) {
@@ -61,8 +68,8 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Small delay to ensure DOM is ready
-    const initTimeout = setTimeout(initializeCalendar, 100);
+    // Small delay to ensure DOM and Cal API are ready
+    const initTimeout = setTimeout(initializeCalendar, 1000);
 
     return () => {
       clearTimeout(initTimeout);

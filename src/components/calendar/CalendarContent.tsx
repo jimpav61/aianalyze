@@ -1,4 +1,5 @@
 import { useCalendarInitialization } from "@/hooks/useCalendarInitialization";
+import { useEffect, useRef } from "react";
 
 interface CalendarContentProps {
   calLink: string;
@@ -6,6 +7,12 @@ interface CalendarContentProps {
 }
 
 export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentProps) => {
+  const placeholderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log("CalendarContent - Mounted with placeholder:", placeholderRef.current);
+  }, []);
+
   useCalendarInitialization({ 
     calLink, 
     onBookingSuccess,
@@ -15,6 +22,7 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
   return (
     <div className="w-full h-[700px] flex flex-col">
       <div 
+        ref={placeholderRef}
         id="cal-booking-placeholder" 
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
       />
