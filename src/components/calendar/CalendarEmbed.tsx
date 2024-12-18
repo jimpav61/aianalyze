@@ -30,7 +30,9 @@ export const CalendarEmbed = ({
     const prefill = formData ? {
       name: formData.companyName,
       email: formData.email,
-      phone_number: formData.phoneNumber || '', // Use correct field name with underscore
+      customAnswers: {
+        a1: formData.phoneNumber || '' // Map phone number to custom answer field
+      }
     } : {};
 
     console.log("CalendarEmbed - Initializing with:", {
