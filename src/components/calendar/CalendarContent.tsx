@@ -10,15 +10,17 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
   const placeholderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (placeholderRef.current) {
-      console.log("CalendarContent - Placeholder mounted:", placeholderRef.current);
+    const element = placeholderRef.current;
+    if (element) {
+      console.log("CalendarContent - Placeholder mounted and ready");
+      element.innerHTML = ''; // Clear any existing content
     }
   }, []);
 
   useCalendarInitialization({ 
     calLink, 
     onBookingSuccess,
-    isScriptLoaded: true // We know it's loaded because parent component checks
+    isScriptLoaded: true
   });
 
   return (
