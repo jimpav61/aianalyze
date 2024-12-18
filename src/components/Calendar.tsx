@@ -52,6 +52,13 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
         
+        // Ensure the element is mounted before initialization
+        const element = document.getElementById('cal-booking-placeholder');
+        if (!element) {
+          console.error('Calendar - Booking placeholder not found');
+          return;
+        }
+
         cal('ui', {
           styles: { 
             branding: { brandColor: '#000000' } 
@@ -76,7 +83,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     }
 
     // Initialize with a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(initializeCalendar, 100);
+    const timeoutId = setTimeout(initializeCalendar, 500);
 
     return () => {
       console.log('Calendar - Cleaning up');
@@ -91,5 +98,10 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     };
   }, [calLink, sendEmails]);
 
-  return <CalendarConfig calLink={calLink} />;
+  return (
+    <div className="w-full min-h-[600px]">
+      <CalendarConfig calLink={calLink} />
+      <div id="cal-booking-placeholder" className="min-h-[500px]" />
+    </div>
+  );
 };

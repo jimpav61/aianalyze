@@ -1,18 +1,12 @@
-import { useEffect } from "react";
-
 interface CalendarConfigProps {
   calLink: string;
 }
 
 export const CalendarConfig = ({ calLink }: CalendarConfigProps) => {
   return (
-    <div 
+    <cal-inline-widget 
+      style={{ width: '100%', height: '100%', minHeight: '500px' }} 
       data-cal-link={calLink}
-      style={{ 
-        minHeight: "600px", 
-        width: "100%",
-        marginTop: "1rem" 
-      }}
     />
   );
 };
