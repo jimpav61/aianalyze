@@ -30,12 +30,18 @@ export const CalendarEmbed = ({
   });
 
   useEffect(() => {
+    console.log("CalendarEmbed - Effect triggered with formData:", {
+      formData,
+      phoneNumber: formData?.phoneNumber
+    });
+
     if (!calendarRef.current || calendlyInitialized.current || !calLink) {
-      console.log("CalendarEmbed - Initialization conditions:", {
+      console.log("CalendarEmbed - Initialization conditions not met:", {
         hasRef: !!calendarRef.current,
         isInitialized: calendlyInitialized.current,
         hasCalLink: !!calLink,
-        formData
+        formData: formData,
+        phoneNumber: formData?.phoneNumber
       });
       return;
     }
@@ -46,7 +52,8 @@ export const CalendarEmbed = ({
     console.log("CalendarEmbed - Initializing Calendly with:", {
       url: calendlyUrl,
       prefill,
-      rawFormData: formData
+      rawFormData: formData,
+      phoneNumber: formData?.phoneNumber
     });
 
     // @ts-ignore - Calendly types are not available
@@ -65,22 +72,34 @@ export const CalendarEmbed = ({
       utm: {}
     });
 
-    // Log after initialization
-    console.log("CalendarEmbed - Calendly widget initialized with prefill:", prefill);
+    console.log("CalendarEmbed - Calendly widget initialized with prefill:", {
+      prefill,
+      phoneNumber: formData?.phoneNumber
+    });
 
     // @ts-ignore - Calendly types are not available
     window.addEventListener('calendly.init', () => {
-      console.log("CalendarEmbed - Calendly init event fired");
+      console.log("CalendarEmbed - Calendly init event fired with data:", {
+        prefill,
+        phoneNumber: formData?.phoneNumber
+      });
       handleCalendlyInit(prefill);
     });
 
     // @ts-ignore - Calendly types are not available
     window.addEventListener('calendly.event_scheduled', (e: any) => {
-      console.log("CalendarEmbed - Event scheduled with data:", e);
+      console.log("CalendarEmbed - Event scheduled with complete data:", {
+        event: e,
+        formData,
+        phoneNumber: formData?.phoneNumber,
+        eventData: e?.data,
+        inviteeData: e?.data?.invitee
+      });
       handleEventScheduled(e);
     });
 
     return () => {
+      console.log("CalendarEmbed - Cleanup triggered");
       if (calendarRef.current) {
         calendarRef.current.innerHTML = '';
       }
