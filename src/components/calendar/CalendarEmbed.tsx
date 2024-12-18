@@ -30,9 +30,7 @@ export const CalendarEmbed = ({
     const prefill = formData ? {
       name: formData.companyName,
       email: formData.email,
-      customAnswers: {
-        a1: formData.phoneNumber || '' // Ensure phone number is passed as custom answer
-      }
+      phoneNumber: formData.phoneNumber || '', // Changed from customAnswers to phoneNumber field
     } : {};
 
     console.log("CalendarEmbed - Initializing with:", {
