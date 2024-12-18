@@ -4,6 +4,9 @@ import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { CalendarProps } from "@/types/calendar";
 import { useCalendarScript } from "@/hooks/calendar/useCalendarScript";
+import { useCalApi } from "@/hooks/calendar/useCalApi";
+import { useCalConfig } from "@/hooks/calendar/useCalConfig";
+import { useCalCleanup } from "@/hooks/calendar/useCalCleanup";
 import { useEffect, useRef } from "react";
 
 export const Calendar = ({ 
@@ -14,7 +17,11 @@ export const Calendar = ({
 }: CalendarProps) => {
   const { toast } = useToast();
   const { isScriptLoaded, scriptError } = useCalendarScript();
-  const calInitialized = useRef(false);
+  const mounted = useRef(true);
+  const { calInitialized, calApiRef, initializeApi } = useCalApi();
+  const { getUiConfig, getInlineConfig } = useCalConfig();
+  
+  useCalCleanup(mounted, calApiRef, calInitialized);
   
   const { sendEmails } = useEmailHandler({ 
     formData, 
@@ -27,33 +34,41 @@ export const Calendar = ({
   });
 
   useEffect(() => {
-    if (!isScriptLoaded || calInitialized.current) return;
+    if (!isScriptLoaded || !mounted.current) {
+      console.log("Calendar - Not ready to initialize");
+      return;
+    }
 
     const initializeCalendar = async () => {
       try {
-        if (!window.Cal) {
-          throw new Error('Calendar API not available');
+        console.log("Calendar - Starting initialization");
+        
+        const cal = await initializeApi();
+        if (!cal) {
+          console.error("Calendar - Failed to initialize Cal API");
+          return;
         }
 
-        // Configure UI
-        window.Cal('ui', {
-          theme: 'light',
-          styles: { branding: { brandColor: '#2563eb' } },
-          hideEventTypeDetails: false,
-        });
+        if (calInitialized.current) {
+          console.log("Calendar - Calendar already initialized");
+          return;
+        }
 
-        // Initialize inline calendar
-        window.Cal('inline', {
-          elementOrSelector: '#cal-booking-placeholder',
-          calLink: calLink,
-          config: {
-            hideEventTypeDetails: 'false',
-          },
-        });
+        const placeholder = document.getElementById('cal-booking-placeholder');
+        if (!placeholder) {
+          console.error("Calendar - Placeholder element not found");
+          return;
+        }
 
-        // Set up booking callback
-        window.Cal('on', {
-          action: 'bookingSuccessful',
+        placeholder.innerHTML = '';
+        
+        console.log("Calendar - Configuring calendar with link:", calLink);
+        
+        cal('ui', getUiConfig());
+        cal('inline', getInlineConfig(calLink));
+
+        cal('on', {
+          action: "bookingSuccessful",
           callback: async () => {
             console.log('Booking successful, sending emails');
             try {
@@ -70,9 +85,10 @@ export const Calendar = ({
         });
 
         calInitialized.current = true;
-        console.log('Calendar initialized successfully');
+        console.log("Calendar - Calendar initialized successfully");
+
       } catch (error) {
-        console.error('Error initializing calendar:', error);
+        console.error('Calendar - Error initializing calendar:', error);
         toast({
           title: 'Error',
           description: 'Failed to initialize calendar. Please refresh the page.',
@@ -81,10 +97,9 @@ export const Calendar = ({
       }
     };
 
-    // Add a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(initializeCalendar, 100);
-    return () => clearTimeout(timeoutId);
-  }, [isScriptLoaded, calLink, sendEmails, toast]);
+    const initTimeout = setTimeout(initializeCalendar, 100);
+    return () => clearTimeout(initTimeout);
+  }, [isScriptLoaded, calLink, sendEmails, toast, initializeApi, getUiConfig, getInlineConfig]);
 
   if (scriptError) {
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
