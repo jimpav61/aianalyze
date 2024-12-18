@@ -39,7 +39,7 @@ export const Calendar = ({
         window.Cal('ui', {
           theme: 'light',
           styles: { branding: { brandColor: '#2563eb' } },
-          hideEventTypeDetails: 'false',
+          hideEventTypeDetails: false,
         });
 
         // Initialize inline calendar
