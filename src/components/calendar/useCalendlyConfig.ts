@@ -11,11 +11,11 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     const [firstName = '', lastName = ''] = (formData?.ownerName || '').split(' ');
     
     const prefillData = {
-      firstName,
-      lastName,
+      name: formData?.ownerName || '',
       email: formData?.email || '',
-      customAnswers: {
-        a1: formData?.phoneNumber || '' // Testing a1 for phone field
+      location: {
+        type: "custom",
+        value: formData?.phoneNumber || ''
       }
     };
 

@@ -43,15 +43,10 @@ export const CalendarEmbed = ({
     element.innerHTML = '';
     const prefill = getPrefillData();
     
-    console.log("CalendarEmbed - Detailed mapping:", {
-      originalName: formData?.ownerName,
-      firstName: prefill.firstName,
-      lastName: prefill.lastName,
-      originalPhoneNumber: formData?.phoneNumber,
-      mappedField: 'a1',
-      prefillValue: prefill.customAnswers.a1,
-      allPrefillData: prefill,
-      formDataComplete: formData
+    console.log("CalendarEmbed - Initializing with:", {
+      url: calendlyUrl,
+      prefill,
+      formData
     });
 
     // @ts-ignore - Calendly types are not available

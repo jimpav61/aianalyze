@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatPhoneNumber, validatePhoneNumber } from "@/utils/phoneValidation";
+import { validatePhoneNumber, formatPhoneNumber } from "@/utils/phoneValidation";
 
 interface ContactFieldsProps {
   phoneNumber: string;
@@ -14,49 +14,35 @@ export const ContactFields = ({
   handleInputChange,
 }: ContactFieldsProps) => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatPhoneNumber(e.target.value);
-    console.log("Phone validation - Testing number:", {
-      original: e.target.value,
-      cleaned: formattedValue.replace(/\D/g, ''),
-      length: formattedValue.replace(/\D/g, '').length,
-      isValid: !validatePhoneNumber(formattedValue)
-    });
-    
-    const event = {
-      ...e,
-      target: {
-        ...e.target,
-        name: e.target.name,
-        value: formattedValue,
-      },
-    };
-    handleInputChange(event);
+    const formattedNumber = formatPhoneNumber(e.target.value);
+    e.target.value = formattedNumber;
+    handleInputChange(e);
   };
 
   const phoneError = validatePhoneNumber(phoneNumber);
 
   return (
-    <>
+    <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber" className="flex items-center">
-          Phone Number <span className="text-red-500 ml-1">*</span>
+        <Label htmlFor="phoneNumber" className="text-gray-700">
+          Phone Number
         </Label>
         <Input
           id="phoneNumber"
           name="phoneNumber"
+          type="tel"
           value={phoneNumber}
           onChange={handlePhoneChange}
           placeholder="(555) 555-5555"
-          maxLength={14}
-          className={!phoneNumber || phoneError ? "border-red-300" : ""}
+          className={`bg-white ${phoneError ? 'border-red-500' : ''}`}
         />
         {phoneError && (
           <p className="text-sm text-red-500 mt-1">{phoneError}</p>
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email" className="flex items-center">
-          Email <span className="text-red-500 ml-1">*</span>
+        <Label htmlFor="email" className="text-gray-700">
+          Email Address
         </Label>
         <Input
           id="email"
@@ -64,10 +50,11 @@ export const ContactFields = ({
           type="email"
           value={email}
           onChange={handleInputChange}
-          placeholder="Enter your email"
-          className={!email ? "border-red-300" : ""}
+          placeholder="your@email.com"
+          className="bg-white"
+          required
         />
       </div>
-    </>
+    </div>
   );
 };
