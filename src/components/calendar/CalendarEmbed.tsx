@@ -52,6 +52,13 @@ export const CalendarEmbed = ({
     // @ts-ignore - Calendly types are not available
     window.addEventListener('calendly.init', handleCalendlyInit);
     
+    // Initialize Calendly widget only once
+    // @ts-ignore - Calendly types are not available
+    if (!window.Calendly) {
+      console.error("CalendarEmbed - Calendly not loaded");
+      return;
+    }
+
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
       url: calendlyUrl,
@@ -73,14 +80,17 @@ export const CalendarEmbed = ({
     // @ts-ignore - Calendly types are not available
     window.addEventListener('calendly.event_scheduled', handleEventScheduled);
 
+    // Cleanup function
     return () => {
-      element.innerHTML = '';
+      if (element) {
+        element.innerHTML = '';
+      }
       // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
       // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.init', handleCalendlyInit);
     };
-  }, [calLink, handleBookingSuccess, formData]);
+  }, [calLink, handleBookingSuccess, formData]); // Only re-run when these dependencies change
 
   return (
     <div className="w-full h-[700px] flex flex-col">
