@@ -35,10 +35,12 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
           onBookDemo={onBookDemo}
         />
       </div>
-      <ReportActions 
-        reportRef={reportRef}
-        onBookDemo={onBookDemo}
-      />
+      <div className="mt-6">
+        <ReportActions 
+          reportRef={reportRef}
+          onBookDemo={onBookDemo}
+        />
+      </div>
     </div>
   );
 };
