@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCalApi } from "./useCalApi";
 import { useCalConfig } from "./useCalConfig";
 import { useCalendarCleanup } from "./useCalendarCleanup";
@@ -14,75 +14,59 @@ export const useCalendarInitialization = ({
   onBookingSuccess,
   isScriptLoaded 
 }: UseCalendarInitializationProps) => {
+  const initAttempted = useRef(false);
   const { calInitialized, calApiRef, initializeApi } = useCalApi();
   const { getUiConfig, getInlineConfig } = useCalConfig();
 
   useEffect(() => {
-    if (!isScriptLoaded) {
-      console.log("CalendarInit - Script not loaded yet");
+    if (!isScriptLoaded || initAttempted.current) {
       return;
     }
 
-    console.log("CalendarInit - Starting initialization process");
-
     const initializeCalendar = async () => {
       try {
-        console.log("CalendarInit - Getting Cal API");
+        initAttempted.current = true;
         const cal = await initializeApi();
         
         if (!cal) {
-          console.error("CalendarInit - Failed to get Cal API");
           return;
         }
 
         if (calInitialized.current) {
-          console.log("CalendarInit - Calendar already initialized");
           return;
         }
 
         const placeholder = document.getElementById('cal-booking-placeholder');
         if (!placeholder) {
-          console.error("CalendarInit - Placeholder element not found");
           return;
         }
 
-        console.log("CalendarInit - Found placeholder element, clearing content");
         placeholder.innerHTML = '';
         
-        console.log("CalendarInit - Configuring calendar with link:", calLink);
+        cal('ui', getUiConfig());
         
-        const uiConfig = getUiConfig();
-        console.log("CalendarInit - UI Config:", uiConfig);
-        cal('ui', uiConfig);
-        
-        const inlineConfig = {
+        cal('inline', {
           ...getInlineConfig(calLink),
           elementOrSelector: '#cal-booking-placeholder',
-        };
-        console.log("CalendarInit - Inline Config:", inlineConfig);
-        cal('inline', inlineConfig);
+        });
 
-        console.log("CalendarInit - Setting up booking success callback");
         cal('on', {
           action: "bookingSuccessful",
           callback: onBookingSuccess,
         });
 
         calInitialized.current = true;
-        console.log("CalendarInit - Calendar initialization complete");
 
       } catch (error) {
-        console.error('CalendarInit - Error during initialization:', error);
+        console.error('CalendarInit - Error initializing calendar:', error);
         calInitialized.current = false;
       }
     };
 
     const initTimeout = setTimeout(initializeCalendar, 1000);
-    console.log("CalendarInit - Set initialization timeout");
 
     return () => {
       clearTimeout(initTimeout);
-      console.log("CalendarInit - Cleanup: cleared initialization timeout");
     };
   }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);
 };

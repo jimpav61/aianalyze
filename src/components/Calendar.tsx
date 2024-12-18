@@ -7,6 +7,7 @@ import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitialization";
+import { useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 export const Calendar = ({ 
@@ -20,6 +21,7 @@ export const Calendar = ({
   const { isScriptLoaded, scriptError } = useCalendarScript();
   const mounted = useRef(true);
   const { calInitialized, calApiRef } = useCalApi();
+  const errorShown = useRef(false);
   
   useCalCleanup(mounted, calApiRef, calInitialized);
   
@@ -35,13 +37,19 @@ export const Calendar = ({
     isScriptLoaded
   });
 
+  useEffect(() => {
+    if (scriptError && !errorShown.current) {
+      console.error("Calendar - Script error:", scriptError);
+      toast({
+        title: "Calendar Error",
+        description: scriptError,
+        variant: "destructive",
+      });
+      errorShown.current = true;
+    }
+  }, [scriptError]);
+
   if (scriptError) {
-    console.error("Calendar - Script error:", scriptError);
-    toast({
-      title: "Calendar Error",
-      description: scriptError,
-      variant: "destructive",
-    });
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
 
