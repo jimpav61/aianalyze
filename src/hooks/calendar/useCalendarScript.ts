@@ -6,7 +6,9 @@ export const useCalendarScript = () => {
 
   useEffect(() => {
     const checkCalExists = () => {
-      return typeof window !== 'undefined' && 'Cal' in window;
+      const exists = typeof window !== 'undefined' && 'Cal' in window;
+      console.log('Calendar script check:', exists ? 'Found Cal object' : 'Cal object not found');
+      return exists;
     };
 
     if (checkCalExists()) {
@@ -15,6 +17,8 @@ export const useCalendarScript = () => {
       return;
     }
 
+    console.log('Starting calendar script load check...');
+    
     const scriptCheck = setInterval(() => {
       if (checkCalExists()) {
         console.log('Calendar script loaded successfully');
@@ -27,10 +31,11 @@ export const useCalendarScript = () => {
     const timeoutId = setTimeout(() => {
       if (!checkCalExists()) {
         clearInterval(scriptCheck);
-        setScriptError('Calendar script failed to load');
-        console.error('Calendar script failed to load within timeout');
+        const errorMsg = 'Calendar script failed to load within timeout';
+        setScriptError(errorMsg);
+        console.error(errorMsg);
       }
-    }, 5000);
+    }, 10000);
 
     return () => {
       clearInterval(scriptCheck);
