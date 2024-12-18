@@ -28,21 +28,27 @@ export const CalendarEmbed = ({
     element.innerHTML = '';
     
     // Create prefill object with form data
-    const prefill = createCalendlyPrefill(formData);
+    const prefill = {
+      name: formData?.companyName || '',
+      email: formData?.email || '',
+      customAnswers: {
+        a1: formData?.phoneNumber || '' // Explicitly set phone field
+      }
+    };
     
-    console.log("CalendarEmbed - Detailed debug info:", {
-      calendlyUrl,
-      formData,
+    console.log("CalendarEmbed - Initializing with config:", {
+      url: calendlyUrl,
       prefill,
-      phoneNumber: {
-        raw: formData?.phoneNumber,
-        prefilled: prefill?.customAnswers?.a1,
+      phoneDetails: {
+        originalNumber: formData?.phoneNumber,
+        mappedField: 'a1',
+        prefillValue: prefill.customAnswers.a1
       }
     });
 
     // Add event listener for prefill
     const handleCalendlyInit = (e: any) => {
-      console.log("CalendarEmbed - Calendly initialized:", e);
+      console.log("CalendarEmbed - Calendly initialized with prefill data:", prefill);
     };
 
     // @ts-ignore - Calendly types are not available
@@ -58,10 +64,10 @@ export const CalendarEmbed = ({
 
     // Listen for booking success
     const handleEventScheduled = (e: any) => {
-      console.log("CalendarEmbed - Booking successful, full event data:", {
+      console.log("CalendarEmbed - Booking successful, event data:", {
         event: e,
-        formData,
-        prefill
+        prefillData: prefill,
+        phoneNumber: formData?.phoneNumber
       });
       handleBookingSuccess();
     };
