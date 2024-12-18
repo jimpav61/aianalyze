@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface EmailReportButtonProps {
   email?: string;
-  companyName: string;
+  companyName?: string;
   onComplete?: () => void;
 }
 
@@ -69,9 +69,9 @@ export const EmailReportButton = ({ email, companyName, onComplete }: EmailRepor
       const { data, error } = await supabase.functions.invoke("sendemail", {
         body: {
           email,
-          companyName,
+          companyName: companyName || 'Your Company',
           reportHtml: reportClone.innerHTML,
-          subject: `${companyName} - AI Implementation Analysis Report`
+          subject: `${companyName || 'Your Company'} - AI Implementation Analysis Report`
         },
       });
 

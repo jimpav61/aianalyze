@@ -4,12 +4,11 @@ import { CompanyInformation } from "./CompanyInformation";
 import { CurrentOperations } from "./CurrentOperations";
 import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
-import { ReportActions } from "./ReportActions";
 
 interface ReportContentProps {
   formData: DetailedFormData;
   analysis: any;
-  onBookDemo: () => void;
+  onBookDemo?: () => void;
 }
 
 export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
@@ -18,12 +17,16 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
   return (
     <>
       <div ref={reportRef} className="space-y-8">
-        <CompanyInformation formData={formData} />
-        <CurrentOperations formData={formData} />
+        <CompanyInformation data={formData} industry={analysis.industry} />
+        <CurrentOperations data={formData} />
         <AnalysisResults analysis={analysis} />
-        <ImplementationPlan />
+        <ImplementationPlan data={{
+          objectives: formData.objectives,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          additionalInfo: formData.additionalInfo
+        }} />
       </div>
-      <ReportActions reportRef={reportRef} onBookDemo={onBookDemo} />
     </>
   );
 };
