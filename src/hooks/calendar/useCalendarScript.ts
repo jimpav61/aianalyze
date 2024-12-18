@@ -19,7 +19,6 @@ export const useCalendarScript = () => {
         console.log("CalendarScript - Cal script loaded successfully");
         setIsScriptLoaded(true);
         setScriptError(null);
-        clearInterval(intervalId);
         return true;
       }
       
@@ -27,7 +26,6 @@ export const useCalendarScript = () => {
       if (attempts >= maxAttempts) {
         console.error("CalendarScript - Failed to load Cal script after maximum attempts");
         setScriptError('Failed to load calendar. Please refresh the page.');
-        clearInterval(intervalId);
         return true;
       }
       
@@ -44,6 +42,7 @@ export const useCalendarScript = () => {
       }, checkInterval);
     };
 
+    // Add initial delay before starting checks
     timeoutId = setTimeout(startChecking, initialDelay);
 
     return () => {

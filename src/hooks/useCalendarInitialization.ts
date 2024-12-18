@@ -21,14 +21,12 @@ export const useCalendarInitialization = ({
   useCalendarCleanup(mounted, calApiRef, calInitialized);
 
   useEffect(() => {
-    if (!isScriptLoaded) {
-      console.log("CalendarInit - Script not loaded yet");
+    if (!isScriptLoaded || !mounted.current) {
+      console.log("CalendarInit - Not ready to initialize");
       return;
     }
 
     const initializeCalendar = async () => {
-      if (!mounted.current) return;
-
       try {
         console.log("CalendarInit - Initializing calendar");
         const cal = await initializeApi();

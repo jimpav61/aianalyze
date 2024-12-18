@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useCalendarInitialization } from "@/hooks/useCalendarInitialization";
 import { useEmailHandler } from "./calendar/EmailHandler";
@@ -6,6 +5,7 @@ import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { CalendarProps } from "@/types/calendar";
 import { useCalendarScript } from "@/hooks/calendar/useCalendarScript";
+import { CalendarContent } from "./calendar/CalendarContent";
 
 export const Calendar = ({ 
   calLink, 
@@ -40,12 +40,6 @@ export const Calendar = ({
     }
   };
 
-  useCalendarInitialization({ 
-    calLink, 
-    onBookingSuccess: handleBookingSuccess,
-    isScriptLoaded 
-  });
-
   if (scriptError) {
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
@@ -55,8 +49,9 @@ export const Calendar = ({
   }
 
   return (
-    <div className="w-full h-[700px] flex flex-col">
-      <div id="cal-booking-placeholder" className="flex-1 min-h-[600px]" />
-    </div>
+    <CalendarContent 
+      calLink={calLink} 
+      onBookingSuccess={handleBookingSuccess} 
+    />
   );
 };
