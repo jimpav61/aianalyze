@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
-import { createCalendlyPrefill } from "@/utils/calendar";
 
 export const CalendarEmbed = ({ 
   calLink, 
@@ -31,9 +30,11 @@ export const CalendarEmbed = ({
     const prefill = {
       name: formData?.companyName || '',
       email: formData?.email || '',
+      guests: [],
       customAnswers: {
-        a1: formData?.phoneNumber || '' // Explicitly set phone field
-      }
+        a1: formData?.phoneNumber || ''
+      },
+      date: null
     };
     
     console.log("CalendarEmbed - Initializing with config:", {
