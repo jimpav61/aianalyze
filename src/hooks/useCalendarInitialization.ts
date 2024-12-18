@@ -26,11 +26,9 @@ export const useCalendarInitialization = ({
       return;
     }
 
-    let initTimeout: NodeJS.Timeout;
-
     const initializeCalendar = async () => {
       try {
-        console.log("CalendarInit - Initializing calendar");
+        console.log("CalendarInit - Starting initialization");
         const cal = await initializeApi();
         
         if (!cal || calInitialized.current) {
@@ -38,21 +36,24 @@ export const useCalendarInitialization = ({
           return;
         }
 
-        // Small delay to ensure DOM is ready
-        initTimeout = setTimeout(() => {
-          if (mounted.current) {
-            console.log("CalendarInit - Configuring calendar");
-            cal('ui', getUiConfig());
-            cal('inline', getInlineConfig(calLink));
-            cal('on', {
-              action: "bookingSuccessful",
-              callback: onBookingSuccess,
-            });
+        // Ensure the DOM element exists
+        const placeholder = document.getElementById('cal-booking-placeholder');
+        if (!placeholder) {
+          console.error("CalendarInit - Placeholder element not found");
+          return;
+        }
 
-            calInitialized.current = true;
-            console.log("CalendarInit - Calendar initialized successfully");
-          }
-        }, 100);
+        // Configure calendar
+        console.log("CalendarInit - Configuring calendar");
+        cal('ui', getUiConfig());
+        cal('inline', getInlineConfig(calLink));
+        cal('on', {
+          action: "bookingSuccessful",
+          callback: onBookingSuccess,
+        });
+
+        calInitialized.current = true;
+        console.log("CalendarInit - Calendar initialized successfully");
 
       } catch (error) {
         console.error('CalendarInit - Error initializing calendar:', error);
@@ -60,7 +61,8 @@ export const useCalendarInitialization = ({
       }
     };
 
-    initializeCalendar();
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(initializeCalendar, 100);
 
     return () => {
       clearTimeout(initTimeout);

@@ -14,7 +14,10 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
 
   return (
     <div className="w-full h-[700px] flex flex-col">
-      <div id="cal-booking-placeholder" className="flex-1 min-h-[600px]" />
+      <div 
+        id="cal-booking-placeholder" 
+        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
+      />
     </div>
   );
 };
