@@ -29,11 +29,12 @@ export const CalendarEmbed = ({
     
     // Create prefill object with form data
     const prefill = createCalendlyPrefill(formData);
-
+    
     console.log("CalendarEmbed - Initializing with:", {
       url: calendlyUrl,
       prefill,
-      formData
+      formData,
+      phoneNumber: formData?.phoneNumber
     });
     
     // @ts-ignore - Calendly types are not available
@@ -46,7 +47,11 @@ export const CalendarEmbed = ({
 
     // Listen for booking success
     const handleEventScheduled = (e: any) => {
-      console.log("CalendarEmbed - Booking successful", e);
+      console.log("CalendarEmbed - Booking successful", {
+        event: e,
+        formData,
+        phoneNumber: formData?.phoneNumber
+      });
       handleBookingSuccess();
     };
 

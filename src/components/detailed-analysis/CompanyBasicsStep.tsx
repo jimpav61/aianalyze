@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { employeeCountOptions, revenueOptions } from "./constants/dropdownOptions";
 import { createHandlers } from "./utils/dropdownHandlers";
+import { formatPhoneNumber, validatePhoneNumber } from "@/utils/phoneValidation";
 
 interface CompanyBasicsStepProps {
   formData: {
@@ -26,6 +27,26 @@ export const CompanyBasicsStep = ({
   handleInputChange,
 }: CompanyBasicsStepProps) => {
   const { handleEmployeeChange, handleRevenueChange } = createHandlers(handleInputChange);
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatPhoneNumber(e.target.value);
+    console.log("Phone number input:", {
+      raw: e.target.value,
+      formatted: formattedValue
+    });
+    
+    const event = {
+      ...e,
+      target: {
+        ...e.target,
+        name: 'phoneNumber',
+        value: formattedValue
+      }
+    };
+    handleInputChange(event);
+  };
+
+  const phoneError = validatePhoneNumber(formData.phoneNumber);
 
   return (
     <div className="space-y-4">
@@ -63,9 +84,13 @@ export const CompanyBasicsStep = ({
           name="phoneNumber"
           type="tel"
           value={formData.phoneNumber}
-          onChange={handleInputChange}
-          placeholder="e.g., +1 (555) 123-4567"
+          onChange={handlePhoneChange}
+          placeholder="(555) 123-4567"
+          className={phoneError ? "border-red-300" : ""}
         />
+        {phoneError && (
+          <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="employees">Number of Employees</Label>
