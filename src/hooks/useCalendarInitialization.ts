@@ -11,10 +11,10 @@ export const useCalendarInitialization = ({
   onBookingSuccess 
 }: UseCalendarInitializationProps) => {
   const calInitialized = useRef(false);
+  const calApiRef = useRef<any>(null);
   
   useEffect(() => {
     let mounted = true;
-    let cal: any = null;
 
     const initializeCalendar = async () => {
       if (!mounted) {
@@ -24,13 +24,17 @@ export const useCalendarInitialization = ({
 
       try {
         console.log('CalendarInit - Starting initialization');
-        await new Promise(resolve => setTimeout(resolve, 100));
         
-        cal = await getCalApi();
+        // Add a small delay to ensure DOM is ready
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        const cal = await getCalApi();
         if (!cal) {
           console.error('CalendarInit - Calendar API not initialized');
           throw new Error('Calendar API not initialized');
         }
+
+        calApiRef.current = cal;
 
         if (calInitialized.current) {
           console.log('CalendarInit - Already initialized, skipping');
@@ -44,9 +48,10 @@ export const useCalendarInitialization = ({
           hideEventTypeDetails: false,
         });
 
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // Add a small delay between UI config and inline embedding
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         console.log('CalendarInit - Setting up inline calendar');
-
         cal('inline', {
           elementOrSelector: '#cal-booking-placeholder',
           calLink,
@@ -73,20 +78,31 @@ export const useCalendarInitialization = ({
         console.log('CalendarInit - Initialization completed successfully');
       } catch (error) {
         console.error('CalendarInit - Error initializing calendar:', error);
-        throw error;
+        calInitialized.current = false;
+      }
+    };
+
+    // Wrap initialization in try-catch to prevent uncaught errors
+    const safeInitialize = async () => {
+      try {
+        await initializeCalendar();
+      } catch (error) {
+        console.error('CalendarInit - Fatal error during initialization:', error);
+        calInitialized.current = false;
       }
     };
 
     console.log('CalendarInit - Setting up initialization timeout');
-    const timeoutId = setTimeout(initializeCalendar, 300);
+    const timeoutId = setTimeout(safeInitialize, 500);
 
     return () => {
       console.log('CalendarInit - Cleaning up');
       mounted = false;
       clearTimeout(timeoutId);
-      if (cal) {
+      
+      if (calApiRef.current && calInitialized.current) {
         try {
-          cal('destroy');
+          calApiRef.current('destroy');
           console.log('CalendarInit - Calendar destroyed successfully');
         } catch (e) {
           console.error('CalendarInit - Error destroying calendar:', e);
