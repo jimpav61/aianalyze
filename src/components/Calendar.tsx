@@ -27,9 +27,11 @@ export const Calendar = ({
   });
 
   const handleBookingSuccess = async () => {
+    console.log("Calendar - Booking successful, sending emails");
     try {
       await sendEmails();
     } catch (error) {
+      console.error("Calendar - Error sending emails:", error);
       toast({
         title: "Error",
         description: "There was an issue completing your booking. Our team will contact you shortly.",
@@ -39,24 +41,38 @@ export const Calendar = ({
   };
 
   useEffect(() => {
+    let attempts = 0;
+    const maxAttempts = 50;
+    const checkInterval = 100;
+
     const checkCalScript = () => {
+      console.log("Calendar - Checking Cal script availability");
       if ((window as any).Cal) {
+        console.log("Calendar - Cal script loaded successfully");
         setIsScriptLoaded(true);
         setScriptError(null);
       } else {
-        setTimeout(checkCalScript, 100);
+        attempts++;
+        if (attempts < maxAttempts) {
+          setTimeout(checkCalScript, checkInterval);
+        } else {
+          console.error("Calendar - Failed to load Cal script after maximum attempts");
+          setScriptError('Failed to load calendar. Please refresh the page.');
+        }
       }
     };
 
     try {
       checkCalScript();
     } catch (error) {
+      console.error("Calendar - Error during script check:", error);
       setScriptError('Failed to load calendar. Please refresh the page.');
     }
 
     return () => {
       if ((window as any).Cal) {
         try {
+          console.log("Calendar - Cleaning up Cal instance");
           (window as any).Cal('destroy');
         } catch (e) {
           console.error('Calendar - Error destroying calendar:', e);
@@ -70,17 +86,6 @@ export const Calendar = ({
     onBookingSuccess: handleBookingSuccess,
     isScriptLoaded 
   });
-
-  useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      if (event.message === 'Script error.' && !event.filename) {
-        event.preventDefault();
-      }
-    };
-
-    window.addEventListener('error', handleError);
-    return () => window.removeEventListener('error', handleError);
-  }, []);
 
   if (scriptError) {
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;

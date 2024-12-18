@@ -21,16 +21,24 @@ export const useCalendarInitialization = ({
   useCalendarCleanup(mounted, calApiRef, calInitialized);
 
   useEffect(() => {
-    if (!isScriptLoaded) return;
+    if (!isScriptLoaded) {
+      console.log("CalendarInit - Script not loaded yet");
+      return;
+    }
 
     const initializeCalendar = async () => {
       if (!mounted.current) return;
 
       try {
+        console.log("CalendarInit - Initializing calendar");
         const cal = await initializeApi();
         
-        if (!cal || calInitialized.current) return;
+        if (!cal || calInitialized.current) {
+          console.log("CalendarInit - Calendar already initialized or API not available");
+          return;
+        }
 
+        console.log("CalendarInit - Configuring calendar");
         cal('ui', getUiConfig());
         cal('inline', getInlineConfig(calLink));
         cal('on', {
@@ -39,12 +47,14 @@ export const useCalendarInitialization = ({
         });
 
         calInitialized.current = true;
+        console.log("CalendarInit - Calendar initialized successfully");
       } catch (error) {
         console.error('CalendarInit - Error initializing calendar:', error);
         calInitialized.current = false;
       }
     };
 
+    // Add a small delay to ensure Cal.com script is fully loaded
     const timeoutId = setTimeout(initializeCalendar, 1000);
     return () => clearTimeout(timeoutId);
   }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);
