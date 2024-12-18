@@ -12,7 +12,7 @@ export const CalendarView = ({
   onSubmit, 
   formData, 
   analysis, 
-  calLink = "jimmy-chatsites/ai-discovery-call" 
+  calLink = "jimmy-chatsites/30min" // Changed to use a common event type name
 }: CalendarViewProps) => {
   console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
   
