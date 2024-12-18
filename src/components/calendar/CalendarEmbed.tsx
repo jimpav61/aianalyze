@@ -48,7 +48,7 @@ export const CalendarEmbed = ({
       prefill,
       phoneDetails: {
         originalNumber: formData?.phoneNumber,
-        prefillValue: prefill.a1 // Updated to use a1
+        prefillValue: prefill.customAnswers.a1
       }
     });
 
