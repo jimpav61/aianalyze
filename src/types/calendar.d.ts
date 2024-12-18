@@ -25,6 +25,6 @@ export interface CalendarInlineConfig {
   elementOrSelector: string;
   calLink: string;
   config: {
-    [key: string]: string | boolean;
+    [key: string]: string;
   };
 }
