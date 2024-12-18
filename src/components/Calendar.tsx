@@ -27,6 +27,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     formData, 
     analysis, 
     onSuccess: () => {
+      console.log('Calendar - Email sent successfully, triggering onSubmit callback');
       if (onSubmit) {
         requestAnimationFrame(onSubmit);
       }
@@ -40,9 +41,11 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
     let scriptElement: HTMLScriptElement | null = null;
 
     async function initializeCalendar() {
+      console.log('Calendar - Starting initialization');
       try {
         // Add Cal.com embed script if not already present
         if (!document.querySelector('script[src="https://cal.com/embed.js"]')) {
+          console.log('Calendar - Adding Cal.com embed script');
           scriptElement = document.createElement('script');
           scriptElement.src = 'https://cal.com/embed.js';
           scriptElement.async = true;
@@ -54,16 +57,27 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
               scriptElement.onload = resolve;
             }
           });
+          console.log('Calendar - Embed script loaded successfully');
         }
 
-        if (!mounted) return;
-
-        const cal = await getCalApi() as unknown as CalApi;
-        
-        if (!cal || calInitialized.current) {
+        if (!mounted) {
+          console.log('Calendar - Component unmounted, stopping initialization');
           return;
         }
 
+        const cal = await getCalApi() as unknown as CalApi;
+        
+        if (!cal) {
+          console.error('Calendar - Cal API not initialized');
+          return;
+        }
+
+        if (calInitialized.current) {
+          console.log('Calendar - Already initialized, skipping');
+          return;
+        }
+
+        console.log('Calendar - Initializing Cal.com with link:', calLink);
         // Initialize Cal.com
         cal.ns["bookingPage"]({
           debug: true,
@@ -74,20 +88,22 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
         cal.on({
           action: "bookingSuccessful",
           callback: async () => {
-            console.log('Booking completed successfully');
+            console.log('Calendar - Booking completed successfully, sending emails');
             await sendEmails();
           },
         });
 
         calInitialized.current = true;
+        console.log('Calendar - Initialization completed successfully');
       } catch (error) {
-        console.error('Error initializing calendar:', error);
+        console.error('Calendar - Error initializing calendar:', error);
       }
     }
 
     initializeCalendar();
 
     return () => {
+      console.log('Calendar - Cleaning up');
       mounted = false;
       calInitialized.current = false;
       // Clean up script if we added it
