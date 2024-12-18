@@ -5,51 +5,44 @@ export const useCalendarScript = () => {
   const [scriptError, setScriptError] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkCalExists = () => {
-      try {
-        return typeof window !== 'undefined' && 
-               typeof (window as any).Cal !== 'undefined' && 
-               (window as any).Cal !== null;
-      } catch (e) {
-        console.error('CalendarScript - Error checking Cal existence:', e);
-        return false;
-      }
+    const loadScript = () => {
+      return new Promise<void>((resolve, reject) => {
+        if (typeof window.Cal !== 'undefined') {
+          console.log('Calendar script already loaded');
+          resolve();
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://app.cal.com/embed.js';
+        script.onload = () => {
+          console.log('Calendar script loaded successfully');
+          resolve();
+        };
+        script.onerror = () => {
+          console.error('Failed to load calendar script');
+          reject(new Error('Failed to load calendar script'));
+        };
+        document.body.appendChild(script);
+      });
     };
 
-    if (checkCalExists()) {
-      console.log('CalendarScript - Cal already exists');
-      setIsScriptLoaded(true);
-      return;
-    }
-
-    let attempts = 0;
-    const maxAttempts = 20;
-    const checkInterval = 300;
-
-    console.log('CalendarScript - Starting Cal.com script check');
-
-    const intervalId = setInterval(() => {
-      if (checkCalExists()) {
-        console.log('CalendarScript - Cal successfully loaded');
+    loadScript()
+      .then(() => {
         setIsScriptLoaded(true);
         setScriptError(null);
-        clearInterval(intervalId);
-        return;
-      }
-
-      attempts++;
-      console.log(`CalendarScript - Attempt ${attempts}/${maxAttempts}`);
-
-      if (attempts >= maxAttempts) {
-        const errorMsg = 'Calendar failed to load. Please refresh the page.';
-        console.error('CalendarScript - ' + errorMsg);
-        setScriptError(errorMsg);
-        clearInterval(intervalId);
-      }
-    }, checkInterval);
+      })
+      .catch((error) => {
+        console.error('Error loading calendar:', error);
+        setScriptError(error.message);
+        setIsScriptLoaded(false);
+      });
 
     return () => {
-      clearInterval(intervalId);
+      const script = document.querySelector('script[src="https://app.cal.com/embed.js"]');
+      if (script) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
