@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { getCalApi } from "@calcom/embed-react";
 import { DetailedFormData } from "@/types/analysis";
-import { CalendarConfig } from "./calendar/CalendarConfig";
 import { useEmailHandler } from "./calendar/EmailHandler";
 
 interface CalendarProps {
@@ -27,6 +26,7 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
   useEffect(() => {
     let mounted = true;
+    let cal: any = null;
 
     async function initializeCalendar() {
       console.log('Calendar - Starting initialization');
@@ -37,7 +37,10 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
 
       try {
-        const cal = await getCalApi();
+        // Add a small delay to ensure DOM is ready
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        cal = await getCalApi();
         
         if (!cal) {
           console.error('Calendar - Cal API not initialized');
@@ -51,18 +54,23 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
 
+        // Load the calendar UI
+        cal('ui', {
+          styles: { branding: { brandColor: '#000000' } },
+          hideEventTypeDetails: false,
+          layout: 'month_view'
+        });
+
+        // Initialize the inline calendar
         cal('inline', {
           elementOrSelector: '#cal-booking-placeholder',
           calLink: calLink,
           config: {
-            hideEventTypeDetails: 'false',
-            layout: 'month_view',
-            styles: JSON.stringify({ 
-              branding: { brandColor: '#000000' } 
-            })
+            hideEventTypeDetails: 'false'
           }
         });
 
+        // Set up booking callback
         cal('on', {
           action: "bookingSuccessful",
           callback: async () => {
@@ -78,12 +86,19 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
     }
 
-    // Initialize with a longer delay to ensure DOM and scripts are ready
-    const timeoutId = setTimeout(initializeCalendar, 2000);
+    // Initialize with a shorter initial delay
+    const timeoutId = setTimeout(initializeCalendar, 500);
 
     return () => {
       console.log('Calendar - Cleaning up');
       mounted = false;
+      if (cal) {
+        try {
+          cal('destroy');
+        } catch (e) {
+          console.error('Calendar - Error destroying calendar:', e);
+        }
+      }
       calInitialized.current = false;
       clearTimeout(timeoutId);
     };
