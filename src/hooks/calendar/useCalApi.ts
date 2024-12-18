@@ -7,10 +7,15 @@ export const useCalApi = () => {
 
   const initializeApi = async () => {
     try {
+      console.log('CalApi - Starting API initialization');
       const cal = await getCalApi();
+      
       if (!cal) {
-        throw new Error('Calendar API not initialized');
+        console.error('CalApi - Failed to get Cal API');
+        return null;
       }
+      
+      console.log('CalApi - Successfully got Cal API');
       calApiRef.current = cal;
       return cal;
     } catch (error) {

@@ -14,6 +14,8 @@ export const Calendar = ({
   formData, 
   analysis 
 }: CalendarProps) => {
+  console.log("Calendar - Rendering with link:", calLink);
+  
   const { isScriptLoaded, scriptError } = useCalendarScript();
   const mounted = useRef(true);
   const { calInitialized, calApiRef } = useCalApi();
@@ -33,13 +35,16 @@ export const Calendar = ({
   });
 
   if (scriptError) {
+    console.error("Calendar - Script error:", scriptError);
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
 
   if (!isScriptLoaded) {
+    console.log("Calendar - Script not loaded yet, showing loading state");
     return <LoadingState />;
   }
 
+  console.log("Calendar - Rendering calendar placeholder");
   return (
     <div className="w-full h-[700px] flex flex-col">
       <div 
