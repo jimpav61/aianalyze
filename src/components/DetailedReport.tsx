@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { ReportActions } from "./detailed-report/ReportActions";
 import { ReportContent } from "./detailed-report/ReportContent";
 import { DetailedFormData } from "@/types/analysis";
@@ -18,6 +19,8 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
+  const reportRef = useRef<HTMLDivElement>(null);
+
   if (!data || !analysis) {
     console.error("DetailedReport - Missing required data:", { data, analysis });
     return null;
@@ -25,13 +28,15 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   return (
     <div className="relative">
-      <ReportContent 
-        formData={data}
-        analysis={analysis}
-        onBookDemo={onBookDemo}
-      />
+      <div ref={reportRef}>
+        <ReportContent 
+          formData={data}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
+      </div>
       <ReportActions 
-        reportRef={null}
+        reportRef={reportRef}
         onBookDemo={onBookDemo}
       />
     </div>

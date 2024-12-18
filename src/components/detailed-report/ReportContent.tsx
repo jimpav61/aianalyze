@@ -5,7 +5,6 @@ import { ImplementationPlan } from "./ImplementationPlan";
 import { CompanyInformation } from "./CompanyInformation";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
-import { ReportActions } from "./ReportActions";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -13,16 +12,10 @@ interface ReportContentProps {
   onBookDemo?: () => void;
 }
 
-export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
+export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white p-8 rounded-lg">
       <ReportHeader />
-      <div className="flex justify-end mb-4">
-        <ReportActions 
-          reportRef={null}
-          onBookDemo={onBookDemo}
-        />
-      </div>
       <CompanyInformation data={formData} industry={analysis?.industry} />
       <CurrentOperations data={formData} />
       <AnalysisResults analysis={analysis} />

@@ -11,16 +11,17 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    if (!reportRef.current) {
+    if (!reportRef?.current) {
+      console.error("DownloadReportButton - No report ref found");
       toast({
         title: "Error",
         description: "Could not generate report. Please try again.",
         variant: "destructive",
-        duration: 500,
       });
       return;
     }
 
+    console.log("DownloadReportButton - Starting PDF export");
     const success = await exportReportAsPDF(reportRef.current);
     
     toast({
@@ -29,7 +30,6 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
         ? "Report downloaded successfully!" 
         : "Failed to download report. Please try again.",
       variant: success ? "default" : "destructive",
-      duration: 500,
     });
   };
 
