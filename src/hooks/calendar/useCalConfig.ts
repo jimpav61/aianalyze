@@ -9,7 +9,7 @@ export const useCalConfig = () => {
     elementOrSelector: '#cal-booking-placeholder',
     calLink,
     config: {
-      hideEventTypeDetails: 'false'
+      hideEventTypeDetails: false
     }
   });
 

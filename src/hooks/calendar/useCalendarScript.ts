@@ -6,38 +6,35 @@ export const useCalendarScript = () => {
 
   useEffect(() => {
     const checkCalExists = () => {
-      return typeof window !== 'undefined' && typeof (window as any).Cal !== 'undefined';
+      return typeof window !== 'undefined' && 'Cal' in window;
     };
 
-    const loadScript = () => {
+    if (checkCalExists()) {
+      console.log('Calendar script already loaded');
+      setIsScriptLoaded(true);
+      return;
+    }
+
+    const scriptCheck = setInterval(() => {
       if (checkCalExists()) {
-        console.log('Calendar script already loaded');
+        console.log('Calendar script loaded successfully');
         setIsScriptLoaded(true);
-        return;
+        clearInterval(scriptCheck);
       }
+    }, 100);
 
-      const scriptLoadCheck = setInterval(() => {
-        if (checkCalExists()) {
-          console.log('Calendar script loaded successfully');
-          setIsScriptLoaded(true);
-          clearInterval(scriptLoadCheck);
-        }
-      }, 100);
-
-      // Clear interval after 10 seconds if script hasn't loaded
-      setTimeout(() => {
-        if (!checkCalExists()) {
-          clearInterval(scriptLoadCheck);
-          console.error('Calendar script failed to load within timeout');
-          setScriptError('Failed to load calendar script');
-        }
-      }, 10000);
-    };
-
-    loadScript();
+    // Set timeout for script loading
+    const timeoutId = setTimeout(() => {
+      if (!checkCalExists()) {
+        clearInterval(scriptCheck);
+        setScriptError('Calendar script failed to load');
+        console.error('Calendar script failed to load within timeout');
+      }
+    }, 5000);
 
     return () => {
-      setIsScriptLoaded(false);
+      clearInterval(scriptCheck);
+      clearTimeout(timeoutId);
     };
   }, []);
 
