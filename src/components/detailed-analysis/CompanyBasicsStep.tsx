@@ -31,6 +31,15 @@ export const CompanyBasicsStep = ({
   
   console.log("CompanyBasicsStep - Rendering with formData:", formData);
 
+  // Find the corresponding option values based on the labels
+  const selectedEmployeeValue = employeeCountOptions.find(
+    opt => opt.label === formData.employees
+  )?.value || "";
+  
+  const selectedRevenueValue = revenueOptions.find(
+    opt => opt.label === formData.revenue
+  )?.value || "";
+
   return (
     <div className="space-y-6 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
       <CompanyFields
@@ -48,7 +57,7 @@ export const CompanyBasicsStep = ({
       <div className="space-y-4 pt-4 border-t border-gray-200">
         <div className="space-y-2">
           <Label htmlFor="employees" className="text-gray-700">Number of Employees</Label>
-          <Select value={formData.employees} onValueChange={handleEmployeeChange}>
+          <Select value={selectedEmployeeValue} onValueChange={handleEmployeeChange}>
             <SelectTrigger id="employees" className="bg-white">
               <SelectValue placeholder="Select employee count" />
             </SelectTrigger>
@@ -67,7 +76,7 @@ export const CompanyBasicsStep = ({
         </div>
         <div className="space-y-2">
           <Label htmlFor="revenue" className="text-gray-700">Annual Revenue</Label>
-          <Select value={formData.revenue} onValueChange={handleRevenueChange}>
+          <Select value={selectedRevenueValue} onValueChange={handleRevenueChange}>
             <SelectTrigger id="revenue" className="bg-white">
               <SelectValue placeholder="Select revenue range" />
             </SelectTrigger>
