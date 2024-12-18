@@ -1,42 +1,26 @@
-import { useEffect, useRef } from "react";
-import { getCalApi } from "@calcom/embed-react";
+import { useRef, useEffect } from "react";
+import { useCalendarApi } from "./calendar/useCalendarApi";
+import { useCalendarConfig } from "./calendar/useCalendarConfig";
+import { useCalendarCleanup } from "./calendar/useCalendarCleanup";
 
 interface UseCalendarInitializationProps {
   calLink: string;
   onBookingSuccess: () => Promise<void>;
 }
 
-// Define proper types for Cal.com configuration
-interface UiConfig {
-  theme?: 'light' | 'dark';
-  styles?: {
-    branding?: {
-      brandColor?: string;
-    };
-  };
-  hideEventTypeDetails?: string;
-}
-
-interface InlineConfig {
-  elementOrSelector: string;
-  calLink: string;
-  config?: {
-    hideEventTypeDetails?: string;
-  };
-}
-
 export const useCalendarInitialization = ({ 
   calLink, 
   onBookingSuccess 
 }: UseCalendarInitializationProps) => {
-  const calInitialized = useRef(false);
-  const calApiRef = useRef<any>(null);
+  const mounted = useRef(true);
+  const { calInitialized, calApiRef, initializeApi } = useCalendarApi();
+  const { getUiConfig, getInlineConfig } = useCalendarConfig();
   
-  useEffect(() => {
-    let mounted = true;
+  useCalendarCleanup(mounted, calApiRef, calInitialized);
 
+  useEffect(() => {
     const initializeCalendar = async () => {
-      if (!mounted) {
+      if (!mounted.current) {
         console.log('CalendarInit - Component unmounted, stopping initialization');
         return;
       }
@@ -44,16 +28,9 @@ export const useCalendarInitialization = ({
       try {
         console.log('CalendarInit - Starting initialization');
         
-        // Add a small delay to ensure DOM is ready
         await new Promise(resolve => setTimeout(resolve, 300));
         
-        const cal = await getCalApi();
-        if (!cal) {
-          console.error('CalendarInit - Calendar API not initialized');
-          throw new Error('Calendar API not initialized');
-        }
-
-        calApiRef.current = cal;
+        const cal = await initializeApi();
 
         if (calInitialized.current) {
           console.log('CalendarInit - Already initialized, skipping');
@@ -61,23 +38,12 @@ export const useCalendarInitialization = ({
         }
 
         console.log('CalendarInit - Configuring UI');
-        cal('ui', {
-          theme: 'light',
-          styles: { branding: { brandColor: '#000000' } },
-          hideEventTypeDetails: "false",
-        } satisfies UiConfig);
+        cal('ui', getUiConfig());
 
-        // Add a small delay between UI config and inline embedding
         await new Promise(resolve => setTimeout(resolve, 100));
         
         console.log('CalendarInit - Setting up inline calendar');
-        cal('inline', {
-          elementOrSelector: '#cal-booking-placeholder',
-          calLink,
-          config: {
-            hideEventTypeDetails: "false",
-          }
-        } satisfies InlineConfig);
+        cal('inline', getInlineConfig(calLink));
 
         console.log('CalendarInit - Setting up booking callback');
         cal('on', {
@@ -101,7 +67,6 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Wrap initialization in try-catch to prevent uncaught errors
     const safeInitialize = async () => {
       try {
         await initializeCalendar();
@@ -111,23 +76,10 @@ export const useCalendarInitialization = ({
       }
     };
 
-    console.log('CalendarInit - Setting up initialization timeout');
     const timeoutId = setTimeout(safeInitialize, 500);
 
     return () => {
-      console.log('CalendarInit - Cleaning up');
-      mounted = false;
       clearTimeout(timeoutId);
-      
-      if (calApiRef.current && calInitialized.current) {
-        try {
-          calApiRef.current('destroy');
-          console.log('CalendarInit - Calendar destroyed successfully');
-        } catch (e) {
-          console.error('CalendarInit - Error destroying calendar:', e);
-        }
-      }
-      calInitialized.current = false;
     };
-  }, [calLink, onBookingSuccess]);
+  }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig]);
 };
