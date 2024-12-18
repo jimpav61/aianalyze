@@ -10,9 +10,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      customAnswers: {
-        a1: formData?.phoneNumber || ''
-      }
+      location: formData?.phoneNumber || '' // Changed to use 'location' field which is a default Calendly field
     };
 
     console.log("useCalendlyConfig - Final prefill data:", prefillData);
