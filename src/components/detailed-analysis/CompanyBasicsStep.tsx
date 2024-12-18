@@ -15,7 +15,7 @@ interface CompanyBasicsStepProps {
   formData: {
     companyName: string;
     ownerName: string;
-    phone: string;
+    phoneNumber: string;
     email: string;
     employees: string;
     revenue: string;
@@ -41,7 +41,7 @@ export const CompanyBasicsStep = ({
         handleInputChange={handleInputChange}
       />
       <ContactFields
-        phone={formData.phone}
+        phoneNumber={formData.phoneNumber}
         email={formData.email}
         handleInputChange={handleInputChange}
       />
