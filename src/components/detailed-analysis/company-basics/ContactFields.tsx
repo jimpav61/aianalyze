@@ -15,9 +15,10 @@ export const ContactFields = ({
 }: ContactFieldsProps) => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatPhoneNumber(e.target.value);
-    console.log("Phone number input:", {
-      raw: e.target.value,
-      formatted: formattedValue,
+    console.log("Phone validation - Testing number:", {
+      original: e.target.value,
+      cleaned: formattedValue.replace(/\D/g, ''),
+      length: formattedValue.replace(/\D/g, '').length,
       isValid: !validatePhoneNumber(formattedValue)
     });
     
