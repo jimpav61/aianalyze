@@ -72,10 +72,10 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Initialize immediately when script is loaded
-    initializeCalendar();
+    const initTimeout = setTimeout(initializeCalendar, 1000);
 
     return () => {
+      clearTimeout(initTimeout);
       mounted.current = false;
     };
   }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);

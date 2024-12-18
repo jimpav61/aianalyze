@@ -6,7 +6,14 @@ export const useCalendarScript = () => {
 
   useEffect(() => {
     const checkCalExists = () => {
-      return typeof (window as any).Cal !== 'undefined' && (window as any).Cal;
+      try {
+        return typeof window !== 'undefined' && 
+               typeof (window as any).Cal !== 'undefined' && 
+               (window as any).Cal !== null;
+      } catch (e) {
+        console.error('CalendarScript - Error checking Cal existence:', e);
+        return false;
+      }
     };
 
     if (checkCalExists()) {
@@ -16,8 +23,8 @@ export const useCalendarScript = () => {
     }
 
     let attempts = 0;
-    const maxAttempts = 30;
-    const checkInterval = 500;
+    const maxAttempts = 20;
+    const checkInterval = 300;
 
     console.log('CalendarScript - Starting Cal.com script check');
 
@@ -34,7 +41,7 @@ export const useCalendarScript = () => {
       console.log(`CalendarScript - Attempt ${attempts}/${maxAttempts}`);
 
       if (attempts >= maxAttempts) {
-        const errorMsg = 'Calendar failed to load. Please try again later.';
+        const errorMsg = 'Calendar failed to load. Please refresh the page.';
         console.error('CalendarScript - ' + errorMsg);
         setScriptError(errorMsg);
         clearInterval(intervalId);
