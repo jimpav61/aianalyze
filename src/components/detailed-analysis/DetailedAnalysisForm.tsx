@@ -29,6 +29,7 @@ export const DetailedAnalysisForm = ({
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<DetailedFormData>({
     companyName: "",
+    ownerName: "",
     phoneNumber: "",
     email: "",
     employees: "",
@@ -66,7 +67,7 @@ export const DetailedAnalysisForm = ({
     console.log("DetailedAnalysisForm - Validating step:", step);
     
     const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "email"],
+      1: ["companyName", "ownerName", "email"],
       2: ["serviceChannels", "monthlyInteractions"],
       3: ["objectives", "timeline", "budget"],
     };

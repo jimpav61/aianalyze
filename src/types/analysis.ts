@@ -1,5 +1,6 @@
 export interface DetailedFormData {
   companyName: string;
+  ownerName: string;
   phoneNumber: string;
   email: string;
   employees: string;
