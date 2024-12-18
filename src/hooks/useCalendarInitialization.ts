@@ -6,11 +6,13 @@ import { useCalendarCleanup } from "./calendar/useCalendarCleanup";
 interface UseCalendarInitializationProps {
   calLink: string;
   onBookingSuccess: () => Promise<void>;
+  isScriptLoaded: boolean;
 }
 
 export const useCalendarInitialization = ({ 
   calLink, 
-  onBookingSuccess 
+  onBookingSuccess,
+  isScriptLoaded 
 }: UseCalendarInitializationProps) => {
   const mounted = useRef(true);
   const { calInitialized, calApiRef, initializeApi } = useCalendarApi();
@@ -19,6 +21,10 @@ export const useCalendarInitialization = ({
   useCalendarCleanup(mounted, calApiRef, calInitialized);
 
   useEffect(() => {
+    if (!isScriptLoaded) {
+      return;
+    }
+
     const initializeCalendar = async () => {
       if (!mounted.current) {
         console.log('CalendarInit - Component unmounted, stopping initialization');
@@ -81,5 +87,5 @@ export const useCalendarInitialization = ({
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig]);
+  }, [calLink, onBookingSuccess, initializeApi, getUiConfig, getInlineConfig, isScriptLoaded]);
 };

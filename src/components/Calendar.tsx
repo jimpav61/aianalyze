@@ -2,7 +2,7 @@ import { useCalendarInitialization } from "@/hooks/useCalendarInitialization";
 import { DetailedFormData } from "@/types/analysis";
 import { useEmailHandler } from "./calendar/EmailHandler";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface CalendarProps {
   calLink: string;
@@ -18,6 +18,8 @@ export const Calendar = ({
   analysis 
 }: CalendarProps) => {
   const { toast } = useToast();
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  
   console.log('Calendar - Component mounted with props:', { 
     calLink, 
     hasOnSubmit: !!onSubmit,
@@ -51,9 +53,32 @@ export const Calendar = ({
     }
   };
 
+  useEffect(() => {
+    const checkCalScript = () => {
+      if ((window as any).Cal) {
+        setIsScriptLoaded(true);
+      } else {
+        setTimeout(checkCalScript, 100);
+      }
+    };
+
+    checkCalScript();
+
+    return () => {
+      if ((window as any).Cal) {
+        try {
+          (window as any).Cal('destroy');
+        } catch (e) {
+          console.error('Calendar - Error destroying calendar:', e);
+        }
+      }
+    };
+  }, []);
+
   useCalendarInitialization({ 
     calLink, 
-    onBookingSuccess: handleBookingSuccess 
+    onBookingSuccess: handleBookingSuccess,
+    isScriptLoaded 
   });
 
   // Add error boundary for Cal.com script errors
@@ -68,6 +93,17 @@ export const Calendar = ({
     window.addEventListener('error', handleError);
     return () => window.removeEventListener('error', handleError);
   }, []);
+
+  if (!isScriptLoaded) {
+    return (
+      <div className="w-full h-[700px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading calendar...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[700px] flex flex-col">
