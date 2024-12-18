@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { CalendarFormData } from '@/types/analysis';
 
 export const useCalendlyConfig = (formData?: CalendarFormData) => {
-  const calendlyInitialized = useRef(false);
+  const calendlyInitialized = useRef<boolean>(false);
 
   const getPrefillData = () => {
     console.log("useCalendlyConfig - Creating prefill data with form data:", formData);
