@@ -55,7 +55,7 @@ export const useCalendarInitialization = ({
         cal('ui', getUiConfig());
         
         // Short delay before inline initialization
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 200));
         
         // Initialize inline calendar
         cal('inline', {
@@ -78,7 +78,7 @@ export const useCalendarInitialization = ({
     };
 
     // Increased delay to ensure DOM is ready
-    const initTimeout = setTimeout(initializeCalendar, 1500);
+    const initTimeout = setTimeout(initializeCalendar, 2000);
 
     return () => {
       clearTimeout(initTimeout);
