@@ -30,7 +30,9 @@ export const CalendarEmbed = ({
     const prefill = formData ? {
       name: formData.companyName,
       email: formData.email,
-      phone: formData.phoneNumber || '' // Using Calendly's standard phone field
+      customAnswers: {
+        a1: formData.phoneNumber || '' // Map phone number to Calendly's custom question field
+      }
     } : {};
 
     console.log("CalendarEmbed - Initializing with:", {
