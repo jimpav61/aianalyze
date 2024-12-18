@@ -5,22 +5,14 @@ interface CalendarConfigProps {
 }
 
 export const CalendarConfig = ({ calLink }: CalendarConfigProps) => {
-  useEffect(() => {
-    // Add Cal.com embed script if not already present
-    const script = document.createElement('script');
-    script.src = 'https://cal.com/embed.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   return (
     <div 
       data-cal-link={calLink}
-      style={{ minHeight: "600px", width: "100%" }}
+      style={{ 
+        minHeight: "600px", 
+        width: "100%",
+        marginTop: "1rem" 
+      }}
     />
   );
 };

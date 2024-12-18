@@ -30,12 +30,13 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
     async function initializeCalendar() {
       console.log('Calendar - Starting initialization');
-      try {
-        if (!mounted) {
-          console.log('Calendar - Component unmounted, stopping initialization');
-          return;
-        }
+      
+      if (!mounted) {
+        console.log('Calendar - Component unmounted, stopping initialization');
+        return;
+      }
 
+      try {
         const cal = await getCalApi();
         
         if (!cal) {
@@ -50,10 +51,13 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
 
         console.log('Calendar - Initializing Cal.com with link:', calLink);
         
-        // Initialize Cal.com using the correct method
-        cal('inline', {
-          elementOrSelector: '[data-cal-link]',
-          calLink: calLink,
+        // Initialize Cal.com
+        cal('ui', {
+          styles: { 
+            branding: { brandColor: '#000000' } 
+          },
+          hideEventTypeDetails: false,
+          layout: 'month_view'
         });
 
         // Add event listener for successful bookings
@@ -72,12 +76,14 @@ export const Calendar = ({ calLink, onSubmit, formData, analysis }: CalendarProp
       }
     }
 
-    initializeCalendar();
+    // Initialize with a small delay to ensure DOM is ready
+    const timeoutId = setTimeout(initializeCalendar, 100);
 
     return () => {
       console.log('Calendar - Cleaning up');
       mounted = false;
       calInitialized.current = false;
+      clearTimeout(timeoutId);
     };
   }, [calLink, sendEmails]);
 
