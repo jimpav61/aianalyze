@@ -30,11 +30,6 @@ export const useCalendarInitialization = ({
       try {
         console.log("CalendarInit - Starting initialization");
         
-        if (!(window as any).Cal) {
-          console.error("CalendarInit - Cal not found in window");
-          return;
-        }
-
         const cal = await initializeApi();
         if (!cal) {
           console.error("CalendarInit - Failed to initialize Cal API");
@@ -46,18 +41,23 @@ export const useCalendarInitialization = ({
           return;
         }
 
-        // Wait for placeholder element
         const placeholder = document.getElementById('cal-booking-placeholder');
         if (!placeholder) {
           console.error("CalendarInit - Placeholder element not found");
           return;
         }
 
-        // Clear any existing content
         placeholder.innerHTML = '';
         
         console.log("CalendarInit - Configuring calendar with link:", calLink);
+        
+        // Initialize UI first
         cal('ui', getUiConfig());
+        
+        // Short delay before inline initialization
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Initialize inline calendar
         cal('inline', {
           ...getInlineConfig(calLink),
           elementOrSelector: '#cal-booking-placeholder',
@@ -77,8 +77,8 @@ export const useCalendarInitialization = ({
       }
     };
 
-    // Small delay to ensure DOM is ready
-    const initTimeout = setTimeout(initializeCalendar, 1000);
+    // Increased delay to ensure DOM is ready
+    const initTimeout = setTimeout(initializeCalendar, 1500);
 
     return () => {
       clearTimeout(initTimeout);

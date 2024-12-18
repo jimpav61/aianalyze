@@ -13,8 +13,14 @@ export const CalendarContent = ({ calLink, onBookingSuccess }: CalendarContentPr
     const element = placeholderRef.current;
     if (element) {
       console.log("CalendarContent - Placeholder mounted and ready");
-      element.innerHTML = ''; // Clear any existing content
+      element.innerHTML = '';
     }
+    
+    return () => {
+      if (element) {
+        element.innerHTML = '';
+      }
+    };
   }, []);
 
   useCalendarInitialization({ 
