@@ -7,7 +7,7 @@ export const useSuccessToast = () => {
     toast({
       title: "Success",
       description: "Your demo has been scheduled successfully! A confirmation email with your detailed analysis report will be sent to your inbox shortly.",
-      duration: 1000, // Changed to 1 second
+      duration: 1500, // Changed to 1.5 seconds to match the removal delay
     });
   };
 
