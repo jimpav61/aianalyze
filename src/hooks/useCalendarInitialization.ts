@@ -14,14 +14,14 @@ interface UiConfig {
       brandColor?: string;
     };
   };
-  hideEventTypeDetails?: boolean;
+  hideEventTypeDetails?: string;
 }
 
 interface InlineConfig {
   elementOrSelector: string;
   calLink: string;
   config?: {
-    hideEventTypeDetails?: boolean;
+    hideEventTypeDetails?: string;
   };
 }
 
@@ -64,7 +64,7 @@ export const useCalendarInitialization = ({
         cal('ui', {
           theme: 'light',
           styles: { branding: { brandColor: '#000000' } },
-          hideEventTypeDetails: false,
+          hideEventTypeDetails: "false",
         } satisfies UiConfig);
 
         // Add a small delay between UI config and inline embedding
@@ -75,7 +75,7 @@ export const useCalendarInitialization = ({
           elementOrSelector: '#cal-booking-placeholder',
           calLink,
           config: {
-            hideEventTypeDetails: false,
+            hideEventTypeDetails: "false",
           }
         } satisfies InlineConfig);
 
