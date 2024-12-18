@@ -11,6 +11,7 @@ export const Calendar = ({
   analysis 
 }: CalendarProps) => {
   console.log("Calendar - Rendering with link:", calLink);
+  console.log("Calendar - Form data:", formData); // Added for debugging
   
   const { isScriptLoaded, scriptError } = useCalendarScript();
 
@@ -23,7 +24,6 @@ export const Calendar = ({
     return <LoadingState />;
   }
 
-  console.log("Calendar - Rendering calendar placeholder");
   return (
     <CalendarEmbed 
       calLink={calLink}
