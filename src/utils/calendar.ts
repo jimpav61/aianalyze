@@ -19,6 +19,10 @@ export const createCalendlyPrefill = (formData?: FormData) => {
     }
   };
 
-  console.log("createCalendlyPrefill - Created prefill object:", prefill);
+  console.log("createCalendlyPrefill - Created prefill with phone:", {
+    input: formData.phoneNumber,
+    output: prefill.customAnswers.a1
+  });
+  
   return prefill;
 };
