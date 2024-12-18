@@ -43,13 +43,12 @@ export const CalendarEmbed = ({
     element.innerHTML = '';
     const prefill = getPrefillData();
     
-    console.log("CalendarEmbed - Initializing with config:", {
-      url: calendlyUrl,
-      prefill,
-      phoneDetails: {
-        originalNumber: formData?.phoneNumber,
-        prefillValue: prefill.customAnswers.a2
-      }
+    console.log("CalendarEmbed - Detailed phone mapping:", {
+      originalPhoneNumber: formData?.phoneNumber,
+      mappedField: 'a2',
+      prefillValue: prefill.customAnswers.a2,
+      allPrefillData: prefill,
+      formDataComplete: formData
     });
 
     // @ts-ignore - Calendly types are not available
