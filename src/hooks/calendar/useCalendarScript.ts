@@ -16,8 +16,8 @@ export const useCalendarScript = () => {
     }
 
     let attempts = 0;
-    const maxAttempts = 10;
-    const checkInterval = 500;
+    const maxAttempts = 20;
+    const checkInterval = 300;
 
     console.log('CalendarScript - Starting Cal.com script check');
 
@@ -34,7 +34,7 @@ export const useCalendarScript = () => {
       console.log(`CalendarScript - Attempt ${attempts}/${maxAttempts}`);
 
       if (attempts >= maxAttempts) {
-        const errorMsg = 'Calendar failed to load. Please try again.';
+        const errorMsg = 'Calendar failed to load. Please refresh the page.';
         console.error('CalendarScript - ' + errorMsg);
         setScriptError(errorMsg);
         clearInterval(intervalId);

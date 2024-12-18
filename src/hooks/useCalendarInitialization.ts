@@ -72,7 +72,7 @@ export const useCalendarInitialization = ({
       }
     };
 
-    const initTimeout = setTimeout(initializeCalendar, 500);
+    const initTimeout = setTimeout(initializeCalendar, 1000);
 
     return () => {
       clearTimeout(initTimeout);
