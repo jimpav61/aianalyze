@@ -31,7 +31,7 @@ export const CalendarEmbed = ({
       name: formData.companyName,
       email: formData.email,
       customAnswers: {
-        a1: formData.phoneNumber || '' // Map phone number to Calendly's first custom question field
+        a2: formData.phoneNumber || '' // Map phone number to Calendly's phone number field (a2)
       }
     } : {};
 
