@@ -30,11 +30,23 @@ export const CalendarEmbed = ({
     // Create prefill object with form data
     const prefill = createCalendlyPrefill(formData);
     
-    console.log("CalendarEmbed - Phone number being sent to Calendly:", {
-      rawPhoneNumber: formData?.phoneNumber,
-      prefillPhoneNumber: prefill?.customAnswers?.a1,
-      fullPrefill: prefill
+    console.log("CalendarEmbed - Detailed debug info:", {
+      calendlyUrl,
+      formData,
+      prefill,
+      phoneNumber: {
+        raw: formData?.phoneNumber,
+        prefilled: prefill?.customAnswers?.a1,
+      }
     });
+
+    // Add event listener for prefill
+    const handleCalendlyInit = (e: any) => {
+      console.log("CalendarEmbed - Calendly initialized:", e);
+    };
+
+    // @ts-ignore - Calendly types are not available
+    window.addEventListener('calendly.init', handleCalendlyInit);
     
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
@@ -46,10 +58,10 @@ export const CalendarEmbed = ({
 
     // Listen for booking success
     const handleEventScheduled = (e: any) => {
-      console.log("CalendarEmbed - Booking successful, phone number:", {
+      console.log("CalendarEmbed - Booking successful, full event data:", {
         event: e,
-        phoneNumber: formData?.phoneNumber,
-        prefillData: prefill
+        formData,
+        prefill
       });
       handleBookingSuccess();
     };
@@ -61,6 +73,8 @@ export const CalendarEmbed = ({
       element.innerHTML = '';
       // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
+      // @ts-ignore - Calendly types are not available
+      window.removeEventListener('calendly.init', handleCalendlyInit);
     };
   }, [calLink, handleBookingSuccess, formData]);
 

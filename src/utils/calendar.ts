@@ -9,7 +9,7 @@ interface CalendlyPrefill {
   name: string;
   email: string;
   customAnswers: {
-    a1?: string; // This is the field Calendly expects for phone numbers
+    [key: string]: string; // Make this more flexible to handle any question ID
   };
 }
 
@@ -19,18 +19,30 @@ export const createCalendlyPrefill = (formData?: FormData): CalendlyPrefill | Re
     return {};
   }
 
+  // Try multiple known Calendly phone field IDs
+  const phoneFieldIds = ['a1', 'a2', 'a3', 'phone_number', 'phone'];
+  const customAnswers: { [key: string]: string } = {};
+  
+  phoneFieldIds.forEach(id => {
+    if (formData.phoneNumber) {
+      customAnswers[id] = formData.phoneNumber;
+    }
+  });
+
   const prefill = {
     name: formData.companyName || '',
     email: formData.email || '',
-    customAnswers: {
-      a1: formData.phoneNumber || '' // Map phoneNumber to a1 field for Calendly
-    }
+    customAnswers
   };
 
-  console.log("createCalendlyPrefill - Created prefill with phone:", {
-    input: formData.phoneNumber,
-    output: prefill.customAnswers.a1,
-    fullPrefill: prefill
+  console.log("createCalendlyPrefill - Created prefill object:", {
+    input: {
+      phoneNumber: formData.phoneNumber,
+      email: formData.email,
+      name: formData.companyName
+    },
+    output: prefill,
+    customAnswers
   });
   
   return prefill;
