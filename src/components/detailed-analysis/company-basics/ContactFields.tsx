@@ -3,15 +3,15 @@ import { Label } from "@/components/ui/label";
 import { formatPhoneNumber, validatePhoneNumber } from "@/utils/phoneValidation";
 
 interface ContactFieldsProps {
-  email: string;
   phoneNumber: string;
+  email: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ContactFields = ({ 
-  email, 
-  phoneNumber, 
-  handleInputChange 
+export const ContactFields = ({
+  phoneNumber,
+  email,
+  handleInputChange,
 }: ContactFieldsProps) => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatPhoneNumber(e.target.value);
@@ -26,14 +26,12 @@ export const ContactFields = ({
       ...e,
       target: {
         ...e.target,
-        name: 'phoneNumber',
-        value: formattedValue
-      }
+        name: e.target.name,
+        value: formattedValue,
+      },
     };
     handleInputChange(event);
   };
-
-  const phoneError = validatePhoneNumber(phoneNumber);
 
   return (
     <>
@@ -42,15 +40,11 @@ export const ContactFields = ({
         <Input
           id="phoneNumber"
           name="phoneNumber"
-          type="tel"
           value={phoneNumber}
           onChange={handlePhoneChange}
-          placeholder="(555) 123-4567"
-          className={phoneError ? "border-red-300" : ""}
+          placeholder="(555) 555-5555"
+          maxLength={14}
         />
-        {phoneError && (
-          <p className="text-sm text-red-500 mt-1">{phoneError}</p>
-        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email" className="flex items-center">
@@ -62,7 +56,7 @@ export const ContactFields = ({
           type="email"
           value={email}
           onChange={handleInputChange}
-          placeholder="your@email.com"
+          placeholder="Enter your email"
           className={!email ? "border-red-300" : ""}
         />
       </div>
