@@ -18,11 +18,22 @@ export const CalendarEmbed = ({
     // Initialize Calendly widget
     const calendlyUrl = `https://calendly.com/${calLink}`;
     
+    // Create prefill object with form data
+    const prefill = formData ? {
+      name: formData.companyName,
+      email: formData.email,
+      customAnswers: {
+        a1: formData.phoneNumber || 'Not provided'
+      }
+    } : {};
+
+    console.log("CalendarEmbed - Initializing with prefill data:", prefill);
+    
     // @ts-ignore - Calendly types are not available
     Calendly.initInlineWidget({
       url: calendlyUrl,
       parentElement: document.getElementById('calendly-booking-placeholder'),
-      prefill: {},
+      prefill,
       utm: {}
     });
 
@@ -34,7 +45,7 @@ export const CalendarEmbed = ({
       // @ts-ignore - Calendly types are not available
       window.removeEventListener('calendly.event_scheduled', handleBookingSuccess);
     };
-  }, [calLink, handleBookingSuccess]);
+  }, [calLink, handleBookingSuccess, formData]);
 
   return (
     <div className="w-full h-[700px] flex flex-col">
