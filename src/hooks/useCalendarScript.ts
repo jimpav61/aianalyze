@@ -1,45 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { toast } from "@/components/ui/use-toast";
 
 export const useCalendarScript = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [scriptError, setScriptError] = useState<string | null>(null);
+  const initAttempted = useRef(false);
+  const errorShown = useRef(false);
 
   useEffect(() => {
-    const checkCalExists = () => {
-      return typeof window !== 'undefined' && typeof (window as any).Cal !== 'undefined';
+    if (initAttempted.current) return;
+    
+    const script = document.createElement('script');
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    
+    script.onload = () => {
+      setIsScriptLoaded(true);
+      initAttempted.current = true;
     };
-
-    const loadScript = () => {
-      if (checkCalExists()) {
-        console.log('Calendar script already loaded');
-        setIsScriptLoaded(true);
-        return;
-      }
-
-      const scriptLoadCheck = setInterval(() => {
-        if (checkCalExists()) {
-          console.log('Calendar script loaded successfully');
-          setIsScriptLoaded(true);
-          clearInterval(scriptLoadCheck);
-        }
-      }, 100);
-
-      // Clear interval after 10 seconds if script hasn't loaded
-      setTimeout(() => {
-        if (!checkCalExists()) {
-          clearInterval(scriptLoadCheck);
-          console.error('Calendar script failed to load within timeout');
-          setScriptError('Failed to load calendar script');
-        }
-      }, 10000);
+    
+    script.onerror = () => {
+      setScriptError('Failed to load calendar script - please refresh the page');
+      initAttempted.current = true;
     };
-
-    loadScript();
-
+    
+    document.head.appendChild(script);
+    
     return () => {
-      setIsScriptLoaded(false);
+      document.head.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    if (scriptError && !errorShown.current) {
+      console.error("Calendar - Script error:", scriptError);
+      toast({
+        title: "Calendar Error",
+        description: scriptError,
+        variant: "destructive",
+      });
+      errorShown.current = true;
+    }
+  }, [scriptError]);
 
   return { isScriptLoaded, scriptError };
 };
