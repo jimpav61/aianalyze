@@ -65,7 +65,10 @@ export const Calendar = ({
         console.log("Calendar - Configuring calendar with link:", calLink);
         
         cal('ui', getUiConfig());
-        cal('inline', getInlineConfig(calLink));
+        cal('inline', {
+          ...getInlineConfig(calLink),
+          elementOrSelector: '#cal-booking-placeholder',
+        });
 
         cal('on', {
           action: "bookingSuccessful",
@@ -97,7 +100,7 @@ export const Calendar = ({
       }
     };
 
-    const initTimeout = setTimeout(initializeCalendar, 100);
+    const initTimeout = setTimeout(initializeCalendar, 1000);
     return () => clearTimeout(initTimeout);
   }, [isScriptLoaded, calLink, sendEmails, toast, initializeApi, getUiConfig, getInlineConfig]);
 

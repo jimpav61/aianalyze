@@ -5,44 +5,39 @@ export const useCalendarScript = () => {
   const [scriptError, setScriptError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadScript = () => {
-      return new Promise<void>((resolve, reject) => {
-        if (typeof window.Cal !== 'undefined') {
-          console.log('Calendar script already loaded');
-          resolve();
-          return;
-        }
-
-        const script = document.createElement('script');
-        script.src = 'https://app.cal.com/embed.js';
-        script.onload = () => {
-          console.log('Calendar script loaded successfully');
-          resolve();
-        };
-        script.onerror = () => {
-          console.error('Failed to load calendar script');
-          reject(new Error('Failed to load calendar script'));
-        };
-        document.body.appendChild(script);
-      });
+    const checkCalExists = () => {
+      return typeof window !== 'undefined' && typeof (window as any).Cal !== 'undefined';
     };
 
-    loadScript()
-      .then(() => {
+    const loadScript = () => {
+      if (checkCalExists()) {
+        console.log('Calendar script already loaded');
         setIsScriptLoaded(true);
-        setScriptError(null);
-      })
-      .catch((error) => {
-        console.error('Error loading calendar:', error);
-        setScriptError(error.message);
-        setIsScriptLoaded(false);
-      });
+        return;
+      }
+
+      const scriptLoadCheck = setInterval(() => {
+        if (checkCalExists()) {
+          console.log('Calendar script loaded successfully');
+          setIsScriptLoaded(true);
+          clearInterval(scriptLoadCheck);
+        }
+      }, 100);
+
+      // Clear interval after 10 seconds if script hasn't loaded
+      setTimeout(() => {
+        if (!checkCalExists()) {
+          clearInterval(scriptLoadCheck);
+          console.error('Calendar script failed to load within timeout');
+          setScriptError('Failed to load calendar script');
+        }
+      }, 10000);
+    };
+
+    loadScript();
 
     return () => {
-      const script = document.querySelector('script[src="https://app.cal.com/embed.js"]');
-      if (script) {
-        document.body.removeChild(script);
-      }
+      setIsScriptLoaded(false);
     };
   }, []);
 
