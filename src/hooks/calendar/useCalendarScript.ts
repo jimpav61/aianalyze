@@ -15,15 +15,13 @@ export const useCalendarScript = () => {
       return;
     }
 
-    const script = document.createElement('script');
-    script.src = 'https://app.cal.com/embed.js';
-    script.async = true;
-    
     let attempts = 0;
-    const maxAttempts = 10;
-    const checkInterval = 1000; // 1 second between checks
+    const maxAttempts = 20; // Increased max attempts
+    const checkInterval = 500; // Reduced interval to 500ms
 
     const intervalId = setInterval(() => {
+      console.log(`CalendarScript - Checking Cal existence (${attempts + 1}/${maxAttempts})`);
+      
       if (checkCalExists()) {
         console.log('CalendarScript - Cal successfully loaded');
         setIsScriptLoaded(true);
@@ -33,28 +31,16 @@ export const useCalendarScript = () => {
       }
 
       attempts++;
-      console.log(`CalendarScript - Check attempt ${attempts}/${maxAttempts}`);
-
       if (attempts >= maxAttempts) {
-        console.error('CalendarScript - Failed to load Cal after maximum attempts');
-        setScriptError('Calendar failed to load. Please refresh the page.');
+        const errorMsg = 'Calendar failed to load. Please refresh the page.';
+        console.error('CalendarScript - ' + errorMsg);
+        setScriptError(errorMsg);
         clearInterval(intervalId);
       }
     }, checkInterval);
 
-    script.onerror = () => {
-      console.error('CalendarScript - Failed to load script');
-      setScriptError('Calendar script failed to load. Please refresh the page.');
-      clearInterval(intervalId);
-    };
-
-    document.body.appendChild(script);
-
     return () => {
       clearInterval(intervalId);
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
     };
   }, []);
 
