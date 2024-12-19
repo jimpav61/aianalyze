@@ -21,10 +21,16 @@ export const CalendarView = ({
 }: CalendarViewProps) => {
   const [showDownload, setShowDownload] = useState(false);
   const { toast } = useToast();
-  console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
+  console.log("CalendarView - Initial Render:", { 
+    showDownload,
+    hasFormData: !!formData, 
+    hasAnalysis: !!analysis 
+  });
 
   const handleDownload = async () => {
+    console.log("Download button clicked", { formData, analysis });
     if (!formData || !analysis) {
+      console.error("Missing required data for download:", { formData, analysis });
       toast({
         title: "Error",
         description: "Could not generate report. Please try again.",
@@ -53,6 +59,7 @@ export const CalendarView = ({
     const success = await exportReportAsPDF(reportElement);
     document.body.removeChild(reportElement);
 
+    console.log("PDF export result:", { success });
     toast({
       title: success ? "Success" : "Error",
       description: success 
@@ -63,8 +70,9 @@ export const CalendarView = ({
   };
 
   const handleCalendarEvent = () => {
-    console.log("Calendar event handled, showing download button");
+    console.log("Calendar event handled - showing download button");
     setShowDownload(true);
+    console.log("Download button should now be visible");
     onSubmit();
   };
   
