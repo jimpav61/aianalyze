@@ -11,7 +11,7 @@ export const CalendarContainer = forwardRef<HTMLDivElement, CalendarContainerPro
       <div 
         ref={ref}
         className={`w-full h-full bg-white rounded-lg ${className}`}
-        style={{ height: 'calc(90vh - 100px)', minWidth: '320px' }}
+        style={{ height: 'calc(100vh - 200px)', minWidth: '320px' }}
       >
         {children}
       </div>

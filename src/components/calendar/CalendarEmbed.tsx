@@ -101,7 +101,7 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex flex-col">
       <CalendarContainer ref={calendarRef}>
         <div 
           className="calendly-inline-widget w-full h-full"
