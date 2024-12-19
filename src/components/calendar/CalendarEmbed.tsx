@@ -101,12 +101,12 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-[700px] overflow-y-auto">
+    <div className="w-full h-full">
       <CalendarContainer ref={calendarRef}>
         <div 
-          className="calendly-inline-widget w-full"
+          className="calendly-inline-widget w-full h-full"
           data-url={`https://calendly.com/${calLink}`}
-          style={{ minWidth: '320px', height: '700px' }}
+          style={{ minWidth: '320px', height: '100%' }}
         />
       </CalendarContainer>
       {showDownloadButton && (
