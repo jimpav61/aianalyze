@@ -24,8 +24,8 @@ export const CalendarView = ({
   };
   
   return (
-    <div className="flex flex-col">
-      <div className="mb-4">
+    <div className="flex flex-col items-center">
+      <div className="text-center mb-2">
         <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
         <p className="text-muted-foreground">
           Choose a time that works best for you
