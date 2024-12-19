@@ -101,10 +101,10 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-[700px]">
+    <div className="w-full h-[700px] overflow-y-auto">
       <CalendarContainer ref={calendarRef}>
         <div 
-          className="calendly-inline-widget" 
+          className="calendly-inline-widget w-full"
           data-url={`https://calendly.com/${calLink}`}
           style={{ minWidth: '320px', height: '700px' }}
         />
