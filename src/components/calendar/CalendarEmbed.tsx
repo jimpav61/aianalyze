@@ -113,13 +113,8 @@ export const CalendarEmbed = ({
           .calendly-success-message {
             position: relative !important;
           }
-          .calendly-success-message::before {
-            content: '';
-            display: block;
-            margin: 20px auto;
-          }
-          .calendly-success-message button {
-            margin-top: 15px !important;
+          .calendly-success-message button:first-child {
+            order: -1;
           }
           .download-report-button {
             display: block;
@@ -132,19 +127,14 @@ export const CalendarEmbed = ({
       <script dangerouslySetInnerHTML={{
         __html: `
           window.addEventListener('calendly.event_scheduled', function() {
-            setTimeout(() => {
-              const successMessage = document.querySelector('.calendly-success-message');
-              if (successMessage) {
-                const downloadButton = document.createElement('button');
-                downloadButton.className = 'download-report-button';
-                downloadButton.innerHTML = '<span class="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
-                downloadButton.onclick = ${handleDownload.toString()};
-                const firstButton = successMessage.querySelector('button');
-                if (firstButton) {
-                  successMessage.insertBefore(downloadButton, firstButton);
-                }
-              }
-            }, 100);
+            const successMessage = document.querySelector('.calendly-success-message');
+            if (successMessage) {
+              const downloadButton = document.createElement('button');
+              downloadButton.className = 'download-report-button';
+              downloadButton.innerHTML = '<span class="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
+              downloadButton.onclick = ${handleDownload.toString()};
+              successMessage.insertBefore(downloadButton, successMessage.firstChild);
+            }
           });
         `
       }} />
