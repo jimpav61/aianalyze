@@ -26,29 +26,49 @@ interface EmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  console.log("[Email Function] Starting request handling");
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
+    console.log("[Email Function] Handling CORS preflight request");
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log("[Step 1] Starting email process...");
+    console.log("[Email Function] Parsing request body");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
     
+    // Validate required data
+    console.log("[Email Function] Validating request data:", {
+      hasEmail: !!formData?.email,
+      hasCompanyName: !!formData?.companyName,
+      hasPdfData: !!pdfBase64,
+      pdfDataLength: pdfBase64?.length || 0
+    });
+
     if (!formData?.email || !pdfBase64) {
-      console.error("[Validation Error] Missing required data:", { 
-        hasEmail: !!formData?.email, 
-        hasPDF: !!pdfBase64 
-      });
       throw new Error("Missing required email data");
     }
-    
-    console.log("[Step 2] Validating recipient:", formData.email);
-    
-    // Generate a unique ID for the attachment
-    const attachmentId = crypto.randomUUID();
-    console.log("[Step 3] Generated attachment ID:", attachmentId);
 
+    // Clean and validate PDF data
+    console.log("[Email Function] Cleaning PDF base64 data");
+    const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+    
+    console.log("[Email Function] Validating cleaned PDF data:", {
+      originalLength: pdfBase64.length,
+      cleanedLength: cleanBase64.length
+    });
+
+    if (cleanBase64.length === 0) {
+      throw new Error("Invalid PDF data after cleaning");
+    }
+
+    // Generate attachment ID
+    const attachmentId = crypto.randomUUID();
+    console.log("[Email Function] Generated attachment ID:", attachmentId);
+
+    // Prepare email HTML
+    console.log("[Email Function] Preparing email HTML template");
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333;">Demo Booking Confirmation</h1>
@@ -89,18 +109,8 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    console.log("[Step 4] Preparing email template with attachment reference");
-    
-    // Clean and validate the base64 data
-    const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
-    console.log("[Step 5] Cleaned base64 data, length:", cleanBase64.length);
-    
-    if (cleanBase64.length === 0) {
-      console.error("[Error] Empty PDF data after cleaning");
-      throw new Error("Invalid PDF data");
-    }
-
-    console.log("[Step 6] Sending email via Resend API");
+    // Send email via Resend API
+    console.log("[Email Function] Sending email via Resend API to:", formData.email);
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -122,23 +132,27 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    // Handle API response
     if (res.ok) {
       const data = await res.json();
-      console.log("[Success] Email sent successfully:", data);
+      console.log("[Email Function] Email sent successfully:", {
+        messageId: data.id,
+        recipient: formData.email
+      });
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
       const error = await res.text();
-      console.error("[API Error] Resend API error:", error);
-      return new Response(JSON.stringify({ error }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("[Email Function] Resend API error:", error);
+      throw new Error(`Resend API error: ${error}`);
     }
   } catch (error: any) {
-    console.error("[Fatal Error] Error in sendemail function:", error);
+    console.error("[Email Function] Fatal error:", {
+      message: error.message,
+      stack: error.stack
+    });
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
