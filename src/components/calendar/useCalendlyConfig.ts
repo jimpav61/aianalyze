@@ -12,18 +12,13 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
       formData
     });
 
-    // Following Calendly's official documentation for pre-populating data
-    // Using both location and questions array for maximum compatibility
+    // Using a custom question field for phone number
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber,
-      questions: [
-        {
-          answer: phoneNumber,
-          name: 'phone'
-        }
-      ]
+      customAnswers: {
+        a1: phoneNumber // This maps to the first custom question in Calendly
+      }
     };
 
     console.log('[PHONE_DEBUG] Created prefill data:', prefillData);
