@@ -17,7 +17,7 @@ export const useCalendarEvents = ({ onEventScheduled }: UseCalendarEventsProps) 
     // Show the toast notification
     toast({
       title: "Important!",
-      description: "Please download your detailed analysis report now. You won't be able to access it after closing this window.",
+      description: "Please download your detailed analysis report before closing this window.",
       duration: 10000, // 10 seconds
       variant: "default",
     });
