@@ -9,6 +9,13 @@ import { Download } from "lucide-react";
 import { exportReportAsPDF } from "@/utils/reportExport";
 import { useToast } from "@/hooks/use-toast";
 
+// Add type declaration for the window object
+declare global {
+  interface Window {
+    handleDownloadPDF: () => Promise<void>;
+  }
+}
+
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
 }
