@@ -31,12 +31,8 @@ export const DialogContent = ({
         analysis={analysis}
         industry={industry}
         onBookDemo={() => {
-          if (formData) {
-            console.log("DialogContent - Book demo clicked with form data:", formData);
-            return true;
-          }
-          console.log("DialogContent - Book demo clicked but no form data available");
-          return false;
+          console.log("DialogContent - Book demo clicked with form data:", formData);
+          return true;
         }}
       />
     );
