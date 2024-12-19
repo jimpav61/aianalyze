@@ -3,13 +3,19 @@ import { CalendarProps } from "@/types/calendar";
 import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { CalendarEmbed } from "./calendar/CalendarEmbed";
+import { DetailedFormData } from "@/types/analysis";
+
+interface ExtendedCalendarProps extends Omit<CalendarProps, 'formData'> {
+  formData?: Partial<DetailedFormData>;
+  analysis?: any;
+}
 
 export const Calendar = ({ 
   calLink, 
   onSubmit, 
   formData, 
   analysis 
-}: CalendarProps) => {
+}: ExtendedCalendarProps) => {
   console.log("[DEBUG] Calendar - Component Mounted", {
     hasCalLink: !!calLink,
     hasFormData: !!formData,
