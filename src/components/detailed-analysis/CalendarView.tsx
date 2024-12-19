@@ -38,12 +38,6 @@ export const CalendarView = ({
         formData={formData}
         analysis={analysis}
       />
-
-      {isBooked && (
-        <div className="text-center text-sm">
-          <span className="font-medium">30 Minute Meeting Confirmed</span>
-        </div>
-      )}
     </div>
   );
 };
