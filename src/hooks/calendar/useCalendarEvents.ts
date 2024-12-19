@@ -9,19 +9,16 @@ export const useCalendarEvents = ({ onEventScheduled }: UseCalendarEventsProps) 
   const { toast } = useToast();
 
   const handleEventScheduled = useCallback((e: any) => {
-    console.log('[PHONE_DEBUG] Event scheduled:', {
-      event: e,
-      data: e?.data,
-      invitee: e?.data?.invitee,
-      questions: e?.data?.invitee?.questions,
-    });
+    console.log('Calendar event scheduled:', e);
     
+    // Call the callback first
     onEventScheduled();
     
+    // Show the toast notification
     toast({
       title: "Important!",
       description: "Please download your detailed analysis report now. You won't be able to access it after closing this window.",
-      duration: 10000,
+      duration: 10000, // 10 seconds
       variant: "default",
     });
   }, [onEventScheduled, toast]);

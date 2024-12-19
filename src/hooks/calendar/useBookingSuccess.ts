@@ -16,7 +16,7 @@ export const useBookingSuccess = ({
   const { toast } = useToast();
 
   const handleBookingSuccess = useCallback(() => {
-    console.log("useBookingSuccess - Booking successful with data:", {
+    console.log("Booking successful with data:", {
       formData,
       analysis
     });
