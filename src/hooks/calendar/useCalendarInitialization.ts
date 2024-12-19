@@ -3,7 +3,7 @@ import { CalendarFormData } from '@/types/analysis';
 
 interface UseCalendarInitializationProps {
   calendarRef: RefObject<HTMLDivElement>;
-  calendlyInitialized: RefObject<boolean>;
+  calendlyInitialized: { current: boolean }; // Changed from RefObject to mutable ref
   calLink: string;
   getPrefillData: () => any;
   handleCalendlyInit: (prefill: any) => void;
