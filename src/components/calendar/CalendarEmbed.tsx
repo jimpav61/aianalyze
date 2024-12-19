@@ -108,25 +108,27 @@ export const CalendarEmbed = ({
           style={{ minWidth: '320px', height: '700px' }}
         />
       </CalendarContainer>
-      <style>{`
-        .calendly-success-message {
-          position: relative !important;
-        }
-        .calendly-success-message::before {
-          content: '';
-          display: block;
-          margin: 20px auto;
-        }
-        .calendly-success-message button {
-          margin-top: 15px !important;
-        }
-        .download-report-button {
-          display: block;
-          margin: 15px auto !important;
-          position: relative !important;
-          z-index: 100;
-        }
-      `}</style>
+      <style>
+        {`
+          .calendly-success-message {
+            position: relative !important;
+          }
+          .calendly-success-message::before {
+            content: '';
+            display: block;
+            margin: 20px auto;
+          }
+          .calendly-success-message button {
+            margin-top: 15px !important;
+          }
+          .download-report-button {
+            display: block;
+            margin: 15px auto !important;
+            position: relative !important;
+            z-index: 100;
+          }
+        `}
+      </style>
       <script dangerouslySetInnerHTML={{
         __html: `
           window.addEventListener('calendly.event_scheduled', function() {
