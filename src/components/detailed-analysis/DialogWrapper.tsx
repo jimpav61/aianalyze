@@ -1,18 +1,15 @@
-import { Dialog, DialogContent } from "../ui/dialog";
-import { ReactNode } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface DialogWrapperProps {
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const DialogWrapper = ({ isOpen, onClose, children }: DialogWrapperProps) => {
-  console.log("DialogWrapper - Render:", { isOpen });
-  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[800px] h-auto overflow-visible">
+      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto">
         {children}
       </DialogContent>
     </Dialog>

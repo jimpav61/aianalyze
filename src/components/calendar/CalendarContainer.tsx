@@ -1,16 +1,16 @@
-import { forwardRef, ReactNode } from 'react';
+import { forwardRef } from "react";
 
-interface CalendarContainerProps {
-  className?: string;
-  children?: ReactNode;
+interface CalendarContainerProps extends React.HTMLProps<HTMLDivElement> {
+  children: React.ReactNode;
 }
 
 export const CalendarContainer = forwardRef<HTMLDivElement, CalendarContainerProps>(
-  ({ className = '', children }, ref) => {
+  ({ children, className = "", ...props }, ref) => {
     return (
       <div 
         ref={ref}
-        className={`w-full h-[600px] bg-white rounded-lg ${className}`}
+        className={`w-full h-[650px] bg-white rounded-lg shadow-md ${className}`}
+        {...props}
       >
         {children}
       </div>
@@ -18,4 +18,4 @@ export const CalendarContainer = forwardRef<HTMLDivElement, CalendarContainerPro
   }
 );
 
-CalendarContainer.displayName = 'CalendarContainer';
+CalendarContainer.displayName = "CalendarContainer";

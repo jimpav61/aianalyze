@@ -5,37 +5,38 @@ import { useState } from "react";
 interface CalendarViewProps {
   onSubmit: () => void;
   formData?: DetailedFormData;
-  analysis: any;
-  calLink?: string;
+  analysis?: any;
 }
 
-export const CalendarView = ({ 
-  onSubmit, 
-  formData, 
-  analysis, 
-  calLink = "jimmy-chatsites/30min"
-}: CalendarViewProps) => {
+export const CalendarView = ({ onSubmit, formData, analysis }: CalendarViewProps) => {
   const [isBooked, setIsBooked] = useState(false);
+  
+  const calLink = "chatsites/demo";
 
-  const handleCalendarEvent = () => {
-    console.log("[DEBUG] CalendarView - Calendar event received");
+  const handleBookingSuccess = () => {
+    console.log("CalendarView - Booking successful");
     setIsBooked(true);
     onSubmit();
   };
   
   return (
-    <div className="flex flex-col items-center w-full max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Schedule Your Demo</h2>
+    <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold mb-2">Schedule Your Demo</h2>
+        <p className="text-muted-foreground">
+          Choose a time that works best for you
+        </p>
+      </div>
       
       <Calendar 
         calLink={calLink}
-        onSubmit={handleCalendarEvent}
+        onBookingSuccess={handleBookingSuccess}
         formData={formData}
         analysis={analysis}
       />
 
       {isBooked && (
-        <div className="text-center mt-4">
+        <div className="text-center text-sm mt-4">
           <span className="font-medium">30 Minute Meeting Confirmed</span>
         </div>
       )}
