@@ -6,8 +6,8 @@ export const useSuccessToast = () => {
   const showSuccessToast = () => {
     toast({
       title: "Success",
-      description: "Your demo has been scheduled successfully! A confirmation email with your detailed analysis report will be sent to your inbox shortly.",
-      duration: 500, // Changed to 0.5 seconds to match the removal delay
+      description: "Your demo has been scheduled successfully!",
+      duration: 500, // Brief 0.5 second notification
     });
   };
 

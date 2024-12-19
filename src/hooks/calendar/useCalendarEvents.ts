@@ -1,29 +1,33 @@
 import { useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { CalendarFormData } from '@/types/analysis';
 
 interface UseCalendarEventsProps {
-  onEventScheduled: () => void;
+  formData?: CalendarFormData;
+  onBookingSuccess: () => void;
 }
 
-export const useCalendarEvents = ({ onEventScheduled }: UseCalendarEventsProps) => {
-  const { toast } = useToast();
+export const useCalendarEvents = ({ formData, onBookingSuccess }: UseCalendarEventsProps) => {
+  const handleCalendlyInit = useCallback((prefill: any) => {
+    console.log('[PHONE_DEBUG] Calendly init callback:', {
+      phoneNumber: formData?.phoneNumber,
+      prefill,
+      questions: prefill?.questions
+    });
+  }, [formData?.phoneNumber]);
 
   const handleEventScheduled = useCallback((e: any) => {
-    console.log('Calendar event scheduled:', e);
-    
-    // Call the callback first
-    onEventScheduled();
-    
-    // Show the toast notification
-    toast({
-      title: "Important!",
-      description: "Please download your detailed analysis report before closing this window.",
-      duration: 10000, // 10 seconds
-      variant: "default",
+    console.log('[PHONE_DEBUG] Event scheduled callback:', {
+      phoneNumber: formData?.phoneNumber,
+      eventData: e?.data,
+      invitee: e?.data?.invitee,
+      questions: e?.data?.invitee?.questions,
+      customAnswers: e?.data?.invitee?.customAnswers
     });
-  }, [onEventScheduled, toast]);
+    onBookingSuccess();
+  }, [formData?.phoneNumber, onBookingSuccess]);
 
   return {
+    handleCalendlyInit,
     handleEventScheduled
   };
 };
