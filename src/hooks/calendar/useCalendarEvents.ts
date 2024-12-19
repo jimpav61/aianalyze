@@ -2,11 +2,11 @@ import { useCallback } from 'react';
 import { CalendarFormData } from '@/types/analysis';
 
 interface UseCalendarEventsProps {
+  onEventScheduled: () => void;
   formData?: CalendarFormData;
-  onBookingSuccess: () => void;
 }
 
-export const useCalendarEvents = ({ formData, onBookingSuccess }: UseCalendarEventsProps) => {
+export const useCalendarEvents = ({ onEventScheduled, formData }: UseCalendarEventsProps) => {
   const handleCalendlyInit = useCallback((prefill: any) => {
     console.log('[PHONE_DEBUG] Calendly init callback:', {
       phoneNumber: formData?.phoneNumber,
@@ -23,8 +23,8 @@ export const useCalendarEvents = ({ formData, onBookingSuccess }: UseCalendarEve
       questions: e?.data?.invitee?.questions,
       customAnswers: e?.data?.invitee?.customAnswers
     });
-    onBookingSuccess();
-  }, [formData?.phoneNumber, onBookingSuccess]);
+    onEventScheduled();
+  }, [formData?.phoneNumber, onEventScheduled]);
 
   return {
     handleCalendlyInit,

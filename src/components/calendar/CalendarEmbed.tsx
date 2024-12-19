@@ -24,7 +24,8 @@ export const CalendarEmbed = ({
   });
 
   const { handleEventScheduled } = useCalendarEvents({
-    onEventScheduled: handleBookingSuccess
+    onEventScheduled: handleBookingSuccess,
+    formData
   });
 
   useCalendarInit({
