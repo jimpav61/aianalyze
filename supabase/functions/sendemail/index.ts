@@ -34,25 +34,38 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Received email request with PDF");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
-    
-    // Convert base64 to binary for PDF attachment
-    const pdfData = pdfBase64.split(',')[1]; // Remove data URL prefix
 
     const emailHtml = `
-      <h1>Demo Booking Confirmation</h1>
-      <p>Dear ${formData.companyName},</p>
-      <p>Thank you for booking a demo with us! Your detailed analysis report is attached to this email.</p>
-      <h2>Quick Summary:</h2>
-      <ul>
-        <li>Industry: ${analysis.industry}</li>
-        <li>Potential Savings: $${analysis.savings.toLocaleString()}</li>
-        <li>Projected Profit Increase: ${analysis.profit_increase}%</li>
-      </ul>
-      <div style="margin-top: 20px; margin-bottom: 20px;">
-        <a href="#" style="display: inline-block; background-color: #4285f4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-right: 10px;">Add to Calendar</a>
-        <a href="data:application/pdf;base64,${pdfData}" download="analysis-report.pdf" style="display: inline-block; background-color: #f65228; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Download Report</a>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #333;">Demo Booking Confirmation</h1>
+        <p>Dear ${formData.companyName},</p>
+        <p>Thank you for booking a demo with us! Your detailed analysis report is attached to this email.</p>
+        
+        <h2 style="color: #333; margin-top: 24px;">Quick Summary:</h2>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin: 8px 0;">Industry: ${analysis.industry}</li>
+          <li style="margin: 8px 0;">Potential Savings: $${analysis.savings.toLocaleString()}</li>
+          <li style="margin: 8px 0;">Projected Profit Increase: ${analysis.profit_increase}%</li>
+        </ul>
+        
+        <div style="margin: 32px 0;">
+          <a href="#" 
+             style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin-right: 16px; font-weight: bold;">
+            Add to Calendar
+          </a>
+          <a href="data:application/pdf;base64,${pdfBase64}" 
+             download="analysis-report.pdf" 
+             style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Download Report
+          </a>
+        </div>
+        
+        <p style="margin-top: 32px;">We look forward to discussing these opportunities with you during the demo!</p>
+        
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px;">
+          <p>This is an automated message, please do not reply directly to this email.</p>
+        </div>
       </div>
-      <p>We look forward to discussing these opportunities with you during the demo!</p>
     `;
 
     console.log("Sending email with PDF attachment");
@@ -69,7 +82,8 @@ const handler = async (req: Request): Promise<Response> => {
         html: emailHtml,
         attachments: [{
           filename: 'analysis-report.pdf',
-          content: pdfData
+          content: pdfBase64,
+          type: 'application/pdf'
         }]
       }),
     });
