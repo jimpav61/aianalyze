@@ -35,7 +35,7 @@ export const DetailedAnalysisDialog = ({
     showCalendar,
     handleBookDemo,
     handleBookingSubmit
-  } = useCalendarHandling({ onClose });
+  } = useCalendarHandling({ onClose, setShowReport });
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,

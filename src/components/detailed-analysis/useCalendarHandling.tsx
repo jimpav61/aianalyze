@@ -5,11 +5,11 @@ import { useToast } from "@/hooks/use-toast";
 
 interface UseCalendarHandlingProps {
   onClose: () => void;
+  setShowReport: (show: boolean) => void;
 }
 
-export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
+export const useCalendarHandling = ({ onClose, setShowReport }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showReport, setShowReport] = useState(false);
   const { showSuccessToast } = useSuccessToast();
   const { toast } = useToast();
 
@@ -35,12 +35,10 @@ export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
       description: "Please download your detailed analysis report before closing.",
       duration: 10000, // 10 seconds
     });
-  }, [showSuccessToast, toast]);
+  }, [showSuccessToast, toast, setShowReport]);
 
   return {
     showCalendar,
-    showReport,
-    setShowReport,
     handleBookDemo,
     handleBookingSubmit
   };
