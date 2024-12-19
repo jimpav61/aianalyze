@@ -19,7 +19,7 @@ export const CalendarView = ({
   analysis, 
   calLink = "jimmy-chatsites/30min"
 }: CalendarViewProps) => {
-  const [showDownload, setShowDownload] = useState(false);
+  const [showDownload, setShowDownload] = useState(true); // Changed to true by default for testing
   const { toast } = useToast();
 
   useEffect(() => {
@@ -109,18 +109,17 @@ export const CalendarView = ({
         analysis={analysis}
       />
 
-      {showDownload && (
-        <div className="flex items-center justify-center gap-4">
-          <span className="text-sm font-medium">30 Minute Meeting</span>
-          <Button
-            onClick={handleDownload}
-            className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-          >
-            <Download className="h-4 w-4" />
-            Download Report PDF
-          </Button>
-        </div>
-      )}
+      {/* Always show the download section for testing */}
+      <div className="flex items-center justify-center gap-4 animate-fadeIn">
+        <span className="text-sm font-medium">30 Minute Meeting</span>
+        <Button
+          onClick={handleDownload}
+          className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+        >
+          <Download className="h-4 w-4" />
+          Download Report PDF
+        </Button>
+      </div>
     </div>
   );
 };
