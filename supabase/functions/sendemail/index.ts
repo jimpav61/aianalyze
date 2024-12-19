@@ -32,12 +32,22 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log("Starting email process...");
+    console.log("[Step 1] Starting email process...");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
+    
+    if (!formData?.email || !pdfBase64) {
+      console.error("[Validation Error] Missing required data:", { 
+        hasEmail: !!formData?.email, 
+        hasPDF: !!pdfBase64 
+      });
+      throw new Error("Missing required email data");
+    }
+    
+    console.log("[Step 2] Validating recipient:", formData.email);
     
     // Generate a unique ID for the attachment
     const attachmentId = crypto.randomUUID();
-    console.log("Generated attachment ID:", attachmentId);
+    console.log("[Step 3] Generated attachment ID:", attachmentId);
 
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -79,12 +89,18 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    console.log("Preparing to send email with attachment...");
+    console.log("[Step 4] Preparing email template with attachment reference");
     
-    // Clean the base64 data
+    // Clean and validate the base64 data
     const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
-    console.log("Cleaned base64 data, length:", cleanBase64.length);
+    console.log("[Step 5] Cleaned base64 data, length:", cleanBase64.length);
+    
+    if (cleanBase64.length === 0) {
+      console.error("[Error] Empty PDF data after cleaning");
+      throw new Error("Invalid PDF data");
+    }
 
+    console.log("[Step 6] Sending email via Resend API");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -108,21 +124,21 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Email sent successfully:", data);
+      console.log("[Success] Email sent successfully:", data);
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
       const error = await res.text();
-      console.error("Error from Resend API:", error);
+      console.error("[API Error] Resend API error:", error);
       return new Response(JSON.stringify({ error }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
   } catch (error: any) {
-    console.error("Error in sendemail function:", error);
+    console.error("[Fatal Error] Error in sendemail function:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
