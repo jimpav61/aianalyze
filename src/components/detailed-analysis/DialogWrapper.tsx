@@ -12,7 +12,7 @@ export const DialogWrapper = ({ isOpen, onClose, children }: DialogWrapperProps)
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-y-auto pt-2 px-6 pb-4">
+      <DialogContent className="sm:max-w-[800px] h-auto overflow-visible">
         {children}
       </DialogContent>
     </Dialog>
