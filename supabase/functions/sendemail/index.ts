@@ -48,6 +48,10 @@ const handler = async (req: Request): Promise<Response> => {
         <li>Potential Savings: $${analysis.savings.toLocaleString()}</li>
         <li>Projected Profit Increase: ${analysis.profit_increase}%</li>
       </ul>
+      <div style="margin-top: 20px; margin-bottom: 20px;">
+        <a href="#" style="display: inline-block; background-color: #4285f4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-right: 10px;">Add to Calendar</a>
+        <a href="data:application/pdf;base64,${pdfData}" download="analysis-report.pdf" style="display: inline-block; background-color: #f65228; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Download Report</a>
+      </div>
       <p>We look forward to discussing these opportunities with you during the demo!</p>
     `;
 
