@@ -7,7 +7,6 @@ interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'a
   showReport: boolean;
   formData: DetailedFormData | null;
   onSubmit: (data: DetailedFormData) => void;
-  onBookDemo: () => void;
 }
 
 export const DialogContent = ({ 
@@ -15,8 +14,7 @@ export const DialogContent = ({
   formData, 
   onSubmit, 
   industry, 
-  analysis,
-  onBookDemo
+  analysis
 }: DialogContentProps) => {
   console.log("DialogContent - Render state:", { 
     showReport, 
@@ -31,7 +29,6 @@ export const DialogContent = ({
       <ReportView 
         formData={formData}
         analysis={analysis}
-        onBookDemo={onBookDemo}
         industry={industry}
       />
     );
