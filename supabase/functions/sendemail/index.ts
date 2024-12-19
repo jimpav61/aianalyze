@@ -9,9 +9,19 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  email: string;
-  companyName: string;
-  reportHtml: string;
+  formData: {
+    email: string;
+    companyName: string;
+    [key: string]: any;
+  };
+  analysis: {
+    industry: string;
+    savings: number;
+    profit_increase: number;
+    explanation: string;
+    marketing_strategy: string;
+  };
+  pdfBase64: string;
   subject: string;
 }
 
@@ -22,19 +32,26 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log("Received email request");
-    const formData: EmailRequest = await req.json();
-    console.log("Email request data:", { 
-      to: formData.email, 
-      subject: formData.subject,
-      companyName: formData.companyName 
-    });
+    console.log("Received email request with PDF");
+    const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
+    
+    // Convert base64 to binary for PDF attachment
+    const pdfData = pdfBase64.split(',')[1]; // Remove data URL prefix
 
-    if (!RESEND_API_KEY) {
-      throw new Error("Missing RESEND_API_KEY");
-    }
+    const emailHtml = `
+      <h1>Demo Booking Confirmation</h1>
+      <p>Dear ${formData.companyName},</p>
+      <p>Thank you for booking a demo with us! Your detailed analysis report is attached to this email.</p>
+      <h2>Quick Summary:</h2>
+      <ul>
+        <li>Industry: ${analysis.industry}</li>
+        <li>Potential Savings: $${analysis.savings.toLocaleString()}</li>
+        <li>Projected Profit Increase: ${analysis.profit_increase}%</li>
+      </ul>
+      <p>We look forward to discussing these opportunities with you during the demo!</p>
+    `;
 
-    console.log("Sending email to Resend API");
+    console.log("Sending email with PDF attachment");
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -42,16 +59,20 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "jimmy@chatsites.io", // Using the verified email address
+        from: "Acme <onboarding@resend.dev>",
         to: [formData.email],
-        subject: formData.subject,
-        html: formData.reportHtml,
+        subject: subject,
+        html: emailHtml,
+        attachments: [{
+          filename: 'analysis-report.pdf',
+          content: pdfData
+        }]
       }),
     });
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Email sent successfully:", data);
+      console.log("Email sent successfully with PDF attachment");
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
