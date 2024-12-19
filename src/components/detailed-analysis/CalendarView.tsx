@@ -68,35 +68,35 @@ export const CalendarView = ({
   };
   
   return (
-    <>
-      <div className="mb-4 text-center">
+    <div className="flex flex-col space-y-6">
+      <div className="text-center">
         <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
         <p className="text-muted-foreground">
           Choose a time that works best for you
         </p>
       </div>
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-full">
-          <Calendar 
-            calLink={calLink}
-            onSubmit={handleCalendarEvent}
-            formData={formData}
-            analysis={analysis}
-          />
-        </div>
-        {showDownload && (
-          <div className="flex items-center gap-4">
-            <p className="text-sm font-medium">30 Minute Meeting</p>
-            <Button
-              onClick={handleDownload}
-              className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-            >
-              <Download className="h-4 w-4" />
-              Download Report PDF
-            </Button>
-          </div>
-        )}
+      
+      <div className="w-full">
+        <Calendar 
+          calLink={calLink}
+          onSubmit={handleCalendarEvent}
+          formData={formData}
+          analysis={analysis}
+        />
       </div>
-    </>
+
+      {showDownload && (
+        <div className="flex items-center justify-center gap-4 mt-4">
+          <span className="text-sm font-medium">30 Minute Meeting</span>
+          <Button
+            onClick={handleDownload}
+            className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+          >
+            <Download className="h-4 w-4" />
+            Download Report PDF
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
