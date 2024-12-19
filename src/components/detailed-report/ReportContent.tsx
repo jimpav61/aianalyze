@@ -14,7 +14,7 @@ interface ReportContentProps {
 
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   return (
-    <div className="space-y-6 bg-white p-8 rounded-lg">
+    <div className="space-y-6 bg-white p-8 rounded-lg w-full max-w-4xl mx-auto">
       <ReportHeader />
       <CompanyInformation data={formData} industry={analysis?.industry} />
       <CurrentOperations data={formData} />

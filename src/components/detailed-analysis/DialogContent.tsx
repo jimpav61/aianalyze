@@ -28,12 +28,14 @@ export const DialogContent = ({
   if (showReport && formData && analysis) {
     console.log("DialogContent - Showing report view");
     return (
-      <ReportView 
-        formData={formData}
-        analysis={analysis}
-        industry={industry}
-        onBookDemo={onBookDemo}
-      />
+      <div className="max-h-[80vh] overflow-y-auto">
+        <ReportView 
+          formData={formData}
+          analysis={analysis}
+          industry={industry}
+          onBookDemo={onBookDemo}
+        />
+      </div>
     );
   }
 
