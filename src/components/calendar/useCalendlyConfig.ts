@@ -11,19 +11,25 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
       formData,
       phoneNumber,
       hasPhoneNumber: !!phoneNumber,
-      phoneNumberLength: phoneNumber.length
+      phoneNumberLength: phoneNumber.length,
+      isPhoneCallEvent: true // Added to confirm event type
     });
 
     // Following Calendly's official documentation for pre-populating data
+    // For phone call events, the phone number goes in the location field
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber // Used for Phone call event types
+      location: phoneNumber, // Phone number goes here for phone call events
+      customAnswers: {
+        a1: phoneNumber // Backup in case the event type uses custom fields
+      }
     };
 
     console.log('[CALENDLY_DEBUG] Created prefill data:', {
       prefillData,
       phoneInLocation: prefillData.location,
+      phoneInCustomAnswers: prefillData.customAnswers.a1,
       allFields: Object.keys(prefillData)
     });
 
