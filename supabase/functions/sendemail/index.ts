@@ -35,6 +35,9 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received email request with PDF");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
 
+    // Create a unique identifier for the PDF attachment
+    const attachmentId = crypto.randomUUID();
+
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333;">Demo Booking Confirmation</h1>
@@ -48,16 +51,23 @@ const handler = async (req: Request): Promise<Response> => {
           <li style="margin: 8px 0;">Projected Profit Increase: ${analysis.profit_increase}%</li>
         </ul>
         
-        <div style="margin: 32px 0;">
-          <a href="#" 
-             style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin-right: 16px; font-weight: bold;">
-            Add to Calendar
-          </a>
-          <a href="data:application/pdf;base64,${pdfBase64}" 
-             download="analysis-report.pdf" 
-             style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-            Download Report
-          </a>
+        <div style="margin: 32px 0; text-align: center;">
+          <table role="presentation" style="border-collapse: separate; width: 100%; max-width: 400px; margin: 0 auto;">
+            <tr>
+              <td style="padding: 10px;">
+                <a href="#" 
+                   style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
+                  Add to Calendar
+                </a>
+              </td>
+              <td style="padding: 10px;">
+                <a href="cid:${attachmentId}" 
+                   style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
+                  Download Report
+                </a>
+              </td>
+            </tr>
+          </table>
         </div>
         
         <p style="margin-top: 32px;">We look forward to discussing these opportunities with you during the demo!</p>
@@ -82,8 +92,9 @@ const handler = async (req: Request): Promise<Response> => {
         html: emailHtml,
         attachments: [{
           filename: 'analysis-report.pdf',
-          content: pdfBase64,
-          type: 'application/pdf'
+          content: pdfBase64.replace(/^data:application\/pdf;base64,/, ''),
+          type: 'application/pdf',
+          contentId: attachmentId
         }]
       }),
     });
