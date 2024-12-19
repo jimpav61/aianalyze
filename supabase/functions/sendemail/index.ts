@@ -35,9 +35,6 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Received email request with PDF");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
 
-    // Create a unique identifier for the PDF attachment
-    const attachmentId = crypto.randomUUID();
-
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333;">Demo Booking Confirmation</h1>
@@ -61,7 +58,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </a>
               </td>
               <td style="padding: 10px;">
-                <a href="cid:${attachmentId}" 
+                <a href="analysis-report.pdf" 
                    style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
                   Download Report
                 </a>
@@ -92,9 +89,8 @@ const handler = async (req: Request): Promise<Response> => {
         html: emailHtml,
         attachments: [{
           filename: 'analysis-report.pdf',
-          content: pdfBase64.replace(/^data:application\/pdf;base64,/, ''),
-          type: 'application/pdf',
-          contentId: attachmentId
+          content: pdfBase64.split(',')[1], // Remove the data:application/pdf;base64, prefix
+          type: 'application/pdf'
         }]
       }),
     });
