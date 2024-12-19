@@ -13,10 +13,17 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     });
 
     // Following Calendly's official documentation for pre-populating data
+    // Using both location and questions array for maximum compatibility
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber, // Primary method for phone number as per Calendly docs
+      location: phoneNumber,
+      questions: [
+        {
+          answer: phoneNumber,
+          name: 'phone'
+        }
+      ]
     };
 
     console.log('[PHONE_DEBUG] Created prefill data:', prefillData);
