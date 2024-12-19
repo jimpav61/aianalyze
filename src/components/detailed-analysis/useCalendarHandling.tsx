@@ -32,7 +32,7 @@ export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
     // Show download reminder toast
     toast({
       title: "Important!",
-      description: "Please download your detailed analysis report before closing this window.",
+      description: "Please download your detailed analysis report before closing.",
       duration: 10000, // 10 seconds
     });
   }, [showSuccessToast, toast]);
