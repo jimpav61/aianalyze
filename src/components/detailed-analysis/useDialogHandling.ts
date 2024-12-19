@@ -27,9 +27,8 @@ export const useDialogHandling = ({ onClose, showFormOnly = false }: UseDialogHa
   }, [onClose, showReport, showFormOnly]);
 
   const confirmClose = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Closing dialog");
+    console.log("DetailedAnalysisDialog - Closing confirmation dialog");
     setShowCloseConfirm(false);
-    // Don't call onClose() here to keep the report visible
   }, []);
 
   return {

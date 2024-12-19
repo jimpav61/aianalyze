@@ -20,8 +20,9 @@ export const useCalendarHandling = ({ onClose, setShowReport }: UseCalendarHandl
       return false;
     }
     setShowCalendar(true);
+    setShowReport(false); // Hide report while calendar is shown
     return true;
-  }, []);
+  }, [setShowReport]);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("useCalendarHandling - Booking submitted successfully");
