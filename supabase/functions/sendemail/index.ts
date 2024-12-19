@@ -26,24 +26,29 @@ interface EmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("[Email Function] Starting request handling");
+  const requestId = crypto.randomUUID();
+  console.log(`[${requestId}] Email Function Started - ${new Date().toISOString()}`);
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
-    console.log("[Email Function] Handling CORS preflight request");
+    console.log(`[${requestId}] Handling CORS preflight request`);
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log("[Email Function] Parsing request body");
+    console.log(`[${requestId}] Parsing request body`);
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
     
-    // Validate required data
-    console.log("[Email Function] Validating request data:", {
+    // Log input validation
+    console.log(`[${requestId}] Input validation:`, {
       hasEmail: !!formData?.email,
+      emailValue: formData?.email,
       hasCompanyName: !!formData?.companyName,
+      companyName: formData?.companyName,
       hasPdfData: !!pdfBase64,
-      pdfDataLength: pdfBase64?.length || 0
+      pdfDataLength: pdfBase64?.length || 0,
+      hasAnalysis: !!analysis,
+      subject
     });
 
     if (!formData?.email || !pdfBase64) {
@@ -51,12 +56,13 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Clean and validate PDF data
-    console.log("[Email Function] Cleaning PDF base64 data");
+    console.log(`[${requestId}] Cleaning PDF base64 data`);
     const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
     
-    console.log("[Email Function] Validating cleaned PDF data:", {
+    console.log(`[${requestId}] PDF data validation:`, {
       originalLength: pdfBase64.length,
-      cleanedLength: cleanBase64.length
+      cleanedLength: cleanBase64.length,
+      firstBytes: cleanBase64.substring(0, 20) // Log start of PDF data
     });
 
     if (cleanBase64.length === 0) {
@@ -65,10 +71,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Generate attachment ID
     const attachmentId = crypto.randomUUID();
-    console.log("[Email Function] Generated attachment ID:", attachmentId);
+    console.log(`[${requestId}] Generated attachment ID:`, attachmentId);
 
     // Prepare email HTML
-    console.log("[Email Function] Preparing email HTML template");
+    console.log(`[${requestId}] Preparing email template`);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h1 style="color: #333;">Demo Booking Confirmation</h1>
@@ -109,8 +115,17 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
+    // Log email preparation details
+    console.log(`[${requestId}] Email preparation:`, {
+      recipient: formData.email,
+      subject,
+      hasHtmlContent: !!emailHtml,
+      attachmentId,
+      attachmentSize: cleanBase64.length
+    });
+
     // Send email via Resend API
-    console.log("[Email Function] Sending email via Resend API to:", formData.email);
+    console.log(`[${requestId}] Sending email via Resend API`);
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -133,25 +148,34 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Handle API response
+    const responseText = await res.text();
+    console.log(`[${requestId}] Resend API response:`, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: Object.fromEntries(res.headers.entries()),
+      body: responseText
+    });
+
     if (res.ok) {
-      const data = await res.json();
-      console.log("[Email Function] Email sent successfully:", {
+      const data = JSON.parse(responseText);
+      console.log(`[${requestId}] Email sent successfully:`, {
         messageId: data.id,
-        recipient: formData.email
+        recipient: formData.email,
+        timestamp: new Date().toISOString()
       });
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } else {
-      const error = await res.text();
-      console.error("[Email Function] Resend API error:", error);
-      throw new Error(`Resend API error: ${error}`);
+      console.error(`[${requestId}] Resend API error:`, responseText);
+      throw new Error(`Resend API error: ${responseText}`);
     }
   } catch (error: any) {
-    console.error("[Email Function] Fatal error:", {
+    console.error(`[${requestId}] Fatal error:`, {
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
+      timestamp: new Date().toISOString()
     });
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
