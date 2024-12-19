@@ -63,6 +63,7 @@ export const CalendarView = ({
   };
 
   const handleCalendarEvent = () => {
+    console.log("Calendar event handled, showing download button");
     setShowDownload(true);
     onSubmit();
   };
@@ -76,17 +77,15 @@ export const CalendarView = ({
         </p>
       </div>
       
-      <div className="w-full">
-        <Calendar 
-          calLink={calLink}
-          onSubmit={handleCalendarEvent}
-          formData={formData}
-          analysis={analysis}
-        />
-      </div>
+      <Calendar 
+        calLink={calLink}
+        onSubmit={handleCalendarEvent}
+        formData={formData}
+        analysis={analysis}
+      />
 
       {showDownload && (
-        <div className="flex items-center justify-center gap-4 mt-4">
+        <div className="flex items-center justify-center gap-4">
           <span className="text-sm font-medium">30 Minute Meeting</span>
           <Button
             onClick={handleDownload}
