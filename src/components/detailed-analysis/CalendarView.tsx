@@ -75,23 +75,28 @@ export const CalendarView = ({
           Choose a time that works best for you
         </p>
       </div>
-      <Calendar 
-        calLink={calLink}
-        onSubmit={handleCalendarEvent}
-        formData={formData}
-        analysis={analysis}
-      />
-      {showDownload && (
-        <div className="mt-4 flex justify-center">
-          <Button
-            onClick={handleDownload}
-            className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-          >
-            <Download className="h-4 w-4" />
-            Download Report PDF
-          </Button>
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-full">
+          <Calendar 
+            calLink={calLink}
+            onSubmit={handleCalendarEvent}
+            formData={formData}
+            analysis={analysis}
+          />
         </div>
-      )}
+        {showDownload && (
+          <div className="flex items-center gap-4">
+            <p className="text-sm font-medium">30 Minute Meeting</p>
+            <Button
+              onClick={handleDownload}
+              className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+            >
+              <Download className="h-4 w-4" />
+              Download Report PDF
+            </Button>
+          </div>
+        )}
+      </div>
     </>
   );
 };
