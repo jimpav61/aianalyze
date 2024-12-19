@@ -10,7 +10,6 @@ interface CalendarViewProps {
 
 export const CalendarView = ({ onSubmit, formData, analysis }: CalendarViewProps) => {
   const [isBooked, setIsBooked] = useState(false);
-  
   const calLink = "chatsites/demo";
 
   const handleBookingSuccess = () => {
@@ -20,7 +19,7 @@ export const CalendarView = ({ onSubmit, formData, analysis }: CalendarViewProps
   };
   
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl mx-auto p-6">
+    <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold mb-2">Schedule Your Demo</h2>
         <p className="text-muted-foreground">
@@ -28,14 +27,12 @@ export const CalendarView = ({ onSubmit, formData, analysis }: CalendarViewProps
         </p>
       </div>
       
-      <div className="w-full">
-        <Calendar 
-          calLink={calLink}
-          onSubmit={handleBookingSuccess}
-          formData={formData}
-          analysis={analysis}
-        />
-      </div>
+      <Calendar 
+        calLink={calLink}
+        onSubmit={handleBookingSuccess}
+        formData={formData}
+        analysis={analysis}
+      />
 
       {isBooked && (
         <div className="text-center text-sm mt-4">

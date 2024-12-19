@@ -52,54 +52,6 @@ export const CalendarEmbed = ({
     formData
   });
 
-  const handleDownload = async () => {
-    console.log("[DEBUG] CalendarEmbed - Download initiated", {
-      formData,
-      analysis
-    });
-
-    if (!formData || !analysis) {
-      console.error("[DEBUG] CalendarEmbed - Missing required data for download");
-      toast({
-        title: "Error",
-        description: "Could not generate report. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const reportElement = document.createElement('div');
-    reportElement.innerHTML = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h1>AI Implementation Analysis Report</h1>
-        <h2>Company Information</h2>
-        <p>Company: ${formData.companyName || 'N/A'}</p>
-        <p>Industry: ${analysis.industry || 'N/A'}</p>
-        <h2>Analysis Results</h2>
-        <p>Potential Savings: $${analysis.savings?.toLocaleString() || '0'}</p>
-        <p>Profit Increase: ${analysis.profit_increase || '0'}%</p>
-        <p>Implementation Strategy: ${analysis.marketing_strategy || 'N/A'}</p>
-        <h2>Detailed Explanation</h2>
-        <p>${analysis.explanation || 'N/A'}</p>
-      </div>
-    `;
-
-    try {
-      await exportReportAsPDF(reportElement);
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-      });
-    } catch (error) {
-      console.error("[DEBUG] CalendarEmbed - PDF export failed:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col space-y-4">
       <CalendarContainer ref={calendarRef}>
@@ -109,9 +61,9 @@ export const CalendarEmbed = ({
         />
       </CalendarContainer>
       {showDownloadButton && (
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <button 
-            onClick={handleDownload}
+            onClick={() => exportReportAsPDF(formData, analysis)}
             className="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"
           >
             <Download className="w-4 h-4" />
