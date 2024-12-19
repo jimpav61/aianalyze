@@ -16,6 +16,11 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
     
     if (!formData || !analysis) {
       console.error('EmailHandler - Missing required data:', { formData, analysis });
+      toast({
+        title: "Error",
+        description: "Missing required data for email sending",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -40,7 +45,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
       `;
       document.body.appendChild(reportDiv);
 
-      console.log('EmailHandler - Generating PDF');
+      console.log('EmailHandler - Starting PDF generation');
       const canvas = await html2canvas(reportDiv, {
         scale: 2,
         useCORS: true,
@@ -49,12 +54,19 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
       });
       
       const pdfBase64 = canvas.toDataURL('image/png');
-      console.log('EmailHandler - PDF generated, length:', pdfBase64.length);
+      console.log('EmailHandler - PDF generated successfully, length:', pdfBase64.length);
       
       // Clean up
       document.body.removeChild(reportDiv);
 
-      console.log('EmailHandler - Calling sendemail function');
+      console.log('EmailHandler - Preparing to call sendemail function with data:', {
+        hasFormData: !!formData,
+        formDataEmail: formData.email,
+        hasAnalysis: !!analysis,
+        hasPdfData: !!pdfBase64,
+        pdfLength: pdfBase64.length
+      });
+
       const { data, error } = await supabase.functions.invoke("sendemail", {
         body: {
           formData,
@@ -66,6 +78,11 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
 
       if (error) {
         console.error('EmailHandler - Supabase function error:', error);
+        toast({
+          title: "Error",
+          description: "Failed to send email. Please try again.",
+          variant: "destructive",
+        });
         throw error;
       }
 
@@ -79,11 +96,11 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
       if (onSuccess) {
         onSuccess();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('EmailHandler - Error:', error);
       toast({
         title: "Error",
-        description: "There was an issue sending the confirmation emails.",
+        description: error.message || "There was an issue sending the confirmation emails.",
         variant: "destructive",
       });
       throw error;

@@ -39,15 +39,12 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`[${requestId}] Parsing request body`);
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
     
-    // Log input validation
-    console.log(`[${requestId}] Input validation:`, {
-      hasEmail: !!formData?.email,
-      emailValue: formData?.email,
-      hasCompanyName: !!formData?.companyName,
-      companyName: formData?.companyName,
-      hasPdfData: !!pdfBase64,
-      pdfDataLength: pdfBase64?.length || 0,
+    console.log(`[${requestId}] Request validation:`, {
+      hasFormData: !!formData,
+      formDataEmail: formData?.email,
       hasAnalysis: !!analysis,
+      hasPdfBase64: !!pdfBase64,
+      pdfBase64Length: pdfBase64?.length || 0,
       subject
     });
 
@@ -57,12 +54,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Clean and validate PDF data
     console.log(`[${requestId}] Cleaning PDF base64 data`);
-    const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+    const cleanBase64 = pdfBase64.replace(/^data:image\/png;base64,/, '');
     
     console.log(`[${requestId}] PDF data validation:`, {
       originalLength: pdfBase64.length,
       cleanedLength: cleanBase64.length,
-      firstBytes: cleanBase64.substring(0, 20) // Log start of PDF data
     });
 
     if (cleanBase64.length === 0) {
@@ -73,7 +69,7 @@ const handler = async (req: Request): Promise<Response> => {
     const attachmentId = crypto.randomUUID();
     console.log(`[${requestId}] Generated attachment ID:`, attachmentId);
 
-    // Prepare email HTML
+    // Prepare email HTML with calendar button
     console.log(`[${requestId}] Preparing email template`);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -89,22 +85,10 @@ const handler = async (req: Request): Promise<Response> => {
         </ul>
         
         <div style="margin: 32px 0; text-align: center;">
-          <table role="presentation" style="border-collapse: separate; width: 100%; max-width: 400px; margin: 0 auto;">
-            <tr>
-              <td style="padding: 10px;">
-                <a href="#" 
-                   style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
-                  Add to Calendar
-                </a>
-              </td>
-              <td style="padding: 10px;">
-                <a href="cid:${attachmentId}" 
-                   style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
-                  Download Report
-                </a>
-              </td>
-            </tr>
-          </table>
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=AI%20Implementation%20Demo&details=Demo%20session%20for%20${encodeURIComponent(formData.companyName)}"
+             style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Add to Calendar
+          </a>
         </div>
         
         <p style="margin-top: 32px;">We look forward to discussing these opportunities with you during the demo!</p>
@@ -115,16 +99,6 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    // Log email preparation details
-    console.log(`[${requestId}] Email preparation:`, {
-      recipient: formData.email,
-      subject,
-      hasHtmlContent: !!emailHtml,
-      attachmentId,
-      attachmentSize: cleanBase64.length
-    });
-
-    // Send email via Resend API
     console.log(`[${requestId}] Sending email via Resend API`);
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -138,44 +112,39 @@ const handler = async (req: Request): Promise<Response> => {
         subject: subject,
         html: emailHtml,
         attachments: [{
-          filename: 'analysis-report.pdf',
+          filename: 'analysis-report.png',
           content: cleanBase64,
-          type: 'application/pdf',
-          disposition: 'attachment',
-          contentId: attachmentId
+          type: 'image/png',
+          disposition: 'attachment'
         }]
       }),
     });
 
-    // Handle API response
     const responseText = await res.text();
     console.log(`[${requestId}] Resend API response:`, {
       status: res.status,
       statusText: res.statusText,
-      headers: Object.fromEntries(res.headers.entries()),
       body: responseText
     });
 
-    if (res.ok) {
-      const data = JSON.parse(responseText);
-      console.log(`[${requestId}] Email sent successfully:`, {
-        messageId: data.id,
-        recipient: formData.email,
-        timestamp: new Date().toISOString()
-      });
-      return new Response(JSON.stringify(data), {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    } else {
-      console.error(`[${requestId}] Resend API error:`, responseText);
+    if (!res.ok) {
       throw new Error(`Resend API error: ${responseText}`);
     }
+
+    const data = JSON.parse(responseText);
+    console.log(`[${requestId}] Email sent successfully:`, {
+      messageId: data.id,
+      recipient: formData.email
+    });
+
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (error: any) {
-    console.error(`[${requestId}] Fatal error:`, {
+    console.error(`[${requestId}] Error:`, {
       message: error.message,
-      stack: error.stack,
-      timestamp: new Date().toISOString()
+      stack: error.stack
     });
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
