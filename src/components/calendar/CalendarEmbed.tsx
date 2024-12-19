@@ -3,15 +3,16 @@ import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendlyConfig } from "./useCalendlyConfig";
 import { useCalendlyEvents } from "./useCalendlyEvents";
-import { CalendarFormData } from "@/types/analysis";
+import { DetailedFormData } from "@/types/analysis";
 import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitialization";
 import { CalendarContainer } from "./CalendarContainer";
 import { useToast } from "@/hooks/use-toast";
-import { exportReportAsPDF } from "@/utils/reportExport";
 import { Download } from "lucide-react";
+import { exportReportAsPDF } from "@/utils/reportExport";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
-  formData?: CalendarFormData;
+  formData?: DetailedFormData;
+  analysis?: any;
 }
 
 export const CalendarEmbed = ({ 
@@ -52,6 +53,19 @@ export const CalendarEmbed = ({
     formData
   });
 
+  const handleDownloadReport = () => {
+    if (formData && analysis) {
+      exportReportAsPDF(formData, analysis).catch(error => {
+        console.error("Failed to export PDF:", error);
+        toast({
+          title: "Error",
+          description: "Failed to download report. Please try again.",
+          variant: "destructive",
+        });
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-4">
       <CalendarContainer ref={calendarRef}>
@@ -63,7 +77,7 @@ export const CalendarEmbed = ({
       {showDownloadButton && (
         <div className="flex justify-center mt-4">
           <button 
-            onClick={() => exportReportAsPDF(formData, analysis)}
+            onClick={handleDownloadReport}
             className="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"
           >
             <Download className="w-4 h-4" />
