@@ -29,7 +29,6 @@ const handler = async (req: Request): Promise<Response> => {
   const requestId = crypto.randomUUID();
   console.log(`[${requestId}] Email Function Started - ${new Date().toISOString()}`);
   
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     console.log(`[${requestId}] Handling CORS preflight request`);
     return new Response(null, { headers: corsHeaders });
@@ -52,7 +51,6 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing required email data");
     }
 
-    // Clean and validate PDF data
     console.log(`[${requestId}] Cleaning PDF base64 data`);
     const cleanBase64 = pdfBase64.replace(/^data:image\/png;base64,/, '');
     
@@ -65,11 +63,9 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Invalid PDF data after cleaning");
     }
 
-    // Generate attachment ID
     const attachmentId = crypto.randomUUID();
     console.log(`[${requestId}] Generated attachment ID:`, attachmentId);
 
-    // Prepare email HTML with calendar button
     console.log(`[${requestId}] Preparing email template`);
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -86,8 +82,14 @@ const handler = async (req: Request): Promise<Response> => {
         
         <div style="margin: 32px 0; text-align: center;">
           <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=AI%20Implementation%20Demo&details=Demo%20session%20for%20${encodeURIComponent(formData.companyName)}"
-             style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+             style="display: inline-block; background-color: #4285f4; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; margin-right: 16px;">
             Add to Calendar
+          </a>
+          
+          <a href="data:application/pdf;base64,${cleanBase64}"
+             download="analysis-report.pdf"
+             style="display: inline-block; background-color: #34d399; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Download Report
           </a>
         </div>
         
