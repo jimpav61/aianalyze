@@ -10,7 +10,7 @@ export const CalendarContainer = forwardRef<HTMLDivElement, CalendarContainerPro
     return (
       <div 
         ref={ref}
-        className={`w-full h-[650px] bg-white rounded-lg shadow-sm ${className}`}
+        className={`w-full h-[700px] bg-white rounded-lg shadow-md ${className}`}
       >
         {children}
       </div>
