@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Download } from "lucide-react";
 import { exportReportAsPDF } from "@/utils/reportExport";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface CalendarViewProps {
   onSubmit: () => void;
@@ -21,16 +21,32 @@ export const CalendarView = ({
 }: CalendarViewProps) => {
   const [showDownload, setShowDownload] = useState(false);
   const { toast } = useToast();
-  console.log("CalendarView - Initial Render:", { 
-    showDownload,
-    hasFormData: !!formData, 
-    hasAnalysis: !!analysis 
-  });
+
+  useEffect(() => {
+    console.log("[DEBUG] CalendarView - Component Mounted", {
+      showDownload,
+      hasFormData: !!formData,
+      hasAnalysis: !!analysis,
+      formData,
+      analysis
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("[DEBUG] CalendarView - showDownload changed:", showDownload);
+  }, [showDownload]);
 
   const handleDownload = async () => {
-    console.log("Download button clicked", { formData, analysis });
+    console.log("[DEBUG] CalendarView - Download initiated", {
+      formData,
+      analysis
+    });
+
     if (!formData || !analysis) {
-      console.error("Missing required data for download:", { formData, analysis });
+      console.error("[DEBUG] CalendarView - Missing required data for download:", {
+        formData,
+        analysis
+      });
       toast({
         title: "Error",
         description: "Could not generate report. Please try again.",
@@ -56,10 +72,11 @@ export const CalendarView = ({
     `;
     document.body.appendChild(reportElement);
 
+    console.log("[DEBUG] CalendarView - Attempting PDF export");
     const success = await exportReportAsPDF(reportElement);
     document.body.removeChild(reportElement);
 
-    console.log("PDF export result:", { success });
+    console.log("[DEBUG] CalendarView - PDF export result:", { success });
     toast({
       title: success ? "Success" : "Error",
       description: success 
@@ -70,9 +87,9 @@ export const CalendarView = ({
   };
 
   const handleCalendarEvent = () => {
-    console.log("Calendar event handled - showing download button");
+    console.log("[DEBUG] CalendarView - Calendar event received");
     setShowDownload(true);
-    console.log("Download button should now be visible");
+    console.log("[DEBUG] CalendarView - Download button should now be visible");
     onSubmit();
   };
   

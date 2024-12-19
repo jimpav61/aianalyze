@@ -17,6 +17,14 @@ export const CalendarEmbed = ({
   formData, 
   analysis 
 }: CalendarEmbedProps) => {
+  console.log("[DEBUG] CalendarEmbed - Component Mounted", {
+    calLink,
+    hasFormData: !!formData,
+    hasAnalysis: !!analysis,
+    formData,
+    analysis
+  });
+
   const calendarRef = useRef<HTMLDivElement>(null);
   
   const { handleBookingSuccess } = useBookingSuccess({ 
@@ -41,6 +49,7 @@ export const CalendarEmbed = ({
     formData
   });
 
+  console.log("[DEBUG] CalendarEmbed - Rendering calendar container");
   return (
     <div className="w-full h-[700px] flex flex-col">
       <CalendarContainer ref={calendarRef} />

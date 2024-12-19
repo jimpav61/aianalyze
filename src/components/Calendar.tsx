@@ -10,20 +10,27 @@ export const Calendar = ({
   formData, 
   analysis 
 }: CalendarProps) => {
-  console.log("Calendar - Rendering with link:", calLink);
-  console.log("Calendar - Form data:", formData); // Added for debugging
+  console.log("[DEBUG] Calendar - Component Mounted", {
+    hasCalLink: !!calLink,
+    hasFormData: !!formData,
+    hasAnalysis: !!analysis,
+    formData,
+    analysis
+  });
   
   const { isScriptLoaded, scriptError } = useCalendarScript();
 
   if (scriptError) {
+    console.error("[DEBUG] Calendar - Script loading error:", scriptError);
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
 
   if (!isScriptLoaded) {
-    console.log("Calendar - Script not loaded yet, showing loading state");
+    console.log("[DEBUG] Calendar - Waiting for script to load");
     return <LoadingState />;
   }
 
+  console.log("[DEBUG] Calendar - Rendering CalendarEmbed");
   return (
     <CalendarEmbed 
       calLink={calLink}
