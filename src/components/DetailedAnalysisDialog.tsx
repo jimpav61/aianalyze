@@ -55,6 +55,7 @@ export const DetailedAnalysisDialog = ({
     toast({
       title: "Success",
       description: "Your analysis report is ready!",
+      duration: 500, // Set to 500ms (0.5 seconds)
     });
     console.log("DetailedAnalysisDialog - Report view enabled");
   }, [toast, analysis, setShowReport]);
