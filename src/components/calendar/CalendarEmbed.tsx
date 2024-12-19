@@ -30,19 +30,17 @@ export const CalendarEmbed = ({
   });
 
   useEffect(() => {
-    // Log effect trigger
-    console.log('[PHONE_TEST] Effect triggered:', {
+    console.log('[PHONE_DEBUG] Calendar effect triggered:', {
       hasFormData: !!formData,
-      phoneNumber: formData?.phoneNumber
+      phoneNumber: formData?.phoneNumber,
+      calLink
     });
 
-    // Check initialization conditions
     if (!calendarRef.current || calendlyInitialized.current || !calLink) {
-      console.log('[PHONE_TEST] Initialization blocked:', {
+      console.log('[PHONE_DEBUG] Calendar initialization blocked:', {
         hasRef: !!calendarRef.current,
         isInitialized: calendlyInitialized.current,
-        hasCalLink: !!calLink,
-        phoneNumber: formData?.phoneNumber
+        hasCalLink: !!calLink
       });
       return;
     }
@@ -50,18 +48,27 @@ export const CalendarEmbed = ({
     const calendlyUrl = `https://calendly.com/${calLink}`;
     const prefill = getPrefillData();
     
-    console.log('[PHONE_TEST] Initializing Calendly:', {
+    console.log('[PHONE_DEBUG] Initializing Calendly widget:', {
       url: calendlyUrl,
       prefill,
       phoneNumber: formData?.phoneNumber
     });
 
     if (!window.Calendly) {
-      console.error('[PHONE_TEST] Calendly not loaded');
+      console.error('[PHONE_DEBUG] Calendly not loaded');
       return;
     }
 
     calendlyInitialized.current = true;
+
+    // Add event listener for form load
+    window.addEventListener('calendly.profile_page_loaded', (e) => {
+      console.log('[PHONE_DEBUG] Calendly form loaded:', {
+        event: e,
+        prefill,
+        phoneNumber: formData?.phoneNumber
+      });
+    });
 
     window.Calendly.initInlineWidget({
       url: calendlyUrl,
@@ -70,9 +77,9 @@ export const CalendarEmbed = ({
       utm: {}
     });
 
-    // Event listeners for testing
-    window.addEventListener('calendly.init', () => {
-      console.log('[PHONE_TEST] Init event:', {
+    window.addEventListener('calendly.init', (e) => {
+      console.log('[PHONE_DEBUG] Calendly initialized:', {
+        event: e,
         prefill,
         phoneNumber: formData?.phoneNumber
       });
@@ -80,24 +87,25 @@ export const CalendarEmbed = ({
     });
 
     window.addEventListener('calendly.event_scheduled', (e: any) => {
-      console.log('[PHONE_TEST] Event scheduled:', {
-        phoneNumber: formData?.phoneNumber,
-        eventData: e?.data,
+      console.log('[PHONE_DEBUG] Event scheduled:', {
+        event: e,
+        data: e?.data,
         invitee: e?.data?.invitee,
         questions: e?.data?.invitee?.questions,
-        customAnswers: e?.data?.invitee?.customAnswers
+        phoneNumber: formData?.phoneNumber
       });
       handleEventScheduled(e);
     });
 
     return () => {
-      console.log('[PHONE_TEST] Cleanup');
+      console.log('[PHONE_DEBUG] Cleanup');
       if (calendarRef.current) {
         calendarRef.current.innerHTML = '';
       }
       calendlyInitialized.current = false;
       window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
       window.removeEventListener('calendly.init', handleCalendlyInit);
+      window.removeEventListener('calendly.profile_page_loaded', () => {});
     };
   }, [calLink, handleBookingSuccess, formData, getPrefillData, handleCalendlyInit, handleEventScheduled]);
 

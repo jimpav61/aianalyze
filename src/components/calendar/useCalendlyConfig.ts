@@ -1,16 +1,15 @@
 import { useRef } from 'react';
 import { CalendarFormData } from '@/types/analysis';
 
+// Simplified mapping focusing on most common Calendly phone field names
 const PHONE_FIELD_MAPPINGS = {
-  location: true,  // Try Calendly's built-in location field
-  customAnswers: {
-    a1: true,
-    'phone-number': true,
-    phone: true,
-    'phone number': true,
-    'Phone Number': true,
-    'questions.1': true, // Additional Calendly field format
-    'questions.phone': true // Additional Calendly field format
+  questions: {
+    'a1': true,  // Common custom question ID
+    'phone': true,  // Standard phone field
+    'Phone': true,  // Alternate capitalization
+    'phone_number': true,  // Snake case variant
+    'phoneNumber': true,  // Camel case variant
+    '1': true,  // Numeric question ID
   }
 };
 
@@ -20,29 +19,26 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const getPrefillData = () => {
     const phoneNumber = formData?.phoneNumber || '';
     
-    // Log initial form data
-    console.log('[PHONE_TEST] Initial form data:', {
-      hasFormData: !!formData,
-      phoneNumber,
+    console.log('[PHONE_DEBUG] Building prefill data:', {
+      rawPhoneNumber: phoneNumber,
       formData
     });
 
-    // Create prefill object with all possible phone mappings
+    // Create a questions object with all possible phone field mappings
+    const questions: Record<string, string> = {};
+    Object.keys(PHONE_FIELD_MAPPINGS.questions).forEach(key => {
+      questions[key] = phoneNumber;
+    });
+
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber, // Try location field
-      customAnswers: Object.keys(PHONE_FIELD_MAPPINGS.customAnswers).reduce((acc, key) => ({
-        ...acc,
-        [key]: phoneNumber
-      }), {})
+      questions
     };
 
-    // Log created prefill data
-    console.log('[PHONE_TEST] Created prefill data:', {
-      phoneNumber,
-      locationField: prefillData.location,
-      customAnswers: prefillData.customAnswers
+    console.log('[PHONE_DEBUG] Created prefill data:', {
+      prefillData,
+      questions
     });
 
     return prefillData;

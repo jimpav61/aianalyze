@@ -8,17 +8,18 @@ interface UseCalendlyEventsProps {
 
 export const useCalendlyEvents = ({ formData, onBookingSuccess }: UseCalendlyEventsProps) => {
   const handleCalendlyInit = useCallback((prefill: any) => {
-    console.log('[PHONE_TEST] Calendly initialized:', {
+    console.log('[PHONE_DEBUG] Calendly init callback:', {
       phoneNumber: formData?.phoneNumber,
-      prefillLocation: prefill?.location,
-      prefillCustomAnswers: prefill?.customAnswers
+      prefill,
+      questions: prefill?.questions
     });
   }, [formData?.phoneNumber]);
 
   const handleEventScheduled = useCallback((e: any) => {
-    console.log('[PHONE_TEST] Final booking data:', {
+    console.log('[PHONE_DEBUG] Event scheduled callback:', {
       phoneNumber: formData?.phoneNumber,
-      location: e?.data?.invitee?.location,
+      eventData: e?.data,
+      invitee: e?.data?.invitee,
       questions: e?.data?.invitee?.questions,
       customAnswers: e?.data?.invitee?.customAnswers
     });
