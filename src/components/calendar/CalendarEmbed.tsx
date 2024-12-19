@@ -36,6 +36,9 @@ export const CalendarEmbed = ({
     onBookingSuccess: () => {
       handleBookingSuccess();
       setShowDownloadButton(true);
+      if (onSubmit) {
+        onSubmit();
+      }
     }
   });
 
