@@ -8,6 +8,7 @@ import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitializ
 import { CalendarContainer } from "./CalendarContainer";
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
+import { Download } from "lucide-react";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
@@ -83,19 +84,21 @@ export const CalendarEmbed = ({
         <p>${analysis.explanation || 'N/A'}</p>
       </div>
     `;
-    document.body.appendChild(reportElement);
 
-    console.log("[DEBUG] CalendarEmbed - Attempting PDF export");
-    const success = await exportReportAsPDF(reportElement);
-    document.body.removeChild(reportElement);
-
-    toast({
-      title: success ? "Success" : "Error",
-      description: success 
-        ? "Report downloaded successfully!" 
-        : "Failed to download report. Please try again.",
-      variant: success ? "default" : "destructive",
-    });
+    try {
+      await exportReportAsPDF(reportElement);
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+      });
+    } catch (error) {
+      console.error("[DEBUG] CalendarEmbed - PDF export failed:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -107,24 +110,14 @@ export const CalendarEmbed = ({
           style={{ minWidth: '320px', height: '700px' }}
         />
       </CalendarContainer>
-      <style>
-        {`
-          .calendly-success-message {
-            position: relative !important;
-          }
-          .download-report-button {
-            margin-bottom: 20px !important;
-          }
-        `}
-      </style>
       <script>
         {`
           window.addEventListener('calendly.event_scheduled', function() {
             const successMessage = document.querySelector('.calendly-success-message');
             if (successMessage) {
               const downloadButton = document.createElement('button');
-              downloadButton.className = 'download-report-button';
-              downloadButton.innerHTML = '<span class="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
+              downloadButton.className = 'download-report-button flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium mt-4 mb-4';
+              downloadButton.innerHTML = '<span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
               downloadButton.onclick = ${handleDownload.toString()};
               successMessage.insertBefore(downloadButton, successMessage.firstChild);
             }
