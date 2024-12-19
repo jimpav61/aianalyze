@@ -1,5 +1,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
+import html2canvas from 'html2canvas';
 
 interface UseEmailHandlerProps {
   formData?: any;
