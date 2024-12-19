@@ -4,7 +4,7 @@ import { DetailedFormData } from "@/types/analysis";
 interface ReportViewProps {
   formData: DetailedFormData;
   analysis: any;
-  onBookDemo: () => void;
+  onBookDemo?: () => void;
   industry?: string;
 }
 
