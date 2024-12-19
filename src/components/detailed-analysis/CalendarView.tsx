@@ -85,7 +85,7 @@ export const CalendarView = ({
         <div className="mt-4 flex justify-center">
           <Button
             onClick={handleDownload}
-            variant="outline"
+            variant="default"
             className="flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
