@@ -16,13 +16,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber,
-      questions: [
-        {
-          answer: phoneNumber,
-          name: 'phone'
-        }
-      ]
+      location: phoneNumber // This is the key field for phone number in Calendly
     };
 
     console.log('[PHONE_DEBUG] Created prefill data:', prefillData);
