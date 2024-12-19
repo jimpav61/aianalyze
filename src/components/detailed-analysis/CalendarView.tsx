@@ -24,8 +24,8 @@ export const CalendarView = ({
   };
   
   return (
-    <div className="flex flex-col space-y-4">
-      <div className="text-center mb-2">
+    <div className="flex flex-col">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
         <p className="text-muted-foreground">
           Choose a time that works best for you
@@ -40,7 +40,7 @@ export const CalendarView = ({
       />
 
       {isBooked && (
-        <div className="text-center text-sm">
+        <div className="text-center text-sm mt-2">
           <span className="font-medium">30 Minute Meeting Confirmed</span>
         </div>
       )}
