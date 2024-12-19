@@ -9,6 +9,7 @@ import { CalendarContainer } from "./CalendarContainer";
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
 import { Download } from "lucide-react";
+import { useState } from "react";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
@@ -20,14 +21,7 @@ export const CalendarEmbed = ({
   formData, 
   analysis 
 }: CalendarEmbedProps) => {
-  console.log("[DEBUG] CalendarEmbed - Component Mounted", {
-    calLink,
-    hasFormData: !!formData,
-    hasAnalysis: !!analysis,
-    formData,
-    analysis
-  });
-
+  const [showDownloadButton, setShowDownloadButton] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
@@ -40,7 +34,10 @@ export const CalendarEmbed = ({
   const { calendlyInitialized, getPrefillData } = useCalendlyConfig(formData);
   const { handleCalendlyInit, handleEventScheduled } = useCalendlyEvents({
     formData,
-    onBookingSuccess: handleBookingSuccess
+    onBookingSuccess: () => {
+      handleBookingSuccess();
+      setShowDownloadButton(true);
+    }
   });
 
   useCalendarInitialization({
@@ -110,20 +107,17 @@ export const CalendarEmbed = ({
           style={{ minWidth: '320px', height: '700px' }}
         />
       </CalendarContainer>
-      <script>
-        {`
-          window.addEventListener('calendly.event_scheduled', function() {
-            const successMessage = document.querySelector('.calendly-success-message');
-            if (successMessage) {
-              const downloadButton = document.createElement('button');
-              downloadButton.className = 'download-report-button flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium mt-4 mb-4';
-              downloadButton.innerHTML = '<span class="flex items-center gap-2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
-              downloadButton.onclick = ${handleDownload.toString()};
-              successMessage.insertBefore(downloadButton, successMessage.firstChild);
-            }
-          });
-        `}
-      </script>
+      {showDownloadButton && (
+        <div className="flex justify-center mt-4">
+          <button 
+            onClick={handleDownload}
+            className="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"
+          >
+            <Download className="w-4 h-4" />
+            Download Report
+          </button>
+        </div>
+      )}
     </div>
   );
 };
