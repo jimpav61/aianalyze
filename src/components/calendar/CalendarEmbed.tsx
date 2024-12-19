@@ -101,24 +101,52 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-[700px] flex flex-col">
+    <div className="w-full h-[700px]">
       <CalendarContainer ref={calendarRef}>
         <div 
           className="calendly-inline-widget" 
           data-url={`https://calendly.com/${calLink}`}
           style={{ minWidth: '320px', height: '700px' }}
         />
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-50 bg-white p-4 rounded-lg shadow-lg border flex items-center gap-4">
-          <span className="text-sm font-medium">Download Your Report</span>
-          <Button
-            onClick={handleDownload}
-            className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-          >
-            <Download className="h-4 w-4" />
-            Download PDF
-          </Button>
-        </div>
       </CalendarContainer>
+      <style jsx global>{`
+        .calendly-success-message {
+          position: relative !important;
+        }
+        .calendly-success-message::before {
+          content: '';
+          display: block;
+          margin: 20px auto;
+        }
+        .calendly-success-message button {
+          margin-top: 15px !important;
+        }
+        .download-report-button {
+          display: block;
+          margin: 15px auto !important;
+          position: relative !important;
+          z-index: 100;
+        }
+      `}</style>
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          window.addEventListener('calendly.event_scheduled', function() {
+            setTimeout(() => {
+              const successMessage = document.querySelector('.calendly-success-message');
+              if (successMessage) {
+                const downloadButton = document.createElement('button');
+                downloadButton.className = 'download-report-button';
+                downloadButton.innerHTML = '<span style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f65228; color: white; border-radius: 6px; font-weight: 500;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
+                downloadButton.onclick = ${handleDownload.toString()};
+                const firstButton = successMessage.querySelector('button');
+                if (firstButton) {
+                  successMessage.insertBefore(downloadButton, firstButton);
+                }
+              }
+            }, 100);
+          });
+        `
+      }} />
     </div>
   );
 };
