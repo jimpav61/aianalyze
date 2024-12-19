@@ -31,6 +31,10 @@ export const DialogContent = ({
         analysis={analysis}
         industry={industry}
         onBookDemo={() => {
+          if (!formData) {
+            console.error("DialogContent - No form data available for booking");
+            return false;
+          }
           console.log("DialogContent - Book demo clicked with form data:", formData);
           return true;
         }}
