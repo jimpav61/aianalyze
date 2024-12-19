@@ -6,6 +6,7 @@ import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { CalendarView } from "./detailed-analysis/CalendarView";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
 import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "./ui/alert-dialog";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -20,6 +21,7 @@ export const DetailedAnalysisDialog = ({
 }: ExtendedDetailedAnalysisProps) => {
   const { toast } = useToast();
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
+  const [showCloseConfirm, setShowCloseConfirm] = useState(false);
   
   const {
     showCalendar,
@@ -60,9 +62,21 @@ export const DetailedAnalysisDialog = ({
   }, [toast, analysis, setShowReport]);
 
   const handleClose = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
+    if (showReport && !showFormOnly) {
+      setShowCloseConfirm(true);
+    } else {
+      console.log("DetailedAnalysisDialog - Dialog closing, resetting state");
+      setShowReport(false);
+      setFormData(null);
+      onClose();
+    }
+  }, [onClose, showReport, showFormOnly]);
+
+  const confirmClose = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Confirmed closing");
     setShowReport(false);
     setFormData(null);
+    setShowCloseConfirm(false);
     onClose();
   }, [onClose]);
 
@@ -78,23 +92,42 @@ export const DetailedAnalysisDialog = ({
   }, [formData, handleBookDemo, toast]);
 
   return (
-    <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-      {showCalendar ? (
-        <CalendarView
-          onSubmit={handleBookingSubmit}
-          formData={formData || undefined}
-          analysis={analysis}
-        />
-      ) : (
-        <DialogContent
-          showReport={showReport && !showFormOnly}
-          formData={formData}
-          onSubmit={handleSubmit}
-          industry={industry}
-          analysis={analysis}
-          onBookDemo={onBookDemo}
-        />
-      )}
-    </DialogWrapper>
+    <>
+      <DialogWrapper isOpen={isOpen} onClose={handleClose}>
+        {showCalendar ? (
+          <CalendarView
+            onSubmit={handleBookingSubmit}
+            formData={formData || undefined}
+            analysis={analysis}
+          />
+        ) : (
+          <DialogContent
+            showReport={showReport && !showFormOnly}
+            formData={formData}
+            onSubmit={handleSubmit}
+            industry={industry}
+            analysis={analysis}
+            onBookDemo={onBookDemo}
+          />
+        )}
+      </DialogWrapper>
+
+      <AlertDialog open={showCloseConfirm} onOpenChange={setShowCloseConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to close?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Make sure you've downloaded your analysis report. You won't be able to access it after closing this window.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmClose} className="bg-red-500 hover:bg-red-600">
+              Yes, close window
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
