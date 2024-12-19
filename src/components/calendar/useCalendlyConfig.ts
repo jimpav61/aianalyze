@@ -8,7 +8,7 @@ const PHONE_FIELD_MAPPINGS = {
     'Phone': true,
     'phone_number': true,
     'phoneNumber': true,
-    'q_phone_number': true, // Added the specific field ID from Calendly form
+    'q_phone_number': true,
     'a1': true,
     'a2': true,
     'a3': true,
@@ -55,7 +55,7 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
         'phone*': phoneNumber,
         'Phone': phoneNumber,
         'Phone*': phoneNumber,
-        'q_phone_number': phoneNumber, // Added the specific field ID here too
+        'q_phone_number': phoneNumber,
       },
       questions
     };
