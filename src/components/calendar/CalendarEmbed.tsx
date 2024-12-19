@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendlyConfig } from "./useCalendlyConfig";
@@ -9,7 +9,6 @@ import { CalendarContainer } from "./CalendarContainer";
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
 import { Download } from "lucide-react";
-import { useState } from "react";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
