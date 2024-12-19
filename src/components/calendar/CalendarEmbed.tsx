@@ -109,7 +109,7 @@ export const CalendarEmbed = ({
           style={{ minWidth: '320px', height: '700px' }}
         />
       </CalendarContainer>
-      <style jsx global>{`
+      <style>{`
         .calendly-success-message {
           position: relative !important;
         }
