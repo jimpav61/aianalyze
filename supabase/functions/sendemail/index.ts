@@ -32,8 +32,12 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    console.log("Received email request with PDF");
+    console.log("Starting email process...");
     const { formData, analysis, pdfBase64, subject }: EmailRequest = await req.json();
+    
+    // Generate a unique ID for the attachment
+    const attachmentId = crypto.randomUUID();
+    console.log("Generated attachment ID:", attachmentId);
 
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -58,7 +62,7 @@ const handler = async (req: Request): Promise<Response> => {
                 </a>
               </td>
               <td style="padding: 10px;">
-                <a href="analysis-report.pdf" 
+                <a href="cid:${attachmentId}" 
                    style="display: inline-block; background-color: #f65228; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; width: 100%; text-align: center; box-sizing: border-box;">
                   Download Report
                 </a>
@@ -75,7 +79,12 @@ const handler = async (req: Request): Promise<Response> => {
       </div>
     `;
 
-    console.log("Sending email with PDF attachment");
+    console.log("Preparing to send email with attachment...");
+    
+    // Clean the base64 data
+    const cleanBase64 = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+    console.log("Cleaned base64 data, length:", cleanBase64.length);
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -89,15 +98,17 @@ const handler = async (req: Request): Promise<Response> => {
         html: emailHtml,
         attachments: [{
           filename: 'analysis-report.pdf',
-          content: pdfBase64.split(',')[1], // Remove the data:application/pdf;base64, prefix
-          type: 'application/pdf'
+          content: cleanBase64,
+          type: 'application/pdf',
+          disposition: 'attachment',
+          contentId: attachmentId
         }]
       }),
     });
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Email sent successfully with PDF attachment");
+      console.log("Email sent successfully:", data);
       return new Response(JSON.stringify(data), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
