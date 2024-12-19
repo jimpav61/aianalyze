@@ -6,10 +6,9 @@ import { useCalendlyEvents } from "./useCalendlyEvents";
 import { CalendarFormData } from "@/types/analysis";
 import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitialization";
 import { CalendarContainer } from "./CalendarContainer";
-import { Button } from "../ui/button";
-import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
+import { SuccessMessage } from "./SuccessMessage";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
@@ -136,7 +135,7 @@ export const CalendarEmbed = ({
               if (successMessage) {
                 const downloadButton = document.createElement('button');
                 downloadButton.className = 'download-report-button';
-                downloadButton.innerHTML = '<span style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f65228; color: white; border-radius: 6px; font-weight: 500;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
+                downloadButton.innerHTML = '<span class="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download Report</span>';
                 downloadButton.onclick = ${handleDownload.toString()};
                 const firstButton = successMessage.querySelector('button');
                 if (firstButton) {
