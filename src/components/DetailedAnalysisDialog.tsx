@@ -55,7 +55,7 @@ export const DetailedAnalysisDialog = ({
     toast({
       title: "Success",
       description: "Your analysis report is ready!",
-      duration: 500, // Set to 500ms (0.5 seconds)
+      duration: 500,
     });
     console.log("DetailedAnalysisDialog - Report view enabled");
   }, [toast, analysis, setShowReport]);
@@ -66,17 +66,6 @@ export const DetailedAnalysisDialog = ({
     setFormData(null);
     onClose();
   }, [onClose]);
-
-  const onBookDemo = useCallback(() => {
-    const success = handleBookDemo(formData);
-    if (!success) {
-      toast({
-        title: "Error",
-        description: "Please complete the form first.",
-        variant: "destructive",
-      });
-    }
-  }, [formData, handleBookDemo, toast]);
 
   return (
     <DialogWrapper isOpen={isOpen} onClose={handleClose}>
@@ -93,7 +82,7 @@ export const DetailedAnalysisDialog = ({
           onSubmit={handleSubmit}
           industry={industry}
           analysis={analysis}
-          onBookDemo={onBookDemo}
+          onBookDemo={handleBookDemo}
         />
       )}
     </DialogWrapper>
