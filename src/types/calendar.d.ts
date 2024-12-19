@@ -14,6 +14,11 @@ declare global {
         };
         utm?: Record<string, string>;
       }) => void;
+      eventType?: {
+        name?: string;
+        location?: string;
+        type?: string;
+      };
     };
   }
 }
