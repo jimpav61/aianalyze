@@ -31,9 +31,12 @@ export const DialogContent = ({
         analysis={analysis}
         industry={industry}
         onBookDemo={() => {
-          console.log("DialogContent - Book demo clicked, passing to parent handler");
-          // This will trigger the calendar view through the parent's handleBookDemo
-          return true;
+          if (formData) {
+            console.log("DialogContent - Book demo clicked with form data:", formData);
+            return true;
+          }
+          console.log("DialogContent - Book demo clicked but no form data available");
+          return false;
         }}
       />
     );
