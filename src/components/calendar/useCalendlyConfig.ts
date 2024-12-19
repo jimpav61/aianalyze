@@ -7,19 +7,25 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const getPrefillData = () => {
     const phoneNumber = formData?.phoneNumber || '';
     
-    console.log('[PHONE_DEBUG] Building prefill data:', {
-      rawPhoneNumber: phoneNumber,
-      formData
+    console.log('[CALENDLY_DEBUG] Starting getPrefillData:', {
+      formData,
+      phoneNumber,
+      hasPhoneNumber: !!phoneNumber,
+      phoneNumberLength: phoneNumber.length
     });
 
     // Following Calendly's official documentation for pre-populating data
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber // This is the key field for phone number in Calendly
+      location: phoneNumber // Used for Phone call event types
     };
 
-    console.log('[PHONE_DEBUG] Created prefill data:', prefillData);
+    console.log('[CALENDLY_DEBUG] Created prefill data:', {
+      prefillData,
+      phoneInLocation: prefillData.location,
+      allFields: Object.keys(prefillData)
+    });
 
     return prefillData;
   };
