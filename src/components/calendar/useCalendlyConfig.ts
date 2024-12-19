@@ -1,38 +1,44 @@
 import { useRef } from 'react';
 import { CalendarFormData } from '@/types/analysis';
 
+// Simplified mapping focusing on most common Calendly phone field names
+const PHONE_FIELD_MAPPINGS = {
+  questions: {
+    'a1': true,  // Common custom question ID
+    'phone': true,  // Standard phone field
+    'Phone': true,  // Alternate capitalization
+    'phone_number': true,  // Snake case variant
+    'phoneNumber': true,  // Camel case variant
+    '1': true,  // Numeric question ID
+  }
+};
+
 export const useCalendlyConfig = (formData?: CalendarFormData) => {
   const calendlyInitialized = useRef<boolean>(false);
 
   const getPrefillData = () => {
-    const phoneNumber = formData?.phoneNumber?.trim() || '';
+    const phoneNumber = formData?.phoneNumber || '';
     
-    console.log('[CALENDLY_DEBUG] Starting getPrefillData:', {
-      formData,
-      phoneNumber,
-      hasPhoneNumber: !!phoneNumber,
-      phoneNumberLength: phoneNumber.length,
-      isPhoneCallEvent: true
+    console.log('[PHONE_DEBUG] Building prefill data:', {
+      rawPhoneNumber: phoneNumber,
+      formData
     });
 
-    // Following Calendly's official documentation for pre-populating data
-    // For phone call events, the phone number must be a string in the location field
+    // Create a questions object with all possible phone field mappings
+    const questions: Record<string, string> = {};
+    Object.keys(PHONE_FIELD_MAPPINGS.questions).forEach(key => {
+      questions[key] = phoneNumber;
+    });
+
     const prefillData = {
       name: formData?.ownerName || '',
       email: formData?.email || '',
-      location: phoneNumber.toString(), // Ensure phone number is a string
-      customAnswers: {
-        a1: phoneNumber.toString() // Backup as string in custom answers
-      }
+      questions
     };
 
-    console.log('[CALENDLY_DEBUG] Created prefill data:', {
+    console.log('[PHONE_DEBUG] Created prefill data:', {
       prefillData,
-      phoneInLocation: prefillData.location,
-      phoneInCustomAnswers: prefillData.customAnswers.a1,
-      allFields: Object.keys(prefillData),
-      locationValueType: typeof prefillData.location,
-      customAnswerValueType: typeof prefillData.customAnswers.a1
+      questions
     });
 
     return prefillData;

@@ -1,18 +1,12 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { CalendarProps } from "@/types/calendar";
 import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendlyConfig } from "./useCalendlyConfig";
 import { useCalendlyEvents } from "./useCalendlyEvents";
-import { DetailedFormData } from "@/types/analysis";
-import { useCalendarInitialization } from "@/hooks/calendar/useCalendarInitialization";
-import { CalendarContainer } from "./CalendarContainer";
-import { useToast } from "@/hooks/use-toast";
-import { Download } from "lucide-react";
-import { exportReportAsPDF } from "@/utils/reportExport";
+import { CalendarFormData } from "@/types/analysis";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
-  formData?: DetailedFormData;
-  analysis?: any;
+  formData?: CalendarFormData;
 }
 
 export const CalendarEmbed = ({ 
@@ -21,9 +15,7 @@ export const CalendarEmbed = ({
   formData, 
   analysis 
 }: CalendarEmbedProps) => {
-  const [showDownloadButton, setShowDownloadButton] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
   
   const { handleBookingSuccess } = useBookingSuccess({ 
     formData, 
@@ -34,57 +26,96 @@ export const CalendarEmbed = ({
   const { calendlyInitialized, getPrefillData } = useCalendlyConfig(formData);
   const { handleCalendlyInit, handleEventScheduled } = useCalendlyEvents({
     formData,
-    onBookingSuccess: () => {
-      handleBookingSuccess();
-      setShowDownloadButton(true);
-      if (onSubmit) {
-        onSubmit();
-      }
-    }
+    onBookingSuccess: handleBookingSuccess
   });
 
-  useCalendarInitialization({
-    calendarRef,
-    calendlyInitialized,
-    calLink,
-    getPrefillData,
-    handleCalendlyInit,
-    handleEventScheduled,
-    formData
-  });
+  useEffect(() => {
+    console.log('[PHONE_DEBUG] Calendar effect triggered:', {
+      hasFormData: !!formData,
+      phoneNumber: formData?.phoneNumber,
+      calLink
+    });
 
-  const handleDownloadReport = () => {
-    if (formData && analysis) {
-      exportReportAsPDF(formData, analysis).catch(error => {
-        console.error("Failed to export PDF:", error);
-        toast({
-          title: "Error",
-          description: "Failed to download report. Please try again.",
-          variant: "destructive",
-        });
+    if (!calendarRef.current || calendlyInitialized.current || !calLink) {
+      console.log('[PHONE_DEBUG] Calendar initialization blocked:', {
+        hasRef: !!calendarRef.current,
+        isInitialized: calendlyInitialized.current,
+        hasCalLink: !!calLink
       });
+      return;
     }
-  };
+
+    const calendlyUrl = `https://calendly.com/${calLink}`;
+    const prefill = getPrefillData();
+    
+    console.log('[PHONE_DEBUG] Initializing Calendly widget:', {
+      url: calendlyUrl,
+      prefill,
+      phoneNumber: formData?.phoneNumber
+    });
+
+    if (!window.Calendly) {
+      console.error('[PHONE_DEBUG] Calendly not loaded');
+      return;
+    }
+
+    calendlyInitialized.current = true;
+
+    // Add event listener for form load
+    window.addEventListener('calendly.profile_page_loaded', (e) => {
+      console.log('[PHONE_DEBUG] Calendly form loaded:', {
+        event: e,
+        prefill,
+        phoneNumber: formData?.phoneNumber
+      });
+    });
+
+    window.Calendly.initInlineWidget({
+      url: calendlyUrl,
+      parentElement: calendarRef.current,
+      prefill,
+      utm: {}
+    });
+
+    window.addEventListener('calendly.init', (e) => {
+      console.log('[PHONE_DEBUG] Calendly initialized:', {
+        event: e,
+        prefill,
+        phoneNumber: formData?.phoneNumber
+      });
+      handleCalendlyInit(prefill);
+    });
+
+    window.addEventListener('calendly.event_scheduled', (e: any) => {
+      console.log('[PHONE_DEBUG] Event scheduled:', {
+        event: e,
+        data: e?.data,
+        invitee: e?.data?.invitee,
+        questions: e?.data?.invitee?.questions,
+        phoneNumber: formData?.phoneNumber
+      });
+      handleEventScheduled(e);
+    });
+
+    return () => {
+      console.log('[PHONE_DEBUG] Cleanup');
+      if (calendarRef.current) {
+        calendarRef.current.innerHTML = '';
+      }
+      calendlyInitialized.current = false;
+      window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
+      window.removeEventListener('calendly.init', handleCalendlyInit);
+      window.removeEventListener('calendly.profile_page_loaded', () => {});
+    };
+  }, [calLink, handleBookingSuccess, formData, getPrefillData, handleCalendlyInit, handleEventScheduled]);
 
   return (
-    <div className="flex flex-col space-y-4">
-      <CalendarContainer ref={calendarRef}>
-        <div 
-          className="calendly-inline-widget w-full h-full"
-          data-url={`https://calendly.com/${calLink}`}
-        />
-      </CalendarContainer>
-      {showDownloadButton && (
-        <div className="flex justify-center mt-4">
-          <button 
-            onClick={handleDownloadReport}
-            className="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"
-          >
-            <Download className="w-4 h-4" />
-            Download Report
-          </button>
-        </div>
-      )}
+    <div className="w-full h-[700px] flex flex-col">
+      <div 
+        ref={calendarRef}
+        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
+        style={{ minWidth: '320px' }}
+      />
     </div>
   );
 };

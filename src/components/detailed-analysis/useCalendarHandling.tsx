@@ -24,10 +24,10 @@ export const useCalendarHandling = ({ onClose }: UseCalendarHandlingProps) => {
 
   const handleBookingSubmit = useCallback(() => {
     console.log("useCalendarHandling - Booking submitted successfully");
-    showSuccessToast();
     setShowCalendar(false);
-    onClose();
-  }, [showSuccessToast, onClose]);
+    setShowReport(true);
+    showSuccessToast();
+  }, [showSuccessToast]);
 
   return {
     showCalendar,

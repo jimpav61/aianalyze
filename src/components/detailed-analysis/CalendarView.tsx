@@ -1,44 +1,35 @@
 import { Calendar } from "../Calendar";
 import { DetailedFormData } from "@/types/analysis";
-import { useState } from "react";
 
 interface CalendarViewProps {
   onSubmit: () => void;
   formData?: DetailedFormData;
-  analysis?: any;
+  analysis: any;
+  calLink?: string;
 }
 
-export const CalendarView = ({ onSubmit, formData, analysis }: CalendarViewProps) => {
-  const [isBooked, setIsBooked] = useState(false);
-  const calLink = "chatsites/demo";
-
-  const handleBookingSuccess = () => {
-    console.log("CalendarView - Booking successful");
-    setIsBooked(true);
-    onSubmit();
-  };
+export const CalendarView = ({ 
+  onSubmit, 
+  formData, 
+  analysis, 
+  calLink = "jimmy-chatsites/30min" // Changed to use a common event type name
+}: CalendarViewProps) => {
+  console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
   
   return (
-    <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold mb-2">Schedule Your Demo</h2>
+    <>
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
         <p className="text-muted-foreground">
           Choose a time that works best for you
         </p>
       </div>
-      
       <Calendar 
         calLink={calLink}
-        onSubmit={handleBookingSuccess}
+        onSubmit={onSubmit}
         formData={formData}
         analysis={analysis}
       />
-
-      {isBooked && (
-        <div className="text-center text-sm mt-4">
-          <span className="font-medium">30 Minute Meeting Confirmed</span>
-        </div>
-      )}
-    </div>
+    </>
   );
 };

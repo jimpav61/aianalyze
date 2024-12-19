@@ -2,20 +2,17 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { exportReportAsPDF } from "@/utils/reportExport";
 import { useToast } from "@/hooks/use-toast";
-import { DetailedFormData } from "@/types/analysis";
 
 interface DownloadReportButtonProps {
   reportRef: React.RefObject<HTMLDivElement>;
-  formData?: DetailedFormData;
-  analysis?: any;
 }
 
-export const DownloadReportButton = ({ reportRef, formData, analysis }: DownloadReportButtonProps) => {
+export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    if (!formData || !analysis) {
-      console.error("DownloadReportButton - Missing required data");
+    if (!reportRef?.current) {
+      console.error("DownloadReportButton - No report ref found");
       toast({
         title: "Error",
         description: "Could not generate report. Please try again.",
@@ -24,21 +21,16 @@ export const DownloadReportButton = ({ reportRef, formData, analysis }: Download
       return;
     }
 
-    try {
-      await exportReportAsPDF(formData, analysis);
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("Failed to export PDF:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-      });
-    }
+    console.log("DownloadReportButton - Starting PDF export");
+    const success = await exportReportAsPDF(reportRef.current);
+    
+    toast({
+      title: success ? "Success" : "Error",
+      description: success 
+        ? "Report downloaded successfully!" 
+        : "Failed to download report. Please try again.",
+      variant: success ? "default" : "destructive",
+    });
   };
 
   return (

@@ -4,7 +4,7 @@ import { DetailedFormData } from "@/types/analysis";
 interface ReportViewProps {
   formData: DetailedFormData;
   analysis: any;
-  onBookDemo?: () => void;
+  onBookDemo: () => void;
   industry?: string;
 }
 
@@ -12,8 +12,7 @@ export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportV
   console.log("ReportView - Render:", { 
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
-    industry,
-    hasBookDemo: !!onBookDemo
+    industry 
   });
 
   const analysesForGrid = analysis.allAnalyses || [{

@@ -3,40 +3,27 @@ import { CalendarProps } from "@/types/calendar";
 import { LoadingState } from "./calendar/LoadingState";
 import { ErrorState } from "./calendar/ErrorState";
 import { CalendarEmbed } from "./calendar/CalendarEmbed";
-import { DetailedFormData } from "@/types/analysis";
-
-interface ExtendedCalendarProps extends Omit<CalendarProps, 'formData'> {
-  formData?: Partial<DetailedFormData>;
-  analysis?: any;
-}
 
 export const Calendar = ({ 
   calLink, 
   onSubmit, 
   formData, 
   analysis 
-}: ExtendedCalendarProps) => {
-  console.log("[DEBUG] Calendar - Component Mounted", {
-    hasCalLink: !!calLink,
-    hasFormData: !!formData,
-    hasAnalysis: !!analysis,
-    formData,
-    analysis
-  });
+}: CalendarProps) => {
+  console.log("Calendar - Rendering with link:", calLink);
+  console.log("Calendar - Form data:", formData); // Added for debugging
   
   const { isScriptLoaded, scriptError } = useCalendarScript();
 
   if (scriptError) {
-    console.error("[DEBUG] Calendar - Script loading error:", scriptError);
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
 
   if (!isScriptLoaded) {
-    console.log("[DEBUG] Calendar - Waiting for script to load");
+    console.log("Calendar - Script not loaded yet, showing loading state");
     return <LoadingState />;
   }
 
-  console.log("[DEBUG] Calendar - Rendering CalendarEmbed");
   return (
     <CalendarEmbed 
       calLink={calLink}

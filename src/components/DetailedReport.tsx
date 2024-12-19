@@ -27,7 +27,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   }
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto">
+    <div className="relative">
       <ReportActions 
         reportRef={reportRef}
         onBookDemo={onBookDemo}
