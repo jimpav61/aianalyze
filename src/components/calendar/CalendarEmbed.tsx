@@ -101,16 +101,15 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="flex flex-col space-y-4">
       <CalendarContainer ref={calendarRef}>
         <div 
           className="calendly-inline-widget w-full h-full"
           data-url={`https://calendly.com/${calLink}`}
-          style={{ minWidth: '320px', height: '100%' }}
         />
       </CalendarContainer>
       {showDownloadButton && (
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center">
           <button 
             onClick={handleDownload}
             className="flex items-center gap-2 px-4 py-2 bg-[#f65228] text-white rounded-md font-medium"
