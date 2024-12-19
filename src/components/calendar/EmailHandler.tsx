@@ -1,5 +1,5 @@
 import { useToast } from "@/hooks/use-toast";
-import { exportReportAsPDF } from "@/utils/reportExport";
+import { supabase } from "@/integrations/supabase/client";
 import html2canvas from 'html2canvas';
 
 interface UseEmailHandlerProps {
@@ -12,13 +12,15 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
   const { toast } = useToast();
 
   const sendEmails = async () => {
+    console.log('EmailHandler - Starting email process with data:', { formData, analysis });
+    
     if (!formData || !analysis) {
       console.error('EmailHandler - Missing required data:', { formData, analysis });
       return;
     }
 
     try {
-      console.log('EmailHandler - Starting email process with report generation');
+      console.log('EmailHandler - Creating report HTML');
       
       // Create a temporary div for PDF generation
       const reportDiv = document.createElement('div');
@@ -38,34 +40,36 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
       `;
       document.body.appendChild(reportDiv);
 
-      // Generate PDF as base64
+      console.log('EmailHandler - Generating PDF');
       const canvas = await html2canvas(reportDiv, {
         scale: 2,
         useCORS: true,
         logging: true,
         backgroundColor: '#ffffff'
       });
+      
       const pdfBase64 = canvas.toDataURL('image/png');
+      console.log('EmailHandler - PDF generated, length:', pdfBase64.length);
       
       // Clean up
       document.body.removeChild(reportDiv);
 
-      const response = await fetch('/api/sendemail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      console.log('EmailHandler - Calling sendemail function');
+      const { data, error } = await supabase.functions.invoke("sendemail", {
+        body: {
           formData,
           analysis,
           pdfBase64,
           subject: "Your Demo Booking Confirmation and Analysis Report"
-        }),
+        },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to send emails');
+      if (error) {
+        console.error('EmailHandler - Supabase function error:', error);
+        throw error;
       }
+
+      console.log('EmailHandler - Email sent successfully:', data);
 
       toast({
         title: "Success",
@@ -76,7 +80,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
         onSuccess();
       }
     } catch (error) {
-      console.error('EmailHandler - Error sending emails:', error);
+      console.error('EmailHandler - Error:', error);
       toast({
         title: "Error",
         description: "There was an issue sending the confirmation emails.",
