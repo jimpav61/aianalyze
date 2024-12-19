@@ -67,18 +67,6 @@ export const DetailedAnalysisDialog = ({
     onClose();
   }, [onClose]);
 
-  const onBookDemo = useCallback(() => {
-    if (formData) {
-      handleBookDemo(formData);
-    } else {
-      toast({
-        title: "Error",
-        description: "Please complete the form first.",
-        variant: "destructive",
-      });
-    }
-  }, [formData, handleBookDemo, toast]);
-
   return (
     <DialogWrapper isOpen={isOpen} onClose={handleClose}>
       {showCalendar ? (
@@ -94,7 +82,6 @@ export const DetailedAnalysisDialog = ({
           onSubmit={handleSubmit}
           industry={industry}
           analysis={analysis}
-          onBookDemo={onBookDemo}
         />
       )}
     </DialogWrapper>
