@@ -97,11 +97,12 @@ export const CalendarEmbed = ({
       });
       handleEventScheduled(e);
       
-      // Show toast notification reminding to download report
+      // Show toast notification with longer duration and more prominent message
       toast({
-        title: "Don't forget!",
-        description: "Download your report before closing the window.",
-        duration: 5000,
+        title: "Important!",
+        description: "Please download your detailed analysis report now. You won't be able to access it after closing this window.",
+        duration: 10000, // 10 seconds
+        variant: "default",
       });
     });
 
