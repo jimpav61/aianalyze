@@ -17,7 +17,7 @@ export const CloseConfirmationDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to close?</AlertDialogTitle>
           <AlertDialogDescription>
-            Make sure you've downloaded your analysis report. You won't be able to access it after closing this window.
+            Don't worry, you can still access and download your analysis report after closing this window.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
