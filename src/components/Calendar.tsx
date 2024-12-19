@@ -7,6 +7,7 @@ import { CalendarEmbed } from "./calendar/CalendarEmbed";
 export const Calendar = ({ 
   calLink, 
   onSubmit, 
+  onBookingSuccess,
   formData, 
   analysis 
 }: CalendarProps) => {
@@ -34,7 +35,7 @@ export const Calendar = ({
   return (
     <CalendarEmbed 
       calLink={calLink}
-      onSubmit={onSubmit}
+      onSubmit={onSubmit || onBookingSuccess}
       formData={formData}
       analysis={analysis}
     />

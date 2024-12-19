@@ -26,6 +26,7 @@ declare global {
 export interface CalendarProps {
   calLink: string;
   onSubmit?: () => void;
+  onBookingSuccess?: () => void;
   formData?: {
     companyName?: string;
     email?: string;
