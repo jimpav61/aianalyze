@@ -67,6 +67,13 @@ export const DetailedAnalysisDialog = ({
     onClose();
   }, [onClose]);
 
+  const handleDemoRequest = useCallback(() => {
+    console.log("DetailedAnalysisDialog - Demo requested with form data:", formData);
+    if (handleBookDemo(formData)) {
+      console.log("DetailedAnalysisDialog - Showing calendar view");
+    }
+  }, [formData, handleBookDemo]);
+
   return (
     <DialogWrapper isOpen={isOpen} onClose={handleClose}>
       {showCalendar ? (
@@ -82,6 +89,7 @@ export const DetailedAnalysisDialog = ({
           onSubmit={handleSubmit}
           industry={industry}
           analysis={analysis}
+          onBookDemo={handleDemoRequest}
         />
       )}
     </DialogWrapper>

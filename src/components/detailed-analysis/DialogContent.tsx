@@ -7,6 +7,7 @@ interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'a
   showReport: boolean;
   formData: DetailedFormData | null;
   onSubmit: (data: DetailedFormData) => void;
+  onBookDemo: () => void;
 }
 
 export const DialogContent = ({ 
@@ -14,7 +15,8 @@ export const DialogContent = ({
   formData, 
   onSubmit, 
   industry, 
-  analysis
+  analysis,
+  onBookDemo
 }: DialogContentProps) => {
   console.log("DialogContent - Render state:", { 
     showReport, 
@@ -30,14 +32,7 @@ export const DialogContent = ({
         formData={formData}
         analysis={analysis}
         industry={industry}
-        onBookDemo={() => {
-          if (!formData) {
-            console.error("DialogContent - No form data available for booking");
-            return false;
-          }
-          console.log("DialogContent - Book demo clicked with form data:", formData);
-          return true;
-        }}
+        onBookDemo={onBookDemo}
       />
     );
   }
