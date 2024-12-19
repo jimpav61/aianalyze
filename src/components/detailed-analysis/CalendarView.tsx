@@ -85,8 +85,7 @@ export const CalendarView = ({
         <div className="mt-4 flex justify-center">
           <Button
             onClick={handleDownload}
-            variant="default"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
           >
             <Download className="h-4 w-4" />
             Download Report PDF
