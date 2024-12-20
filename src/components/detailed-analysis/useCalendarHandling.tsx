@@ -26,15 +26,14 @@ export const useCalendarHandling = ({ onClose, setShowReport }: UseCalendarHandl
   const handleBookingSubmit = useCallback(() => {
     console.log("useCalendarHandling - Booking submitted successfully");
     setShowCalendar(false);
-    setShowReport(true);
     showSuccessToast();
     
     toast({
       title: "Demo Scheduled Successfully",
-      description: "Your report is still available for download. You can close this window when you're done.",
+      description: "Your report is ready for download. You can close this window when you're done.",
       duration: 5000,
     });
-  }, [showSuccessToast, toast, setShowReport]);
+  }, [showSuccessToast, toast]);
 
   return {
     showCalendar,
