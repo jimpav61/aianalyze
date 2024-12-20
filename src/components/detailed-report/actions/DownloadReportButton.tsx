@@ -12,7 +12,7 @@ interface DownloadReportButtonProps {
 export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (!formData || !analysis) {
       toast({
         title: "Error",
