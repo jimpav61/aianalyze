@@ -81,24 +81,24 @@ export const CalendarEmbed = ({
     }
   };
 
-  // Add custom styles to inject the download button
-  const customStyles = `
-    .calendly-confirmation-button {
-      margin-top: 16px !important;
-    }
-    .download-report-button {
-      display: none;
-    }
-    .calendly-confirmation-page .download-report-button {
-      display: flex !important;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-  `;
-
   return (
     <div className="w-full h-[700px] flex flex-col">
-      <style>{customStyles}</style>
+      <style>
+        {`
+          .calendly-confirmation-page .calendly-confirmation-button {
+            margin-top: 16px !important;
+          }
+          .download-report-button {
+            display: none;
+          }
+          .calendly-confirmation-page .download-report-button {
+            display: flex !important;
+            justify-content: center;
+            margin-top: 16px;
+            margin-bottom: 16px;
+          }
+        `}
+      </style>
       <div className="download-report-button">
         <Button
           onClick={handleDownload}
