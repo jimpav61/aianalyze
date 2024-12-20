@@ -22,45 +22,25 @@ export const CloseConfirmationDialog = ({
   const { toast } = useToast();
 
   const handleDownload = () => {
-    console.log("Download initiated with data:", { 
-      hasFormData: !!formData, 
-      formDataKeys: formData ? Object.keys(formData) : [], 
-      hasAnalysis: !!analysis,
-      analysisKeys: analysis ? Object.keys(analysis) : []
-    });
-
     if (!formData || !analysis) {
-      console.error("Missing required data:", { formData, analysis });
       toast({
         title: "Error",
-        description: "Report data not available. Please try again.",
+        description: "Report data not available.",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      console.log("Starting PDF generation with:", {
-        companyName: formData.companyName,
-        industry: analysis.industry,
-        savings: analysis.savings,
-        profitIncrease: analysis.profit_increase
-      });
-
       const doc = new jsPDF();
       
-      // Set up PDF styling
       doc.setFont("helvetica");
-      
-      // Add header
       doc.setFontSize(24);
-      doc.setTextColor(246, 82, 40); // #f65228
+      doc.setTextColor(246, 82, 40);
       doc.text("ChatSites AI Analysis Report", 20, 30);
       
       let yPosition = 50;
 
-      // Company Information
-      console.log("Adding company information section");
       doc.setFontSize(18);
       doc.setTextColor(0);
       doc.text("Company Information", 20, yPosition);
@@ -82,8 +62,6 @@ export const CloseConfirmationDialog = ({
       });
       yPosition += 10;
 
-      // Current Operations
-      console.log("Adding operations section");
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 30;
@@ -107,8 +85,6 @@ export const CloseConfirmationDialog = ({
       });
       yPosition += 10;
 
-      // Analysis Results
-      console.log("Adding analysis results section");
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 30;
@@ -130,36 +106,7 @@ export const CloseConfirmationDialog = ({
         doc.text(lines, 20, yPosition);
         yPosition += lines.length * 8;
       });
-      yPosition += 10;
 
-      // Implementation Plan
-      console.log("Adding implementation plan section");
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 30;
-      }
-      doc.setFontSize(18);
-      doc.text("Implementation Plan", 20, yPosition);
-      yPosition += 10;
-      doc.setFontSize(12);
-
-      const plan = [
-        `Objectives: ${formData.objectives}`,
-        `Timeline: ${formData.timeline}`,
-        `Budget: ${formData.budget}`,
-        formData.additionalInfo ? `Additional Information: ${formData.additionalInfo}` : null
-      ].filter(Boolean);
-
-      plan.forEach(item => {
-        if (item) {
-          const lines = doc.splitTextToSize(item, 170);
-          doc.text(lines, 20, yPosition);
-          yPosition += lines.length * 8;
-        }
-      });
-
-      // Add footer to each page
-      console.log("Adding footers to all pages");
       const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -172,16 +119,13 @@ export const CloseConfirmationDialog = ({
         );
       }
       
-      console.log("PDF generation completed successfully");
       doc.save("chatsites-analysis-report.pdf");
       
-      console.log("Download completed successfully");
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
       });
     } catch (error) {
-      console.error("PDF generation/download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
