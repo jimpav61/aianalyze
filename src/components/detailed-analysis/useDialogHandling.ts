@@ -28,8 +28,8 @@ export const useDialogHandling = ({ onClose, showFormOnly = false }: UseDialogHa
 
   const confirmClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Closing confirmation dialog");
-    setShowCloseConfirm(false);
-  }, []);
+    onClose();
+  }, [onClose]);
 
   return {
     formData,

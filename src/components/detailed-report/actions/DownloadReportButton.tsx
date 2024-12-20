@@ -11,6 +11,7 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
   const { toast } = useToast();
 
   const handleDownload = async () => {
+    console.log("DownloadReportButton - Starting download");
     if (!reportRef?.current) {
       console.error("DownloadReportButton - No report ref found");
       toast({
@@ -21,16 +22,25 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
       return;
     }
 
-    console.log("DownloadReportButton - Starting PDF export");
-    const success = await exportReportAsPDF(reportRef.current);
-    
-    toast({
-      title: success ? "Success" : "Error",
-      description: success 
-        ? "Report downloaded successfully!" 
-        : "Failed to download report. Please try again.",
-      variant: success ? "default" : "destructive",
-    });
+    try {
+      const success = await exportReportAsPDF(reportRef.current);
+      console.log("DownloadReportButton - Download result:", success);
+      
+      toast({
+        title: success ? "Success" : "Error",
+        description: success 
+          ? "Report downloaded successfully!" 
+          : "Failed to download report. Please try again.",
+        variant: success ? "default" : "destructive",
+      });
+    } catch (error) {
+      console.error("DownloadReportButton - Download error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
