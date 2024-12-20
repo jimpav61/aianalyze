@@ -1,16 +1,23 @@
 import { DownloadReportButton } from "./actions/DownloadReportButton";
 import { EmailReportButton } from "./actions/EmailReportButton";
 import { Button } from "../ui/button";
+import { DetailedFormData } from "@/types/analysis";
 
 interface ReportActionsProps {
   reportRef: React.RefObject<HTMLDivElement>;
   onBookDemo?: () => void;
+  formData?: DetailedFormData;
+  analysis?: any;
 }
 
-export const ReportActions = ({ reportRef, onBookDemo }: ReportActionsProps) => {
+export const ReportActions = ({ reportRef, onBookDemo, formData, analysis }: ReportActionsProps) => {
   return (
     <div className="flex gap-4 items-center">
-      <DownloadReportButton reportRef={reportRef} />
+      <DownloadReportButton 
+        reportRef={reportRef} 
+        formData={formData} 
+        analysis={analysis}
+      />
       <EmailReportButton onComplete={onBookDemo} />
       {onBookDemo && (
         <Button 

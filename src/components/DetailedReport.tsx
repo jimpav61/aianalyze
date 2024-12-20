@@ -30,6 +30,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     <div className="relative">
       <ReportActions 
         reportRef={reportRef}
+        formData={data}
+        analysis={analysis}
         onBookDemo={onBookDemo}
       />
       <div className="mt-6" ref={reportRef}>

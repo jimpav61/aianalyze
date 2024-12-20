@@ -2,19 +2,22 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { jsPDF } from "jspdf";
+import { DetailedFormData } from "@/types/analysis";
 
 interface DownloadReportButtonProps {
   reportRef: React.RefObject<HTMLDivElement>;
+  formData?: DetailedFormData;
+  analysis?: any;
 }
 
-export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) => {
+export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    if (!reportRef?.current) {
+    if (!formData || !analysis) {
       toast({
         title: "Error",
-        description: "Could not generate report. Please try again.",
+        description: "Report data not available. Please try again.",
         variant: "destructive",
       });
       return;
@@ -23,12 +26,6 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
     try {
       const doc = new jsPDF();
       
-      // Extract report data from the ref
-      const companyInfo = reportRef.current.querySelector('.company-info');
-      const currentOps = reportRef.current.querySelector('.current-operations');
-      const analysisResults = reportRef.current.querySelector('.analysis-results');
-      const implementationPlan = reportRef.current.querySelector('.implementation-plan');
-
       // Set up PDF styling
       doc.setFont("helvetica");
       
@@ -39,87 +36,100 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
       
       let yPosition = 50;
 
-      // Add company information section
-      if (companyInfo) {
-        const companyData = companyInfo.querySelectorAll('.text-gray-600');
-        doc.setFontSize(18);
-        doc.setTextColor(0);
-        doc.text("Company Information", 20, yPosition);
-        yPosition += 10;
-        doc.setFontSize(12);
-        companyData.forEach((data) => {
-          const text = data.textContent || '';
-          if (text && yPosition < 270) {
-            doc.text(text, 20, yPosition);
-            yPosition += 8;
-          }
-        });
-        yPosition += 10;
-      }
+      // Company Information
+      doc.setFontSize(18);
+      doc.setTextColor(0);
+      doc.text("Company Information", 20, yPosition);
+      yPosition += 10;
+      doc.setFontSize(12);
+      
+      const companyInfo = [
+        `Company Name: ${formData.companyName}`,
+        `Industry: ${analysis.industry}`,
+        `Contact Email: ${formData.email}`,
+        `Contact Phone: ${formData.phoneNumber}`,
+        `Employees: ${formData.employees}`,
+        `Revenue: ${formData.revenue}`
+      ];
 
-      // Add current operations section
-      if (currentOps) {
-        if (yPosition > 250) {
-          doc.addPage();
-          yPosition = 30;
-        }
-        const opsData = currentOps.querySelectorAll('.text-gray-600');
-        doc.setFontSize(18);
-        doc.text("Current Operations", 20, yPosition);
-        yPosition += 10;
-        doc.setFontSize(12);
-        opsData.forEach((data) => {
-          const text = data.textContent || '';
-          if (text && yPosition < 270) {
-            doc.text(text, 20, yPosition);
-            yPosition += 8;
-          }
-        });
-        yPosition += 10;
-      }
+      companyInfo.forEach(info => {
+        doc.text(info, 20, yPosition);
+        yPosition += 8;
+      });
+      yPosition += 10;
 
-      // Add analysis results section
-      if (analysisResults) {
-        if (yPosition > 250) {
-          doc.addPage();
-          yPosition = 30;
-        }
-        const resultsData = analysisResults.querySelectorAll('.text-gray-600');
-        doc.setFontSize(18);
-        doc.text("Analysis Results", 20, yPosition);
-        yPosition += 10;
-        doc.setFontSize(12);
-        resultsData.forEach((data) => {
-          const text = data.textContent || '';
-          if (text && yPosition < 270) {
-            const lines = doc.splitTextToSize(text, 170);
-            doc.text(lines, 20, yPosition);
-            yPosition += lines.length * 8 + 4;
-          }
-        });
-        yPosition += 10;
+      // Current Operations
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 30;
       }
+      doc.setFontSize(18);
+      doc.text("Current Operations", 20, yPosition);
+      yPosition += 10;
+      doc.setFontSize(12);
+      
+      const operations = [
+        `Service Channels: ${formData.serviceChannels}`,
+        `Monthly Interactions: ${formData.monthlyInteractions}`,
+        `Current Tools: ${formData.currentTools}`,
+        `Pain Points: ${formData.painPoints}`
+      ];
 
-      // Add implementation plan section
-      if (implementationPlan) {
-        if (yPosition > 250) {
-          doc.addPage();
-          yPosition = 30;
-        }
-        const planData = implementationPlan.querySelectorAll('.text-gray-600');
-        doc.setFontSize(18);
-        doc.text("Implementation Plan", 20, yPosition);
-        yPosition += 10;
-        doc.setFontSize(12);
-        planData.forEach((data) => {
-          const text = data.textContent || '';
-          if (text && yPosition < 270) {
-            const lines = doc.splitTextToSize(text, 170);
-            doc.text(lines, 20, yPosition);
-            yPosition += lines.length * 8 + 4;
-          }
-        });
+      operations.forEach(op => {
+        const lines = doc.splitTextToSize(op, 170);
+        doc.text(lines, 20, yPosition);
+        yPosition += lines.length * 8;
+      });
+      yPosition += 10;
+
+      // Analysis Results
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 30;
       }
+      doc.setFontSize(18);
+      doc.text("Analysis Results", 20, yPosition);
+      yPosition += 10;
+      doc.setFontSize(12);
+
+      const results = [
+        `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
+        `Projected Profit Increase: ${analysis.profit_increase}%`,
+        `Implementation Strategy: ${analysis.explanation}`,
+        `Marketing Strategy: ${analysis.marketing_strategy}`
+      ];
+
+      results.forEach(result => {
+        const lines = doc.splitTextToSize(result, 170);
+        doc.text(lines, 20, yPosition);
+        yPosition += lines.length * 8;
+      });
+      yPosition += 10;
+
+      // Implementation Plan
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 30;
+      }
+      doc.setFontSize(18);
+      doc.text("Implementation Plan", 20, yPosition);
+      yPosition += 10;
+      doc.setFontSize(12);
+
+      const plan = [
+        `Objectives: ${formData.objectives}`,
+        `Timeline: ${formData.timeline}`,
+        `Budget: ${formData.budget}`,
+        formData.additionalInfo ? `Additional Information: ${formData.additionalInfo}` : null
+      ].filter(Boolean);
+
+      plan.forEach(item => {
+        if (item) {
+          const lines = doc.splitTextToSize(item, 170);
+          doc.text(lines, 20, yPosition);
+          yPosition += lines.length * 8;
+        }
+      });
 
       // Add footer to each page
       const pageCount = doc.getNumberOfPages();
