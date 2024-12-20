@@ -13,7 +13,7 @@ export const generateAnalysisSection = (doc: HTMLDivElement, analysis: any) => {
           <p style="margin: 0; color: #10B981; font-size: 1.75rem; font-weight: 600;">${analysis.profit_increase}%</p>
         </div>
       </div>
-      <div style="line-height: 1.6;">
+      <div style="line-height: 1.8;">
         <p style="margin: 0 0 0.75rem 0; font-weight: 500; color: #374151;">Recommended Implementation:</p>
         <p style="margin: 0; color: #4B5563;">${analysis.explanation}</p>
       </div>

@@ -2,18 +2,18 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
   const header = document.createElement('div');
   header.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem;">
-      <div style="display: flex; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
         <img 
-          src="/lovable-uploads/7def398d-ead6-40ce-893d-93996cba4427.png" 
-          alt="Logo" 
-          style="height: 32px; width: auto; margin-right: 1rem;"
+          src="/lovable-uploads/16e069a8-1b12-4eb4-9c52-25400e76cda9.png" 
+          alt="ChatSites Logo" 
+          style="height: 2.5rem; width: auto;"
         />
       </div>
-      <div style="text-align: right; color: #4B5563; font-size: 0.875rem; line-height: 1.5;">
-        <p style="margin: 0 0 0.5rem 0; font-weight: 600;">Contact us:</p>
-        <p style="margin: 0 0 0.25rem 0;">info@chatsites.ai</p>
-        <p style="margin: 0 0 0.25rem 0;">+1 480 862 0288</p>
-        <p style="margin: 0;">chatsites.ai</p>
+      <div style="text-align: right; font-size: 0.875rem; line-height: 1.6;">
+        <p style="margin: 0 0 0.75rem 0; font-weight: 600; color: #374151;">Contact us:</p>
+        <p style="margin: 0 0 0.25rem 0; color: #4B5563;">info@chatsites.ai</p>
+        <p style="margin: 0 0 0.25rem 0; color: #4B5563;">+1 480 862 0288</p>
+        <p style="margin: 0; color: #4B5563;">chatsites.ai</p>
       </div>
     </div>
   `;
