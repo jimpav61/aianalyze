@@ -85,17 +85,25 @@ export const CalendarEmbed = ({
     <div className="w-full h-[700px] flex flex-col">
       <style>
         {`
+          .calendly-confirmation-page {
+            position: relative;
+          }
           .calendly-confirmation-page .calendly-confirmation-button {
             margin-top: 16px !important;
           }
           .download-report-button {
             display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
           }
           .calendly-confirmation-page .download-report-button {
             display: flex !important;
-            justify-content: center;
-            margin-top: 16px;
-            margin-bottom: 16px;
           }
         `}
       </style>
@@ -103,7 +111,7 @@ export const CalendarEmbed = ({
         <Button
           onClick={handleDownload}
           size="lg"
-          className="w-full max-w-[300px] bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+          className="w-full bg-[#f65228] hover:bg-[#f65228]/90 text-white"
         >
           <Download className="mr-2 h-4 w-4" />
           Download Your Report
