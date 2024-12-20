@@ -5,9 +5,10 @@ import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendarEvents } from "@/hooks/calendar/useCalendarEvents";
 import { useCalendarInit } from "@/hooks/calendar/useCalendarInit";
 import { useToast } from "@/hooks/use-toast";
-import { DownloadButton } from "./DownloadButton";
-import { HiddenReport } from "./HiddenReport";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import { exportReportAsPDF } from "@/utils/reportExport";
+import { HiddenReport } from "./HiddenReport";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
@@ -21,6 +22,7 @@ export const CalendarEmbed = ({
   analysis 
 }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
   console.log("CalendarEmbed - Rendering with data:", { formData, analysis });
@@ -44,46 +46,26 @@ export const CalendarEmbed = ({
   });
 
   const handleDownload = async () => {
-    console.log("Download button clicked");
-    if (!formData || !analysis) {
-      console.error("Missing data for download:", { formData, analysis });
+    if (!reportRef.current) {
+      console.error("Download error: Report ref not found");
       toast({
         title: "Error",
-        description: "Report data not available. Please try again.",
+        description: "Could not generate report. Please try again.",
         variant: "destructive",
       });
       return;
     }
 
-    const reportElement = document.getElementById('report-content');
-    if (!reportElement) {
-      console.error("Report element not found");
-      toast({
-        title: "Error",
-        description: "Report element not found. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const success = await exportReportAsPDF(reportElement);
-      console.log("PDF export result:", success);
-      toast({
-        title: success ? "Success" : "Error",
-        description: success 
-          ? "Report downloaded successfully!" 
-          : "Failed to download report. Please try again.",
-        variant: success ? "default" : "destructive",
-      });
-    } catch (error) {
-      console.error('Download error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-      });
-    }
+    console.log("Starting PDF export");
+    const success = await exportReportAsPDF(reportRef.current);
+    
+    toast({
+      title: success ? "Success" : "Error",
+      description: success 
+        ? "Report downloaded successfully!" 
+        : "Failed to download report. Please try again.",
+      variant: success ? "default" : "destructive",
+    });
   };
 
   return (
@@ -119,12 +101,18 @@ export const CalendarEmbed = ({
         ref={calendarRef}
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm relative"
       >
-        <DownloadButton 
-          onClick={handleDownload} 
-          className="download-report-button"
-        />
+        <Button
+          onClick={handleDownload}
+          size="lg"
+          className="download-report-button bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Download Your Report
+        </Button>
       </div>
-      <HiddenReport formData={formData} analysis={analysis} />
+      <div ref={reportRef}>
+        <HiddenReport formData={formData} analysis={analysis} />
+      </div>
     </div>
   );
 };
