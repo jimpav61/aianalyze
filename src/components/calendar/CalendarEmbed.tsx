@@ -92,25 +92,19 @@ export const CalendarEmbed = ({
           
           .download-report-button {
             display: none;
-            position: absolute;
-            top: 120px;
+            position: fixed;
+            top: 240px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999999;
             width: calc(100% - 4rem);
             max-width: 400px;
-            background: transparent;
+            pointer-events: auto;
           }
 
           /* Show button only when confirmation page is loaded */
-          .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
+          body:has(.calendly-inline-widget iframe[src*="confirmation"]) .download-report-button {
             display: block !important;
-          }
-
-          /* Ensure the confirmation page layout isn't affected */
-          .calendly-inline-widget iframe[src*="confirmation"] {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
           }
         `}
       </style>
