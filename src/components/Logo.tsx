@@ -4,7 +4,7 @@ export const Logo = () => {
       <img 
         src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
         alt="Logo" 
-        className="h-8 w-auto" 
+        className="h-16 w-auto" 
       />
     </div>
   );
