@@ -16,15 +16,23 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   return (
     <div className="space-y-6 bg-white p-8 rounded-lg">
       <ReportHeader />
-      <CompanyInformation data={formData} industry={analysis?.industry} />
-      <CurrentOperations data={formData} />
-      <AnalysisResults analysis={analysis} />
-      <ImplementationPlan data={{
-        objectives: formData.objectives,
-        timeline: formData.timeline,
-        budget: formData.budget,
-        additionalInfo: formData.additionalInfo
-      }} />
+      <div className="company-info">
+        <CompanyInformation data={formData} industry={analysis?.industry} />
+      </div>
+      <div className="current-operations">
+        <CurrentOperations data={formData} />
+      </div>
+      <div className="analysis-results">
+        <AnalysisResults analysis={analysis} />
+      </div>
+      <div className="implementation-plan">
+        <ImplementationPlan data={{
+          objectives: formData.objectives,
+          timeline: formData.timeline,
+          budget: formData.budget,
+          additionalInfo: formData.additionalInfo
+        }} />
+      </div>
       <ReportFooter />
     </div>
   );
