@@ -108,9 +108,9 @@ export const CalendarEmbed = ({
             pointer-events: auto;
           }
 
-          /* Show button when confirmation page is loaded */
-          .calendly-inline-widget iframe[src*="confirmed=1"] ~ .download-report-button,
-          .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
+          .calendly-inline-widget .confirmation-page ~ .download-report-button,
+          .calendly-inline-widget .confirmation-page-content ~ .download-report-button,
+          .calendly-inline-widget[data-state="confirmed"] ~ .download-report-button {
             display: block !important;
           }
         `}
