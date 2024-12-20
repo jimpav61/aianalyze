@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { CalendarProps } from "@/types/calendar";
-import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { CalendarFormData } from "@/types/analysis";
+import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
 import { useCalendarEvents } from "@/hooks/calendar/useCalendarEvents";
 import { useCalendarInit } from "@/hooks/calendar/useCalendarInit";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
-import { exportReportAsPDF } from "@/utils/reportExport";
 import { useToast } from "@/hooks/use-toast";
+import { DownloadButton } from "./DownloadButton";
+import { HiddenReport } from "./HiddenReport";
+import { exportReportAsPDF } from "@/utils/reportExport";
 
 interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
   formData?: CalendarFormData;
@@ -21,7 +21,6 @@ export const CalendarEmbed = ({
   analysis 
 }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
-  const reportRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
   const { handleBookingSuccess } = useBookingSuccess({ 
@@ -94,7 +93,7 @@ export const CalendarEmbed = ({
           .download-report-button {
             display: none;
             position: absolute;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 1000;
@@ -108,34 +107,14 @@ export const CalendarEmbed = ({
         `}
       </style>
       <div className="download-report-button">
-        <Button
-          onClick={handleDownload}
-          size="lg"
-          className="w-full bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download Your Report
-        </Button>
+        <DownloadButton onClick={handleDownload} />
       </div>
       <div 
         ref={calendarRef}
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
         style={{ minWidth: '320px' }}
       />
-      <div id="report-content" className="hidden">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold mb-4">Analysis Report</h1>
-          <h2 className="text-xl mb-2">Company Information</h2>
-          <p>Company: {formData?.companyName}</p>
-          <p>Industry: {analysis?.industry}</p>
-          <p>Department: {analysis?.department}</p>
-          <h2 className="text-xl mt-4 mb-2">Analysis Results</h2>
-          <p>Potential Savings: ${analysis?.savings}</p>
-          <p>Profit Increase: ${analysis?.profit_increase}</p>
-          <p>Explanation: {analysis?.explanation}</p>
-          <p>Marketing Strategy: {analysis?.marketing_strategy}</p>
-        </div>
-      </div>
+      <HiddenReport formData={formData} analysis={analysis} />
     </div>
   );
 };
