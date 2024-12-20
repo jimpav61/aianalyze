@@ -20,19 +20,18 @@ export const useCalendarHandling = ({ onClose, setShowReport }: UseCalendarHandl
       return false;
     }
     setShowCalendar(true);
-    setShowReport(false); // Hide report while calendar is shown
     return true;
-  }, [setShowReport]);
+  }, []);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("useCalendarHandling - Booking submitted successfully");
     setShowCalendar(false);
-    setShowReport(true); // Show report again after booking
+    setShowReport(true);
     showSuccessToast();
     
     toast({
       title: "Demo Scheduled Successfully",
-      description: "Your report is still available for download.",
+      description: "Your report is still available for download. You can close this window when you're done.",
       duration: 5000,
     });
   }, [showSuccessToast, toast, setShowReport]);
