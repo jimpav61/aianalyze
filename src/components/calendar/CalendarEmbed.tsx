@@ -70,47 +70,21 @@ export const CalendarEmbed = ({
 
   return (
     <div className="w-full h-[700px] flex flex-col relative">
-      <style>
-        {`
-          .calendly-inline-widget {
-            position: relative;
-            min-width: 320px;
-            height: 100%;
-          }
-          
-          .download-report-button {
-            display: none;
-            position: fixed;
-            top: 180px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999999;
-            width: calc(100% - 4rem);
-            max-width: 400px;
-            pointer-events: auto;
-          }
-
-          .calendly-inline-widget .confirmation-page ~ .download-report-button,
-          .calendly-inline-widget .confirmation-page-content ~ .download-report-button,
-          .calendly-inline-widget[data-state="confirmed"] ~ .download-report-button {
-            display: block !important;
-          }
-        `}
-      </style>
+      <Button
+        onClick={handleDownload}
+        size="lg"
+        className="absolute top-4 right-4 z-50 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+      >
+        <Download className="mr-2 h-4 w-4" />
+        Download Your Report
+      </Button>
+      
       <div 
         ref={calendarRef}
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm relative"
-      >
-        <Button
-          onClick={handleDownload}
-          size="lg"
-          className="download-report-button bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download Your Report
-        </Button>
-      </div>
-      <div ref={reportRef}>
+      />
+      
+      <div ref={reportRef} className="hidden">
         <HiddenReport formData={formData} analysis={analysis} />
       </div>
     </div>
