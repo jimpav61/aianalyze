@@ -84,22 +84,21 @@ export const CalendarEmbed = ({
     <div className="w-full h-[700px] flex flex-col">
       <style>
         {`
-          .calendly-confirmation-page {
-            position: relative !important;
+          iframe[src*="confirmation"] {
             padding-top: 80px !important;
           }
           .download-report-button {
             display: none;
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
-            width: 100%;
+            z-index: 99999;
+            width: 90%;
             max-width: 300px;
             margin: 0 auto;
           }
-          .calendly-confirmation-page .download-report-button {
+          iframe[src*="confirmation"] ~ .download-report-button {
             display: block !important;
           }
         `}
