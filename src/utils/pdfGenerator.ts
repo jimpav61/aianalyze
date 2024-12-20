@@ -19,8 +19,10 @@ interface GenerateReportParams {
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
   // Create a temporary container to render the report
   const reportContainer = document.createElement('div');
+  reportContainer.style.width = '800px'; // Set fixed width for consistent rendering
   reportContainer.style.padding = '20px';
   reportContainer.style.background = 'white';
+  document.body.appendChild(reportContainer);
   
   // Create the report content matching the exact card layout
   reportContainer.innerHTML = `
@@ -80,34 +82,49 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     </div>
   `;
 
-  document.body.appendChild(reportContainer);
-
   try {
-    // Capture the rendered content as an image
+    // Capture the rendered content as an image with higher quality settings
     const canvas = await html2canvas(reportContainer, {
-      scale: 2,
+      scale: 2, // Increase scale for better quality
       logging: false,
       useCORS: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      windowWidth: 800,
+      height: reportContainer.offsetHeight // Capture full height
     });
 
     // Remove the temporary container
     document.body.removeChild(reportContainer);
 
-    // Create PDF with the correct dimensions
+    // Create PDF with proper dimensions
     const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const pdf = new jsPDF('p', 'mm', 'a4');
     
-    // Add the image to the PDF
-    pdf.addImage(
-      canvas.toDataURL('image/png'),
-      'PNG',
-      0,
-      0,
-      imgWidth,
-      imgHeight
-    );
+    // Handle multi-page content if needed
+    let heightLeft = imgHeight;
+    let position = 0;
+    let pageNumber = 1;
+
+    while (heightLeft >= 0) {
+      if (pageNumber > 1) {
+        pdf.addPage();
+      }
+      
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        0,
+        position,
+        imgWidth,
+        imgHeight
+      );
+      
+      heightLeft -= pageHeight;
+      position -= pageHeight;
+      pageNumber++;
+    }
 
     return pdf;
   } catch (error) {
