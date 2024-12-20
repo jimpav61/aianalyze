@@ -12,7 +12,7 @@ interface DownloadReportButtonProps {
 export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!formData || !analysis) {
       toast({
         title: "Error",
@@ -23,7 +23,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
     }
 
     try {
-      const doc = generateAnalysisReport({ formData, analysis });
+      const doc = await generateAnalysisReport({ formData, analysis });
       doc.save("chatsites-analysis-report.pdf");
       
       toast({

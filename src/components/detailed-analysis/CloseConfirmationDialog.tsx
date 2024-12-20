@@ -21,7 +21,7 @@ export const CloseConfirmationDialog = ({
 }: CloseConfirmationDialogProps) => {
   const { toast } = useToast();
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!formData || !analysis) {
       toast({
         title: "Error",
@@ -32,7 +32,7 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      const doc = generateAnalysisReport({ formData, analysis });
+      const doc = await generateAnalysisReport({ formData, analysis });
       doc.save("chatsites-analysis-report.pdf");
       
       toast({
