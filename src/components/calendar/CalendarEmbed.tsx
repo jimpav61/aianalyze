@@ -69,47 +69,47 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-[700px] flex flex-col relative">
-      <style>
-        {`
-          .calendly-inline-widget {
-            position: relative;
-            min-width: 320px;
-            height: 100%;
-          }
-          
-          .download-report-button {
-            display: none;
-            position: fixed;
-            top: 180px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999999;
-            width: calc(100% - 4rem);
-            max-width: 400px;
-            pointer-events: auto;
-          }
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div ref={calendarRef} className="min-h-[600px] relative">
+          <div className="download-button-container" style={{ display: 'none' }}>
+            <h1 className="text-2xl font-bold mb-4 text-center">Schedule Your Demo</h1>
+            <Button
+              onClick={handleDownload}
+              size="lg"
+              className="w-full max-w-md mx-auto bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download Your Report
+            </Button>
+          </div>
+        </div>
+        
+        <style>
+          {`
+            .calendly-inline-widget {
+              min-width: 320px;
+              height: 600px;
+            }
+            
+            .download-button-container {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 100%;
+              max-width: 400px;
+              text-align: center;
+              z-index: 999999;
+            }
 
-          .calendly-inline-widget .confirmation-page ~ .download-report-button,
-          .calendly-inline-widget .confirmation-page-content ~ .download-report-button,
-          .calendly-inline-widget[data-state="confirmed"] ~ .download-report-button {
-            display: block !important;
-          }
-        `}
-      </style>
-      
-      <div 
-        ref={calendarRef}
-        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm relative"
-      >
-        <Button
-          onClick={handleDownload}
-          size="lg"
-          className="download-report-button bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download Your Report
-        </Button>
+            .calendly-inline-widget .confirmation-page ~ .download-button-container,
+            .calendly-inline-widget .confirmation-page-content ~ .download-button-container,
+            .calendly-inline-widget[data-state="confirmed"] ~ .download-button-container {
+              display: block !important;
+            }
+          `}
+        </style>
       </div>
       
       <div ref={reportRef}>
