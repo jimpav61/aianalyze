@@ -72,7 +72,7 @@ export const CalendarView = ({
           {formData && analysis && (
             <>
               <h2 className="text-xl mb-2">Company Information</h2>
-              <p>Company: {formData.company_name}</p>
+              <p>Company: {formData.companyName}</p>
               <p>Industry: {analysis.industry}</p>
               <p>Department: {analysis.department}</p>
               <h2 className="text-xl mt-4 mb-2">Analysis Results</h2>
