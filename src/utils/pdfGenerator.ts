@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 import { DetailedFormData } from "@/types/analysis";
 
 interface GenerateReportParams {
@@ -16,118 +17,141 @@ interface GenerateReportParams {
 }
 
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  const doc = new jsPDF();
-  let yPosition = 20;
-  const pageWidth = doc.internal.pageSize.width;
-  const margin = 20;
-  const contentWidth = pageWidth - (2 * margin);
+  // Create a temporary container to render the report
+  const reportContainer = document.createElement('div');
+  reportContainer.style.padding = '20px';
+  reportContainer.style.background = 'white';
+  
+  // Create the report content matching the exact card layout
+  reportContainer.innerHTML = `
+    <div style="font-family: Arial, sans-serif;">
+      <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <div style="color: #f65228; font-size: 24px; font-weight: bold;">ChatSites Analysis Report</div>
+      </div>
+      
+      <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="color: #333; font-size: 18px; margin-bottom: 15px;">Company Information</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <p style="font-weight: bold; margin: 5px 0;">Company Name:</p>
+            <p style="color: #666;">${formData.companyName}</p>
+          </div>
+          <div>
+            <p style="font-weight: bold; margin: 5px 0;">Industry:</p>
+            <p style="color: #666;">${analysis.industry}</p>
+          </div>
+          <div>
+            <p style="font-weight: bold; margin: 5px 0;">Contact Email:</p>
+            <p style="color: #666;">${formData.email}</p>
+          </div>
+          <div>
+            <p style="font-weight: bold; margin: 5px 0;">Contact Phone:</p>
+            <p style="color: #666;">${formData.phoneNumber}</p>
+          </div>
+        </div>
+      </div>
 
-  // Helper function for consistent section styling
-  const addSection = (title: string, content: string | string[], y: number) => {
-    // Add section background
-    doc.setFillColor(249, 250, 251); // bg-gray-50
-    doc.rect(margin, y - 5, contentWidth, 30, "F");
-    
-    // Add section title
-    doc.setFontSize(14);
-    doc.setTextColor(31, 41, 55); // text-gray-800
-    doc.setFont("helvetica", "bold");
-    doc.text(title, margin + 5, y + 5);
-    
-    // Add content
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(75, 85, 99); // text-gray-600
-    
-    const contentArray = Array.isArray(content) ? content : [content];
-    let contentY = y + 15;
-    
-    contentArray.forEach(line => {
-      const lines = doc.splitTextToSize(line, contentWidth - 10);
-      lines.forEach((textLine: string) => {
-        if (contentY > 270) {
-          doc.addPage();
-          contentY = 20;
-        }
-        doc.text(textLine, margin + 5, contentY);
-        contentY += 7;
-      });
+      <div style="display: grid; gap: 20px;">
+        ${(analysis.allAnalyses || [analysis]).map(item => `
+          <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; background: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <h3 style="font-size: 20px; font-weight: bold; color: #333;">${item.department}</h3>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
+                Function
+              </div>
+              <p style="color: #666; font-size: 14px;">${item.function || item.bot_function}</p>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
+                Explanation
+              </div>
+              <p style="color: #666; font-size: 14px;">${item.explanation}</p>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
+                Marketing Strategy
+              </div>
+              <p style="color: #666; font-size: 14px;">${item.marketingStrategy || item.marketing_strategy}</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="color: #10B981;">$</span>
+                <span style="font-size: 14px; font-weight: 500;">Savings: $${typeof item.savings === 'string' ? item.savings : item.savings.toLocaleString()}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="color: #10B981;">↗</span>
+                <span style="font-size: 14px; font-weight: 500;">Profit: ${typeof item.profit_increase === 'string' ? item.profit_increase : item.profit_increase}%</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div style="margin-top: 20px; text-align: center; color: #666; font-size: 12px;">
+        <p>Generated by ChatSites AI Analysis Tool</p>
+        <p>www.chatsites.ai</p>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(reportContainer);
+
+  try {
+    // Capture the rendered content as an image
+    const canvas = await html2canvas(reportContainer, {
+      scale: 2, // Higher resolution
+      logging: false,
+      useCORS: true,
+      backgroundColor: '#ffffff'
     });
+
+    // Remove the temporary container
+    document.body.removeChild(reportContainer);
+
+    // Create PDF with the correct dimensions
+    const imgWidth = 210; // A4 width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const pdf = new jsPDF('p', 'mm', 'a4');
     
-    return contentY + 10;
-  };
-
-  // Header with logo and contact
-  doc.setFillColor(246, 82, 40); // #f65228
-  doc.rect(margin, yPosition - 10, contentWidth, 2, "F");
-  
-  doc.setFontSize(24);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(246, 82, 40);
-  doc.text("ChatSites", margin, yPosition + 10);
-  
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(107, 114, 128); // text-gray-500
-  doc.text([
-    "Contact:",
-    "info@chatsites.io",
-    "chatsites.ai"
-  ], pageWidth - margin - 30, yPosition, { align: "right" });
-  
-  yPosition += 30;
-
-  // Company Information
-  yPosition = addSection("Company Information", [
-    `Company: ${formData.companyName}`,
-    `Industry: ${analysis.industry}`,
-    `Contact: ${formData.email}`,
-    `Phone: ${formData.phoneNumber}`,
-    `Employees: ${formData.employees}`,
-    `Revenue: ${formData.revenue}`
-  ], yPosition);
-
-  // Current Operations
-  yPosition = addSection("Current Operations", [
-    `Service Channels: ${formData.serviceChannels}`,
-    `Monthly Interactions: ${formData.monthlyInteractions}`,
-    `Current Tools: ${formData.currentTools}`,
-    `Pain Points: ${formData.painPoints}`
-  ], yPosition);
-
-  // Analysis Results
-  yPosition = addSection("Analysis Results", [
-    `Department: ${analysis.department}`,
-    `Function: ${analysis.bot_function}`,
-    `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
-    `Projected Profit Increase: ${analysis.profit_increase}%`,
-    `Implementation Strategy: ${analysis.explanation}`,
-    `Marketing Strategy: ${analysis.marketing_strategy}`
-  ], yPosition);
-
-  // Additional Analyses
-  if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
-    yPosition = addSection("Additional Department Analyses", 
-      analysis.allAnalyses.slice(1).map(dept => 
-        `${dept.department}: ${dept.function}\nSavings: $${parseInt(dept.savings).toLocaleString()}, Profit Increase: ${dept.profit_increase}%`
-      ),
-      yPosition
+    // Add the image to the PDF
+    pdf.addImage(
+      canvas.toDataURL('image/png'),
+      'PNG',
+      0,
+      0,
+      imgWidth,
+      imgHeight
     );
+
+    // If content spans multiple pages, add them
+    if (imgHeight > 297) { // A4 height in mm
+      let heightLeft = imgHeight - 297;
+      let position = -297;
+      
+      while (heightLeft > 0) {
+        pdf.addPage();
+        pdf.addImage(
+          canvas.toDataURL('image/png'),
+          'PNG',
+          0,
+          position,
+          imgWidth,
+          imgHeight
+        );
+        heightLeft -= 297;
+        position -= 297;
+      }
+    }
+
+    return pdf;
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    throw error;
   }
-
-  // Implementation Plan
-  yPosition = addSection("Implementation Plan", [
-    `Objectives: ${formData.objectives}`,
-    `Timeline: ${formData.timeline}`,
-    `Budget: ${formData.budget}`,
-    formData.additionalInfo ? `Additional Information: ${formData.additionalInfo}` : ""
-  ], yPosition);
-
-  // Footer
-  doc.setFontSize(10);
-  doc.setTextColor(107, 114, 128);
-  doc.text("Generated by ChatSites AI Analysis Tool", pageWidth / 2, doc.internal.pageSize.height - 20, { align: "center" });
-  doc.text("www.chatsites.ai", pageWidth / 2, doc.internal.pageSize.height - 15, { align: "center" });
-
-  return doc;
 };
