@@ -2,8 +2,8 @@ export const Logo = () => {
   return (
     <div className="flex items-center">
       <img 
-        src="/lovable-uploads/a726414f-2662-45f3-bae7-8e5cdda04be4.png" 
-        alt="ChatSites Logo" 
+        src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
+        alt="Logo" 
         className="h-8 w-auto" 
       />
     </div>
