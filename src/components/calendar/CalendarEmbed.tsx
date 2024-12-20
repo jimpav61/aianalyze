@@ -23,6 +23,8 @@ export const CalendarEmbed = ({
   const calendarRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
+  console.log("CalendarEmbed - Rendering with data:", { formData, analysis });
+  
   const { handleBookingSuccess } = useBookingSuccess({ 
     formData, 
     analysis, 
@@ -106,7 +108,7 @@ export const CalendarEmbed = ({
             pointer-events: auto;
           }
 
-          /* Show button only when confirmation page is loaded */
+          /* Show button when confirmation page is loaded */
           .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
             display: block !important;
           }
