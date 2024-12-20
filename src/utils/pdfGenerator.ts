@@ -24,7 +24,6 @@ export const generateAnalysisReport = ({ formData, analysis }: GenerateReportPar
   
   let yPosition = 50;
 
-  // Company Information
   doc.setFontSize(18);
   doc.setTextColor(0);
   doc.text("Company Information", 20, yPosition);
@@ -46,7 +45,6 @@ export const generateAnalysisReport = ({ formData, analysis }: GenerateReportPar
   });
   yPosition += 10;
 
-  // Current Operations
   if (yPosition > 250) {
     doc.addPage();
     yPosition = 30;
@@ -70,7 +68,6 @@ export const generateAnalysisReport = ({ formData, analysis }: GenerateReportPar
   });
   yPosition += 10;
 
-  // Analysis Results
   if (yPosition > 250) {
     doc.addPage();
     yPosition = 30;
@@ -93,7 +90,6 @@ export const generateAnalysisReport = ({ formData, analysis }: GenerateReportPar
     yPosition += lines.length * 8;
   });
 
-  // Add footer to each page
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
