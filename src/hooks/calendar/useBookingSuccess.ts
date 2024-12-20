@@ -187,7 +187,7 @@ export const useBookingSuccess = ({
           </Button>
         </div>
       ),
-      duration: 5000, // Increased to 5 seconds to give time to click download
+      duration: 5000,
     });
 
     if (onSubmit) {
