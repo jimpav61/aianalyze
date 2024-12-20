@@ -5,6 +5,7 @@ import { ImplementationPlan } from "./ImplementationPlan";
 import { CompanyInformation } from "./CompanyInformation";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
+import { AnalysisGrid } from "../AnalysisGrid";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -13,6 +14,17 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
+  // Transform analysis data to match the grid format
+  const analysesForGrid = [{
+    id: crypto.randomUUID(),
+    department: analysis.department,
+    function: analysis.bot_function,
+    savings: analysis.savings.toString(),
+    profit_increase: analysis.profit_increase.toString(),
+    explanation: analysis.explanation,
+    marketingStrategy: analysis.marketing_strategy
+  }];
+
   return (
     <div className="space-y-6 bg-white p-8 rounded-lg">
       <ReportHeader />
@@ -24,6 +36,10 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
       </div>
       <div className="analysis-results">
         <AnalysisResults analysis={analysis} />
+      </div>
+      <div className="implementation-recommendations mt-8">
+        <h3 className="text-xl font-semibold mb-4">AI Implementation Recommendations</h3>
+        <AnalysisGrid analyses={analysesForGrid} />
       </div>
       <div className="implementation-plan">
         <ImplementationPlan data={{
