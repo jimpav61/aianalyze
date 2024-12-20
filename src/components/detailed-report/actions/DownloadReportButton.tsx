@@ -13,7 +13,10 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
   const { toast } = useToast();
 
   const handleDownload = () => {
+    console.log("Download initiated with:", { formData, analysis });
+
     if (!formData || !analysis) {
+      console.error("Missing required data for download");
       toast({
         title: "Error",
         description: "Report data not available. Please try again.",
@@ -143,9 +146,11 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         );
       }
 
+      console.log("PDF generated successfully, initiating download");
       // Save the PDF - this triggers immediate download
       doc.save("chatsites-analysis-report.pdf");
       
+      console.log("Download completed, showing success toast");
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
