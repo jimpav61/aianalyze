@@ -42,7 +42,9 @@ export const CalendarEmbed = ({
   });
 
   const handleDownload = async () => {
+    console.log("Download button clicked");
     if (!formData || !analysis) {
+      console.error("Missing data for download:", { formData, analysis });
       toast({
         title: "Error",
         description: "Report data not available. Please try again.",
@@ -53,6 +55,7 @@ export const CalendarEmbed = ({
 
     const reportElement = document.getElementById('report-content');
     if (!reportElement) {
+      console.error("Report element not found");
       toast({
         title: "Error",
         description: "Report element not found. Please try again.",
@@ -63,6 +66,7 @@ export const CalendarEmbed = ({
 
     try {
       const success = await exportReportAsPDF(reportElement);
+      console.log("PDF export result:", success);
       toast({
         title: success ? "Success" : "Error",
         description: success 
