@@ -1,6 +1,5 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
-import html2canvas from "html2canvas";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -19,27 +18,46 @@ interface GenerateReportParams {
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
   const doc = new jsPDF();
   let yPosition = 20;
+  const pageWidth = doc.internal.pageSize.width;
+  const margin = 20;
+  const contentWidth = pageWidth - (2 * margin);
 
   // Helper function to add section headers with brand colors
   const addSectionHeader = (text: string, y: number) => {
     doc.setFillColor(246, 82, 40); // Primary brand color #f65228
-    doc.rect(20, y - 6, 170, 10, "F");
+    doc.rect(margin, y - 6, contentWidth, 10, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(14);
-    doc.text(text, 25, y);
+    doc.text(text, margin + 5, y);
     doc.setTextColor(0);
     return y + 15;
   };
 
-  // Add header with logo and contact info
+  // Helper function to add wrapped text
+  const addWrappedText = (text: string, y: number, fontSize: number = 11) => {
+    doc.setFontSize(fontSize);
+    const lines = doc.splitTextToSize(text, contentWidth - 10);
+    lines.forEach((line: string) => {
+      // Check if we need a new page
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(line, margin + 5, y);
+      y += fontSize * 0.5;
+    });
+    return y + 8;
+  };
+
+  // Header with logo and contact info
   doc.setFillColor(255, 255, 255);
-  doc.rect(20, yPosition - 10, 170, 25, "F");
+  doc.rect(margin, yPosition - 10, contentWidth, 25, "F");
   
-  // Add ChatSites text as logo placeholder
+  // Add ChatSites text as logo
   doc.setTextColor(246, 82, 40);
   doc.setFontSize(24);
   doc.setFont("helvetica", "bold");
-  doc.text("ChatSites", 25, yPosition + 5);
+  doc.text("ChatSites", margin + 5, yPosition + 5);
   
   // Add contact information
   doc.setTextColor(128, 128, 128);
@@ -50,12 +68,12 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     "info@chatsites.io",
     "+1 480 862 0288",
     "chatsites.ai"
-  ], 150, yPosition - 5, { align: "right" });
+  ], pageWidth - margin - 5, yPosition - 5, { align: "right" });
 
   yPosition += 30;
 
-  // Executive Summary
-  yPosition = addSectionHeader("Executive Summary", yPosition);
+  // Company Information
+  yPosition = addSectionHeader("Company Information", yPosition);
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
 
@@ -69,31 +87,11 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   ];
 
   companyInfo.forEach(line => {
-    doc.text(line, 25, yPosition);
-    yPosition += 8;
+    yPosition = addWrappedText(line, yPosition);
   });
 
-  yPosition += 10;
-
-  // Key Metrics
-  const metrics = [
-    `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
-    `Projected Profit Increase: ${analysis.profit_increase}%`,
-    `Primary Department: ${analysis.department}`,
-    `Primary Function: ${analysis.bot_function}`
-  ];
-
-  metrics.forEach(line => {
-    doc.text(line, 25, yPosition);
-    yPosition += 8;
-  });
-
-  // Add new page for Current Operations
-  doc.addPage();
-  yPosition = 20;
-
-  // Current Operations Analysis
-  yPosition = addSectionHeader("Current Operations Analysis", yPosition);
+  // Current Operations
+  yPosition = addSectionHeader("Current Operations", yPosition + 5);
   
   const operations = [
     `Service Channels: ${formData.serviceChannels}`,
@@ -103,59 +101,47 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   ];
 
   operations.forEach(line => {
-    const lines = doc.splitTextToSize(line, 160);
-    lines.forEach(splitLine => {
-      doc.text(splitLine, 25, yPosition);
-      yPosition += 8;
-    });
-    yPosition += 4;
+    yPosition = addWrappedText(line, yPosition);
   });
 
-  // Implementation Strategy
-  yPosition = addSectionHeader("Implementation Strategy", yPosition + 10);
+  // Analysis Results
+  yPosition = addSectionHeader("Analysis Results", yPosition + 5);
   
-  const strategyLines = doc.splitTextToSize(analysis.explanation, 160);
-  strategyLines.forEach(line => {
-    doc.text(line, 25, yPosition);
-    yPosition += 8;
+  const results = [
+    `Primary Department: ${analysis.department}`,
+    `Primary Function: ${analysis.bot_function}`,
+    `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
+    `Projected Profit Increase: ${analysis.profit_increase}%`,
+    `Implementation Strategy: ${analysis.explanation}`,
+    `Marketing Strategy: ${analysis.marketing_strategy}`
+  ];
+
+  results.forEach(line => {
+    yPosition = addWrappedText(line, yPosition);
   });
-
-  yPosition += 10;
-
-  const marketingLines = doc.splitTextToSize(analysis.marketing_strategy, 160);
-  marketingLines.forEach(line => {
-    doc.text(line, 25, yPosition);
-    yPosition += 8;
-  });
-
-  // Add new page for Implementation Plan
-  doc.addPage();
-  yPosition = 20;
 
   // Implementation Plan
-  yPosition = addSectionHeader("Implementation Plan", yPosition);
+  yPosition = addSectionHeader("Implementation Plan", yPosition + 5);
   
   const planDetails = [
     `Objectives: ${formData.objectives}`,
     `Timeline: ${formData.timeline}`,
-    `Budget: ${formData.budget}`,
-    `Additional Information: ${formData.additionalInfo || 'None provided'}`
+    `Budget: ${formData.budget}`
   ];
 
-  planDetails.forEach(detail => {
-    const lines = doc.splitTextToSize(detail, 160);
-    lines.forEach(line => {
-      doc.text(line, 25, yPosition);
-      yPosition += 8;
-    });
-    yPosition += 4;
+  planDetails.forEach(line => {
+    yPosition = addWrappedText(line, yPosition);
   });
 
-  // Add department recommendations if available
-  if (analysis.allAnalyses && analysis.allAnalyses.length > 0) {
-    yPosition = addSectionHeader("Department Recommendations", yPosition + 10);
+  if (formData.additionalInfo) {
+    yPosition = addWrappedText(`Additional Information: ${formData.additionalInfo}`, yPosition);
+  }
+
+  // Department Recommendations
+  if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
+    yPosition = addSectionHeader("Additional Department Recommendations", yPosition + 5);
     
-    analysis.allAnalyses.forEach(dept => {
+    analysis.allAnalyses.slice(1).forEach((dept: any) => {
       const deptInfo = [
         `Department: ${dept.department}`,
         `Function: ${dept.function}`,
@@ -166,15 +152,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       ];
 
       deptInfo.forEach(line => {
-        const lines = doc.splitTextToSize(line, 160);
-        lines.forEach(splitLine => {
-          if (yPosition > 270) {
-            doc.addPage();
-            yPosition = 20;
-          }
-          doc.text(splitLine, 25, yPosition);
-          yPosition += 8;
-        });
+        yPosition = addWrappedText(line, yPosition);
       });
     });
   }
