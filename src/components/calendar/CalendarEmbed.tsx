@@ -81,36 +81,46 @@ export const CalendarEmbed = ({
   };
 
   return (
-    <div className="w-full h-[700px] flex flex-col">
+    <div className="w-full h-[700px] flex flex-col relative">
       <style>
         {`
-          iframe[src*="confirmation"] {
-            padding-top: 80px !important;
+          .calendly-inline-widget {
+            position: relative;
+            min-width: 320px;
+            height: 100%;
           }
+          
           .download-report-button {
             display: none;
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 99999;
-            width: 90%;
-            max-width: 300px;
-            margin: 0 auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999999;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           }
-          iframe[src*="confirmation"] ~ .download-report-button {
+
+          /* Show button when confirmation page is loaded */
+          .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
             display: block !important;
+          }
+
+          /* Adjust iframe padding when confirmation page is shown */
+          .calendly-inline-widget iframe[src*="confirmation"] {
+            padding-top: 100px !important;
           }
         `}
       </style>
-      <div className="download-report-button">
-        <DownloadButton onClick={handleDownload} />
-      </div>
       <div 
         ref={calendarRef}
-        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
-        style={{ minWidth: '320px' }}
-      />
+        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm relative"
+      >
+        <div className="download-report-button">
+          <DownloadButton onClick={handleDownload} />
+        </div>
+      </div>
       <HiddenReport formData={formData} analysis={analysis} />
     </div>
   );
