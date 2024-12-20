@@ -11,9 +11,7 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    console.log("DownloadReportButton - Starting download");
     if (!reportRef?.current) {
-      console.error("DownloadReportButton - No report ref found");
       toast({
         title: "Error",
         description: "Could not generate report. Please try again.",
@@ -24,82 +22,111 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
 
     try {
       const doc = new jsPDF();
-      const report = reportRef.current;
-
-      // Extract text content from each section
-      const companyInfo = report.querySelector('.company-info');
-      const currentOps = report.querySelector('.current-operations');
-      const analysisResults = report.querySelector('.analysis-results');
-      const implementationPlan = report.querySelector('.implementation-plan');
+      
+      // Extract report data from the ref
+      const companyInfo = reportRef.current.querySelector('.company-info');
+      const currentOps = reportRef.current.querySelector('.current-operations');
+      const analysisResults = reportRef.current.querySelector('.analysis-results');
+      const implementationPlan = reportRef.current.querySelector('.implementation-plan');
 
       // Set up PDF styling
       doc.setFont("helvetica");
-      doc.setFontSize(20);
-      doc.text("ChatSites AI Analysis Report", 20, 20);
       
-      doc.setFontSize(12);
-      let yPosition = 40;
+      // Add header
+      doc.setFontSize(24);
+      doc.setTextColor(246, 82, 40); // #f65228
+      doc.text("ChatSites AI Analysis Report", 20, 30);
+      
+      let yPosition = 50;
 
-      // Add company information
+      // Add company information section
       if (companyInfo) {
-        doc.setFontSize(16);
+        const companyData = companyInfo.querySelectorAll('.text-gray-600');
+        doc.setFontSize(18);
+        doc.setTextColor(0);
         doc.text("Company Information", 20, yPosition);
         yPosition += 10;
         doc.setFontSize(12);
-        const companyText = companyInfo.textContent || '';
-        const companyLines = doc.splitTextToSize(companyText, 170);
-        doc.text(companyLines, 20, yPosition);
-        yPosition += companyLines.length * 7 + 10;
+        companyData.forEach((data) => {
+          const text = data.textContent || '';
+          if (text && yPosition < 270) {
+            doc.text(text, 20, yPosition);
+            yPosition += 8;
+          }
+        });
+        yPosition += 10;
       }
 
-      // Add current operations
+      // Add current operations section
       if (currentOps) {
-        doc.setFontSize(16);
+        if (yPosition > 250) {
+          doc.addPage();
+          yPosition = 30;
+        }
+        const opsData = currentOps.querySelectorAll('.text-gray-600');
+        doc.setFontSize(18);
         doc.text("Current Operations", 20, yPosition);
         yPosition += 10;
         doc.setFontSize(12);
-        const opsText = currentOps.textContent || '';
-        const opsLines = doc.splitTextToSize(opsText, 170);
-        doc.text(opsLines, 20, yPosition);
-        yPosition += opsLines.length * 7 + 10;
+        opsData.forEach((data) => {
+          const text = data.textContent || '';
+          if (text && yPosition < 270) {
+            doc.text(text, 20, yPosition);
+            yPosition += 8;
+          }
+        });
+        yPosition += 10;
       }
 
-      // Add analysis results
+      // Add analysis results section
       if (analysisResults) {
         if (yPosition > 250) {
           doc.addPage();
-          yPosition = 20;
+          yPosition = 30;
         }
-        doc.setFontSize(16);
+        const resultsData = analysisResults.querySelectorAll('.text-gray-600');
+        doc.setFontSize(18);
         doc.text("Analysis Results", 20, yPosition);
         yPosition += 10;
         doc.setFontSize(12);
-        const analysisText = analysisResults.textContent || '';
-        const analysisLines = doc.splitTextToSize(analysisText, 170);
-        doc.text(analysisLines, 20, yPosition);
-        yPosition += analysisLines.length * 7 + 10;
+        resultsData.forEach((data) => {
+          const text = data.textContent || '';
+          if (text && yPosition < 270) {
+            const lines = doc.splitTextToSize(text, 170);
+            doc.text(lines, 20, yPosition);
+            yPosition += lines.length * 8 + 4;
+          }
+        });
+        yPosition += 10;
       }
 
-      // Add implementation plan
+      // Add implementation plan section
       if (implementationPlan) {
         if (yPosition > 250) {
           doc.addPage();
-          yPosition = 20;
+          yPosition = 30;
         }
-        doc.setFontSize(16);
+        const planData = implementationPlan.querySelectorAll('.text-gray-600');
+        doc.setFontSize(18);
         doc.text("Implementation Plan", 20, yPosition);
         yPosition += 10;
         doc.setFontSize(12);
-        const planText = implementationPlan.textContent || '';
-        const planLines = doc.splitTextToSize(planText, 170);
-        doc.text(planLines, 20, yPosition);
+        planData.forEach((data) => {
+          const text = data.textContent || '';
+          if (text && yPosition < 270) {
+            const lines = doc.splitTextToSize(text, 170);
+            doc.text(lines, 20, yPosition);
+            yPosition += lines.length * 8 + 4;
+          }
+        });
       }
 
-      // Add footer
-      doc.setFontSize(10);
+      // Add footer to each page
       const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(128);
         doc.text(
           `Generated by ChatSites AI - Page ${i} of ${pageCount}`,
           20,
@@ -110,13 +137,12 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
       // Save the PDF
       doc.save("chatsites-analysis-report.pdf");
       
-      console.log("DownloadReportButton - Download completed successfully");
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
       });
     } catch (error) {
-      console.error("DownloadReportButton - Download error:", error);
+      console.error("Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
