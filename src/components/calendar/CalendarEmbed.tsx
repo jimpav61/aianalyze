@@ -42,7 +42,7 @@ export const CalendarEmbed = ({
     calendarRef,
     calLink,
     formData,
-    handleEventScheduled
+    onEventScheduled: handleEventScheduled
   });
 
   const handleDownload = async () => {
