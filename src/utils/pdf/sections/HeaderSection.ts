@@ -4,9 +4,9 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem;">
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <img 
-          src="/lovable-uploads/16e069a8-1b12-4eb4-9c52-25400e76cda9.png" 
+          src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
           alt="ChatSites Logo" 
-          style="height: 2.5rem; width: auto;"
+          style="height: 64px; width: auto;"
         />
       </div>
       <div style="text-align: right; font-size: 0.875rem; line-height: 1.6;">
