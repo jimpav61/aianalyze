@@ -42,7 +42,7 @@ export const CalendarEmbed = ({
     calendarRef,
     calLink,
     formData,
-    onEventScheduled: handleEventScheduled
+    handleEventScheduled
   });
 
   const handleDownload = async () => {
@@ -72,8 +72,9 @@ export const CalendarEmbed = ({
     <div className="container mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-sm p-6">
         <div ref={calendarRef} className="min-h-[600px] relative">
-          <div className="download-button-container" style={{ display: 'none' }}>
-            <h1 className="text-2xl font-bold mb-4 text-center">Schedule Your Demo</h1>
+          <div className="calendly-inline-widget" style={{ minWidth: '320px', height: '600px' }} />
+          <div className="download-button-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[400px] text-center opacity-0 pointer-events-none">
+            <h1 className="text-2xl font-bold mb-4">Schedule Your Demo</h1>
             <Button
               onClick={handleDownload}
               size="lg"
@@ -93,20 +94,15 @@ export const CalendarEmbed = ({
             }
             
             .download-button-container {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              width: 100%;
-              max-width: 400px;
-              text-align: center;
               z-index: 999999;
+              transition: opacity 0.3s ease;
             }
 
             .calendly-inline-widget .confirmation-page ~ .download-button-container,
             .calendly-inline-widget .confirmation-page-content ~ .download-button-container,
             .calendly-inline-widget[data-state="confirmed"] ~ .download-button-container {
-              display: block !important;
+              opacity: 1;
+              pointer-events: auto;
             }
           `}
         </style>
