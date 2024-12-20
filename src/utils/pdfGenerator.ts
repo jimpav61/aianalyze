@@ -26,76 +26,56 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   reportContainer.innerHTML = `
     <div style="font-family: Arial, sans-serif;">
       <div style="display: flex; align-items: center; margin-bottom: 20px;">
-        <div style="color: #f65228; font-size: 24px; font-weight: bold;">ChatSites Analysis Report</div>
+        <img src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" alt="ChatSites Logo" style="height: 64px; margin-right: 10px;" />
       </div>
       
-      <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2 style="color: #333; font-size: 18px; margin-bottom: 15px;">Company Information</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-          <div>
-            <p style="font-weight: bold; margin: 5px 0;">Company Name:</p>
-            <p style="color: #666;">${formData.companyName}</p>
+      <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h3 style="font-size: 20px; font-weight: bold; color: #333; margin: 0;">${analysis.department}</h3>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f65228" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <span style="background: #f65228; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; display: inline-block; margin-bottom: 8px;">
+            Function
+          </span>
+          <p style="color: #666; font-size: 14px; margin: 0;">${analysis.bot_function}</p>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <span style="background: #f65228; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; display: inline-block; margin-bottom: 8px;">
+            Explanation
+          </span>
+          <p style="color: #666; font-size: 14px; margin: 0;">${analysis.explanation}</p>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+          <span style="background: #f65228; color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; display: inline-block; margin-bottom: 8px;">
+            Marketing Strategy
+          </span>
+          <p style="color: #666; font-size: 14px; margin: 0;">${analysis.marketing_strategy}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span style="font-size: 14px; font-weight: 500;">Savings: $${typeof analysis.savings === 'string' ? analysis.savings : analysis.savings.toLocaleString()}</span>
           </div>
-          <div>
-            <p style="font-weight: bold; margin: 5px 0;">Industry:</p>
-            <p style="color: #666;">${analysis.industry}</p>
-          </div>
-          <div>
-            <p style="font-weight: bold; margin: 5px 0;">Contact Email:</p>
-            <p style="color: #666;">${formData.email}</p>
-          </div>
-          <div>
-            <p style="font-weight: bold; margin: 5px 0;">Contact Phone:</p>
-            <p style="color: #666;">${formData.phoneNumber}</p>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span style="font-size: 14px; font-weight: 500;">Profit: ${typeof analysis.profit_increase === 'string' ? analysis.profit_increase : analysis.profit_increase}%</span>
           </div>
         </div>
-      </div>
-
-      <div style="display: grid; gap: 20px;">
-        ${(analysis.allAnalyses || [analysis]).map(item => `
-          <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; background: white;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <h3 style="font-size: 20px; font-weight: bold; color: #333;">${item.department}</h3>
-            </div>
-            
-            <div style="margin-bottom: 16px;">
-              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
-                Function
-              </div>
-              <p style="color: #666; font-size: 14px;">${item.function || item.bot_function}</p>
-            </div>
-            
-            <div style="margin-bottom: 16px;">
-              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
-                Explanation
-              </div>
-              <p style="color: #666; font-size: 14px;">${item.explanation}</p>
-            </div>
-            
-            <div style="margin-bottom: 16px;">
-              <div style="background: #f65228; color: white; display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-bottom: 8px;">
-                Marketing Strategy
-              </div>
-              <p style="color: #666; font-size: 14px;">${item.marketingStrategy || item.marketing_strategy}</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="color: #10B981;">$</span>
-                <span style="font-size: 14px; font-weight: 500;">Savings: $${typeof item.savings === 'string' ? item.savings : item.savings.toLocaleString()}</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="color: #10B981;">↗</span>
-                <span style="font-size: 14px; font-weight: 500;">Profit: ${typeof item.profit_increase === 'string' ? item.profit_increase : item.profit_increase}%</span>
-              </div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-
-      <div style="margin-top: 20px; text-align: center; color: #666; font-size: 12px;">
-        <p>Generated by ChatSites AI Analysis Tool</p>
-        <p>www.chatsites.ai</p>
       </div>
     </div>
   `;
@@ -105,7 +85,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   try {
     // Capture the rendered content as an image
     const canvas = await html2canvas(reportContainer, {
-      scale: 2, // Higher resolution
+      scale: 2,
       logging: false,
       useCORS: true,
       backgroundColor: '#ffffff'
@@ -128,26 +108,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       imgWidth,
       imgHeight
     );
-
-    // If content spans multiple pages, add them
-    if (imgHeight > 297) { // A4 height in mm
-      let heightLeft = imgHeight - 297;
-      let position = -297;
-      
-      while (heightLeft > 0) {
-        pdf.addPage();
-        pdf.addImage(
-          canvas.toDataURL('image/png'),
-          'PNG',
-          0,
-          position,
-          imgWidth,
-          imgHeight
-        );
-        heightLeft -= 297;
-        position -= 297;
-      }
-    }
 
     return pdf;
   } catch (error) {
