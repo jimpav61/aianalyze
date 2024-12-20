@@ -25,6 +25,8 @@ export const Hero = ({
 
   useEffect(() => {
     if (analyses && analyses.length > 0) {
+      console.log("Hero - Setting up analysis with data:", analyses);
+      
       const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
@@ -32,14 +34,11 @@ export const Hero = ({
         savings: Number(analyses[0].savings),
         profit_increase: Number(analyses[0].profit_increase),
         explanation: analyses[0].explanation,
-        marketing_strategy: analyses[0].marketingStrategy
+        marketing_strategy: analyses[0].marketingStrategy,
+        allAnalyses: analyses
       };
       
-      setCurrentAnalysis({
-        ...primaryAnalysis,
-        allAnalyses: analyses
-      });
-      
+      setCurrentAnalysis(primaryAnalysis);
       setShowAnalysisCard(true);
       setShowDetailedDialog(true);
     }

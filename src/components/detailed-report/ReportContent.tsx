@@ -14,8 +14,8 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
-  // Transform analysis data to match the grid format
-  const analysesForGrid = [{
+  // Use all analyses from the analysis object if available
+  const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
@@ -24,6 +24,8 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy
   }];
+
+  console.log("ReportContent - Analyses for grid:", analysesForGrid);
 
   return (
     <div className="space-y-6 bg-white p-8 rounded-lg">
@@ -35,7 +37,7 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
         <CurrentOperations data={formData} />
       </div>
       <div className="analysis-results">
-        <AnalysisResults analysis={analysis} />
+        <AnalysisResults analyses={analysesForGrid} />
       </div>
       <div className="implementation-recommendations mt-8">
         <h3 className="text-xl font-semibold mb-4">AI Implementation Recommendations</h3>
