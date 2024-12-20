@@ -4,6 +4,7 @@ import { exportReportAsPDF } from "@/utils/reportExport";
 import { CalendarHeader } from "./calendar/CalendarHeader";
 import { HiddenReport } from "./calendar/HiddenReport";
 import { CalendarEmbedWrapper } from "./calendar/CalendarEmbed";
+import { useState } from "react";
 
 interface CalendarViewProps {
   onSubmit: () => void;
@@ -19,6 +20,7 @@ export const CalendarView = ({
   calLink = "jimmy-chatsites/30min"
 }: CalendarViewProps) => {
   const { toast } = useToast();
+  const [showDownload, setShowDownload] = useState(false);
   console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
 
   const handleDownload = async () => {
@@ -55,14 +57,21 @@ export const CalendarView = ({
       });
     }
   };
+
+  const handleBookingComplete = () => {
+    setShowDownload(true);
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
   
   return (
     <>
-      <CalendarHeader onDownload={handleDownload} />
+      <CalendarHeader onDownload={handleDownload} showDownload={showDownload} />
       <HiddenReport formData={formData} analysis={analysis} />
       <CalendarEmbedWrapper 
         calLink={calLink}
-        onSubmit={onSubmit}
+        onSubmit={handleBookingComplete}
         formData={formData}
         analysis={analysis}
       />
