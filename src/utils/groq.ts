@@ -81,12 +81,12 @@ export const generateAnalysis = async (industry: string) => {
 
       return {
         id: item.id,
-        department: String(item.department || ''),
-        function: String(item.bot_function || ''),
-        savings: String(item.savings || 0),
-        profit_increase: String(item.profit_increase || 0),
-        explanation: String(item.explanation || ''),
-        marketingStrategy: String(item.marketing_strategy || '')
+        department: item.department,
+        function: item.bot_function,
+        savings: item.savings.toString(),
+        profit_increase: item.profit_increase.toString(),
+        explanation: item.explanation,
+        marketingStrategy: item.marketing_strategy
       };
     }).filter(Boolean);
 

@@ -14,7 +14,8 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
-  // Use all analyses from the analysis object if available
+  console.log("ReportContent - Analysis data:", analysis);
+  
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),
     department: analysis.department,
