@@ -5,10 +5,9 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
   header.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
       <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" alt="ChatSites Logo" style="height: 32px;" />
-        <span style="font-size: 24px; font-weight: bold; color: #f65228;">ChatSites</span>
+        <img src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" alt="Logo" style="height: 32px;" />
       </div>
-      <div style="text-align: right; color: #4B5563; font-size: 14px;">
+      <div style="text-align: right; color: #4B5563; font-size: 14px; line-height: 1.5;">
         <p style="margin: 0; font-weight: 600;">Contact us:</p>
         <p style="margin: 4px 0;">info@chatsites.ai</p>
         <p style="margin: 4px 0;">+1 480 862 0288</p>
@@ -23,9 +22,9 @@ export const generateCompanySection = (doc: HTMLDivElement, formData: DetailedFo
   const companySection = document.createElement('div');
   companySection.innerHTML = `
     <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Company Information</h2>
+      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Company Information</h2>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-        <div>
+        <div style="line-height: 1.5;">
           <p style="margin: 0 0 4px 0; font-weight: 500;">Company Name:</p>
           <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.companyName}</p>
           
@@ -35,7 +34,7 @@ export const generateCompanySection = (doc: HTMLDivElement, formData: DetailedFo
           <p style="margin: 0 0 4px 0; font-weight: 500;">Number of Employees:</p>
           <p style="margin: 0; color: #4B5563;">${formData.employees}</p>
         </div>
-        <div>
+        <div style="line-height: 1.5;">
           <p style="margin: 0 0 4px 0; font-weight: 500;">Industry:</p>
           <p style="margin: 0 0 16px 0; color: #4B5563;">${industry}</p>
           
@@ -55,8 +54,8 @@ export const generateOperationsSection = (doc: HTMLDivElement, formData: Detaile
   const operationsSection = document.createElement('div');
   operationsSection.innerHTML = `
     <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Current Operations</h2>
-      <div style="space-y-4">
+      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Current Operations</h2>
+      <div style="line-height: 1.5;">
         <div style="margin-bottom: 16px;">
           <p style="margin: 0 0 4px 0; font-weight: 500;">Service Channels:</p>
           <p style="margin: 0; color: #4B5563;">${formData.serviceChannels}</p>
@@ -83,21 +82,21 @@ export const generateAnalysisSection = (doc: HTMLDivElement, analysis: any) => {
   const analysisSection = document.createElement('div');
   analysisSection.innerHTML = `
     <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Analysis Results</h2>
+      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Analysis Results</h2>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
         <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #E5E7EB;">
-          <p style="margin: 0 0 8px 0; color: #4B5563;">Projected Annual Savings</p>
-          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600;">$${analysis.savings.toLocaleString()}</p>
+          <p style="margin: 0 0 8px 0; color: #4B5563; line-height: 1.5;">Projected Annual Savings</p>
+          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600; line-height: 1.4;">$${analysis.savings.toLocaleString()}</p>
         </div>
         <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #E5E7EB;">
-          <p style="margin: 0 0 8px 0; color: #4B5563;">Projected Profit Increase</p>
-          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600;">
+          <p style="margin: 0 0 8px 0; color: #4B5563; line-height: 1.5;">Projected Profit Increase</p>
+          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600; line-height: 1.4;">
             <span style="font-size: 24px;">${analysis.profit_increase}</span>
             <span style="font-size: 20px;">%</span>
           </p>
         </div>
       </div>
-      <div>
+      <div style="line-height: 1.5;">
         <p style="margin: 0 0 8px 0; font-weight: 500;">Recommended Implementation:</p>
         <p style="margin: 0; color: #4B5563;">${analysis.explanation}</p>
       </div>
@@ -110,27 +109,27 @@ export const generateImplementationSection = (doc: HTMLDivElement, formData: Det
   const implementationSection = document.createElement('div');
   implementationSection.innerHTML = `
     <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Implementation Plan</h2>
+      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Implementation Plan</h2>
       
       <div style="background: #F9FAFB; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600;">Project Overview</h3>
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; line-height: 1.4;">Project Overview</h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <div>
+          <div style="line-height: 1.5;">
             <p style="margin: 0 0 4px 0; font-weight: 500;">Primary Objective:</p>
             <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.objectives}</p>
           </div>
-          <div>
+          <div style="line-height: 1.5;">
             <p style="margin: 0 0 4px 0; font-weight: 500;">Timeline:</p>
             <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.timeline}</p>
           </div>
-          <div>
+          <div style="line-height: 1.5;">
             <p style="margin: 0 0 4px 0; font-weight: 500;">Budget Allocation:</p>
             <p style="margin: 0; color: #4B5563;">${formData.budget}</p>
           </div>
         </div>
       </div>
 
-      <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600;">Implementation Phases</h3>
+      <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; line-height: 1.4;">Implementation Phases</h3>
       
       ${generatePhaseSection("Phase 1: Discovery & Planning", [
         "Comprehensive requirements gathering and stakeholder interviews to ensure alignment with business objectives",
@@ -161,8 +160,8 @@ export const generateImplementationSection = (doc: HTMLDivElement, formData: Det
       ])}
 
       <div style="background: #EFF6FF; border-radius: 8px; padding: 16px;">
-        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600;">Expected Outcomes</h3>
-        <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; line-height: 1.4;">Expected Outcomes</h3>
+        <ul style="margin: 0; padding-left: 20px; color: #4B5563; line-height: 1.5;">
           <li style="margin-bottom: 8px;">Improved operational efficiency through automated workflows, reducing manual workload by up to 40% and enabling staff to focus on high-value tasks</li>
           <li style="margin-bottom: 8px;">Enhanced customer satisfaction with 24/7 availability, instant response times, and personalized interactions leading to increased customer retention</li>
           <li style="margin-bottom: 8px;">Substantial cost savings in customer service operations through reduced handling time and optimized resource allocation</li>
@@ -177,8 +176,8 @@ export const generateImplementationSection = (doc: HTMLDivElement, formData: Det
 
 const generatePhaseSection = (title: string, items: string[]) => `
   <div style="border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-    <h4 style="margin: 0 0 12px 0; color: #f65228; font-weight: 500;">${title}</h4>
-    <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
+    <h4 style="margin: 0 0 12px 0; color: #f65228; font-weight: 500; line-height: 1.4;">${title}</h4>
+    <ul style="margin: 0; padding-left: 20px; color: #4B5563; line-height: 1.5;">
       ${items.map((item, index) => `
         <li style="margin-bottom: ${index === items.length - 1 ? '0' : '8px'};">${item}</li>
       `).join('')}
@@ -189,8 +188,8 @@ const generatePhaseSection = (title: string, items: string[]) => `
 export const generateFooterSection = (doc: HTMLDivElement) => {
   const footer = document.createElement('div');
   footer.innerHTML = `
-    <div style="text-align: center; color: #6B7280; font-size: 14px; margin-top: 40px;">
-      <p style="margin: 0 0 4px 0;">Generated by ChatSites AI Analysis Tool</p>
+    <div style="text-align: center; color: #6B7280; font-size: 14px; margin-top: 40px; line-height: 1.5;">
+      <p style="margin: 0 0 4px 0;">Generated by AI Analysis Tool</p>
       <p style="margin: 0;">www.chatsites.ai</p>
     </div>
   `;
