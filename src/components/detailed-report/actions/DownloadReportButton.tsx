@@ -13,10 +13,15 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
   const { toast } = useToast();
 
   const handleDownload = () => {
-    console.log("Download initiated with:", { formData, analysis });
+    console.log("Download initiated with data:", { 
+      hasFormData: !!formData, 
+      formDataKeys: formData ? Object.keys(formData) : [], 
+      hasAnalysis: !!analysis,
+      analysisKeys: analysis ? Object.keys(analysis) : []
+    });
 
     if (!formData || !analysis) {
-      console.error("Missing required data for download");
+      console.error("Missing required data:", { formData, analysis });
       toast({
         title: "Error",
         description: "Report data not available. Please try again.",
@@ -26,7 +31,13 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
     }
 
     try {
-      console.log("Generating PDF...");
+      console.log("Starting PDF generation with:", {
+        companyName: formData.companyName,
+        industry: analysis.industry,
+        savings: analysis.savings,
+        profitIncrease: analysis.profit_increase
+      });
+
       const doc = new jsPDF();
       
       // Set up PDF styling
@@ -40,6 +51,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       let yPosition = 50;
 
       // Company Information
+      console.log("Adding company information section");
       doc.setFontSize(18);
       doc.setTextColor(0);
       doc.text("Company Information", 20, yPosition);
@@ -62,6 +74,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       yPosition += 10;
 
       // Current Operations
+      console.log("Adding operations section");
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 30;
@@ -86,6 +99,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       yPosition += 10;
 
       // Analysis Results
+      console.log("Adding analysis results section");
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 30;
@@ -110,6 +124,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       yPosition += 10;
 
       // Implementation Plan
+      console.log("Adding implementation plan section");
       if (yPosition > 250) {
         doc.addPage();
         yPosition = 30;
@@ -135,6 +150,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       });
 
       // Add footer to each page
+      console.log("Adding footers to all pages");
       const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -147,16 +163,16 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         );
       }
       
-      console.log("PDF generated successfully, initiating download");
+      console.log("PDF generation completed successfully");
       doc.save("chatsites-analysis-report.pdf");
       
-      console.log("Download completed, showing success toast");
+      console.log("Download completed successfully");
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
       });
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("PDF generation/download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
