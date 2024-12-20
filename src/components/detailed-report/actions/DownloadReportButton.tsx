@@ -23,7 +23,17 @@ export const DownloadReportButton = ({ reportRef }: DownloadReportButtonProps) =
     }
 
     try {
-      const success = await exportReportAsPDF(reportRef.current);
+      const reportContent = reportRef.current;
+      // Temporarily modify styles for better capture
+      const originalStyle = reportContent.style.cssText;
+      reportContent.style.width = 'fit-content';
+      reportContent.style.maxWidth = '1200px';
+      
+      const success = await exportReportAsPDF(reportContent);
+      
+      // Restore original styles
+      reportContent.style.cssText = originalStyle;
+      
       console.log("DownloadReportButton - Download result:", success);
       
       toast({
