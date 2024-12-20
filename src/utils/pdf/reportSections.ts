@@ -3,15 +3,15 @@ import { DetailedFormData } from "@/types/analysis";
 export const generateHeaderSection = (doc: HTMLDivElement) => {
   const header = document.createElement('div');
   header.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="/lovable-uploads/1b6619ed-f854-4bba-87ff-33cca6d20e9a.png" alt="Logo" style="height: 32px;" />
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 20px;">
+      <div style="display: flex; align-items: center;">
+        <img src="/lovable-uploads/0d15c757-0ac6-4cba-90a9-cc6ffef7b2f2.png" alt="Logo" style="height: 40px;" />
       </div>
-      <div style="text-align: right; color: #4B5563; font-size: 14px; line-height: 1.5;">
-        <p style="margin: 0; font-weight: 600;">Contact us:</p>
-        <p style="margin: 4px 0;">info@chatsites.ai</p>
-        <p style="margin: 4px 0;">+1 480 862 0288</p>
-        <p style="margin: 4px 0;">chatsites.ai</p>
+      <div style="text-align: right; color: #4B5563; font-size: 14px;">
+        <p style="margin: 0; font-weight: 600; line-height: 1.6;">Contact us:</p>
+        <p style="margin: 0; line-height: 1.6;">info@chatsites.ai</p>
+        <p style="margin: 0; line-height: 1.6;">+1 480 862 0288</p>
+        <p style="margin: 0; line-height: 1.6;">chatsites.ai</p>
       </div>
     </div>
   `;
@@ -21,28 +21,28 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
 export const generateCompanySection = (doc: HTMLDivElement, formData: DetailedFormData, industry: string) => {
   const companySection = document.createElement('div');
   companySection.innerHTML = `
-    <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Company Information</h2>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-        <div style="line-height: 1.5;">
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Company Name:</p>
-          <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.companyName}</p>
+    <div style="background: white; border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #E5E7EB;">
+      <h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 600; color: #111827;">Company Information</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Company Name:</p>
+          <p style="margin: 0 0 20px 0; color: #4B5563; line-height: 1.6;">${formData.companyName}</p>
           
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Contact Email:</p>
-          <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.email}</p>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Contact Email:</p>
+          <p style="margin: 0 0 20px 0; color: #4B5563; line-height: 1.6;">${formData.email}</p>
           
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Number of Employees:</p>
-          <p style="margin: 0; color: #4B5563;">${formData.employees}</p>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Number of Employees:</p>
+          <p style="margin: 0; color: #4B5563; line-height: 1.6;">${formData.employees}</p>
         </div>
-        <div style="line-height: 1.5;">
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Industry:</p>
-          <p style="margin: 0 0 16px 0; color: #4B5563;">${industry}</p>
+        <div>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Industry:</p>
+          <p style="margin: 0 0 20px 0; color: #4B5563; line-height: 1.6;">${industry}</p>
           
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Contact Phone:</p>
-          <p style="margin: 0 0 16px 0; color: #4B5563;">${formData.phoneNumber}</p>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Contact Phone:</p>
+          <p style="margin: 0 0 20px 0; color: #4B5563; line-height: 1.6;">${formData.phoneNumber}</p>
           
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Annual Revenue:</p>
-          <p style="margin: 0; color: #4B5563;">${formData.revenue}</p>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151; line-height: 1.6;">Annual Revenue:</p>
+          <p style="margin: 0; color: #4B5563; line-height: 1.6;">${formData.revenue}</p>
         </div>
       </div>
     </div>
@@ -53,23 +53,23 @@ export const generateCompanySection = (doc: HTMLDivElement, formData: DetailedFo
 export const generateOperationsSection = (doc: HTMLDivElement, formData: DetailedFormData) => {
   const operationsSection = document.createElement('div');
   operationsSection.innerHTML = `
-    <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Current Operations</h2>
-      <div style="line-height: 1.5;">
-        <div style="margin-bottom: 16px;">
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Service Channels:</p>
+    <div style="background: white; border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #E5E7EB;">
+      <h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 600; color: #111827;">Current Operations</h2>
+      <div style="line-height: 1.6;">
+        <div style="margin-bottom: 24px;">
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151;">Service Channels:</p>
           <p style="margin: 0; color: #4B5563;">${formData.serviceChannels}</p>
         </div>
-        <div style="margin-bottom: 16px;">
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Monthly Interactions:</p>
+        <div style="margin-bottom: 24px;">
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151;">Monthly Interactions:</p>
           <p style="margin: 0; color: #4B5563;">${formData.monthlyInteractions}</p>
         </div>
-        <div style="margin-bottom: 16px;">
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Current Tools:</p>
+        <div style="margin-bottom: 24px;">
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151;">Current Tools:</p>
           <p style="margin: 0; color: #4B5563;">${formData.currentTools}</p>
         </div>
         <div>
-          <p style="margin: 0 0 4px 0; font-weight: 500;">Pain Points:</p>
+          <p style="margin: 0 0 8px 0; font-weight: 500; color: #374151;">Pain Points:</p>
           <p style="margin: 0; color: #4B5563;">${formData.painPoints}</p>
         </div>
       </div>
@@ -81,24 +81,21 @@ export const generateOperationsSection = (doc: HTMLDivElement, formData: Detaile
 export const generateAnalysisSection = (doc: HTMLDivElement, analysis: any) => {
   const analysisSection = document.createElement('div');
   analysisSection.innerHTML = `
-    <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; border: 1px solid #E5E7EB;">
-      <h2 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; line-height: 1.4;">Analysis Results</h2>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
-        <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #E5E7EB;">
-          <p style="margin: 0 0 8px 0; color: #4B5563; line-height: 1.5;">Projected Annual Savings</p>
-          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600; line-height: 1.4;">$${analysis.savings.toLocaleString()}</p>
+    <div style="background: white; border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #E5E7EB;">
+      <h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 600; color: #111827;">Analysis Results</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+        <div style="background: #F9FAFB; border-radius: 8px; padding: 24px;">
+          <p style="margin: 0 0 12px 0; color: #374151; font-weight: 500; line-height: 1.6;">Projected Annual Savings</p>
+          <p style="margin: 0; color: #10B981; font-size: 28px; font-weight: 600;">$${analysis.savings.toLocaleString()}</p>
         </div>
-        <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #E5E7EB;">
-          <p style="margin: 0 0 8px 0; color: #4B5563; line-height: 1.5;">Projected Profit Increase</p>
-          <p style="margin: 0; color: #10B981; font-size: 24px; font-weight: 600; line-height: 1.4;">
-            <span style="font-size: 24px;">${analysis.profit_increase}</span>
-            <span style="font-size: 20px;">%</span>
-          </p>
+        <div style="background: #F9FAFB; border-radius: 8px; padding: 24px;">
+          <p style="margin: 0 0 12px 0; color: #374151; font-weight: 500; line-height: 1.6;">Projected Profit Increase</p>
+          <p style="margin: 0; color: #10B981; font-size: 28px; font-weight: 600;">${analysis.profit_increase}%</p>
         </div>
       </div>
-      <div style="line-height: 1.5;">
-        <p style="margin: 0 0 8px 0; font-weight: 500;">Recommended Implementation:</p>
-        <p style="margin: 0; color: #4B5563;">${analysis.explanation}</p>
+      <div style="line-height: 1.6;">
+        <p style="margin: 0 0 12px 0; font-weight: 500; color: #374151;">Recommended Implementation:</p>
+        <p style="margin: 0; color: #4B5563; line-height: 1.8;">${analysis.explanation}</p>
       </div>
     </div>
   `;
