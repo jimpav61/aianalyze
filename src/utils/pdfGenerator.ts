@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 
-interface GeneratePDFParams {
+interface GenerateReportParams {
   formData: DetailedFormData;
   analysis: {
     industry: string;
@@ -14,15 +14,12 @@ interface GeneratePDFParams {
   };
 }
 
-export const generateAnalysisPDF = ({ formData, analysis }: GeneratePDFParams): jsPDF => {
+export const generateAnalysisReport = ({ formData, analysis }: GenerateReportParams): jsPDF => {
   const doc = new jsPDF();
   
-  // Set up PDF styling
   doc.setFont("helvetica");
-  
-  // Add header
   doc.setFontSize(24);
-  doc.setTextColor(246, 82, 40); // #f65228
+  doc.setTextColor(246, 82, 40);
   doc.text("ChatSites AI Analysis Report", 20, 30);
   
   let yPosition = 50;
@@ -94,32 +91,6 @@ export const generateAnalysisPDF = ({ formData, analysis }: GeneratePDFParams): 
     const lines = doc.splitTextToSize(result, 170);
     doc.text(lines, 20, yPosition);
     yPosition += lines.length * 8;
-  });
-  yPosition += 10;
-
-  // Implementation Plan
-  if (yPosition > 250) {
-    doc.addPage();
-    yPosition = 30;
-  }
-  doc.setFontSize(18);
-  doc.text("Implementation Plan", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-
-  const plan = [
-    `Objectives: ${formData.objectives}`,
-    `Timeline: ${formData.timeline}`,
-    `Budget: ${formData.budget}`,
-    formData.additionalInfo ? `Additional Information: ${formData.additionalInfo}` : null
-  ].filter(Boolean);
-
-  plan.forEach(item => {
-    if (item) {
-      const lines = doc.splitTextToSize(item, 170);
-      doc.text(lines, 20, yPosition);
-      yPosition += lines.length * 8;
-    }
   });
 
   // Add footer to each page
