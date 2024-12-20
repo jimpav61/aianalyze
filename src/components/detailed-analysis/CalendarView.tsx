@@ -1,9 +1,9 @@
-import { Calendar } from "../Calendar";
 import { DetailedFormData } from "@/types/analysis";
-import { Button } from "../ui/button";
-import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { exportReportAsPDF } from "@/utils/reportExport";
+import { CalendarHeader } from "./calendar/CalendarHeader";
+import { HiddenReport } from "./calendar/HiddenReport";
+import { CalendarEmbedWrapper } from "./calendar/CalendarEmbed";
 
 interface CalendarViewProps {
   onSubmit: () => void;
@@ -58,41 +58,9 @@ export const CalendarView = ({
   
   return (
     <>
-      <div className="mb-4 text-center">
-        <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
-        <p className="text-muted-foreground mb-4">
-          Choose a time that works best for you
-        </p>
-        <Button
-          onClick={handleDownload}
-          className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white mb-6"
-        >
-          <Download className="h-4 w-4" />
-          Download Your Report
-        </Button>
-      </div>
-
-      {/* Hidden report content for PDF generation */}
-      <div id="report-content" className="hidden">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold mb-4">Analysis Report</h1>
-          {formData && analysis && (
-            <>
-              <h2 className="text-xl mb-2">Company Information</h2>
-              <p>Company: {formData.companyName}</p>
-              <p>Industry: {analysis.industry}</p>
-              <p>Department: {analysis.department}</p>
-              <h2 className="text-xl mt-4 mb-2">Analysis Results</h2>
-              <p>Potential Savings: ${analysis.savings}</p>
-              <p>Profit Increase: ${analysis.profit_increase}</p>
-              <p>Explanation: {analysis.explanation}</p>
-              <p>Marketing Strategy: {analysis.marketing_strategy}</p>
-            </>
-          )}
-        </div>
-      </div>
-
-      <Calendar 
+      <CalendarHeader onDownload={handleDownload} />
+      <HiddenReport formData={formData} analysis={analysis} />
+      <CalendarEmbedWrapper 
         calLink={calLink}
         onSubmit={onSubmit}
         formData={formData}
