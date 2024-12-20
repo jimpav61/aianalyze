@@ -81,6 +81,8 @@ export const DetailedAnalysisDialog = ({
         isOpen={showCloseConfirm}
         onOpenChange={setShowCloseConfirm}
         onConfirm={confirmClose}
+        formData={formData}
+        analysis={analysis}
       />
     </>
   );
