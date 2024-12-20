@@ -1,4 +1,3 @@
-import React from "react";
 import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { CalendarFormData } from "@/types/analysis";
@@ -19,7 +18,7 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleDownload = useCallback(() => {
     if (!formData || !analysis) {
       toast({
         title: "Error",
@@ -150,7 +149,7 @@ export const useBookingSuccess = ({
         );
       }
 
-      // Save the PDF
+      // Save the PDF directly
       doc.save("chatsites-analysis-report.pdf");
       
       toast({
@@ -165,7 +164,7 @@ export const useBookingSuccess = ({
         variant: "destructive",
       });
     }
-  };
+  }, [formData, analysis, toast]);
 
   const handleBookingSuccess = useCallback(() => {
     console.log("Booking successful with data:", {
@@ -194,7 +193,7 @@ export const useBookingSuccess = ({
     if (onSubmit) {
       onSubmit();
     }
-  }, [formData, analysis, onSubmit, toast]);
+  }, [formData, analysis, onSubmit, toast, handleDownload]);
 
   return { handleBookingSuccess };
 };
