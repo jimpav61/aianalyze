@@ -1,5 +1,6 @@
 import { DetailedFormData } from "@/types/analysis";
 import { createReportContainer, generatePDF } from "./pdf/pdfUtils";
+import { jsPDF } from "jspdf"; // Add this import
 import {
   generateHeaderSection,
   generateCompanySection,
