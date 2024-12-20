@@ -21,8 +21,7 @@ export const CloseConfirmationDialog = ({
           <AlertDialogDescription className="space-y-4">
             <p>Don't worry, you can still access and download your analysis report after closing this window.</p>
             <Button
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -31,7 +30,7 @@ export const CloseConfirmationDialog = ({
               }}
             >
               <Download className="h-4 w-4" />
-              Download Report
+              Download Your Report
             </Button>
           </AlertDialogDescription>
         </AlertDialogHeader>
