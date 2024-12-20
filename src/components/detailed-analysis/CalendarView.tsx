@@ -60,9 +60,16 @@ export const CalendarView = ({
     <>
       <div className="mb-4 text-center">
         <h2 className="text-2xl font-bold">Schedule Your Demo</h2>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground mb-4">
           Choose a time that works best for you
         </p>
+        <Button
+          onClick={handleDownload}
+          className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white mb-6"
+        >
+          <Download className="h-4 w-4" />
+          Download Your Report
+        </Button>
       </div>
 
       {/* Hidden report content for PDF generation */}
@@ -91,16 +98,6 @@ export const CalendarView = ({
         formData={formData}
         analysis={analysis}
       />
-
-      <div className="mt-4 flex justify-center">
-        <Button
-          onClick={handleDownload}
-          className="flex items-center gap-2 bg-[#f65228] hover:bg-[#f65228]/90 text-white"
-        >
-          <Download className="h-4 w-4" />
-          Download Your Report
-        </Button>
-      </div>
     </>
   );
 };
