@@ -29,7 +29,6 @@ export const useAnalysis = () => {
     try {
       console.log('Fetching analysis data...');
       const results = await generateAnalysis(selectedIndustry);
-      console.log('Analysis results:', results);
       
       if (!results || results.length === 0) {
         console.log('No results returned');
