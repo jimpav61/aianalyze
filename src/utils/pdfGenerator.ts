@@ -17,151 +17,120 @@ interface GenerateReportParams {
 
 export const generateAnalysisReport = ({ formData, analysis }: GenerateReportParams): jsPDF => {
   const doc = new jsPDF();
-  let yPosition = 30;
+  let yPosition = 20;
+
+  // Helper function to add section headers with brand colors
+  const addSectionHeader = (text: string, y: number) => {
+    doc.setFillColor(246, 82, 40); // Primary brand color #f65228
+    doc.rect(20, y - 6, 170, 10, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
+    doc.text(text, 25, y);
+    doc.setTextColor(0);
+    return y + 15;
+  };
+
+  // Helper function for content blocks with background
+  const addContentBlock = (content: string[], y: number, title?: string) => {
+    doc.setFillColor(249, 250, 251); // Light gray background
+    const lineHeight = 7;
+    const contentHeight = (content.length + (title ? 1 : 0)) * lineHeight + 10;
+    doc.rect(20, y - 5, 170, contentHeight, "F");
+    
+    let currentY = y;
+    if (title) {
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(title, 25, currentY);
+      currentY += lineHeight;
+    }
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    content.forEach(line => {
+      const lines = doc.splitTextToSize(line, 160);
+      lines.forEach(splitLine => {
+        doc.text(splitLine, 25, currentY);
+        currentY += lineHeight;
+      });
+    });
+    return currentY + 5;
+  };
 
   // Page 1: Executive Summary
-  doc.setFont("helvetica");
-  doc.setFontSize(24);
-  doc.setTextColor(246, 82, 40); // Primary brand color
-  doc.text("ChatSites AI Analysis Report", 20, yPosition);
+  yPosition = addSectionHeader("ChatSites AI Analysis Report", yPosition);
   
-  yPosition += 20;
-  doc.setFontSize(18);
-  doc.setTextColor(0);
-  doc.text("Executive Summary", 20, yPosition);
-  
-  yPosition += 15;
-  doc.setFontSize(12);
-  const companyInfo = [
+  // Company Information Block
+  yPosition = addContentBlock([
     `Company: ${formData.companyName}`,
     `Industry: ${analysis.industry}`,
-    `Primary Department: ${analysis.department}`,
-    `Annual Revenue: ${formData.revenue}`,
-    `Employees: ${formData.employees}`,
     `Contact: ${formData.email}`,
-    `Phone: ${formData.phoneNumber}`
-  ];
+    `Phone: ${formData.phoneNumber}`,
+    `Employees: ${formData.employees}`,
+    `Annual Revenue: ${formData.revenue}`
+  ], yPosition + 10, "Company Information");
 
-  companyInfo.forEach(info => {
-    doc.text(info, 20, yPosition);
-    yPosition += 10;
-  });
-
-  yPosition += 10;
-  doc.setFontSize(14);
-  doc.text("Key Findings", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-  const findings = [
+  // Key Metrics Block
+  yPosition = addContentBlock([
     `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
     `Projected Profit Increase: ${analysis.profit_increase}%`,
+    `Primary Department: ${analysis.department}`,
     `Primary Function: ${analysis.bot_function}`
-  ];
+  ], yPosition + 10, "Key Metrics");
 
-  findings.forEach(finding => {
-    doc.text(finding, 20, yPosition);
-    yPosition += 10;
-  });
-
-  // Page 2: Detailed Analysis
+  // Page 2: Current Operations
   doc.addPage();
-  yPosition = 30;
-  doc.setFontSize(18);
-  doc.text("Detailed Analysis", 20, yPosition);
-  
-  yPosition += 15;
-  doc.setFontSize(14);
-  doc.text("Current Operations", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-  
-  const operations = [
+  yPosition = 20;
+  yPosition = addSectionHeader("Current Operations Analysis", yPosition);
+
+  // Operations Details Block
+  yPosition = addContentBlock([
     `Service Channels: ${formData.serviceChannels}`,
     `Monthly Interactions: ${formData.monthlyInteractions}`,
     `Current Tools: ${formData.currentTools}`,
     `Pain Points: ${formData.painPoints}`
-  ];
+  ], yPosition + 10, "Operations Overview");
 
-  operations.forEach(op => {
-    const lines = doc.splitTextToSize(op, 170);
-    doc.text(lines, 20, yPosition);
-    yPosition += lines.length * 8;
-  });
-
-  yPosition += 15;
-  doc.setFontSize(14);
-  doc.text("Implementation Strategy", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-  const strategyLines = doc.splitTextToSize(analysis.explanation, 170);
-  doc.text(strategyLines, 20, yPosition);
-  yPosition += strategyLines.length * 8 + 10;
-
-  doc.setFontSize(14);
-  doc.text("Marketing Strategy", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-  const marketingLines = doc.splitTextToSize(analysis.marketing_strategy, 170);
-  doc.text(marketingLines, 20, yPosition);
+  // Implementation Strategy Block
+  yPosition = addContentBlock([
+    "Implementation Strategy:",
+    analysis.explanation,
+    "",
+    "Marketing Strategy:",
+    analysis.marketing_strategy
+  ], yPosition + 10, "Strategic Implementation");
 
   // Page 3: Implementation Plan
   doc.addPage();
-  yPosition = 30;
-  doc.setFontSize(18);
-  doc.text("Implementation Plan", 20, yPosition);
-  
-  yPosition += 15;
-  doc.setFontSize(14);
-  doc.text("Project Overview", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-  
-  const projectDetails = [
+  yPosition = 20;
+  yPosition = addSectionHeader("Implementation Plan & Additional Analyses", yPosition);
+
+  // Project Details Block
+  yPosition = addContentBlock([
     `Objectives: ${formData.objectives}`,
     `Timeline: ${formData.timeline}`,
     `Budget: ${formData.budget}`
-  ];
+  ], yPosition + 10, "Project Overview");
 
-  projectDetails.forEach(detail => {
-    const lines = doc.splitTextToSize(detail, 170);
-    doc.text(lines, 20, yPosition);
-    yPosition += lines.length * 8 + 5;
-  });
-
-  yPosition += 15;
-  doc.setFontSize(14);
-  doc.text("Additional Departments Analysis", 20, yPosition);
-  yPosition += 10;
-  doc.setFontSize(12);
-
+  // Additional Departments Analysis
   if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
-    analysis.allAnalyses.slice(1).forEach((dept: any) => {
-      const deptInfo = [
-        `Department: ${dept.department}`,
-        `Function: ${dept.function}`,
-        `Projected Savings: $${parseInt(dept.savings).toLocaleString()}`,
+    yPosition = addContentBlock(
+      analysis.allAnalyses.slice(1).map(dept => 
+        `${dept.department}: ${dept.function}\n` +
+        `Savings: $${parseInt(dept.savings).toLocaleString()}\n` +
         `Profit Increase: ${dept.profit_increase}%`
-      ];
-      
-      deptInfo.forEach(info => {
-        doc.text(info, 20, yPosition);
-        yPosition += 8;
-      });
-      yPosition += 5;
-    });
+      ),
+      yPosition + 10,
+      "Additional Department Recommendations"
+    );
   }
 
+  // Additional Information Block
   if (formData.additionalInfo) {
-    yPosition += 15;
-    doc.setFontSize(14);
-    doc.text("Additional Considerations", 20, yPosition);
-    yPosition += 10;
-    doc.setFontSize(12);
-    const additionalLines = doc.splitTextToSize(formData.additionalInfo, 170);
-    doc.text(additionalLines, 20, yPosition);
+    yPosition = addContentBlock([formData.additionalInfo], yPosition + 10, "Additional Considerations");
   }
 
-  // Add page numbers and footer to all pages
+  // Footer on all pages
   const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
