@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
+import html2canvas from "html2canvas";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -15,7 +16,7 @@ interface GenerateReportParams {
   };
 }
 
-export const generateAnalysisReport = ({ formData, analysis }: GenerateReportParams): jsPDF => {
+export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
   const doc = new jsPDF();
   let yPosition = 20;
 
@@ -30,117 +31,152 @@ export const generateAnalysisReport = ({ formData, analysis }: GenerateReportPar
     return y + 15;
   };
 
-  // Helper function for content blocks with background
-  const addContentBlock = (content: string[], y: number, title?: string) => {
-    doc.setFillColor(249, 250, 251); // Light gray background
-    const lineHeight = 7;
-    const contentHeight = (content.length + (title ? 1 : 0)) * lineHeight + 10;
-    doc.rect(20, y - 5, 170, contentHeight, "F");
-    
-    let currentY = y;
-    if (title) {
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(title, 25, currentY);
-      currentY += lineHeight;
-    }
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
-    content.forEach(line => {
-      const lines = doc.splitTextToSize(line, 160);
-      lines.forEach(splitLine => {
-        doc.text(splitLine, 25, currentY);
-        currentY += lineHeight;
-      });
-    });
-    return currentY + 5;
-  };
-
-  // Page 1: Executive Summary
-  yPosition = addSectionHeader("ChatSites AI Analysis Report", yPosition);
+  // Add header with logo and contact info
+  doc.setFillColor(255, 255, 255);
+  doc.rect(20, yPosition - 10, 170, 25, "F");
   
-  // Company Information Block
-  yPosition = addContentBlock([
+  // Add ChatSites text as logo placeholder
+  doc.setTextColor(246, 82, 40);
+  doc.setFontSize(24);
+  doc.setFont("helvetica", "bold");
+  doc.text("ChatSites", 25, yPosition + 5);
+  
+  // Add contact information
+  doc.setTextColor(128, 128, 128);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text([
+    "Contact us:",
+    "info@chatsites.io",
+    "+1 480 862 0288",
+    "chatsites.ai"
+  ], 150, yPosition - 5, { align: "right" });
+
+  yPosition += 30;
+
+  // Executive Summary
+  yPosition = addSectionHeader("Executive Summary", yPosition);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "normal");
+
+  const companyInfo = [
     `Company: ${formData.companyName}`,
     `Industry: ${analysis.industry}`,
     `Contact: ${formData.email}`,
     `Phone: ${formData.phoneNumber}`,
     `Employees: ${formData.employees}`,
     `Annual Revenue: ${formData.revenue}`
-  ], yPosition + 10, "Company Information");
+  ];
 
-  // Key Metrics Block
-  yPosition = addContentBlock([
+  companyInfo.forEach(line => {
+    doc.text(line, 25, yPosition);
+    yPosition += 8;
+  });
+
+  yPosition += 10;
+
+  // Key Metrics
+  const metrics = [
     `Projected Annual Savings: $${analysis.savings.toLocaleString()}`,
     `Projected Profit Increase: ${analysis.profit_increase}%`,
     `Primary Department: ${analysis.department}`,
     `Primary Function: ${analysis.bot_function}`
-  ], yPosition + 10, "Key Metrics");
+  ];
 
-  // Page 2: Current Operations
+  metrics.forEach(line => {
+    doc.text(line, 25, yPosition);
+    yPosition += 8;
+  });
+
+  // Add new page for Current Operations
   doc.addPage();
   yPosition = 20;
-  yPosition = addSectionHeader("Current Operations Analysis", yPosition);
 
-  // Operations Details Block
-  yPosition = addContentBlock([
+  // Current Operations Analysis
+  yPosition = addSectionHeader("Current Operations Analysis", yPosition);
+  
+  const operations = [
     `Service Channels: ${formData.serviceChannels}`,
     `Monthly Interactions: ${formData.monthlyInteractions}`,
     `Current Tools: ${formData.currentTools}`,
     `Pain Points: ${formData.painPoints}`
-  ], yPosition + 10, "Operations Overview");
+  ];
 
-  // Implementation Strategy Block
-  yPosition = addContentBlock([
-    "Implementation Strategy:",
-    analysis.explanation,
-    "",
-    "Marketing Strategy:",
-    analysis.marketing_strategy
-  ], yPosition + 10, "Strategic Implementation");
+  operations.forEach(line => {
+    const lines = doc.splitTextToSize(line, 160);
+    lines.forEach(splitLine => {
+      doc.text(splitLine, 25, yPosition);
+      yPosition += 8;
+    });
+    yPosition += 4;
+  });
 
-  // Page 3: Implementation Plan
+  // Implementation Strategy
+  yPosition = addSectionHeader("Implementation Strategy", yPosition + 10);
+  
+  const strategyLines = doc.splitTextToSize(analysis.explanation, 160);
+  strategyLines.forEach(line => {
+    doc.text(line, 25, yPosition);
+    yPosition += 8;
+  });
+
+  yPosition += 10;
+
+  const marketingLines = doc.splitTextToSize(analysis.marketing_strategy, 160);
+  marketingLines.forEach(line => {
+    doc.text(line, 25, yPosition);
+    yPosition += 8;
+  });
+
+  // Add new page for Implementation Plan
   doc.addPage();
   yPosition = 20;
-  yPosition = addSectionHeader("Implementation Plan & Additional Analyses", yPosition);
 
-  // Project Details Block
-  yPosition = addContentBlock([
+  // Implementation Plan
+  yPosition = addSectionHeader("Implementation Plan", yPosition);
+  
+  const planDetails = [
     `Objectives: ${formData.objectives}`,
     `Timeline: ${formData.timeline}`,
-    `Budget: ${formData.budget}`
-  ], yPosition + 10, "Project Overview");
+    `Budget: ${formData.budget}`,
+    `Additional Information: ${formData.additionalInfo || 'None provided'}`
+  ];
 
-  // Additional Departments Analysis
-  if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
-    yPosition = addContentBlock(
-      analysis.allAnalyses.slice(1).map(dept => 
-        `${dept.department}: ${dept.function}\n` +
-        `Savings: $${parseInt(dept.savings).toLocaleString()}\n` +
-        `Profit Increase: ${dept.profit_increase}%`
-      ),
-      yPosition + 10,
-      "Additional Department Recommendations"
-    );
-  }
+  planDetails.forEach(detail => {
+    const lines = doc.splitTextToSize(detail, 160);
+    lines.forEach(line => {
+      doc.text(line, 25, yPosition);
+      yPosition += 8;
+    });
+    yPosition += 4;
+  });
 
-  // Additional Information Block
-  if (formData.additionalInfo) {
-    yPosition = addContentBlock([formData.additionalInfo], yPosition + 10, "Additional Considerations");
-  }
+  // Add department recommendations if available
+  if (analysis.allAnalyses && analysis.allAnalyses.length > 0) {
+    yPosition = addSectionHeader("Department Recommendations", yPosition + 10);
+    
+    analysis.allAnalyses.forEach(dept => {
+      const deptInfo = [
+        `Department: ${dept.department}`,
+        `Function: ${dept.function}`,
+        `Savings: $${parseInt(dept.savings).toLocaleString()}`,
+        `Profit Increase: ${dept.profit_increase}%`,
+        `Strategy: ${dept.explanation}`,
+        ''
+      ];
 
-  // Footer on all pages
-  const pageCount = doc.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.setTextColor(128);
-    doc.text(
-      `Generated by ChatSites AI - Page ${i} of ${pageCount}`,
-      20,
-      doc.internal.pageSize.height - 10
-    );
+      deptInfo.forEach(line => {
+        const lines = doc.splitTextToSize(line, 160);
+        lines.forEach(splitLine => {
+          if (yPosition > 270) {
+            doc.addPage();
+            yPosition = 20;
+          }
+          doc.text(splitLine, 25, yPosition);
+          yPosition += 8;
+        });
+      });
+    });
   }
 
   return doc;
