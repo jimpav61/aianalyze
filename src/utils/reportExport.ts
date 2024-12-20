@@ -5,16 +5,11 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
   try {
     console.log('Starting PDF export process');
     
-    // Wait for any images to load
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
     const canvas = await html2canvas(reportElement, {
       scale: 2,
       useCORS: true,
       logging: true,
       backgroundColor: '#ffffff',
-      allowTaint: true,
-      foreignObjectRendering: true,
     });
     
     const imgData = canvas.toDataURL('image/png');
