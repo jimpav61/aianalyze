@@ -108,7 +108,8 @@ export const CalendarEmbed = ({
             pointer-events: auto;
           }
 
-          /* Show button when confirmation page is loaded */
+          /* Target confirmation page specifically */
+          .calendly-inline-widget iframe[src*="confirmed=1"] ~ .download-report-button,
           .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
             display: block !important;
           }
@@ -118,9 +119,10 @@ export const CalendarEmbed = ({
         ref={calendarRef}
         className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm relative"
       >
-        <div className="download-report-button">
-          <DownloadButton onClick={handleDownload} />
-        </div>
+        <DownloadButton 
+          onClick={handleDownload} 
+          className="download-report-button"
+        />
       </div>
       <HiddenReport formData={formData} analysis={analysis} />
     </div>
