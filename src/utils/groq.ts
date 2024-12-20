@@ -8,8 +8,7 @@ export const generateAnalysis = async (industry: string) => {
     const { data, error } = await supabase
       .from('analyses')
       .select('*')
-      .eq('industry', industry)
-      .order('department');
+      .eq('industry', industry);
     
     if (error) {
       console.error('generateAnalysis - Supabase error:', error);
@@ -23,39 +22,18 @@ export const generateAnalysis = async (industry: string) => {
       return [];
     }
 
-    console.log('generateAnalysis - Processing', data.length, 'records');
+    // Transform the data to match the expected format
+    const transformedData = data.map(item => ({
+      id: item.id,
+      department: item.department,
+      function: item.bot_function,
+      savings: item.savings.toString(),
+      profit_increase: item.profit_increase.toString(),
+      explanation: item.explanation,
+      marketingStrategy: item.marketing_strategy
+    }));
 
-    // Transform and validate each item
-    const transformedData = data.map((item, index) => {
-      console.log(`generateAnalysis - Processing item ${index + 1}:`, item);
-
-      if (!item) {
-        console.warn('generateAnalysis - Invalid item:', item);
-        return null;
-      }
-
-      // Transform the data with strict type checking
-      const transformed = {
-        id: item.id || `generated-${crypto.randomUUID()}`,
-        department: String(item.department || ''),
-        function: String(item.bot_function || ''),
-        savings: String(item.savings || 0),
-        profit_increase: String(item.profit_increase || 0),
-        explanation: String(item.explanation || ''),
-        marketingStrategy: String(item.marketing_strategy || '')
-      };
-
-      console.log(`generateAnalysis - Transformed item ${index + 1}:`, transformed);
-      return transformed;
-    }).filter(Boolean); // Remove null items
-
-    console.log('generateAnalysis - Final transformed data:', transformedData);
-    
-    if (transformedData.length === 0) {
-      console.warn('generateAnalysis - No valid items after transformation');
-      return [];
-    }
-
+    console.log('generateAnalysis - Transformed data:', transformedData);
     return transformedData;
   } catch (error) {
     console.error('generateAnalysis - Error:', error);
