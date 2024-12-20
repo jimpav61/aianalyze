@@ -5,7 +5,6 @@ import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 
 interface DownloadReportButtonProps {
-  reportRef: React.RefObject<HTMLDivElement>;
   formData?: DetailedFormData;
   analysis?: any;
 }
@@ -144,7 +143,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         );
       }
 
-      // Save the PDF
+      // Save the PDF - this triggers immediate download
       doc.save("chatsites-analysis-report.pdf");
       
       toast({
