@@ -85,24 +85,22 @@ export const CalendarEmbed = ({
       <style>
         {`
           .calendly-confirmation-page {
-            position: relative;
-          }
-          .calendly-confirmation-page .calendly-confirmation-button {
-            margin-top: 16px !important;
+            position: relative !important;
+            padding-top: 80px !important;
           }
           .download-report-button {
             display: none;
             position: absolute;
-            top: 35%;
+            top: 20px;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             z-index: 1000;
             width: 100%;
             max-width: 300px;
             margin: 0 auto;
           }
           .calendly-confirmation-page .download-report-button {
-            display: flex !important;
+            display: block !important;
           }
         `}
       </style>
