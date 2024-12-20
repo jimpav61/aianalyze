@@ -93,7 +93,7 @@ export const CalendarEmbed = ({
           .download-report-button {
             display: none;
             position: fixed;
-            top: 240px;
+            top: 180px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 999999;
@@ -103,7 +103,7 @@ export const CalendarEmbed = ({
           }
 
           /* Show button only when confirmation page is loaded */
-          body:has(.calendly-inline-widget iframe[src*="confirmation"]) .download-report-button {
+          .calendly-inline-widget iframe[src*="confirmation"] ~ .download-report-button {
             display: block !important;
           }
         `}
