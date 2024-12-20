@@ -1,4 +1,6 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
+import { Button } from "../ui/button";
+import { Download } from "lucide-react";
 
 interface CloseConfirmationDialogProps {
   isOpen: boolean;
@@ -16,8 +18,21 @@ export const CloseConfirmationDialog = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to close?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Don't worry, you can still access and download your analysis report after closing this window.
+          <AlertDialogDescription className="space-y-4">
+            <p>Don't worry, you can still access and download your analysis report after closing this window.</p>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Trigger download functionality
+                window.print();
+              }}
+            >
+              <Download className="h-4 w-4" />
+              Download Report
+            </Button>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
