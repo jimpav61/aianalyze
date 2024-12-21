@@ -43,10 +43,11 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
     <Button
       onClick={handleDownload}
       variant="outline"
-      className="flex items-center gap-2"
+      className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-sm"
     >
       <Download className="h-4 w-4" />
-      Download PDF
+      <span className="hidden sm:inline">Download PDF</span>
+      <span className="sm:hidden">Download</span>
     </Button>
   );
 };
