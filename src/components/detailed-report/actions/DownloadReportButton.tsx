@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { processAllImages } from "@/utils/pdf/imageProcessing";
+import { createPDF } from "@/utils/pdf/pdfUtils";
 
 interface DownloadReportButtonProps {
   formData?: DetailedFormData;
@@ -10,7 +11,7 @@ interface DownloadReportButtonProps {
   reportData?: any;
 }
 
-export const DownloadReportButton = ({ formData, analysis, reportData }: DownloadReportButtonProps) => {
+export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
   const handleDownload = async () => {
@@ -19,55 +20,21 @@ export const DownloadReportButton = ({ formData, analysis, reportData }: Downloa
         throw new Error("Report data not available");
       }
 
-      // Create a clone to avoid modifying the original DOM
       const reportContainer = document.querySelector("#detailed-report");
       if (!reportContainer) {
         throw new Error("Report container not found");
       }
 
+      // Create a clone to avoid modifying the original DOM
       const clone = reportContainer.cloneNode(true) as HTMLElement;
       document.body.appendChild(clone);
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
       
-      // Process all images in the clone
-      const images = Array.from(clone.getElementsByTagName('img'));
-      console.log("Processing images:", images.length);
+      await processAllImages(clone);
       
-      await Promise.all(
-        images.map(img => 
-          new Promise((resolve) => {
-            const originalSrc = img.src;
-            // Convert relative URLs to absolute
-            if (img.src.startsWith('/')) {
-              img.src = window.location.origin + img.src;
-            }
-            // Remove port number if present
-            img.src = img.src.replace(/:\d+\//, '/');
-            
-            console.log(`Processing image: ${originalSrc} -> ${img.src}`);
-            
-            if (img.complete) {
-              console.log("Image already loaded:", img.src);
-              resolve(null);
-            } else {
-              img.onload = () => {
-                console.log("Image loaded successfully:", img.src);
-                resolve(null);
-              };
-              img.onerror = () => {
-                console.warn(`Failed to load image: ${img.src}`);
-                // Instead of removing, replace with a placeholder or default image
-                img.src = '/placeholder.svg';
-                resolve(null);
-              };
-            }
-          })
-        )
-      );
-
-      const doc = await generateAnalysisReport({ formData, analysis });
-      doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      const pdf = await createPDF(clone, `AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
 
       document.body.removeChild(clone);
 
