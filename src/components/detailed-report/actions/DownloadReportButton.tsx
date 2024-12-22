@@ -43,13 +43,36 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
       
-      // Capture the content
+      // Wait for all images (including logo) to load
+      const images = clone.getElementsByTagName('img');
+      await Promise.all(
+        Array.from(images).map(img => 
+          new Promise((resolve, reject) => {
+            if (img.complete) {
+              resolve(null);
+            } else {
+              img.onload = () => resolve(null);
+              img.onerror = () => reject(new Error(`Failed to load image: ${img.src}`));
+            }
+          })
+        )
+      );
+      
+      // Capture the content with proper image handling
       const canvas = await html2canvas(clone, {
         scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        onclone: (document, element) => {
+          // Ensure images are visible and loaded
+          const images = element.getElementsByTagName('img');
+          Array.from(images).forEach(img => {
+            img.style.display = 'block';
+            img.crossOrigin = 'anonymous';
+          });
+        }
       });
       
       document.body.removeChild(clone);
