@@ -51,8 +51,6 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
-    setShowDetailedDialog(false);
-    setCurrentAnalysis(null);
     handleAnalyze();
   };
 
@@ -76,6 +74,7 @@ export const Hero = ({
         isOpen={showDetailedDialog}
         onClose={() => {
           setShowDetailedDialog(false);
+          setCurrentAnalysis(null);
         }}
         industry={selectedIndustry}
         analysis={currentAnalysis}
