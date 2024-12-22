@@ -1,22 +1,10 @@
-import { useRef } from 'react';
-import { CalendarFormData } from '@/types/analysis';
+import { useRef, useCallback } from 'react';
+import { DetailedFormData } from '@/types/analysis';
 
-// Simplified mapping focusing on most common Calendly phone field names
-const PHONE_FIELD_MAPPINGS = {
-  questions: {
-    'a1': true,  // Common custom question ID
-    'phone': true,  // Standard phone field
-    'Phone': true,  // Alternate capitalization
-    'phone_number': true,  // Snake case variant
-    'phoneNumber': true,  // Camel case variant
-    '1': true,  // Numeric question ID
-  }
-};
-
-export const useCalendlyConfig = (formData?: CalendarFormData) => {
+export const useCalendlyConfig = (formData?: DetailedFormData) => {
   const calendlyInitialized = useRef<boolean>(false);
 
-  const getPrefillData = () => {
+  const getPrefillData = useCallback(() => {
     const phoneNumber = formData?.phoneNumber || '';
     
     console.log('[PHONE_DEBUG] Building prefill data:', {
@@ -24,11 +12,14 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
       formData
     });
 
-    // Create a questions object with all possible phone field mappings
-    const questions: Record<string, string> = {};
-    Object.keys(PHONE_FIELD_MAPPINGS.questions).forEach(key => {
-      questions[key] = phoneNumber;
-    });
+    const questions: Record<string, string> = {
+      'a1': phoneNumber,
+      'phone': phoneNumber,
+      'Phone': phoneNumber,
+      'phone_number': phoneNumber,
+      'phoneNumber': phoneNumber,
+      '1': phoneNumber,
+    };
 
     const prefillData = {
       name: formData?.ownerName || '',
@@ -42,10 +33,22 @@ export const useCalendlyConfig = (formData?: CalendarFormData) => {
     });
 
     return prefillData;
-  };
+  }, [formData]);
+
+  const initCalendly = useCallback((prefill: any) => {
+    if (window.Calendly && !calendlyInitialized.current) {
+      calendlyInitialized.current = true;
+      window.Calendly.initInlineWidget({
+        url: 'https://calendly.com/chatsites/demo',
+        parentElement: document.querySelector('.calendly-inline-widget'),
+        prefill,
+      });
+    }
+  }, []);
 
   return {
     calendlyInitialized,
-    getPrefillData
+    getPrefillData,
+    initCalendly
   };
 };

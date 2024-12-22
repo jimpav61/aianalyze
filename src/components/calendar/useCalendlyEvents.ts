@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { CalendarFormData } from '@/types/analysis';
+import { DetailedFormData } from '@/types/analysis';
 
 interface UseCalendlyEventsProps {
-  formData?: CalendarFormData;
+  formData?: DetailedFormData;
   onBookingSuccess: () => void;
 }
 

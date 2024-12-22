@@ -4,31 +4,25 @@ import { useCalendlyEvents } from "./useCalendlyEvents";
 import { DetailedFormData } from "@/types/analysis";
 
 interface CalendarEmbedProps {
+  calLink?: string;
   onSubmit?: () => void;
   formData: DetailedFormData;
   analysis?: any;
 }
 
 export const CalendarEmbed = ({ onSubmit, formData, analysis }: CalendarEmbedProps) => {
-  const { initCalendly } = useCalendlyConfig();
-  const { handleEventScheduled } = useCalendlyEvents({ onSubmit });
+  const { getPrefillData, initCalendly } = useCalendlyConfig(formData);
+  const { handleEventScheduled } = useCalendlyEvents({ 
+    formData, 
+    onBookingSuccess: onSubmit || (() => {}) 
+  });
 
   useEffect(() => {
     if (formData) {
-      const prefill = {
-        name: formData.companyName,
-        email: formData.email,
-        customAnswers: {
-          a1: formData.phoneNumber,
-          a2: formData.employees,
-          a3: formData.revenue,
-          a4: formData.industry || 'Not specified',
-        }
-      };
-
+      const prefill = getPrefillData();
       initCalendly(prefill);
     }
-  }, [formData, initCalendly]);
+  }, [formData, getPrefillData, initCalendly]);
 
   return (
     <div className="calendly-embed min-h-[600px] w-full">
