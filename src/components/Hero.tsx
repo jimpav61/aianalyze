@@ -4,7 +4,7 @@ import { HeroHeader } from "./hero/HeroHeader";
 import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
 import { useToast } from "@/hooks/use-toast";
-import { SampleReport } from "./SampleReport";
+import { AnalysisSection } from "../components/AnalysisSection";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -45,7 +45,6 @@ export const Hero = ({
       setShowAnalysisCard(true);
       setShowDetailedDialog(true);
 
-      // Show toast notification about the number of departments
       toast({
         title: "AI Implementation Opportunities",
         description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
@@ -77,9 +76,11 @@ export const Hero = ({
         </div>
       </div>
 
-      {!showDetailedDialog && !analyses?.length && (
-        <SampleReport />
-      )}
+      <AnalysisSection 
+        analyses={analyses} 
+        isMobile={false} 
+        analysisGridRef={{ current: null }}
+      />
 
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
