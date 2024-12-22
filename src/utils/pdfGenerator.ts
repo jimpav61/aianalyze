@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import html2canvas from 'html2canvas';
-import { prepareImagesForPDF } from "./pdf/imageProcessing";
+import { processAllImages } from "./pdf/imageProcessing";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -26,7 +26,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report container not found");
     }
 
-    await prepareImagesForPDF(reportContainer as HTMLElement);
+    await processAllImages(reportContainer as HTMLElement);
 
     const canvas = await html2canvas(reportContainer as HTMLElement, {
       scale: 2,
