@@ -1,105 +1,73 @@
-interface FinancialFactors {
-  savingsPercent: number;
-  profitPercent: number;
-}
-
-interface FinancialResults {
-  savings: {
-    amount: number;
-    percentage: number;
+export const getBaseFactors = (department: string) => {
+  const factors = {
+    'Customer Service': { savingsPercent: 15, profitPercent: 8 },
+    'Marketing': { savingsPercent: 12, profitPercent: 10 },
+    'Sales': { savingsPercent: 18, profitPercent: 15 },
+    'Operations': { savingsPercent: 20, profitPercent: 12 },
+    'Human Resources': { savingsPercent: 15, profitPercent: 8 },
+    'Finance': { savingsPercent: 12, profitPercent: 10 },
+    'IT': { savingsPercent: 25, profitPercent: 15 },
+    'Legal': { savingsPercent: 10, profitPercent: 5 },
   };
-  profit: {
-    amount: number;
-    percentage: number;
-  };
-}
+  return factors[department as keyof typeof factors] || factors['Customer Service'];
+};
 
-export const getDepartmentFactors = (): Record<string, FinancialFactors> => ({
-  'Customer Service': {
-    savingsPercent: 25,
-    profitPercent: 8
-  },
-  'Marketing': {
-    savingsPercent: 15,
-    profitPercent: 12
-  },
-  'Sales': {
-    savingsPercent: 20,
-    profitPercent: 15
-  }
-});
-
-const getScaledFactors = (baseFactors: FinancialFactors, revenue: number): FinancialFactors => {
-  let scale = 1;
-  if (revenue < 50000) {
-    scale = 1.2; // Higher percentage impact for smaller businesses
-  } else if (revenue > 1000000) {
-    scale = 0.8; // Lower percentage but higher absolute numbers for larger businesses
-  }
-  
-  return {
-    savingsPercent: baseFactors.savingsPercent * scale,
-    profitPercent: baseFactors.profitPercent * scale
-  };
+const getScalingFactor = (revenue: number) => {
+  if (revenue >= 10000000) return 0.7; // Scale down for very large companies
+  if (revenue >= 5000000) return 0.8;
+  if (revenue >= 1000000) return 0.9;
+  return 1; // No scaling for smaller companies
 };
 
 export const calculateRevenue = (revenueStr: string): number => {
+  if (!revenueStr) return 0;
+  
   // Handle "X million+" cases
-  if (revenueStr.includes('million')) {
-    if (revenueStr.includes('1 million+')) {
-      return 1000000;
-    }
-    const match = revenueStr.match(/\$(\d+(?:\.\d+)?)/);
-    return match ? parseFloat(match[1]) * 1000000 : 0;
+  if (revenueStr.toLowerCase().includes('million')) {
+    const match = revenueStr.match(/(\d+)\s*million/i);
+    return match ? parseFloat(match[1]) * 1000000 : 1000000;
   }
 
   // Handle ranges like "$100,000 - $500,000"
   const matches = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
   if (matches && matches.length >= 1) {
     if (matches.length === 2) {
-      // If it's a range, take the average
       const lowerBound = parseFloat(matches[0].replace(/[$,]/g, ''));
       const upperBound = parseFloat(matches[1].replace(/[$,]/g, ''));
-      return (lowerBound + upperBound) / 2;
+      return Math.round((lowerBound + upperBound) / 2);
     }
-    // Single value
     return parseFloat(matches[0].replace(/[$,]/g, ''));
   }
   return 0;
 };
 
-export const calculateFinancials = (revenue: number, department: string): FinancialResults => {
-  if (revenue === 0) {
+export const calculateFinancials = (revenue: number, department: string) => {
+  if (!revenue || revenue <= 0) {
+    console.warn('Invalid revenue value:', revenue);
     return {
-      savings: { amount: 0, percentage: 0 },
-      profit: { amount: 0, percentage: 0 }
+      savingsAmount: 0,
+      savingsPercentage: 0,
+      profitPercentage: 0,
+      profitAmount: 0
     };
   }
 
-  const departmentFactors = getDepartmentFactors();
-  const baseFactors = departmentFactors[department] || {
-    savingsPercent: 10,
-    profitPercent: 5
+  const baseFactors = getBaseFactors(department);
+  const scalingFactor = getScalingFactor(revenue);
+  const scaledFactors = {
+    savingsPercent: baseFactors.savingsPercent * scalingFactor,
+    profitPercent: baseFactors.profitPercent * scalingFactor
   };
-  
-  const scaledFactors = getScaledFactors(baseFactors, revenue);
 
-  // Calculate savings
   const savingsAmount = Math.round(revenue * (scaledFactors.savingsPercent / 100));
   const savingsPercentage = parseFloat(scaledFactors.savingsPercent.toFixed(1));
-  
-  // Calculate profit increase
   const profitPercentage = parseFloat(scaledFactors.profitPercent.toFixed(1));
   const profitAmount = Math.round(revenue * (profitPercentage / 100));
 
   return {
-    savings: {
-      amount: savingsAmount,
-      percentage: savingsPercentage
-    },
-    profit: {
-      amount: profitAmount,
-      percentage: profitPercentage
-    }
+    savingsAmount,
+    savingsPercentage,
+    profitPercentage,
+    profitAmount
   };
 };

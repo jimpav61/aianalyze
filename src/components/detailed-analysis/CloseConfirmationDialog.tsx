@@ -37,7 +37,20 @@ export const CloseConfirmationDialog = ({
       
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Report downloaded successfully!</p>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="w-full flex items-center justify-center gap-2 mt-2"
+              onClick={() => handleDownload()}
+            >
+              <Download className="h-4 w-4" />
+              Download Again
+            </Button>
+          </div>
+        ),
       });
     } catch (error) {
       console.error("Download error:", error);
