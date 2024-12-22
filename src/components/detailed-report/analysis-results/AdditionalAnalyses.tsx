@@ -35,7 +35,7 @@ export const AdditionalAnalyses = ({
             <Card key={index} className="p-6 bg-[#F8F9FC] border border-gray-100">
               <div className="mb-4">
                 <p className="font-medium text-gray-700 mb-2">{analysis.department}</p>
-                <p className="text-[#f65228] whitespace-pre-line leading-relaxed">{analysis.function}</p>
+                <p className="text-[#f65228] whitespace-pre-line leading-relaxed break-words">{analysis.function}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
