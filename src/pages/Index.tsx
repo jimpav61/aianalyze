@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { AnalysisSection } from "@/components/AnalysisSection";
 import { generateAnalysis } from "@/utils/groq";
 
 const Index = () => {
