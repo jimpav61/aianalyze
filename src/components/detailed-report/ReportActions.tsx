@@ -1,5 +1,4 @@
 import { DownloadReportButton } from "./actions/DownloadReportButton";
-import { EmailReportButton } from "./actions/EmailReportButton";
 import { Button } from "../ui/button";
 import { DetailedFormData } from "@/types/analysis";
 
@@ -16,7 +15,6 @@ export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsP
         formData={formData} 
         analysis={analysis}
       />
-      <EmailReportButton onComplete={onBookDemo} />
       {onBookDemo && (
         <Button 
           onClick={onBookDemo}
