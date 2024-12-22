@@ -44,6 +44,7 @@ const getScaledFactors = (baseFactors: FinancialFactors, revenue: number): Finan
 };
 
 export const calculateRevenue = (revenueStr: string): number => {
+  // Handle "X million+" cases
   if (revenueStr.includes('million')) {
     if (revenueStr.includes('1 million+')) {
       return 1000000;
@@ -52,13 +53,16 @@ export const calculateRevenue = (revenueStr: string): number => {
     return match ? parseFloat(match[1]) * 1000000 : 0;
   }
 
+  // Handle ranges like "$100,000 - $500,000"
   const matches = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
   if (matches && matches.length >= 1) {
     if (matches.length === 2) {
+      // If it's a range, take the average
       const lowerBound = parseFloat(matches[0].replace(/[$,]/g, ''));
       const upperBound = parseFloat(matches[1].replace(/[$,]/g, ''));
       return (lowerBound + upperBound) / 2;
     }
+    // Single value
     return parseFloat(matches[0].replace(/[$,]/g, ''));
   }
   return 0;
@@ -80,9 +84,11 @@ export const calculateFinancials = (revenue: number, department: string): Financ
   
   const scaledFactors = getScaledFactors(baseFactors, revenue);
 
+  // Calculate savings
   const savingsAmount = Math.round(revenue * (scaledFactors.savingsPercent / 100));
   const savingsPercentage = parseFloat(scaledFactors.savingsPercent.toFixed(1));
   
+  // Calculate profit increase
   const profitPercentage = parseFloat(scaledFactors.profitPercent.toFixed(1));
   const profitAmount = Math.round(revenue * (profitPercentage / 100));
 

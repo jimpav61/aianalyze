@@ -9,9 +9,11 @@ interface FinancialAnalysisGridProps {
 
 export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisGridProps) => {
   const revenue = calculateRevenue(formData.revenue);
+  console.log('Calculated revenue:', revenue);
   
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => {
     const financials = calculateFinancials(revenue, item.department);
+    console.log('Financials for', item.department, ':', financials);
     
     return {
       ...item,
