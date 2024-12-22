@@ -1,7 +1,7 @@
 import { Logo } from "./Logo";
 
 interface HeaderProps {
-  isMobile: boolean;
+  isMobile?: boolean;
 }
 
 export const Header = ({ isMobile }: HeaderProps) => {
