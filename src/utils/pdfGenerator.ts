@@ -1,6 +1,6 @@
 import { DetailedFormData } from "@/types/analysis";
 import { createReportContainer, generatePDF } from "./pdf/pdfUtils";
-import { jsPDF } from "jspdf"; // Add this import
+import { jsPDF } from "jspdf";
 import {
   generateHeaderSection,
   generateCompanySection,
@@ -29,13 +29,24 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   
   const reportContainer = createReportContainer();
 
-  // Generate each section of the report
+  // Generate each section of the report with proper line breaks
   generateHeaderSection(reportContainer);
   generateCompanySection(reportContainer, formData, analysis.industry);
   generateOperationsSection(reportContainer, formData);
   generateAnalysisSection(reportContainer, analysis);
   generateImplementationSection(reportContainer, formData);
   generateFooterSection(reportContainer);
+
+  // Add CSS for proper line breaks
+  const style = document.createElement('style');
+  style.textContent = `
+    #pdf-container * {
+      white-space: pre-line !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+    }
+  `;
+  reportContainer.appendChild(style);
 
   return generatePDF(reportContainer);
 };

@@ -3,10 +3,14 @@ import { jsPDF } from "jspdf";
 
 export const createReportContainer = () => {
   const container = document.createElement('div');
+  container.id = 'pdf-container';
   container.style.width = '800px';
   container.style.padding = '40px';
   container.style.background = 'white';
   container.style.fontFamily = 'Inter, sans-serif';
+  container.style.whiteSpace = 'pre-line';
+  container.style.wordWrap = 'break-word';
+  container.style.overflowWrap = 'break-word';
   document.body.appendChild(container);
   return container;
 };
@@ -17,9 +21,21 @@ export const generatePDF = async (reportContainer: HTMLDivElement): Promise<jsPD
       scale: 2,
       logging: false,
       useCORS: true,
+      allowTaint: true,
       backgroundColor: '#ffffff',
       windowWidth: 800,
-      height: reportContainer.offsetHeight
+      height: reportContainer.offsetHeight,
+      onclone: (clonedDoc, element) => {
+        // Ensure all images are loaded before capturing
+        const images = element.getElementsByTagName('img');
+        return Promise.all(Array.from(images).map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }));
+      }
     });
 
     document.body.removeChild(reportContainer);
