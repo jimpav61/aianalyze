@@ -5,6 +5,11 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
   const calendlyInitialized = useRef<boolean>(false);
 
   const getPrefillData = useCallback(() => {
+    if (!formData) {
+      console.log('[CALENDLY_DEBUG] No form data provided, returning empty prefill');
+      return {};
+    }
+
     const phoneNumber = formData?.phoneNumber || '';
     const ownerName = formData?.ownerName || '';
     const email = formData?.email || '';

@@ -7,23 +7,23 @@ import { useToast } from "@/hooks/use-toast";
 interface CalendarEmbedProps {
   calLink?: string;
   onSubmit?: () => void;
-  formData: DetailedFormData;
+  formData?: DetailedFormData | null;
   analysis?: any;
 }
 
-export const CalendarEmbed = ({ onSubmit, formData, analysis }: CalendarEmbedProps) => {
+export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
   console.log("CalendarEmbed - Initializing with:", {
     hasFormData: !!formData,
-    formDataFields: Object.keys(formData),
+    formDataFields: formData ? Object.keys(formData) : [],
     hasAnalysis: !!analysis
   });
 
-  const { getPrefillData } = useCalendlyConfig(formData);
+  const { getPrefillData } = useCalendlyConfig(formData || undefined);
   const { handleEventScheduled } = useCalendlyEvents({ 
-    formData, 
+    formData: formData || null, 
     onBookingSuccess: onSubmit || (() => {}) 
   });
 
