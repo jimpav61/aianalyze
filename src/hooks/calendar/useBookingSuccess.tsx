@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarFormData } from "@/types/analysis";
+import { DetailedFormData } from "@/types/analysis";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
 
 interface UseBookingSuccessProps {
-  formData?: CalendarFormData;
+  formData?: DetailedFormData;
   analysis?: any;
   onSubmit?: () => void;
 }
@@ -46,25 +46,15 @@ export const useBookingSuccess = ({
         analysis
       });
       
-      generateAnalysisReport({ formData, analysis })
-        .then(doc => {
-          console.log("PDF generated successfully, attempting save...");
-          doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-          console.log("PDF saved successfully");
-          
-          toast({
-            title: "Success",
-            description: "Report downloaded successfully!",
-          });
-        })
-        .catch(error => {
-          console.error("PDF Generation/Download error:", error);
-          toast({
-            title: "Error",
-            description: "Failed to download report. Please try again.",
-            variant: "destructive",
-          });
-        });
+      const doc = generateAnalysisReport({ formData, analysis });
+      console.log("PDF generated successfully, attempting save...");
+      doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      console.log("PDF saved successfully");
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+      });
     } catch (error) {
       console.error("PDF Generation/Download error:", error);
       toast({
