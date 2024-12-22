@@ -1,58 +1,49 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { DetailedFormData } from "@/types/analysis";
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DownloadReportButtonProps {
-  formData?: DetailedFormData;
-  analysis?: any;
+  reportData: any;
 }
 
-export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
+export const DownloadReportButton = ({ reportData }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    console.log('Download Report - Starting download with:', { formData, analysis });
-    
-    if (!formData || !analysis) {
-      console.error('Download Report - Missing required data');
-      toast({
-        title: "Error",
-        description: "Report data not available. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
-      // Get the report container element
-      const reportElement = document.querySelector('.space-y-6.bg-white') as HTMLElement;
-      if (!reportElement) {
-        throw new Error('Report element not found');
+      // Create a clone of the report container
+      const reportContainer = document.querySelector("#detailed-report");
+      if (!reportContainer) {
+        throw new Error("Report container not found");
       }
 
-      console.log('Download Report - Capturing report content');
-      
-      // Create a clone of the element to avoid modifying the displayed content
-      const clone = reportElement.cloneNode(true) as HTMLElement;
+      const clone = reportContainer.cloneNode(true) as HTMLElement;
       document.body.appendChild(clone);
-      clone.style.width = '800px';
-      clone.style.padding = '40px';
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
       
-      // Wait for all images (including logo) to load
+      // Process and validate all images
       const images = clone.getElementsByTagName('img');
       await Promise.all(
         Array.from(images).map(img => 
-          new Promise((resolve, reject) => {
+          new Promise((resolve) => {
+            // Convert relative URLs to absolute
+            if (img.src.startsWith('/')) {
+              img.src = window.location.origin + img.src;
+            }
+
             if (img.complete) {
               resolve(null);
             } else {
               img.onload = () => resolve(null);
-              img.onerror = () => reject(new Error(`Failed to load image: ${img.src}`));
+              img.onerror = () => {
+                console.warn(`Image failed to load: ${img.src}`);
+                // Remove failed images instead of rejecting
+                img.remove();
+                resolve(null);
+              };
             }
           })
         )
@@ -61,23 +52,26 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       // Capture the content with proper image handling
       const canvas = await html2canvas(clone, {
         scale: 2,
-        logging: false,
+        logging: true, // Enable logging for debugging
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
-        onclone: (document, element) => {
-          // Ensure images are visible and loaded
+        onclone: (_, element) => {
           const images = element.getElementsByTagName('img');
           Array.from(images).forEach(img => {
             img.style.display = 'block';
             img.crossOrigin = 'anonymous';
+            // Ensure image URLs are absolute
+            if (img.src.startsWith('/')) {
+              img.src = window.location.origin + img.src;
+            }
           });
         }
       });
       
       document.body.removeChild(clone);
 
-      // Convert to PDF
+      // Generate PDF
       const imgWidth = 210; // A4 width in mm
       const pageHeight = 297; // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -107,33 +101,27 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         position -= pageHeight;
       }
 
-      console.log('Download Report - PDF generated, saving file');
-      pdf.save("chatsites-analysis-report.pdf");
-      
+      // Save the PDF
+      pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
+        description: "Report downloaded successfully",
       });
-      console.log('Download Report - PDF saved successfully');
     } catch (error) {
-      console.error('Download Report - Error:', error);
+      console.error('Error generating PDF:', error);
       toast({
         title: "Error",
-        description: "Failed to download report. Please try again.",
+        description: "Failed to generate PDF. Please try again.",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <Button
-      onClick={handleDownload}
-      variant="outline"
-      className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 text-sm"
-    >
-      <Download className="h-4 w-4" />
-      <span className="hidden sm:inline">Download PDF</span>
-      <span className="sm:hidden">Download</span>
+    <Button onClick={handleDownload} variant="outline" size="sm">
+      <Download className="mr-2 h-4 w-4" />
+      Download Report
     </Button>
   );
 };
