@@ -16,64 +16,58 @@ interface ReportContentProps {
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analysis data:", analysis);
   
-  // Calculate actual savings based on revenue and industry standards
-  const calculateActualSavings = () => {
+  // Calculate actual savings and profit based on revenue
+  const calculateFinancials = () => {
     const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
-    if (isNaN(revenue)) return 0;
+    if (isNaN(revenue)) {
+      return {
+        savings: { amount: 0, percentage: 0 },
+        profit: { amount: 0, percentage: 0 }
+      };
+    }
     
     // Calculate savings based on the provided savings value from analysis
-    // This represents the actual dollar amount of savings
     const savingsAmount = parseFloat(analysis.savings);
-    
-    // Calculate savings percentage relative to revenue
     const savingsPercentage = (savingsAmount / revenue) * 100;
     
-    return {
-      amount: Math.round(savingsAmount),
-      percentage: parseFloat(savingsPercentage.toFixed(1))
-    };
-  };
-
-  // Calculate actual profit increase based on revenue
-  const calculateActualProfit = () => {
-    const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
-    if (isNaN(revenue)) return 0;
-    
-    // Use the profit increase percentage from analysis
+    // Calculate profit increase based on the provided percentage
     const profitPercentage = parseFloat(analysis.profit_increase);
-    
-    // Calculate the actual profit increase amount
     const profitAmount = (revenue * (profitPercentage / 100));
     
     return {
-      amount: Math.round(profitAmount),
-      percentage: parseFloat(profitPercentage.toFixed(1))
+      savings: {
+        amount: Math.round(savingsAmount),
+        percentage: parseFloat(savingsPercentage.toFixed(1))
+      },
+      profit: {
+        amount: Math.round(profitAmount),
+        percentage: parseFloat(profitPercentage.toFixed(1))
+      }
     };
   };
 
+  const financials = calculateFinancials();
+
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => {
-    const savingsCalc = calculateActualSavings();
-    const profitCalc = calculateActualProfit();
-    
     return {
       ...item,
-      savings: savingsCalc.amount.toString(),
-      profit_increase: profitCalc.percentage.toString(),
+      savings: financials.savings.amount.toString(),
+      profit_increase: financials.profit.percentage.toString(),
       explanation: item.explanation,
       marketingStrategy: item.marketing_strategy,
-      actualProfitIncrease: profitCalc.amount.toString(),
-      savingsPercentage: savingsCalc.percentage.toString()
+      actualProfitIncrease: financials.profit.amount.toString(),
+      savingsPercentage: financials.savings.percentage.toString()
     };
   }) || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
-    savings: calculateActualSavings().amount.toString(),
-    profit_increase: calculateActualProfit().percentage.toString(),
+    savings: financials.savings.amount.toString(),
+    profit_increase: financials.profit.percentage.toString(),
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy,
-    actualProfitIncrease: calculateActualProfit().amount.toString(),
-    savingsPercentage: calculateActualSavings().percentage.toString()
+    actualProfitIncrease: financials.profit.amount.toString(),
+    savingsPercentage: financials.savings.percentage.toString()
   }];
 
   console.log("ReportContent - Analyses for grid:", analysesForGrid);
