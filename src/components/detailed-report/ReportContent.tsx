@@ -33,9 +33,7 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
         />
       </div>
 
-      <div className="implementation-recommendations whitespace-pre-line">
-        <ImplementationRecommendations analysis={analysis} formData={formData} />
-      </div>
+      <ImplementationRecommendations analysis={analysis} formData={formData} />
       
       <div className="implementation-plan whitespace-pre-line">
         <ImplementationPlan data={{

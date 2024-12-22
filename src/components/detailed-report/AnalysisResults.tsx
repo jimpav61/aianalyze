@@ -29,10 +29,6 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
     return !isNaN(num) ? `${num}%` : '0%';
   };
 
-  const formatText = (text: string) => {
-    return text?.trim().replace(/\s+/g, ' ') || '';
-  };
-
   return (
     <div className="space-y-4">
       <h3 className="text-xl font-semibold">Analysis Results</h3>
@@ -40,15 +36,15 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
         <div className="space-y-4">
           <div>
             <p className="font-medium text-gray-700">Primary Department:</p>
-            <p className="text-gray-600">{formatText(primaryAnalysis.department)}</p>
+            <p className="text-gray-600">{primaryAnalysis.department}</p>
           </div>
           <div>
             <p className="font-medium text-gray-700">Primary Function:</p>
-            <p className="text-gray-600">{formatText(primaryAnalysis.function)}</p>
+            <p className="text-gray-600 whitespace-pre-wrap">{primaryAnalysis.function}</p>
           </div>
           <div>
             <p className="font-medium text-gray-700">Implementation Strategy:</p>
-            <p className="text-gray-600">{formatText(primaryAnalysis.explanation)}</p>
+            <p className="text-gray-600 whitespace-pre-wrap">{primaryAnalysis.explanation}</p>
           </div>
         </div>
         <div className="space-y-4">
@@ -72,7 +68,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           
           <div>
             <p className="font-medium text-gray-700">Marketing Strategy:</p>
-            <p className="text-gray-600">{formatText(primaryAnalysis.marketingStrategy)}</p>
+            <p className="text-gray-600 whitespace-pre-wrap">{primaryAnalysis.marketingStrategy}</p>
           </div>
         </div>
       </div>
@@ -85,8 +81,8 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
               const deptFinancials = calculateFinancials(revenueAmount, analysis.department);
               return (
                 <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                  <p className="font-medium">{formatText(analysis.department)}</p>
-                  <p className="text-sm text-gray-600">{formatText(analysis.function)}</p>
+                  <p className="font-medium">{analysis.department}</p>
+                  <p className="text-sm text-gray-600 whitespace-pre-wrap">{analysis.function}</p>
                   <div className="mt-2 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm">Savings: <span className="text-green-600">{formatCurrency(deptFinancials.savingsAmount)}</span></p>

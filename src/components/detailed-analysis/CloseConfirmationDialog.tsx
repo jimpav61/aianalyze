@@ -27,16 +27,15 @@ export const CloseConfirmationDialog = ({
       e.stopPropagation();
     }
 
-    console.log("[DOWNLOAD TEST] CloseConfirmationDialog - Starting download with:", {
+    console.log("CloseConfirmationDialog - Starting download with:", {
       hasFormData: !!formData,
       formDataContent: formData,
       hasAnalysis: !!analysis,
-      analysisContent: analysis,
-      timestamp: new Date().toISOString()
+      analysisContent: analysis
     });
 
     if (!formData || !analysis) {
-      console.error("[DOWNLOAD TEST] CloseConfirmationDialog - Missing required data:", {
+      console.error("CloseConfirmationDialog - Missing required data:", {
         formData,
         analysis
       });
@@ -49,21 +48,20 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      console.log("[DOWNLOAD TEST] CloseConfirmationDialog - Generating full PDF report with data:", {
+      console.log("CloseConfirmationDialog - Generating PDF with data:", {
         formData,
-        analysis,
-        timestamp: new Date().toISOString()
+        analysis
       });
       
       const pdf = await generateAnalysisReport({ formData, analysis });
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-      console.log("[DOWNLOAD TEST] CloseConfirmationDialog - PDF saved successfully");
+      console.log("CloseConfirmationDialog - PDF saved successfully");
       
       toast({
         title: "Success",
         description: (
           <div className="flex flex-col gap-2">
-            <p>Full report downloaded successfully!</p>
+            <p>Report downloaded successfully!</p>
             <Button 
               variant="outline" 
               size="sm"
@@ -77,7 +75,7 @@ export const CloseConfirmationDialog = ({
         ),
       });
     } catch (error) {
-      console.error('[DOWNLOAD TEST] CloseConfirmationDialog - Download error:', error);
+      console.error("CloseConfirmationDialog - Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
