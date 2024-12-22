@@ -33,6 +33,7 @@ export const EmailReportButton = ({ email, companyName, onComplete }: EmailRepor
 
       const reportClone = report.cloneNode(true) as HTMLElement;
       
+      // Add styling to maintain visual consistency
       const style = document.createElement('style');
       style.textContent = `
         body {
@@ -66,6 +67,12 @@ export const EmailReportButton = ({ email, companyName, onComplete }: EmailRepor
       `;
       reportClone.prepend(style);
 
+      console.log('Sending email with report content:', {
+        email,
+        companyName,
+        contentLength: reportClone.innerHTML.length
+      });
+
       const { data, error } = await supabase.functions.invoke("sendemail", {
         body: {
           email,
@@ -75,9 +82,14 @@ export const EmailReportButton = ({ email, companyName, onComplete }: EmailRepor
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error sending email:', error);
+        throw error;
+      }
 
+      console.log('Email sent successfully:', data);
       onComplete?.();
+      
       toast({
         title: "Success",
         description: "Report sent to your email. Please check your inbox (and spam folder).",
