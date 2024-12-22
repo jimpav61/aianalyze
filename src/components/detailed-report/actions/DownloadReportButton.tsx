@@ -13,39 +13,26 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    console.log("DownloadReportButton - Starting download with:", {
-      hasFormData: !!formData,
-      formDataContent: formData,
-      hasAnalysis: !!analysis,
-      analysisContent: analysis
-    });
-
     try {
       if (!formData || !analysis) {
-        console.error("DownloadReportButton - Missing required data:", {
-          formData,
-          analysis
-        });
         throw new Error("Report data not available");
       }
 
-      console.log("DownloadReportButton - Generating PDF with data:", {
-        formData,
-        analysis
-      });
-      
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       const pdf = await generateAnalysisReport({ formData, analysis });
-      console.log("DownloadReportButton - PDF generated successfully");
-      
-      pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-      console.log("DownloadReportButton - PDF saved successfully");
+      pdf.save(`AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`);
 
       toast({
         title: "Success",
         description: "Report downloaded successfully",
       });
     } catch (error) {
-      console.error('DownloadReportButton - Error generating PDF:', error);
+      console.error('Error generating PDF:', error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",

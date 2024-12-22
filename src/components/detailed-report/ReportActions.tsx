@@ -1,26 +1,23 @@
-import { DownloadReportButton } from "./actions/DownloadReportButton";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
+import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { DownloadReportButton } from "./actions/DownloadReportButton";
 
 interface ReportActionsProps {
+  formData: DetailedFormData;
+  analysis: any;
   onBookDemo?: () => void;
-  formData?: DetailedFormData;
-  analysis?: any;
 }
 
-export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsProps) => {
+export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full sm:w-auto">
-      <DownloadReportButton 
-        formData={formData} 
-        analysis={analysis}
-      />
+    <div className="flex flex-wrap gap-4 items-center justify-end">
+      <DownloadReportButton formData={formData} analysis={analysis} />
       {onBookDemo && (
-        <Button 
-          onClick={onBookDemo}
-          className="bg-[#f65228] hover:bg-[#f65228]/90 text-white w-full sm:w-auto"
-        >
-          Book a Demo
+        <Button onClick={onBookDemo} size="sm" className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white">
+          Book Demo
         </Button>
       )}
     </div>
