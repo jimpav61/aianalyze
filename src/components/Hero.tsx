@@ -72,7 +72,7 @@ export const Hero = ({
       </div>
 
       <AnalysisSection 
-        analyses={analyses.length > 0 ? analyses : []} 
+        analyses={[]} 
         isMobile={false}
         analysisGridRef={null}
       />
