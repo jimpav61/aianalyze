@@ -10,6 +10,10 @@ interface ImplementationPlanProps {
 }
 
 export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
+  const formatText = (text: string) => {
+    return text?.trim().replace(/\s+/g, ' ') || "";
+  };
+
   const implementationPhases = [
     {
       phase: "Phase 1: Discovery & Planning",
@@ -59,15 +63,15 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="font-medium">Primary Objective:</p>
-              <p className="text-gray-600">{data.objectives}</p>
+              <p className="text-gray-600">{formatText(data.objectives)}</p>
             </div>
             <div>
               <p className="font-medium">Timeline:</p>
-              <p className="text-gray-600">{data.timeline}</p>
+              <p className="text-gray-600">{formatText(data.timeline)}</p>
             </div>
             <div>
               <p className="font-medium">Budget Allocation:</p>
-              <p className="text-gray-600">{data.budget}</p>
+              <p className="text-gray-600">{formatText(data.budget)}</p>
             </div>
           </div>
         </div>
@@ -102,7 +106,7 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
         {data.additionalInfo && (
           <div>
             <h3 className="font-medium text-lg mb-2">Additional Considerations</h3>
-            <p className="text-gray-600">{data.additionalInfo}</p>
+            <p className="text-gray-600">{formatText(data.additionalInfo)}</p>
           </div>
         )}
       </div>
