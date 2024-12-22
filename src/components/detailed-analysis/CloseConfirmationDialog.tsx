@@ -32,14 +32,15 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      const doc = await generateAnalysisReport({ formData, analysis });
-      doc.save("chatsites-analysis-report.pdf");
+      const pdf = await generateAnalysisReport({ formData, analysis });
+      pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
       
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
       });
     } catch (error) {
+      console.error("Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",

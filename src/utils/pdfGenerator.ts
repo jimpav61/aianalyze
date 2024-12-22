@@ -26,9 +26,15 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report container not found");
     }
 
-    await processAllImages(reportContainer as HTMLElement);
+    // Clone the container to avoid modifying the original DOM
+    const clone = reportContainer.cloneNode(true) as HTMLElement;
+    document.body.appendChild(clone);
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    
+    await processAllImages(clone);
 
-    const canvas = await html2canvas(reportContainer as HTMLElement, {
+    const canvas = await html2canvas(clone, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
@@ -45,6 +51,8 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
         });
       }
     });
+
+    document.body.removeChild(clone);
 
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm

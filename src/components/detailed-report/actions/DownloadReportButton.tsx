@@ -2,13 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { processAllImages } from "@/utils/pdf/imageProcessing";
-import { createPDF } from "@/utils/pdf/pdfUtils";
+import { generateAnalysisReport } from "@/utils/pdfGenerator";
 
 interface DownloadReportButtonProps {
   formData?: DetailedFormData;
   analysis?: any;
-  reportData?: any;
 }
 
 export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
@@ -20,23 +18,8 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         throw new Error("Report data not available");
       }
 
-      const reportContainer = document.querySelector("#detailed-report");
-      if (!reportContainer) {
-        throw new Error("Report container not found");
-      }
-
-      // Create a clone to avoid modifying the original DOM
-      const clone = reportContainer.cloneNode(true) as HTMLElement;
-      document.body.appendChild(clone);
-      clone.style.position = 'absolute';
-      clone.style.left = '-9999px';
-      
-      await processAllImages(clone);
-      
-      const pdf = await createPDF(clone, `AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      const pdf = await generateAnalysisReport({ formData, analysis });
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-
-      document.body.removeChild(clone);
 
       toast({
         title: "Success",
