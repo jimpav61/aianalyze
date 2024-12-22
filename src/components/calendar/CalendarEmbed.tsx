@@ -16,10 +16,11 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   const initAttempts = useRef(0);
   const { toast } = useToast();
   
-  console.log("CalendarEmbed - Initializing with:", {
+  console.log("CalendarEmbed - Testing calendar initialization with:", {
     hasFormData: !!formData,
     formDataFields: formData ? Object.keys(formData) : [],
-    hasAnalysis: !!analysis
+    hasAnalysis: !!analysis,
+    hasCalendlyScript: typeof window !== 'undefined' && 'Calendly' in window
   });
 
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
@@ -30,10 +31,10 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
 
   useEffect(() => {
     const maxAttempts = 20;
-    const attemptInterval = 500; // 0.5 second between attempts
+    const attemptInterval = 500;
 
     const initializeCalendly = () => {
-      if (!window.Calendly) {
+      if (typeof window === 'undefined' || !window.Calendly) {
         if (initAttempts.current < maxAttempts) {
           console.log(`CalendarEmbed - Attempt ${initAttempts.current + 1} to initialize Calendly`);
           initAttempts.current++;
@@ -55,26 +56,39 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
       }
 
       const prefill = getPrefillData();
-      console.log("CalendarEmbed - Initializing with prefill:", prefill);
+      console.log("CalendarEmbed - Initializing Calendly with:", {
+        prefill,
+        elementExists: !!calendarRef.current
+      });
 
       // Clear any existing widgets
       calendarRef.current.innerHTML = '';
 
-      window.Calendly.initInlineWidget({
-        url: 'https://calendly.com/chatsites/demo',
-        parentElement: calendarRef.current,
-        prefill,
-        utm: {
-          utmSource: 'ChatSites',
-          utmMedium: 'AI_Analysis',
-          utmCampaign: 'Demo_Booking'
-        }
-      });
+      try {
+        window.Calendly.initInlineWidget({
+          url: 'https://calendly.com/chatsites/demo',
+          parentElement: calendarRef.current,
+          prefill,
+          utm: {
+            utmSource: 'ChatSites',
+            utmMedium: 'AI_Analysis',
+            utmCampaign: 'Demo_Booking'
+          }
+        });
+        console.log("CalendarEmbed - Calendly widget initialized successfully");
+      } catch (error) {
+        console.error("CalendarEmbed - Error initializing Calendly widget:", error);
+        toast({
+          title: "Error",
+          description: "Failed to initialize calendar. Please try again.",
+          variant: "destructive",
+        });
+      }
 
       window.addEventListener('calendly.event_scheduled', handleEventScheduled);
     };
 
-    // Start initialization process
+    console.log("CalendarEmbed - Starting calendar initialization process");
     initializeCalendly();
 
     return () => {
@@ -89,8 +103,14 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
     <div className="calendly-embed min-h-[700px] w-full">
       <div 
         ref={calendarRef}
-        className="calendly-inline-widget w-full min-h-[700px]"
-      />
+        className="calendly-inline-widget w-full min-h-[700px] flex items-center justify-center"
+        style={{ minWidth: '320px' }}
+      >
+        <div className="text-center p-4">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading calendar...</p>
+        </div>
+      </div>
     </div>
   );
 };

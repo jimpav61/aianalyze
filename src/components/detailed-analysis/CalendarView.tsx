@@ -15,10 +15,14 @@ export const CalendarView = ({
   analysis, 
   calLink = "chatsites/demo" 
 }: CalendarViewProps) => {
-  console.log("CalendarView - Render:", { hasFormData: !!formData, hasAnalysis: !!analysis });
+  console.log("CalendarView - Render:", { 
+    hasFormData: !!formData, 
+    hasAnalysis: !!analysis,
+    calLink 
+  });
   
   useEffect(() => {
-    // Remove any existing Calendly scripts to prevent duplicates
+    // Remove any existing Calendly scripts
     const existingScript = document.getElementById('calendly-script');
     if (existingScript) {
       existingScript.remove();
@@ -29,13 +33,24 @@ export const CalendarView = ({
     script.id = 'calendly-script';
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
     script.async = true;
+    
+    // Add load event listener to track when script is loaded
+    script.onload = () => {
+      console.log("CalendarView - Calendly script loaded successfully");
+    };
+    
+    script.onerror = (error) => {
+      console.error("CalendarView - Failed to load Calendly script:", error);
+    };
+    
     document.head.appendChild(script);
+    console.log("CalendarView - Added Calendly script to document head");
 
     return () => {
-      // Cleanup on unmount
       const script = document.getElementById('calendly-script');
       if (script) {
         script.remove();
+        console.log("CalendarView - Removed Calendly script during cleanup");
       }
     };
   }, []);
