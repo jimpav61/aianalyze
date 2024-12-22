@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import html2canvas from 'html2canvas';
 import { processAllImages } from "./pdf/imageProcessing";
+import { calculateFinancials, calculateRevenue } from "./financialCalculations";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -42,6 +43,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   });
   
   try {
+    const revenueAmount = calculateRevenue(formData.revenue);
+    const financials = calculateFinancials(revenueAmount, analysis.department);
+
     console.log('Creating temporary container');
     const tempContainer = document.createElement('div');
     tempContainer.id = 'temp-report-container';
@@ -77,8 +81,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           <h2 style="color: #666; font-size: 18px;">Analysis Results</h2>
           <p><strong>Department:</strong> ${analysis.department}</p>
           <p><strong>Function:</strong> ${formatText(analysis.bot_function)}</p>
-          <p><strong>Annual Savings:</strong> ${formatCurrency(analysis.savings)}</p>
-          <p><strong>Profit Increase:</strong> ${formatPercentage(analysis.profit_increase)}</p>
+          <p><strong>Annual Savings:</strong> ${formatCurrency(financials.savingsAmount)}</p>
+          <p><strong>Savings Percentage:</strong> ${formatPercentage(financials.savingsPercentage)}</p>
+          <p><strong>Profit Increase:</strong> ${formatCurrency(financials.profitAmount)} (${formatPercentage(financials.profitPercentage)})</p>
           <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Implementation Strategy:</strong><br>${formatText(analysis.explanation)}</p>
           <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Marketing Strategy:</strong><br>${formatText(analysis.marketing_strategy)}</p>
         </div>
