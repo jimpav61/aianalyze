@@ -67,8 +67,6 @@ export const Hero = ({
         </div>
       </div>
 
-      <p className="text-gray-600 text-lg font-medium mb-8">Sample Report Preview</p>
-
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
         onClose={() => {
