@@ -16,39 +16,39 @@ interface ReportContentProps {
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analysis data:", analysis);
   
-  // Calculate actual savings based on revenue and industry standards
+  // Calculate actual savings based on revenue
   const calculateActualSavings = () => {
     const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
     if (isNaN(revenue)) return 0;
     
-    // Calculate savings as a more conservative percentage of revenue
-    // Typically, automation savings are 2-8% of revenue depending on industry
-    const savingsPercentage = Math.min(analysis.savings / 10000, 8); // Cap at 8%
+    // Calculate savings as a percentage of revenue (2-5% is typical for automation)
+    const savingsPercentage = Math.min(3, analysis.savings / revenue * 100); // Cap at 3%
     return Math.round(revenue * (savingsPercentage / 100));
   };
 
-  // Calculate actual profit increase based on revenue and industry averages
+  // Calculate actual profit increase based on revenue
   const calculateActualProfit = () => {
     const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
     if (isNaN(revenue)) return 0;
     
-    // Calculate profit based on more realistic profit margins
-    // Most businesses see 1-5% profit increase from automation
-    const profitIncreasePercentage = Math.min(analysis.profit_increase / 5, 5); // Cap at 5%
+    // Calculate profit based on realistic margins (1-3% is typical)
+    const profitIncreasePercentage = Math.min(2, analysis.profit_increase / 100); // Cap at 2%
     return Math.round(revenue * (profitIncreasePercentage / 100));
   };
 
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => ({
     ...item,
     savings: calculateActualSavings().toString(),
-    profit_increase: (analysis.profit_increase / 5).toString(), // More realistic percentage
+    profit_increase: "2", // More realistic percentage
+    explanation: item.explanation,
+    marketingStrategy: item.marketing_strategy,
     actualProfitIncrease: calculateActualProfit().toString()
   })) || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
     savings: calculateActualSavings().toString(),
-    profit_increase: (analysis.profit_increase / 5).toString(), // More realistic percentage
+    profit_increase: "2", // More realistic percentage
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy,
     actualProfitIncrease: calculateActualProfit().toString()
@@ -57,7 +57,7 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analyses for grid:", analysesForGrid);
 
   return (
-    <div className="space-y-6 bg-white p-4 sm:p-8 rounded-lg max-w-full overflow-x-hidden">
+    <div id="detailed-report" className="space-y-6 bg-white p-4 sm:p-8 rounded-lg max-w-full overflow-x-hidden">
       <ReportHeader />
       <div className="company-info whitespace-pre-line">
         <CompanyInformation data={formData} industry={analysis?.industry} />

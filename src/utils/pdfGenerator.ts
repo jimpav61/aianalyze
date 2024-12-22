@@ -21,6 +21,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
+    // Wait for any potential React updates to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const reportContainer = document.querySelector("#detailed-report");
     if (!reportContainer) {
       throw new Error("Report container not found");
@@ -31,7 +34,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     document.body.appendChild(clone);
     clone.style.position = 'absolute';
     clone.style.left = '-9999px';
+    clone.style.width = reportContainer.clientWidth + 'px';
     
+    // Process all images in the clone
     await processAllImages(clone);
 
     const canvas = await html2canvas(clone, {
@@ -39,8 +44,11 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
+      width: reportContainer.clientWidth,
+      height: clone.scrollHeight,
       logging: true,
       onclone: (_, element) => {
+        // Ensure all images are properly loaded
         const clonedImages = element.getElementsByTagName('img');
         Array.from(clonedImages).forEach(img => {
           img.crossOrigin = 'anonymous';
