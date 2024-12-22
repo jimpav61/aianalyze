@@ -48,7 +48,7 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      console.log("CloseConfirmationDialog - Generating PDF with data:", {
+      console.log("CloseConfirmationDialog - Generating full PDF report with data:", {
         formData,
         analysis
       });

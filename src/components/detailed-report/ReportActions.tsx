@@ -11,7 +11,9 @@ interface ReportActionsProps {
 export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsProps) => {
   console.log("ReportActions - Render with data:", { 
     hasFormData: !!formData, 
-    hasAnalysis: !!analysis 
+    hasAnalysis: !!analysis,
+    formDataContent: formData,
+    analysisContent: analysis
   });
 
   return (

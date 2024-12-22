@@ -29,7 +29,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         throw new Error("Report data not available");
       }
 
-      console.log("DownloadReportButton - Generating PDF with data:", {
+      console.log("DownloadReportButton - Generating full PDF report with data:", {
         formData,
         analysis
       });
