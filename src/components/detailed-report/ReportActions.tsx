@@ -21,8 +21,12 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       });
 
       const pdf = await generateAnalysisReport({ formData, analysis });
-      pdf.save(`AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`);
+      const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
+      console.log("ReportActions - Generated PDF, attempting to save as:", fileName);
       
+      pdf.save(fileName);
+      
+      console.log("ReportActions - PDF saved successfully");
       toast({
         title: "Success",
         description: "Report downloaded successfully!",

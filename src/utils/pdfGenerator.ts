@@ -23,103 +23,64 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     // Get the actual report element from the DOM
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
+      console.error('PDF Generation - Report element not found');
       throw new Error('Report element not found');
     }
+
+    console.log('PDF Generation - Found report element, preparing for capture');
 
     // Create a clone of the report element to modify for PDF
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
-    // Replace purple backgrounds with white
-    const purpleElements = clonedReport.querySelectorAll('[class*="bg-"]');
-    purpleElements.forEach(element => {
-      const classes = element.className.split(' ');
-      const newClasses = classes
-        .filter(cls => !cls.startsWith('bg-'))
-        .concat(['bg-white'])
-        .join(' ');
-      element.className = newClasses;
-    });
-
-    // Update text colors
-    const textElements = clonedReport.querySelectorAll('*');
-    textElements.forEach(element => {
+    // Replace backgrounds with white and update text colors
+    const elements = clonedReport.querySelectorAll('*');
+    elements.forEach(element => {
       if (element instanceof HTMLElement) {
-        const classes = element.className.split(' ');
-        const newClasses = classes
-          .filter(cls => !cls.startsWith('text-'))
-          .join(' ');
-        element.className = `${newClasses} text-[#f65228]`;
+        // Remove background colors and purple shading
+        element.style.backgroundColor = 'white';
         
-        // Ensure text is visible
-        element.style.color = '#f65228';
+        // Update text colors to #f65228
+        if (element.style.color?.includes('purple') || element.style.color?.includes('rgb(147, 51, 234)')) {
+          element.style.color = '#f65228';
+        }
+        
+        // Ensure proper margins and padding
+        element.style.margin = '0';
+        element.style.padding = '8px';
+        
+        // Ensure text is properly wrapped
+        element.style.whiteSpace = 'pre-wrap';
+        element.style.wordBreak = 'break-word';
       }
     });
 
-    // Create temporary container with proper styling
+    // Create temporary container
     const tempContainer = document.createElement('div');
-    tempContainer.style.cssText = `
-      position: fixed;
-      left: -9999px;
-      width: 800px;
-      background-color: white;
-      padding: 40px;
-      font-family: Arial, sans-serif;
-    `;
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = '800px';  // Fixed width for consistent scaling
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Style all elements for PDF
-    const allElements = tempContainer.getElementsByTagName('*');
-    Array.from(allElements).forEach((el) => {
-      if (el instanceof HTMLElement) {
-        // Base styles for all elements
-        el.style.margin = '0';
-        el.style.padding = '8px';
-        el.style.whiteSpace = 'pre-wrap';
-        el.style.wordBreak = 'break-word';
-        el.style.pageBreakInside = 'avoid';
-        
-        // Specific styles for headings
-        if (/^h[1-6]$/i.test(el.tagName)) {
-          el.style.fontSize = '20px';
-          el.style.fontWeight = '600';
-          el.style.marginBottom = '16px';
-          el.style.color = '#f65228';
-        }
-        
-        // Specific styles for cards
-        if (el.classList.contains('card')) {
-          el.style.border = '1px solid #e2e8f0';
-          el.style.borderRadius = '8px';
-          el.style.marginBottom = '16px';
-          el.style.backgroundColor = 'white';
-        }
-        
-        // Ensure all text is properly sized
-        if (el.tagName === 'P') {
-          el.style.fontSize = '14px';
-          el.style.lineHeight = '1.5';
-          el.style.marginBottom = '8px';
-        }
-      }
-    });
+    console.log('PDF Generation - Preparing to capture content');
 
     // Generate canvas with proper scaling
     const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff',
       logging: true,
+      backgroundColor: '#ffffff',
       width: 800,
       height: tempContainer.scrollHeight,
-      windowWidth: 800,
       onclone: (document, element) => {
+        console.log('PDF Generation - Cloning document for capture');
         element.style.transform = 'none';
         element.style.height = 'auto';
         element.style.overflow = 'visible';
       }
     });
+
+    console.log('PDF Generation - Content captured successfully');
 
     // Clean up temporary container
     document.body.removeChild(tempContainer);
@@ -133,7 +94,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     let heightLeft = imgHeight;
     let position = 0;
     
-    // Add pages as needed
+    console.log('PDF Generation - Creating PDF pages');
+
+    // Add first page
     pdf.addImage(
       canvas.toDataURL('image/png'),
       'PNG',
@@ -145,7 +108,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       'FAST'
     );
 
-    // Add additional pages if content exceeds page height
+    // Add additional pages if needed
     while (heightLeft >= pageHeight) {
       position = position - pageHeight;
       heightLeft = heightLeft - pageHeight;
@@ -163,6 +126,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       );
     }
 
+    console.log('PDF Generation - PDF created successfully');
     return pdf;
   } catch (error) {
     console.error('PDF Generation - Critical error:', error);
