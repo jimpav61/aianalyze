@@ -21,46 +21,63 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    // Wait for any potential React updates to complete
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Create a temporary container for the report
+    const tempContainer = document.createElement('div');
+    tempContainer.id = 'temp-report-container';
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = '800px'; // Fixed width for consistent rendering
+    document.body.appendChild(tempContainer);
 
-    const reportContainer = document.querySelector("#detailed-report");
-    if (!reportContainer) {
-      throw new Error("Report container not found");
-    }
+    // Generate report content
+    tempContainer.innerHTML = `
+      <div style="font-family: Arial, sans-serif; padding: 40px; white-space: pre-wrap; word-wrap: break-word;">
+        <div style="margin-bottom: 30px;">
+          <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">AI Analysis Report</h1>
+          <h2 style="color: #666; font-size: 18px;">Company Information</h2>
+          <p><strong>Company:</strong> ${formData.companyName}</p>
+          <p><strong>Industry:</strong> ${analysis.industry}</p>
+          <p><strong>Contact:</strong> ${formData.email}</p>
+        </div>
 
-    // Clone the container to avoid modifying the original DOM
-    const clone = reportContainer.cloneNode(true) as HTMLElement;
-    document.body.appendChild(clone);
-    clone.style.position = 'absolute';
-    clone.style.left = '-9999px';
-    clone.style.width = reportContainer.clientWidth + 'px';
-    
-    // Process all images in the clone
-    await processAllImages(clone);
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Analysis Results</h2>
+          <p><strong>Department:</strong> ${analysis.department}</p>
+          <p><strong>Function:</strong> ${analysis.bot_function}</p>
+          <p><strong>Annual Savings:</strong> $${analysis.savings.toLocaleString()}</p>
+          <p><strong>Profit Increase:</strong> ${analysis.profit_increase}%</p>
+          <p style="white-space: pre-wrap;"><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
+          <p style="white-space: pre-wrap;"><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
+        </div>
 
-    const canvas = await html2canvas(clone, {
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Implementation Details</h2>
+          <p><strong>Timeline:</strong> ${formData.timeline}</p>
+          <p><strong>Budget Range:</strong> ${formData.budget}</p>
+          <p style="white-space: pre-wrap;"><strong>Objectives:</strong>\n${formData.objectives}</p>
+          ${formData.additionalInfo ? `<p style="white-space: pre-wrap;"><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
+        </div>
+      </div>
+    `;
+
+    // Process images if any
+    await processAllImages(tempContainer);
+
+    const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      width: reportContainer.clientWidth,
-      height: clone.scrollHeight,
-      logging: true,
+      logging: false,
       onclone: (_, element) => {
-        // Ensure all images are properly loaded
-        const clonedImages = element.getElementsByTagName('img');
-        Array.from(clonedImages).forEach(img => {
-          img.crossOrigin = 'anonymous';
-          if (img.src.startsWith('/')) {
-            img.src = window.location.origin + img.src;
-          }
-          img.src = img.src.replace(/:\d+\//, '/');
-        });
+        element.style.width = '800px';
+        element.style.margin = '0';
+        element.style.padding = '0';
       }
     });
 
-    document.body.removeChild(clone);
+    // Clean up the temporary container
+    document.body.removeChild(tempContainer);
 
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
