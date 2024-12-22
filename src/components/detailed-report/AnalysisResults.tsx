@@ -29,14 +29,18 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
         </div>
         <div>
           <p className="font-medium text-gray-700">Projected Annual Savings:</p>
-          <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.savings).toLocaleString()}</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.savings).toLocaleString()}</p>
+            <p className="text-sm text-gray-500">({(parseInt(primaryAnalysis.savings) / parseFloat(revenue.replace(/[^0-9.]/g, '')) * 100).toFixed(1)}% of revenue)</p>
+          </div>
           <p className="text-sm text-gray-500">Based on your annual revenue of {revenue}</p>
           
           <p className="font-medium text-gray-700 mt-4">Projected Profit Increase:</p>
-          <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.actualProfitIncrease).toLocaleString()}</p>
-          <p className="text-sm text-gray-500">
-            {primaryAnalysis.profit_increase}% increase on current revenue
-          </p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.actualProfitIncrease).toLocaleString()}</p>
+            <p className="text-sm text-gray-500">({primaryAnalysis.profit_increase}% increase)</p>
+          </div>
+          <p className="text-sm text-gray-500">Based on your current revenue</p>
           
           <p className="font-medium text-gray-700 mt-4">Marketing Strategy:</p>
           <p className="text-gray-600">{primaryAnalysis.marketingStrategy}</p>
@@ -52,8 +56,14 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
                 <p className="font-medium">{analysis.department}</p>
                 <p className="text-sm text-gray-600">{analysis.function}</p>
                 <div className="mt-2 grid grid-cols-2 gap-4">
-                  <p className="text-sm">Savings: ${parseInt(analysis.savings).toLocaleString()}</p>
-                  <p className="text-sm">Additional Profit: ${parseInt(analysis.actualProfitIncrease).toLocaleString()}</p>
+                  <div>
+                    <p className="text-sm">Savings: ${parseInt(analysis.savings).toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">({(parseInt(analysis.savings) / parseFloat(revenue.replace(/[^0-9.]/g, '')) * 100).toFixed(1)}% of revenue)</p>
+                  </div>
+                  <div>
+                    <p className="text-sm">Additional Profit: ${parseInt(analysis.actualProfitIncrease).toLocaleString()}</p>
+                    <p className="text-xs text-gray-500">({analysis.profit_increase}% increase)</p>
+                  </div>
                 </div>
               </div>
             ))}
