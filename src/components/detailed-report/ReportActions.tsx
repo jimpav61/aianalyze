@@ -9,6 +9,11 @@ interface ReportActionsProps {
 }
 
 export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsProps) => {
+  console.log("ReportActions - Render with data:", { 
+    hasFormData: !!formData, 
+    hasAnalysis: !!analysis 
+  });
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full sm:w-auto">
       <DownloadReportButton 
