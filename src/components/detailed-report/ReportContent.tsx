@@ -16,37 +16,39 @@ interface ReportContentProps {
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analysis data:", analysis);
   
-  // Calculate actual savings based on revenue
+  // Calculate actual savings based on revenue and industry standards
   const calculateActualSavings = () => {
     const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
     if (isNaN(revenue)) return 0;
     
-    // Calculate savings as a percentage of revenue
-    const savingsPercentage = analysis.savings / 100000; // Normalize to percentage
+    // Calculate savings as a more conservative percentage of revenue
+    // Typically, automation savings are 2-8% of revenue depending on industry
+    const savingsPercentage = Math.min(analysis.savings / 10000, 8); // Cap at 8%
     return Math.round(revenue * (savingsPercentage / 100));
   };
 
-  // Calculate actual profit increase based on revenue
+  // Calculate actual profit increase based on revenue and industry averages
   const calculateActualProfit = () => {
     const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
     if (isNaN(revenue)) return 0;
     
-    // Calculate profit based on industry average margins and revenue
-    const profitIncrease = analysis.profit_increase / 100;
-    return Math.round(revenue * profitIncrease);
+    // Calculate profit based on more realistic profit margins
+    // Most businesses see 1-5% profit increase from automation
+    const profitIncreasePercentage = Math.min(analysis.profit_increase / 5, 5); // Cap at 5%
+    return Math.round(revenue * (profitIncreasePercentage / 100));
   };
 
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => ({
     ...item,
     savings: calculateActualSavings().toString(),
-    profit_increase: analysis.profit_increase.toString(),
+    profit_increase: (analysis.profit_increase / 5).toString(), // More realistic percentage
     actualProfitIncrease: calculateActualProfit().toString()
   })) || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
     savings: calculateActualSavings().toString(),
-    profit_increase: analysis.profit_increase.toString(),
+    profit_increase: (analysis.profit_increase / 5).toString(), // More realistic percentage
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy,
     actualProfitIncrease: calculateActualProfit().toString()
