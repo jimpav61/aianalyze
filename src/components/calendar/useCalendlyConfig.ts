@@ -6,9 +6,13 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
 
   const getPrefillData = useCallback(() => {
     const phoneNumber = formData?.phoneNumber || '';
+    const ownerName = formData?.ownerName || '';
+    const email = formData?.email || '';
     
-    console.log('[PHONE_DEBUG] Building prefill data:', {
-      rawPhoneNumber: phoneNumber,
+    console.log('[CALENDLY_DEBUG] Building prefill data:', {
+      phoneNumber,
+      ownerName,
+      email,
       formData
     });
 
@@ -22,12 +26,12 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
     };
 
     const prefillData = {
-      name: formData?.ownerName || '',
-      email: formData?.email || '',
+      name: ownerName,
+      email: email,
       questions
     };
 
-    console.log('[PHONE_DEBUG] Created prefill data:', {
+    console.log('[CALENDLY_DEBUG] Created prefill data:', {
       prefillData,
       questions
     });
@@ -36,12 +40,23 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
   }, [formData]);
 
   const initCalendly = useCallback((prefill: any) => {
+    console.log('[CALENDLY_DEBUG] Initializing Calendly with:', prefill);
+    
     if (window.Calendly && !calendlyInitialized.current) {
+      console.log('[CALENDLY_DEBUG] Calendly object found, initializing widget');
       calendlyInitialized.current = true;
+      
       window.Calendly.initInlineWidget({
         url: 'https://calendly.com/chatsites/demo',
         parentElement: document.querySelector('.calendly-inline-widget'),
         prefill,
+      });
+      
+      console.log('[CALENDLY_DEBUG] Widget initialized');
+    } else {
+      console.log('[CALENDLY_DEBUG] Calendly not ready or already initialized:', {
+        hasCalendly: !!window.Calendly,
+        isInitialized: calendlyInitialized.current
       });
     }
   }, []);

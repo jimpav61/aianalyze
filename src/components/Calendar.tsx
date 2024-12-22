@@ -17,10 +17,12 @@ export const Calendar = ({
 }: ExtendedCalendarProps) => {
   console.log("Calendar - Rendering with link:", calLink);
   console.log("Calendar - Form data:", formData);
+  console.log("Calendar - Analysis:", analysis);
   
   const { isScriptLoaded, scriptError } = useCalendarScript();
 
   if (scriptError) {
+    console.error("Calendar - Script error:", scriptError);
     return <ErrorState message={scriptError} onRetry={() => window.location.reload()} />;
   }
 
