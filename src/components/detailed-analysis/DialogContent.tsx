@@ -43,6 +43,7 @@ export const DialogContent = ({
       onSubmit={onSubmit}
       industry={industry}
       analysis={analysis}
+      initialData={formData}
     />
   );
 };
