@@ -5,8 +5,8 @@ export const pdfStyles = {
   sectionTitle: "font-size: 20px; font-weight: 600; margin-bottom: 16px; color: #1A1F2C;",
   grid: "display: grid; grid-template-columns: 1fr 1fr; gap: 16px;",
   label: "font-weight: 500; color: #403E43; margin-bottom: 4px;",
-  value: "color: #6E59A5; margin: 0;",
-  highlight: "color: #8B5CF6; font-size: 24px; font-weight: 600; margin: 0;",
+  value: "color: #f65228; margin: 0; white-space: pre-wrap;",
+  highlight: "color: #f65228; font-size: 24px; font-weight: 600; margin: 0;",
   footer: "text-align: center; margin-top: 32px;",
-  footerText: "color: #6E59A5; font-size: 14px; margin: 0 0 4px 0;"
+  footerText: "color: #f65228; font-size: 14px; margin: 0 0 4px 0;"
 };

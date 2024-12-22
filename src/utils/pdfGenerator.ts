@@ -20,11 +20,7 @@ interface GenerateReportParams {
 }
 
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  console.log('PDF Generation - Starting with data:', { 
-    formData, 
-    analysis,
-    timestamp: new Date().toISOString()
-  });
+  console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
     const tempContainer = document.createElement('div');
@@ -41,7 +37,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
               alt="ChatSites Logo" 
               style="height: 40px; width: auto;"
             />
-            <span style="font-size: 24px; font-weight: bold; color: #9b87f5;">ChatSites Analysis Report</span>
+            <span style="font-size: 24px; font-weight: bold; color: #f65228;">ChatSites Analysis Report</span>
           </div>
         </div>
 
@@ -109,8 +105,10 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
             <div style="background: #E5DEFF; border-radius: 8px; padding: 16px;">
               <p style="${pdfStyles.label}">Projected Annual Savings:</p>
               <p style="${pdfStyles.highlight}">${formatCurrency(analysis.savings)}</p>
+              <p style="color: #f65228; font-size: 14px;">Based on your annual revenue of ${formData.revenue}</p>
               <p style="${pdfStyles.label}">Projected Profit Increase:</p>
               <p style="${pdfStyles.highlight}">${formatPercentage(analysis.profit_increase)}</p>
+              <p style="color: #f65228; font-size: 14px;">Based on your current revenue</p>
             </div>
           </div>
           <div style="margin-top: 16px;">
@@ -120,30 +118,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           <div style="margin-top: 16px;">
             <p style="${pdfStyles.label}">Marketing Strategy:</p>
             <p style="${pdfStyles.value}">${formatText(analysis.marketing_strategy)}</p>
-          </div>
-        </div>
-
-        <div style="${pdfStyles.section}">
-          <h2 style="${pdfStyles.sectionTitle}">Implementation Details</h2>
-          <div style="display: grid; gap: 16px;">
-            <div>
-              <p style="${pdfStyles.label}">Timeline:</p>
-              <p style="${pdfStyles.value}">${formatText(formData.timeline)}</p>
-            </div>
-            <div>
-              <p style="${pdfStyles.label}">Budget Range:</p>
-              <p style="${pdfStyles.value}">${formatText(formData.budget)}</p>
-            </div>
-            <div>
-              <p style="${pdfStyles.label}">Objectives:</p>
-              <p style="${pdfStyles.value}">${formatText(formData.objectives)}</p>
-            </div>
-            ${formData.additionalInfo ? `
-              <div>
-                <p style="${pdfStyles.label}">Additional Information:</p>
-                <p style="${pdfStyles.value}">${formatText(formData.additionalInfo)}</p>
-              </div>
-            ` : ''}
           </div>
         </div>
 
