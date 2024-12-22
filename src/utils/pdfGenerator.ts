@@ -20,7 +20,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    // Get the actual report element from the DOM
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
       console.error('PDF Generation - Report element not found');
@@ -29,42 +28,56 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
 
     console.log('PDF Generation - Found report element, preparing for capture');
 
-    // Create a clone of the report element to modify for PDF
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
-    // Replace backgrounds with white and update text colors
+    // Style updates for better PDF rendering
     const elements = clonedReport.querySelectorAll('*');
     elements.forEach(element => {
       if (element instanceof HTMLElement) {
-        // Remove background colors and purple shading
+        // Reset background colors
         element.style.backgroundColor = 'white';
         
-        // Update text colors to #f65228
+        // Update text colors
         if (element.style.color?.includes('purple') || element.style.color?.includes('rgb(147, 51, 234)')) {
           element.style.color = '#f65228';
         }
         
-        // Ensure proper margins and padding
-        element.style.margin = '0';
-        element.style.padding = '8px';
+        // Add card-like styling to sections
+        if (element.classList.contains('section-card')) {
+          element.style.border = '1px solid #e2e8f0';
+          element.style.borderRadius = '8px';
+          element.style.padding = '16px';
+          element.style.marginBottom = '16px';
+          element.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+        }
         
-        // Ensure text is properly wrapped
-        element.style.whiteSpace = 'pre-wrap';
-        element.style.wordBreak = 'break-word';
+        // Improve text readability
+        if (element.tagName === 'P') {
+          element.style.lineHeight = '1.6';
+          element.style.marginBottom = '8px';
+          element.style.whiteSpace = 'normal';
+          element.style.wordBreak = 'break-word';
+        }
+
+        // Style headings
+        if (['H1', 'H2', 'H3'].includes(element.tagName)) {
+          element.style.marginBottom = '16px';
+          element.style.marginTop = '24px';
+          element.style.fontWeight = 'bold';
+        }
       }
     });
 
-    // Create temporary container
+    // Create temporary container with fixed width
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
-    tempContainer.style.width = '800px';  // Fixed width for consistent scaling
+    tempContainer.style.width = '800px';
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
     console.log('PDF Generation - Preparing to capture content');
 
-    // Generate canvas with proper scaling
     const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
