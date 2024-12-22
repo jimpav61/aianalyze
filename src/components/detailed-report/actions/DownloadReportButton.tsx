@@ -59,7 +59,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
   return (
     <Button onClick={handleDownload} variant="outline" size="sm">
       <Download className="mr-2 h-4 w-4" />
-      Download Report
+      Download Full Report
     </Button>
   );
 };
