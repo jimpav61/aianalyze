@@ -29,13 +29,22 @@ export const DetailedAnalysisDialog = ({
     handleSubmit,
     handleClose,
     confirmClose
-  } = useDialogHandling({ onClose, showFormOnly });
+  } = useDialogHandling({ 
+    onClose, 
+    showFormOnly,
+    resetOnClose: true // Add this to ensure proper cleanup
+  });
 
   const {
     showCalendar,
     handleBookDemo,
     handleBookingSubmit
-  } = useCalendarHandling({ onClose, setShowReport });
+  } = useCalendarHandling({ 
+    onClose, 
+    setShowReport,
+    formData, // Pass formData to ensure it's available for the calendar
+    analysis // Pass analysis to ensure it's available for the calendar
+  });
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,

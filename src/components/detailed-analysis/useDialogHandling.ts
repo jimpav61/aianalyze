@@ -4,9 +4,14 @@ import { DetailedFormData } from "@/types/analysis";
 interface UseDialogHandlingProps {
   onClose: () => void;
   showFormOnly?: boolean;
+  resetOnClose?: boolean;
 }
 
-export const useDialogHandling = ({ onClose, showFormOnly = false }: UseDialogHandlingProps) => {
+export const useDialogHandling = ({ 
+  onClose, 
+  showFormOnly = false,
+  resetOnClose = true
+}: UseDialogHandlingProps) => {
   const [formData, setFormData] = useState<DetailedFormData | null>(null);
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
   const [showReport, setShowReport] = useState(false);
@@ -26,15 +31,23 @@ export const useDialogHandling = ({ onClose, showFormOnly = false }: UseDialogHa
     if (showReport && !showFormOnly) {
       setShowCloseConfirm(true);
     } else {
+      if (resetOnClose) {
+        setFormData(null);
+        setShowReport(false);
+      }
       onClose();
     }
-  }, [onClose, showReport, showFormOnly]);
+  }, [onClose, showReport, showFormOnly, resetOnClose]);
 
   const confirmClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Confirming close");
     setShowCloseConfirm(false);
+    if (resetOnClose) {
+      setFormData(null);
+      setShowReport(false);
+    }
     onClose();
-  }, [onClose]);
+  }, [onClose, resetOnClose]);
 
   return {
     formData,
