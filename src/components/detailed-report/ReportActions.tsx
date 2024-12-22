@@ -11,18 +11,39 @@ interface ReportActionsProps {
 }
 
 export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
+  const { toast } = useToast();
+
+  const handleDownload = async () => {
+    try {
+      console.log("ReportActions - Starting download with data:", {
+        formData,
+        analysis
+      });
+
+      const pdf = await generateAnalysisReport({ formData, analysis });
+      pdf.save(`AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`);
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+      });
+    } catch (error) {
+      console.error("ReportActions - Download error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-wrap gap-4 items-center justify-end">
       <Button onClick={onBookDemo} size="sm" className="bg-[#f65228] hover:bg-[#d43d16] text-white">
         Book Demo
       </Button>
       <Button 
-        onClick={() => {
-          const reportElement = document.getElementById('detailed-report');
-          if (reportElement) {
-            generateAnalysisReport({ formData, analysis });
-          }
-        }} 
+        onClick={handleDownload}
         variant="outline" 
         size="sm" 
         className="bg-white hover:bg-gray-50"
