@@ -17,6 +17,23 @@ interface GenerateReportParams {
   };
 }
 
+const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
+
+const formatPercentage = (value: number): string => {
+  return `${value}%`;
+};
+
+const formatText = (text: string): string => {
+  return text.replace(/\n/g, '<br>').replace(/\r/g, '<br>');
+};
+
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
   console.log('PDF Generation - Starting with data:', { 
     formData, 
@@ -43,24 +60,35 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           <p><strong>Company:</strong> ${formData.companyName}</p>
           <p><strong>Industry:</strong> ${analysis.industry}</p>
           <p><strong>Contact:</strong> ${formData.email}</p>
+          <p><strong>Phone:</strong> ${formData.phoneNumber}</p>
+          <p><strong>Employees:</strong> ${formData.employees}</p>
+          <p><strong>Revenue:</strong> ${formData.revenue}</p>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Current Operations</h2>
+          <p><strong>Service Channels:</strong> ${formatText(formData.serviceChannels)}</p>
+          <p><strong>Monthly Interactions:</strong> ${formatText(formData.monthlyInteractions)}</p>
+          <p><strong>Current Tools:</strong> ${formatText(formData.currentTools)}</p>
+          <p><strong>Pain Points:</strong> ${formatText(formData.painPoints)}</p>
         </div>
 
         <div style="margin-bottom: 30px;">
           <h2 style="color: #666; font-size: 18px;">Analysis Results</h2>
           <p><strong>Department:</strong> ${analysis.department}</p>
-          <p><strong>Function:</strong> ${analysis.bot_function}</p>
-          <p><strong>Annual Savings:</strong> $${analysis.savings.toLocaleString()}</p>
-          <p><strong>Profit Increase:</strong> ${analysis.profit_increase}%</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
+          <p><strong>Function:</strong> ${formatText(analysis.bot_function)}</p>
+          <p><strong>Annual Savings:</strong> ${formatCurrency(analysis.savings)}</p>
+          <p><strong>Profit Increase:</strong> ${formatPercentage(analysis.profit_increase)}</p>
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Implementation Strategy:</strong><br>${formatText(analysis.explanation)}</p>
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Marketing Strategy:</strong><br>${formatText(analysis.marketing_strategy)}</p>
         </div>
 
         <div style="margin-bottom: 30px;">
           <h2 style="color: #666; font-size: 18px;">Implementation Details</h2>
-          <p><strong>Timeline:</strong> ${formData.timeline}</p>
-          <p><strong>Budget Range:</strong> ${formData.budget}</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Objectives:</strong>\n${formData.objectives}</p>
-          ${formData.additionalInfo ? `<p style="white-space: pre-wrap; margin: 15px 0;"><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
+          <p><strong>Timeline:</strong> ${formatText(formData.timeline)}</p>
+          <p><strong>Budget Range:</strong> ${formatText(formData.budget)}</p>
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Objectives:</strong><br>${formatText(formData.objectives)}</p>
+          ${formData.additionalInfo ? `<p style="white-space: pre-wrap; margin: 15px 0;"><strong>Additional Information:</strong><br>${formatText(formData.additionalInfo)}</p>` : ''}
         </div>
       </div>
     `;
