@@ -16,13 +16,6 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   const initAttempts = useRef(0);
   const { toast } = useToast();
   
-  console.log("CalendarEmbed - Testing calendar initialization with:", {
-    hasFormData: !!formData,
-    formDataFields: formData ? Object.keys(formData) : [],
-    hasAnalysis: !!analysis,
-    hasCalendlyScript: typeof window !== 'undefined' && 'Calendly' in window
-  });
-
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
   const { handleEventScheduled } = useCalendlyEvents({ 
     formData: formData || undefined, 
@@ -32,13 +25,14 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   useEffect(() => {
     const maxAttempts = 20;
     const attemptInterval = 500;
+    let timeoutId: NodeJS.Timeout;
 
     const initializeCalendly = () => {
       if (typeof window === 'undefined' || !window.Calendly) {
         if (initAttempts.current < maxAttempts) {
           console.log(`CalendarEmbed - Attempt ${initAttempts.current + 1} to initialize Calendly`);
           initAttempts.current++;
-          setTimeout(initializeCalendly, attemptInterval);
+          timeoutId = setTimeout(initializeCalendly, attemptInterval);
           return;
         }
         console.error("CalendarEmbed - Failed to initialize Calendly after maximum attempts");
@@ -56,10 +50,6 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
       }
 
       const prefill = getPrefillData();
-      console.log("CalendarEmbed - Initializing Calendly with:", {
-        prefill,
-        elementExists: !!calendarRef.current
-      });
 
       // Clear any existing widgets
       calendarRef.current.innerHTML = '';
@@ -75,7 +65,6 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
             utmCampaign: 'Demo_Booking'
           }
         });
-        console.log("CalendarEmbed - Calendly widget initialized successfully");
       } catch (error) {
         console.error("CalendarEmbed - Error initializing Calendly widget:", error);
         toast({
@@ -84,20 +73,28 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
           variant: "destructive",
         });
       }
-
-      window.addEventListener('calendly.event_scheduled', handleEventScheduled);
     };
 
-    console.log("CalendarEmbed - Starting calendar initialization process");
-    initializeCalendly();
+    // Start initialization process
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    script.onload = initializeCalendly;
+    document.head.appendChild(script);
 
     return () => {
-      window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      const script = document.querySelector('script[src*="calendly.com"]');
+      if (script) {
+        script.remove();
+      }
       if (calendarRef.current) {
         calendarRef.current.innerHTML = '';
       }
     };
-  }, [formData, getPrefillData, handleEventScheduled, toast]);
+  }, [getPrefillData, handleEventScheduled, toast]);
 
   return (
     <div className="calendly-embed min-h-[700px] w-full">
