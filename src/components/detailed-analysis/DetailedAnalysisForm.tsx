@@ -3,9 +3,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CompanyBasicsStep } from "./CompanyBasicsStep";
 import { OperationsStep } from "./OperationsStep";
 import { GoalsStep } from "./GoalsStep";
-import { FormStepNavigator } from "./FormStepNavigator";
 import { DetailedFormData } from "@/types/analysis";
-import { useToast } from "@/hooks/use-toast";
+import { useFormValidation } from "./form/ValidationUtils";
+import { FormNavigation } from "./form/FormNavigation";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -43,7 +43,8 @@ export const DetailedAnalysisForm = ({
     budget: "",
     additionalInfo: "",
   });
-  const { toast } = useToast();
+
+  const { validateStep } = useFormValidation();
 
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
@@ -63,51 +64,9 @@ export const DetailedAnalysisForm = ({
     console.log("DetailedAnalysisForm - Input changed:", { name, value });
   };
 
-  const getFieldLabel = (field: string): string => {
-    const labels: { [key: string]: string } = {
-      companyName: "Company Name",
-      ownerName: "Owner Name",
-      email: "Email Address",
-      revenue: "Annual Revenue",
-      serviceChannels: "Service Channels",
-      monthlyInteractions: "Monthly Interactions",
-      objectives: "Business Objectives",
-      timeline: "Implementation Timeline",
-      budget: "Budget Range"
-    };
-    return labels[field] || field.replace(/([A-Z])/g, ' $1').toLowerCase();
-  };
-
-  const validateStep = (step: number) => {
-    console.log("DetailedAnalysisForm - Validating step:", step);
-    
-    const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "ownerName", "email", "revenue"],
-      2: ["serviceChannels", "monthlyInteractions"],
-      3: ["objectives", "timeline", "budget"],
-    };
-
-    const missingFields = requiredFields[step].filter(
-      (field) => !formData[field as keyof DetailedFormData]?.trim()
-    );
-
-    if (missingFields.length > 0) {
-      console.warn("DetailedAnalysisForm - Missing required fields:", missingFields);
-      toast({
-        title: "Required Information Missing",
-        description: `Please provide your ${missingFields
-          .map((f) => getFieldLabel(f))
-          .join(", ")}`,
-        variant: "destructive",
-      });
-      return false;
-    }
-    return true;
-  };
-
   const handleNext = () => {
     console.log("DetailedAnalysisForm - Attempting to move to next step");
-    if (validateStep(currentStep)) {
+    if (validateStep(currentStep, formData)) {
       setCurrentStep((prev) => prev + 1);
       console.log("DetailedAnalysisForm - Moving to next step");
     }
@@ -122,15 +81,10 @@ export const DetailedAnalysisForm = ({
     console.log("DetailedAnalysisForm - Attempting to submit form");
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
-      toast({
-        title: "Unable to Generate Report",
-        description: "We encountered an issue while processing your request. Please try again.",
-        variant: "destructive",
-      });
       return;
     }
 
-    if (validateStep(currentStep)) {
+    if (validateStep(currentStep, formData)) {
       console.log("DetailedAnalysisForm - Form validation passed, submitting data:", formData);
       onSubmit(formData);
     }
@@ -159,11 +113,12 @@ export const DetailedAnalysisForm = ({
         )}
       </ScrollArea>
 
-      <FormStepNavigator
+      <FormNavigation
         currentStep={currentStep}
         onNext={handleNext}
         onBack={handleBack}
         onSubmit={handleSubmit}
+        isLastStep={currentStep === 3}
       />
     </>
   );

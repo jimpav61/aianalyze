@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import html2canvas from 'html2canvas';
+import { prepareImagesForPDF } from "./pdf/imageProcessing";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -25,40 +26,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report container not found");
     }
 
-    // Process images before capturing
-    const images = Array.from(reportContainer.getElementsByTagName('img'));
-    console.log("Processing images for PDF:", images.length);
-    
-    await Promise.all(
-      images.map(img => 
-        new Promise((resolve) => {
-          const originalSrc = img.src;
-          // Ensure absolute URLs
-          if (img.src.startsWith('/')) {
-            img.src = window.location.origin + img.src;
-          }
-          // Remove port number
-          img.src = img.src.replace(/:\d+\//, '/');
-          
-          console.log(`Processing PDF image: ${originalSrc} -> ${img.src}`);
-          
-          if (img.complete) {
-            console.log("PDF image already loaded:", img.src);
-            resolve(null);
-          } else {
-            img.onload = () => {
-              console.log("PDF image loaded successfully:", img.src);
-              resolve(null);
-            };
-            img.onerror = () => {
-              console.warn(`Failed to load PDF image: ${img.src}`);
-              img.src = '/placeholder.svg';
-              resolve(null);
-            };
-          }
-        })
-      )
-    );
+    await prepareImagesForPDF(reportContainer as HTMLElement);
 
     const canvas = await html2canvas(reportContainer as HTMLElement, {
       scale: 2,
