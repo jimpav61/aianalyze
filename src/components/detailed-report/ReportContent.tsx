@@ -18,14 +18,38 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   
   // Calculate actual savings and profit based on revenue
   const calculateFinancials = () => {
-    const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
-    if (isNaN(revenue)) {
+    // Extract the revenue range and convert to a number for calculations
+    const revenueStr = formData.revenue;
+    let revenue: number;
+
+    if (revenueStr.includes('million')) {
+      // Handle million+ range
+      if (revenueStr.includes('1 million+')) {
+        revenue = 1000000; // Use 1 million as base for calculations
+      } else {
+        const match = revenueStr.match(/\$(\d+(?:\.\d+)?)/);
+        revenue = match ? parseFloat(match[1]) * 1000000 : 0;
+      }
+    } else {
+      // Handle ranges like "$10,000 - $50,000"
+      const match = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
+      if (match && match.length >= 1) {
+        // Use the lower bound of the range for conservative estimates
+        revenue = parseFloat(match[0].replace(/[$,]/g, ''));
+      } else {
+        revenue = 0;
+      }
+    }
+
+    console.log("Calculated revenue base:", revenue);
+
+    if (revenue === 0) {
       return {
         savings: { amount: 0, percentage: 0 },
         profit: { amount: 0, percentage: 0 }
       };
     }
-    
+
     // Calculate savings based on the provided savings value from analysis
     const savingsAmount = parseFloat(analysis.savings);
     const savingsPercentage = (savingsAmount / revenue) * 100;
@@ -34,6 +58,14 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
     const profitPercentage = parseFloat(analysis.profit_increase);
     const profitAmount = (revenue * (profitPercentage / 100));
     
+    console.log("Financial calculations:", {
+      revenue,
+      savingsAmount,
+      savingsPercentage,
+      profitAmount,
+      profitPercentage
+    });
+
     return {
       savings: {
         amount: Math.round(savingsAmount),
