@@ -19,30 +19,34 @@ interface DetailedAnalysisFormProps {
     explanation: string;
     marketing_strategy: string;
   };
+  initialData: DetailedFormData | null;
 }
 
 export const DetailedAnalysisForm = ({ 
   onSubmit, 
   industry,
-  analysis 
+  analysis,
+  initialData
 }: DetailedAnalysisFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<DetailedFormData>({
-    companyName: "",
-    ownerName: "",
-    phoneNumber: "",
-    email: "",
-    employees: "",
-    revenue: "",
-    serviceChannels: "",
-    monthlyInteractions: "",
-    currentTools: "",
-    painPoints: "",
-    objectives: "",
-    timeline: "",
-    budget: "",
-    additionalInfo: "",
-  });
+  const [formData, setFormData] = useState<DetailedFormData>(
+    initialData || {
+      companyName: "",
+      ownerName: "",
+      phoneNumber: "",
+      email: "",
+      employees: "",
+      revenue: "",
+      serviceChannels: "",
+      monthlyInteractions: "",
+      currentTools: "",
+      painPoints: "",
+      objectives: "",
+      timeline: "",
+      budget: "",
+      additionalInfo: "",
+    }
+  );
 
   const { validateStep } = useFormValidation();
 
@@ -50,7 +54,8 @@ export const DetailedAnalysisForm = ({
     currentStep, 
     formData, 
     industry, 
-    analysis 
+    analysis,
+    hasInitialData: !!initialData
   });
 
   const handleInputChange = (
