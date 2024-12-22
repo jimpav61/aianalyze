@@ -37,11 +37,11 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           <div className="space-y-4">
             <div>
               <p className="font-medium text-[#403E43] mb-2">Primary Department:</p>
-              <p className="text-[#6E59A5]">{primaryAnalysis.department}</p>
+              <p className="text-[#f65228]">{primaryAnalysis.department}</p>
             </div>
             <div>
               <p className="font-medium text-[#403E43] mb-2">Primary Function:</p>
-              <p className="text-[#6E59A5] whitespace-pre-wrap">{primaryAnalysis.function}</p>
+              <p className="text-[#f65228] whitespace-pre-wrap">{primaryAnalysis.function}</p>
             </div>
           </div>
         </div>
@@ -49,13 +49,13 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           <div className="space-y-4">
             <div>
               <p className="font-medium text-[#403E43] mb-2">Projected Annual Savings:</p>
-              <p className="text-[#8B5CF6] text-2xl font-semibold">{formatCurrency(financials.savingsAmount)}</p>
-              <p className="text-sm text-[#6E59A5]">Based on your annual revenue of {revenue}</p>
+              <p className="text-[#f65228] text-2xl font-semibold">{formatCurrency(financials.savingsAmount)}</p>
+              <p className="text-sm text-[#f65228]">Based on your annual revenue of {revenue}</p>
             </div>
             <div>
               <p className="font-medium text-[#403E43] mb-2">Projected Profit Increase:</p>
-              <p className="text-[#8B5CF6] text-2xl font-semibold">{formatPercentage(financials.profitPercentage)}</p>
-              <p className="text-sm text-[#6E59A5]">Based on your current revenue</p>
+              <p className="text-[#f65228] text-2xl font-semibold">{formatPercentage(financials.profitPercentage)}</p>
+              <p className="text-sm text-[#f65228]">Based on your current revenue</p>
             </div>
           </div>
         </div>
@@ -64,11 +64,11 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
       <div className="mt-6 space-y-4">
         <div>
           <p className="font-medium text-[#403E43] mb-2">Implementation Strategy:</p>
-          <p className="text-[#6E59A5] whitespace-pre-wrap">{primaryAnalysis.explanation}</p>
+          <p className="text-[#f65228] whitespace-pre-wrap">{primaryAnalysis.explanation}</p>
         </div>
         <div>
           <p className="font-medium text-[#403E43] mb-2">Marketing Strategy:</p>
-          <p className="text-[#6E59A5] whitespace-pre-wrap">{primaryAnalysis.marketingStrategy}</p>
+          <p className="text-[#f65228] whitespace-pre-wrap">{primaryAnalysis.marketingStrategy}</p>
         </div>
       </div>
       
@@ -81,15 +81,15 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
               return (
                 <div key={index} className="bg-[#E5DEFF] p-6 rounded-lg">
                   <p className="font-medium text-[#403E43] mb-2">{analysis.department}</p>
-                  <p className="text-[#6E59A5] mb-4 whitespace-pre-wrap">{analysis.function}</p>
+                  <p className="text-[#f65228] mb-4 whitespace-pre-wrap">{analysis.function}</p>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[#403E43]">Savings: <span className="text-[#8B5CF6] font-semibold">{formatCurrency(deptFinancials.savingsAmount)}</span></p>
-                      <p className="text-sm text-[#6E59A5]">({formatPercentage(deptFinancials.savingsPercentage)} of revenue)</p>
+                      <p className="text-[#403E43]">Savings: <span className="text-[#f65228] font-semibold">{formatCurrency(deptFinancials.savingsAmount)}</span></p>
+                      <p className="text-sm text-[#f65228]">({formatPercentage(deptFinancials.savingsPercentage)} of revenue)</p>
                     </div>
                     <div>
-                      <p className="text-[#403E43]">Additional Profit: <span className="text-[#8B5CF6] font-semibold">{formatCurrency(deptFinancials.profitAmount)}</span></p>
-                      <p className="text-sm text-[#6E59A5]">({formatPercentage(deptFinancials.profitPercentage)} increase)</p>
+                      <p className="text-[#403E43]">Additional Profit: <span className="text-[#f65228] font-semibold">{formatCurrency(deptFinancials.profitAmount)}</span></p>
+                      <p className="text-sm text-[#f65228]">({formatPercentage(deptFinancials.profitPercentage)} increase)</p>
                     </div>
                   </div>
                 </div>
