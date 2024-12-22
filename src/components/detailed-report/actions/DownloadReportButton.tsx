@@ -2,45 +2,49 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { DetailedFormData } from "@/types/analysis";
 
 interface DownloadReportButtonProps {
-  reportData: any;
+  formData?: DetailedFormData;
+  analysis?: any;
+  reportData?: any;
 }
 
-export const DownloadReportButton = ({ reportData }: DownloadReportButtonProps) => {
+export const DownloadReportButton = ({ formData, analysis, reportData }: DownloadReportButtonProps) => {
   const { toast } = useToast();
 
   const handleDownload = async () => {
     try {
-      // Create a clone of the report container
       const reportContainer = document.querySelector("#detailed-report");
       if (!reportContainer) {
         throw new Error("Report container not found");
       }
 
+      // Create a clone to avoid modifying the original DOM
       const clone = reportContainer.cloneNode(true) as HTMLElement;
       document.body.appendChild(clone);
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
       
-      // Process and validate all images
+      // Process all images in the clone
       const images = clone.getElementsByTagName('img');
       await Promise.all(
         Array.from(images).map(img => 
           new Promise((resolve) => {
-            // Convert relative URLs to absolute
+            // Ensure image URLs are absolute
             if (img.src.startsWith('/')) {
               img.src = window.location.origin + img.src;
             }
-
+            // Remove any port number from the URL
+            img.src = img.src.replace(/:\d+\//, '/');
+            
             if (img.complete) {
               resolve(null);
             } else {
               img.onload = () => resolve(null);
               img.onerror = () => {
                 console.warn(`Image failed to load: ${img.src}`);
-                // Remove failed images instead of rejecting
                 img.remove();
                 resolve(null);
               };
@@ -48,11 +52,11 @@ export const DownloadReportButton = ({ reportData }: DownloadReportButtonProps) 
           })
         )
       );
-      
-      // Capture the content with proper image handling
+
+      // Capture the content
       const canvas = await html2canvas(clone, {
         scale: 2,
-        logging: true, // Enable logging for debugging
+        logging: true,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
@@ -61,14 +65,15 @@ export const DownloadReportButton = ({ reportData }: DownloadReportButtonProps) 
           Array.from(images).forEach(img => {
             img.style.display = 'block';
             img.crossOrigin = 'anonymous';
-            // Ensure image URLs are absolute
             if (img.src.startsWith('/')) {
               img.src = window.location.origin + img.src;
             }
+            // Remove any port number from the URL
+            img.src = img.src.replace(/:\d+\//, '/');
           });
         }
       });
-      
+
       document.body.removeChild(clone);
 
       // Generate PDF
@@ -101,7 +106,6 @@ export const DownloadReportButton = ({ reportData }: DownloadReportButtonProps) 
         position -= pageHeight;
       }
 
-      // Save the PDF
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
 
       toast({
