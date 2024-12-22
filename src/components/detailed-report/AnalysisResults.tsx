@@ -30,7 +30,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
   };
 
   const formatText = (text: string) => {
-    return text.trim().replace(/\s+/g, ' ');
+    return text?.trim().replace(/\s+/g, ' ') || '';
   };
 
   return (
@@ -48,7 +48,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           </div>
           <div>
             <p className="font-medium text-gray-700">Implementation Strategy:</p>
-            <p className="text-gray-600 whitespace-pre-line">{formatText(primaryAnalysis.explanation)}</p>
+            <p className="text-gray-600">{formatText(primaryAnalysis.explanation)}</p>
           </div>
         </div>
         <div className="space-y-4">
@@ -72,7 +72,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           
           <div>
             <p className="font-medium text-gray-700">Marketing Strategy:</p>
-            <p className="text-gray-600 whitespace-pre-line">{formatText(primaryAnalysis.marketingStrategy)}</p>
+            <p className="text-gray-600">{formatText(primaryAnalysis.marketingStrategy)}</p>
           </div>
         </div>
       </div>

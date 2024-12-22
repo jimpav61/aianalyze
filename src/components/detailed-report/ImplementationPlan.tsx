@@ -11,7 +11,7 @@ interface ImplementationPlanProps {
 
 export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
   const formatText = (text: string) => {
-    return text?.trim().replace(/\s+/g, ' ') || "";
+    return text?.trim().replace(/\s+/g, ' ') || "Not specified";
   };
 
   const implementationPhases = [
