@@ -46,7 +46,7 @@ export const useBookingSuccess = ({
         analysis
       });
       
-      const doc = generateAnalysisReport({ formData, analysis });
+      const doc = generateAnalysisReport(formData, analysis);
       console.log("PDF generated successfully, attempting save...");
       
       doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);

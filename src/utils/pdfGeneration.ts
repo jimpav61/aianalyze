@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { CalendarFormData } from "@/types/analysis";
-import { useToast } from "@/hooks/use-toast";
+import html2canvas from 'html2canvas';
+import { processAllImages } from "./pdf/imageProcessing";
 
 export const generateAnalysisReport = (formData: CalendarFormData, analysis: any) => {
   const doc = new jsPDF();
