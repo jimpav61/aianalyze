@@ -12,7 +12,7 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
     );
 
     const canvas = await html2canvas(reportElement, {
-      scale: 2, // Higher scale for better quality
+      scale: 2,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
@@ -38,20 +38,16 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
     const imgHeight = canvas.height;
     
     // Calculate the number of pages needed
-    const pageRatio = pdfHeight / pdfWidth;
-    const imageRatio = imgHeight / imgWidth;
-    const pages = Math.ceil(imageRatio / pageRatio);
-    
-    // Scale image to fit width
-    const scaledWidth = pdfWidth;
-    const scaledHeight = (imgHeight * pdfWidth) / imgWidth;
+    const ratio = imgHeight / imgWidth;
+    const pageHeight = (pdfWidth * ratio);
+    const pages = Math.ceil(pageHeight / pdfHeight);
     
     // Add pages and split content
     for (let i = 0; i < pages; i++) {
       if (i > 0) pdf.addPage();
       
       const position = -i * pdfHeight;
-      pdf.addImage(imgData, 'PNG', 0, position, scaledWidth, scaledHeight);
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pageHeight);
     }
 
     pdf.save(fileName);

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { exportReportAsPDF } from "@/utils/reportExport";
 
 interface DownloadReportButtonProps {
   formData?: DetailedFormData;
@@ -26,16 +26,24 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
     }
 
     try {
-      console.log('Download Report - Generating PDF');
-      const doc = await generateAnalysisReport({ formData, analysis });
-      console.log('Download Report - PDF generated, saving file');
-      doc.save("chatsites-analysis-report.pdf");
+      // Get the report element that's currently displayed
+      const reportElement = document.querySelector('.space-y-6') as HTMLElement;
+      if (!reportElement) {
+        throw new Error('Report element not found');
+      }
+
+      console.log('Download Report - Found report element, starting export');
+      const success = await exportReportAsPDF(reportElement, 'chatsites-analysis-report.pdf');
       
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-      });
-      console.log('Download Report - PDF saved successfully');
+      if (success) {
+        toast({
+          title: "Success",
+          description: "Report downloaded successfully!",
+        });
+        console.log('Download Report - PDF saved successfully');
+      } else {
+        throw new Error('Failed to generate PDF');
+      }
     } catch (error) {
       console.error('Download Report - Error:', error);
       toast({
