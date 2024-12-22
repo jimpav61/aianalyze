@@ -1,12 +1,12 @@
 export const generateHeaderSection = (doc: HTMLDivElement) => {
   const header = document.createElement('div');
   header.innerHTML = `
-    <div style="display: flex; items-center justify-between mb-8 p-6 bg-white rounded-lg shadow-sm">
-      <div class="flex items-center gap-2">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 24px; background: white; border-radius: 8px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); margin-bottom: 32px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
         <img 
           src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
           alt="Logo" 
-          style="height: 64px; width: auto;"
+          style="height: 40px; width: auto;"
         />
         <span style="font-size: 24px; font-weight: bold; color: #f65228;">ChatSites</span>
       </div>
