@@ -4,6 +4,7 @@ import { HeroHeader } from "./hero/HeroHeader";
 import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
 import { useToast } from "@/hooks/use-toast";
+import { SampleReport } from "./SampleReport";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -75,6 +76,10 @@ export const Hero = ({
           <BenefitsList position="right" />
         </div>
       </div>
+
+      {!showDetailedDialog && !analyses?.length && (
+        <SampleReport />
+      )}
 
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
