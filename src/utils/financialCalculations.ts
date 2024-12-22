@@ -1,42 +1,3 @@
-export const getBaseFactors = (department: string) => {
-  const factors = {
-    'Customer Service': { savingsPercent: 15, profitPercent: 8 },
-    'Marketing': { savingsPercent: 12, profitPercent: 10 },
-    'Sales': { savingsPercent: 18, profitPercent: 15 },
-    'Operations': { savingsPercent: 20, profitPercent: 12 },
-    'Human Resources': { savingsPercent: 15, profitPercent: 8 },
-    'Finance': { savingsPercent: 12, profitPercent: 10 },
-    'IT': { savingsPercent: 25, profitPercent: 15 },
-    'Legal': { savingsPercent: 10, profitPercent: 5 },
-  };
-  return factors[department as keyof typeof factors] || factors['Customer Service'];
-};
-
-const getIndustryMultiplier = (industry: string): number => {
-  const multipliers: { [key: string]: number } = {
-    'Technology': 1.2,
-    'Healthcare': 1.1,
-    'Manufacturing': 1.15,
-    'Retail': 0.9,
-    'Financial Services': 1.25,
-    'Education': 0.85,
-    'Real Estate': 0.95,
-    'Construction': 1.0,
-    'Transportation': 1.05,
-    'Energy': 1.3,
-    'Agriculture': 0.8,
-    'Hospitality': 0.85
-  };
-  return multipliers[industry] || 1.0;
-};
-
-const getScalingFactor = (revenue: number) => {
-  if (revenue >= 10000000) return 0.7; // Scale down for very large companies
-  if (revenue >= 5000000) return 0.8;
-  if (revenue >= 1000000) return 0.9;
-  return 1; // No scaling for smaller companies
-};
-
 export const calculateRevenue = (revenueStr: string): number => {
   if (!revenueStr) return 0;
   
@@ -59,6 +20,54 @@ export const calculateRevenue = (revenueStr: string): number => {
   return 0;
 };
 
+const getBaseFactors = (department: string) => {
+  const factors: { [key: string]: { savingsPercent: number; profitPercent: number } } = {
+    'Customer Service': { savingsPercent: 25, profitPercent: 12 },
+    'Marketing': { savingsPercent: 20, profitPercent: 15 },
+    'Sales': { savingsPercent: 30, profitPercent: 20 },
+    'Operations': { savingsPercent: 35, profitPercent: 18 },
+    'Human Resources': { savingsPercent: 22, profitPercent: 10 },
+    'Finance': { savingsPercent: 18, profitPercent: 12 },
+    'IT': { savingsPercent: 40, profitPercent: 25 },
+    'Legal': { savingsPercent: 15, profitPercent: 8 },
+    'Manufacturing': { savingsPercent: 28, profitPercent: 16 },
+    'Supply Chain': { savingsPercent: 32, profitPercent: 18 },
+    'Research & Development': { savingsPercent: 20, profitPercent: 15 }
+  };
+  return factors[department] || { savingsPercent: 20, profitPercent: 10 };
+};
+
+const getIndustryMultiplier = (industry: string): number => {
+  const multipliers: { [key: string]: number } = {
+    'Technology': 1.4,
+    'Healthcare': 1.2,
+    'Manufacturing': 1.3,
+    'Retail': 0.9,
+    'Financial Services': 1.35,
+    'Education': 0.8,
+    'Real Estate': 0.95,
+    'Construction': 1.1,
+    'Transportation': 1.15,
+    'Energy': 1.4,
+    'Agriculture': 0.85,
+    'Hospitality': 0.9,
+    'Professional Services': 1.25,
+    'Media & Entertainment': 1.2,
+    'Telecommunications': 1.3
+  };
+  return multipliers[industry] || 1.0;
+};
+
+const getScalingFactor = (revenue: number) => {
+  if (revenue >= 100000000) return 0.6; // Very large enterprise
+  if (revenue >= 50000000) return 0.7; // Large enterprise
+  if (revenue >= 10000000) return 0.8; // Medium-large business
+  if (revenue >= 5000000) return 0.9; // Medium business
+  if (revenue >= 1000000) return 1.0; // Small-medium business
+  if (revenue >= 500000) return 1.1; // Small business
+  return 1.2; // Very small business (higher relative impact)
+};
+
 export const calculateFinancials = (revenue: number, department: string, industry?: string) => {
   if (!revenue || revenue <= 0) {
     console.warn('Invalid revenue value:', revenue);
@@ -74,36 +83,35 @@ export const calculateFinancials = (revenue: number, department: string, industr
   const scalingFactor = getScalingFactor(revenue);
   const industryMultiplier = industry ? getIndustryMultiplier(industry) : 1.0;
 
-  // Apply both scaling factor and industry multiplier
-  const adjustedFactors = {
-    savingsPercent: baseFactors.savingsPercent * scalingFactor * industryMultiplier,
-    profitPercent: baseFactors.profitPercent * scalingFactor * industryMultiplier
-  };
+  // Calculate adjusted percentages based on all factors
+  const adjustedSavingsPercent = baseFactors.savingsPercent * scalingFactor * industryMultiplier;
+  const adjustedProfitPercent = baseFactors.profitPercent * scalingFactor * industryMultiplier;
 
-  const savingsAmount = Math.round(revenue * (adjustedFactors.savingsPercent / 100));
-  const savingsPercentage = parseFloat(adjustedFactors.savingsPercent.toFixed(1));
-  const profitPercentage = parseFloat(adjustedFactors.profitPercent.toFixed(1));
-  const profitAmount = Math.round(revenue * (profitPercentage / 100));
+  // Calculate final amounts
+  const savingsAmount = Math.round(revenue * (adjustedSavingsPercent / 100));
+  const profitAmount = Math.round(revenue * (adjustedProfitPercent / 100));
 
   console.log('Financial calculation details:', {
     revenue,
     department,
     industry,
+    baseFactors,
     scalingFactor,
     industryMultiplier,
-    adjustedFactors,
+    adjustedSavingsPercent,
+    adjustedProfitPercent,
     results: {
       savingsAmount,
-      savingsPercentage,
-      profitPercentage,
+      savingsPercentage: adjustedSavingsPercent,
+      profitPercentage: adjustedProfitPercent,
       profitAmount
     }
   });
 
   return {
     savingsAmount,
-    savingsPercentage,
-    profitPercentage,
+    savingsPercentage: parseFloat(adjustedSavingsPercent.toFixed(1)),
+    profitPercentage: parseFloat(adjustedProfitPercent.toFixed(1)),
     profitAmount
   };
 };
