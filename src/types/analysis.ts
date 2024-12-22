@@ -13,6 +13,7 @@ export interface DetailedFormData {
   timeline: string;
   budget: string;
   additionalInfo: string;
+  industry?: string;
 }
 
 export interface AnalysisData {
