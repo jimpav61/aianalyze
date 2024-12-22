@@ -3,15 +3,24 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { generateAnalysis } from "@/utils/groq";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [analyses, setAnalyses] = useState<any[]>([]);
   const analysisGridRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleAnalyze = async () => {
-    if (!selectedIndustry) return;
+    if (!selectedIndustry) {
+      toast({
+        title: "Error",
+        description: "Please select an industry first",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -24,6 +33,11 @@ const Index = () => {
       }
     } catch (error) {
       console.error("Error generating analysis:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate analysis. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

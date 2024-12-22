@@ -52,6 +52,7 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
+    console.log("Hero - Analyze button clicked");
     handleAnalyze();
   };
 
@@ -72,7 +73,7 @@ export const Hero = ({
       </div>
 
       <AnalysisSection 
-        analyses={[]} 
+        analyses={analyses.length > 0 ? analyses : []} 
         isMobile={false}
         analysisGridRef={null}
       />
@@ -80,6 +81,7 @@ export const Hero = ({
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
         onClose={() => {
+          console.log("Hero - Closing detailed dialog");
           setShowDetailedDialog(false);
           setCurrentAnalysis(null);
         }}
