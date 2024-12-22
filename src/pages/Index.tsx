@@ -1,16 +1,13 @@
 import { Header } from "@/components/Header";
-import { AnalysisContainer } from "@/components/AnalysisContainer";
 import { Footer } from "@/components/Footer";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { SampleReport } from "@/components/SampleReport";
 
 const Index = () => {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header isMobile={isMobile} />
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
+      <Header />
       <main className="container mx-auto px-4 py-8">
-        <AnalysisContainer />
+        <SampleReport />
       </main>
       <Footer />
     </div>
