@@ -16,14 +16,40 @@ interface ReportContentProps {
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analysis data:", analysis);
   
-  const analysesForGrid = analysis.allAnalyses || [{
+  // Calculate actual savings based on revenue
+  const calculateActualSavings = () => {
+    const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
+    if (isNaN(revenue)) return 0;
+    
+    // Calculate savings as a percentage of revenue
+    const savingsPercentage = analysis.savings / 100000; // Normalize to percentage
+    return Math.round(revenue * (savingsPercentage / 100));
+  };
+
+  // Calculate actual profit increase based on revenue
+  const calculateActualProfit = () => {
+    const revenue = parseFloat(formData.revenue.replace(/[^0-9.]/g, ''));
+    if (isNaN(revenue)) return 0;
+    
+    // Calculate profit based on industry average margins and revenue
+    const profitIncrease = analysis.profit_increase / 100;
+    return Math.round(revenue * profitIncrease);
+  };
+
+  const analysesForGrid = analysis.allAnalyses?.map((item: any) => ({
+    ...item,
+    savings: calculateActualSavings().toString(),
+    profit_increase: analysis.profit_increase.toString(),
+    actualProfitIncrease: calculateActualProfit().toString()
+  })) || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
-    savings: analysis.savings.toString(),
+    savings: calculateActualSavings().toString(),
     profit_increase: analysis.profit_increase.toString(),
     explanation: analysis.explanation,
-    marketingStrategy: analysis.marketing_strategy
+    marketingStrategy: analysis.marketing_strategy,
+    actualProfitIncrease: calculateActualProfit().toString()
   }];
 
   console.log("ReportContent - Analyses for grid:", analysesForGrid);
@@ -38,7 +64,10 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
         <CurrentOperations data={formData} />
       </div>
       <div className="analysis-results whitespace-pre-line">
-        <AnalysisResults analyses={analysesForGrid} />
+        <AnalysisResults 
+          analyses={analysesForGrid} 
+          revenue={formData.revenue}
+        />
       </div>
       <div className="implementation-recommendations mt-8">
         <h3 className="text-xl font-semibold mb-4">AI Implementation Recommendations</h3>

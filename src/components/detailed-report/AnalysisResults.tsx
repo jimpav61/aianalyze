@@ -6,10 +6,12 @@ interface AnalysisResultsProps {
     profit_increase: string;
     explanation: string;
     marketingStrategy: string;
+    actualProfitIncrease: string;
   }>;
+  revenue: string;
 }
 
-export const AnalysisResults = ({ analyses }: AnalysisResultsProps) => {
+export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => {
   // Use the first analysis as the primary one for the summary
   const primaryAnalysis = analyses[0];
 
@@ -28,8 +30,14 @@ export const AnalysisResults = ({ analyses }: AnalysisResultsProps) => {
         <div>
           <p className="font-medium text-gray-700">Projected Annual Savings:</p>
           <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.savings).toLocaleString()}</p>
-          <p className="font-medium text-gray-700">Projected Profit Increase:</p>
-          <p className="text-green-600 font-bold">{primaryAnalysis.profit_increase}%</p>
+          <p className="text-sm text-gray-500">Based on your annual revenue of {revenue}</p>
+          
+          <p className="font-medium text-gray-700 mt-4">Projected Profit Increase:</p>
+          <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.actualProfitIncrease).toLocaleString()}</p>
+          <p className="text-sm text-gray-500">
+            {primaryAnalysis.profit_increase}% increase on current revenue
+          </p>
+          
           <p className="font-medium text-gray-700 mt-4">Marketing Strategy:</p>
           <p className="text-gray-600">{primaryAnalysis.marketingStrategy}</p>
         </div>
@@ -45,7 +53,7 @@ export const AnalysisResults = ({ analyses }: AnalysisResultsProps) => {
                 <p className="text-sm text-gray-600">{analysis.function}</p>
                 <div className="mt-2 grid grid-cols-2 gap-4">
                   <p className="text-sm">Savings: ${parseInt(analysis.savings).toLocaleString()}</p>
-                  <p className="text-sm">Profit Increase: {analysis.profit_increase}%</p>
+                  <p className="text-sm">Additional Profit: ${parseInt(analysis.actualProfitIncrease).toLocaleString()}</p>
                 </div>
               </div>
             ))}

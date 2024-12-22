@@ -36,4 +36,10 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
   }
+
+  /* Add white background to toast */
+  [role="status"][data-state="open"],
+  [role="alert"][data-state="open"] {
+    @apply bg-white shadow-lg;
+  }
 }
