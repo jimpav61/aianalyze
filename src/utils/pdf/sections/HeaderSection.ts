@@ -2,10 +2,10 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
   const header = document.createElement('div');
   header.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1.5rem;">
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div style="display: flex; items-center gap-2">
         <img 
-          src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png"
-          alt="ChatSites Logo" 
+          src="/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png" 
+          alt="Logo" 
           style="height: 64px; width: auto;"
         />
       </div>
