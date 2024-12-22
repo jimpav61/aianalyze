@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import html2canvas from 'html2canvas';
+import { jsPDF } from "jspdf";
 
 interface DownloadReportButtonProps {
   formData?: DetailedFormData;
@@ -26,10 +27,65 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
     }
 
     try {
-      console.log('Download Report - Generating PDF');
-      const doc = await generateAnalysisReport({ formData, analysis });
+      // Get the report container element
+      const reportElement = document.querySelector('.space-y-6.bg-white') as HTMLElement;
+      if (!reportElement) {
+        throw new Error('Report element not found');
+      }
+
+      console.log('Download Report - Capturing report content');
+      
+      // Create a clone of the element to avoid modifying the displayed content
+      const clone = reportElement.cloneNode(true) as HTMLElement;
+      document.body.appendChild(clone);
+      clone.style.width = '800px';
+      clone.style.padding = '40px';
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      
+      // Capture the content
+      const canvas = await html2canvas(clone, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
+      
+      document.body.removeChild(clone);
+
+      // Convert to PDF
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+      const totalPages = Math.ceil(imgHeight / pageHeight);
+
+      for (let page = 1; page <= totalPages; page++) {
+        if (page > 1) {
+          pdf.addPage();
+        }
+
+        pdf.addImage(
+          canvas.toDataURL('image/png'),
+          'PNG',
+          0,
+          position,
+          imgWidth,
+          imgHeight,
+          '',
+          'FAST'
+        );
+
+        heightLeft -= pageHeight;
+        position -= pageHeight;
+      }
+
       console.log('Download Report - PDF generated, saving file');
-      doc.save("chatsites-analysis-report.pdf");
+      pdf.save("chatsites-analysis-report.pdf");
       
       toast({
         title: "Success",
