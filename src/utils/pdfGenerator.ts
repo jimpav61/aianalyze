@@ -26,10 +26,11 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     tempContainer.id = 'temp-report-container';
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
-    tempContainer.style.width = '800px'; // Fixed width for consistent rendering
+    tempContainer.style.width = '800px';
+    tempContainer.style.backgroundColor = '#ffffff';
     document.body.appendChild(tempContainer);
 
-    // Generate report content
+    // Generate report content with proper line breaks
     tempContainer.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; white-space: pre-wrap; word-wrap: break-word;">
         <div style="margin-bottom: 30px;">
@@ -46,16 +47,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           <p><strong>Function:</strong> ${analysis.bot_function}</p>
           <p><strong>Annual Savings:</strong> $${analysis.savings.toLocaleString()}</p>
           <p><strong>Profit Increase:</strong> ${analysis.profit_increase}%</p>
-          <p style="white-space: pre-wrap;"><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
-          <p style="white-space: pre-wrap;"><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
         </div>
 
         <div style="margin-bottom: 30px;">
           <h2 style="color: #666; font-size: 18px;">Implementation Details</h2>
           <p><strong>Timeline:</strong> ${formData.timeline}</p>
           <p><strong>Budget Range:</strong> ${formData.budget}</p>
-          <p style="white-space: pre-wrap;"><strong>Objectives:</strong>\n${formData.objectives}</p>
-          ${formData.additionalInfo ? `<p style="white-space: pre-wrap;"><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
+          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Objectives:</strong>\n${formData.objectives}</p>
+          ${formData.additionalInfo ? `<p style="white-space: pre-wrap; margin: 15px 0;"><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
         </div>
       </div>
     `;
@@ -68,7 +69,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      logging: false,
+      logging: true,
       onclone: (_, element) => {
         element.style.width = '800px';
         element.style.margin = '0';

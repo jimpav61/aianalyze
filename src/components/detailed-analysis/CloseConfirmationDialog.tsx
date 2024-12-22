@@ -21,7 +21,12 @@ export const CloseConfirmationDialog = ({
 }: CloseConfirmationDialogProps) => {
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleDownload = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     if (!formData || !analysis) {
       toast({
         title: "Error",
@@ -32,6 +37,7 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
+      console.log("Starting PDF generation with data:", { formData, analysis });
       const pdf = await generateAnalysisReport({ formData, analysis });
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
       
@@ -72,11 +78,7 @@ export const CloseConfirmationDialog = ({
             <Button
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleDownload();
-              }}
+              onClick={handleDownload}
             >
               <Download className="h-4 w-4" />
               Download Report
