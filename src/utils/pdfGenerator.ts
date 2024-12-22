@@ -25,17 +25,38 @@ interface GenerateReportParams {
 }
 
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  console.log('Starting PDF generation with:', { formData, analysis });
+  console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   const reportContainer = createReportContainer();
+  console.log('PDF Generation - Created container');
 
-  // Generate each section of the report
-  generateHeaderSection(reportContainer);
-  generateCompanySection(reportContainer, formData, analysis.industry);
-  generateOperationsSection(reportContainer, formData);
-  generateAnalysisSection(reportContainer, analysis);
-  generateImplementationSection(reportContainer, formData);
-  generateFooterSection(reportContainer);
+  try {
+    // Generate each section of the report
+    console.log('PDF Generation - Generating header section');
+    generateHeaderSection(reportContainer);
+    
+    console.log('PDF Generation - Generating company section');
+    generateCompanySection(reportContainer, formData, analysis.industry);
+    
+    console.log('PDF Generation - Generating operations section');
+    generateOperationsSection(reportContainer, formData);
+    
+    console.log('PDF Generation - Generating analysis section');
+    generateAnalysisSection(reportContainer, analysis);
+    
+    console.log('PDF Generation - Generating implementation section');
+    generateImplementationSection(reportContainer, formData);
+    
+    console.log('PDF Generation - Generating footer section');
+    generateFooterSection(reportContainer);
 
-  return generatePDF(reportContainer);
+    console.log('PDF Generation - All sections generated, creating PDF');
+    const pdf = await generatePDF(reportContainer);
+    console.log('PDF Generation - PDF created successfully');
+    
+    return pdf;
+  } catch (error) {
+    console.error('PDF Generation - Error:', error);
+    throw error;
+  }
 };
