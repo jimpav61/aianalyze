@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CompanyBasicsStep } from "./CompanyBasicsStep";
 import { OperationsStep } from "./OperationsStep";
 import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
-import { useFormValidation } from "./form/ValidationUtils";
-import { FormNavigation } from "./form/FormNavigation";
+import { StepNavigation } from "./form/StepNavigation";
+import { useDetailedFormState } from "@/hooks/useDetailedFormState";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -28,27 +27,12 @@ export const DetailedAnalysisForm = ({
   analysis,
   initialData
 }: DetailedAnalysisFormProps) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<DetailedFormData>(
-    initialData || {
-      companyName: "",
-      ownerName: "",
-      phoneNumber: "",
-      email: "",
-      employees: "",
-      revenue: "",
-      serviceChannels: "",
-      monthlyInteractions: "",
-      currentTools: "",
-      painPoints: "",
-      objectives: "",
-      timeline: "",
-      budget: "",
-      additionalInfo: "",
-    }
-  );
-
-  const { validateStep } = useFormValidation();
+  const {
+    currentStep,
+    setCurrentStep,
+    formData,
+    handleInputChange
+  } = useDetailedFormState(initialData);
 
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
@@ -58,28 +42,12 @@ export const DetailedAnalysisForm = ({
     hasInitialData: !!initialData
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log("DetailedAnalysisForm - Input changed:", { name, value });
-  };
-
   const handleNext = () => {
-    console.log("DetailedAnalysisForm - Attempting to move to next step");
-    if (validateStep(currentStep, formData)) {
-      setCurrentStep((prev) => prev + 1);
-      console.log("DetailedAnalysisForm - Moving to next step");
-    }
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
-    console.log("DetailedAnalysisForm - Moving to previous step");
   };
 
   const handleSubmit = () => {
@@ -88,11 +56,7 @@ export const DetailedAnalysisForm = ({
       console.error("DetailedAnalysisForm - Missing analysis data");
       return;
     }
-
-    if (validateStep(currentStep, formData)) {
-      console.log("DetailedAnalysisForm - Form validation passed, submitting data:", formData);
-      onSubmit(formData);
-    }
+    onSubmit(formData);
   };
 
   return (
@@ -118,12 +82,12 @@ export const DetailedAnalysisForm = ({
         )}
       </ScrollArea>
 
-      <FormNavigation
+      <StepNavigation
         currentStep={currentStep}
+        formData={formData}
         onNext={handleNext}
         onBack={handleBack}
         onSubmit={handleSubmit}
-        isLastStep={currentStep === 3}
       />
     </>
   );

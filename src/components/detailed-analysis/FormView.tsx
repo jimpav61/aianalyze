@@ -10,7 +10,11 @@ export interface FormViewProps {
 }
 
 export const FormView = ({ onSubmit, industry, analysis, initialData }: FormViewProps) => {
-  console.log("FormView - Render:", { hasIndustry: !!industry, hasAnalysis: !!analysis, hasInitialData: !!initialData });
+  console.log("FormView - Render:", { 
+    hasIndustry: !!industry, 
+    hasAnalysis: !!analysis, 
+    hasInitialData: !!initialData 
+  });
 
   return (
     <>
