@@ -1,46 +1,40 @@
-import { useRef } from "react";
-import { CalendarProps } from "@/types/calendar";
-import { useBookingSuccess } from "@/hooks/calendar/useBookingSuccess";
-import { CalendarFormData } from "@/types/analysis";
-import { useCalendarEvents } from "@/hooks/calendar/useCalendarEvents";
-import { useCalendarInit } from "@/hooks/calendar/useCalendarInit";
+import { useEffect } from "react";
+import { useCalendlyConfig } from "./useCalendlyConfig";
+import { useCalendlyEvents } from "./useCalendlyEvents";
+import { DetailedFormData } from "@/types/analysis";
 
-interface CalendarEmbedProps extends Omit<CalendarProps, 'formData'> {
-  formData?: CalendarFormData;
+interface CalendarEmbedProps {
+  onSubmit?: () => void;
+  formData: DetailedFormData;
+  analysis?: any;
 }
 
-export const CalendarEmbed = ({ 
-  calLink, 
-  onSubmit, 
-  formData, 
-  analysis 
-}: CalendarEmbedProps) => {
-  const calendarRef = useRef<HTMLDivElement>(null);
-  
-  const { handleBookingSuccess } = useBookingSuccess({ 
-    formData, 
-    analysis, 
-    onSubmit 
-  });
+export const CalendarEmbed = ({ onSubmit, formData, analysis }: CalendarEmbedProps) => {
+  const { initCalendly } = useCalendlyConfig();
+  const { handleEventScheduled } = useCalendlyEvents({ onSubmit });
 
-  const { handleEventScheduled } = useCalendarEvents({
-    onEventScheduled: handleBookingSuccess,
-    formData
-  });
+  useEffect(() => {
+    if (formData) {
+      const prefill = {
+        name: formData.companyName,
+        email: formData.email,
+        customAnswers: {
+          a1: formData.phoneNumber,
+          a2: formData.employees,
+          a3: formData.revenue,
+          a4: formData.industry || 'Not specified',
+        }
+      };
 
-  useCalendarInit({
-    calendarRef,
-    calLink,
-    formData,
-    onEventScheduled: handleEventScheduled
-  });
+      initCalendly(prefill);
+    }
+  }, [formData, initCalendly]);
 
   return (
-    <div className="w-full h-[700px] flex flex-col">
+    <div className="calendly-embed min-h-[600px] w-full">
       <div 
-        ref={calendarRef}
-        className="flex-1 min-h-[600px] bg-white rounded-lg shadow-sm"
-        style={{ minWidth: '320px' }}
+        className="calendly-inline-widget w-full min-h-[600px]" 
+        data-url="https://calendly.com/chatsites/demo"
       />
     </div>
   );

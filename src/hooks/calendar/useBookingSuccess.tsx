@@ -18,7 +18,7 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     console.log("Download attempt - Starting with data:", {
       hasFormData: !!formData,
       formDataContent: formData,
@@ -46,7 +46,7 @@ export const useBookingSuccess = ({
         analysis
       });
       
-      const doc = generateAnalysisReport({ formData, analysis });
+      const doc = await generateAnalysisReport({ formData, analysis });
       console.log("PDF generated successfully, attempting save...");
       doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
       console.log("PDF saved successfully");
