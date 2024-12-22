@@ -13,6 +13,7 @@ interface CalendarEmbedProps {
 
 export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
+  const initAttempts = useRef(0);
   const { toast } = useToast();
   
   console.log("CalendarEmbed - Initializing with:", {
@@ -28,26 +29,34 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   });
 
   useEffect(() => {
-    let retryCount = 0;
-    const maxRetries = 5;
-    
+    const maxAttempts = 10;
+    const attemptInterval = 1000; // 1 second between attempts
+
     const initializeCalendly = () => {
-      if (!window.Calendly || !calendarRef.current) {
-        if (retryCount < maxRetries) {
-          retryCount++;
-          setTimeout(initializeCalendly, 1000);
-        } else {
-          toast({
-            title: "Error",
-            description: "Failed to load calendar. Please refresh the page.",
-            variant: "destructive",
-          });
+      if (!window.Calendly) {
+        if (initAttempts.current < maxAttempts) {
+          initAttempts.current++;
+          setTimeout(initializeCalendly, attemptInterval);
+          return;
         }
+        toast({
+          title: "Error",
+          description: "Failed to load calendar. Please refresh the page.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!calendarRef.current) {
+        console.error("Calendar reference not found");
         return;
       }
 
       const prefill = getPrefillData();
       console.log("CalendarEmbed - Initializing with prefill:", prefill);
+
+      // Clear any existing widgets
+      calendarRef.current.innerHTML = '';
 
       window.Calendly.initInlineWidget({
         url: 'https://calendly.com/chatsites/demo',
@@ -63,6 +72,7 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
       window.addEventListener('calendly.event_scheduled', handleEventScheduled);
     };
 
+    // Start initialization process
     initializeCalendly();
 
     return () => {
