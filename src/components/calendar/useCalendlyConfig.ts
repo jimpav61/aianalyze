@@ -16,6 +16,7 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
       formData
     });
 
+    // Map phone number to all possible Calendly question field IDs
     const questions: Record<string, string> = {
       'a1': phoneNumber,
       'phone': phoneNumber,
