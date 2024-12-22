@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { AnalysisSection } from "@/components/AnalysisSection";
 import { generateAnalysis } from "@/utils/groq";
-import { useRef } from "react";
 
 const Index = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>();
@@ -21,7 +20,6 @@ const Index = () => {
       console.log("Analysis results:", results);
       setAnalyses(results);
 
-      // Scroll to analysis section after results are loaded
       if (analysisGridRef.current) {
         analysisGridRef.current.scrollIntoView({ behavior: "smooth" });
       }

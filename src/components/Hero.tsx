@@ -21,7 +21,6 @@ export const Hero = ({
   analyses = [],
 }: HeroProps) => {
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
-  const [showAnalysisCard, setShowAnalysisCard] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
   const { toast } = useToast();
 
@@ -41,7 +40,6 @@ export const Hero = ({
       };
       
       setCurrentAnalysis(primaryAnalysis);
-      setShowAnalysisCard(true);
       setShowDetailedDialog(true);
 
       toast({
@@ -53,7 +51,6 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
-    setShowAnalysisCard(false);
     setShowDetailedDialog(false);
     setCurrentAnalysis(null);
     handleAnalyze();
@@ -78,7 +75,6 @@ export const Hero = ({
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
         onClose={() => {
-          setShowAnalysisCard(false);
           setShowDetailedDialog(false);
         }}
         industry={selectedIndustry}
