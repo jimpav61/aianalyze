@@ -75,9 +75,11 @@ export const CompanyBasicsStep = ({
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="revenue" className="text-gray-700">Annual Revenue</Label>
+          <Label htmlFor="revenue" className="text-gray-700 flex items-center">
+            Annual Revenue <span className="text-red-500 ml-1">*</span>
+          </Label>
           <Select value={selectedRevenueValue} onValueChange={handleRevenueChange}>
-            <SelectTrigger id="revenue" className="bg-white">
+            <SelectTrigger id="revenue" className={`bg-white ${!formData.revenue ? 'border-red-300' : ''}`}>
               <SelectValue placeholder="Select revenue range" />
             </SelectTrigger>
             <SelectContent className="bg-white border shadow-lg">

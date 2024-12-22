@@ -67,7 +67,7 @@ export const DetailedAnalysisForm = ({
     console.log("DetailedAnalysisForm - Validating step:", step);
     
     const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "ownerName", "email"],
+      1: ["companyName", "ownerName", "email", "revenue"],
       2: ["serviceChannels", "monthlyInteractions"],
       3: ["objectives", "timeline", "budget"],
     };
