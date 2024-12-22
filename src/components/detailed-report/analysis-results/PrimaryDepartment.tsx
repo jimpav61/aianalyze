@@ -15,7 +15,7 @@ export const PrimaryDepartment = ({ department, function: botFunction }: Primary
         </div>
         <div>
           <p className="font-medium text-gray-700 mb-2">Primary Function:</p>
-          <p className="text-[#f65228] text-lg whitespace-pre-wrap">{botFunction}</p>
+          <p className="text-[#f65228] text-lg whitespace-pre-line leading-relaxed">{botFunction}</p>
         </div>
       </div>
     </Card>
