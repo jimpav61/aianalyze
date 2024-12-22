@@ -29,29 +29,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   
   const reportContainer = createReportContainer();
 
-  // Add global styles for proper text wrapping and line breaks
-  const style = document.createElement('style');
-  style.textContent = `
-    #pdf-container {
-      font-family: Arial, sans-serif;
-    }
-    #pdf-container * {
-      white-space: pre-line !important;
-      word-wrap: break-word !important;
-      overflow-wrap: break-word !important;
-      max-width: 100% !important;
-    }
-    #pdf-container p {
-      margin-bottom: 1em;
-      line-height: 1.5;
-    }
-    #pdf-container .section {
-      margin-bottom: 2em;
-      page-break-inside: avoid;
-    }
-  `;
-  reportContainer.appendChild(style);
-
   // Generate each section of the report
   generateHeaderSection(reportContainer);
   generateCompanySection(reportContainer, formData, analysis.industry);

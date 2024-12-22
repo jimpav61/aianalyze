@@ -7,7 +7,7 @@ export const createReportContainer = () => {
   container.style.width = '800px';
   container.style.padding = '40px';
   container.style.background = 'white';
-  container.style.fontFamily = 'Arial, sans-serif';
+  container.style.fontFamily = 'Inter, sans-serif';
   container.style.whiteSpace = 'pre-line';
   container.style.wordWrap = 'break-word';
   container.style.overflowWrap = 'break-word';
@@ -17,15 +17,6 @@ export const createReportContainer = () => {
 
 export const generatePDF = async (reportContainer: HTMLDivElement): Promise<jsPDF> => {
   try {
-    // Wait for images to load
-    await Promise.all(
-      Array.from(reportContainer.getElementsByTagName('img'))
-        .map(img => img.complete ? Promise.resolve() : new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
-        }))
-    );
-
     const canvas = await html2canvas(reportContainer, {
       scale: 2,
       logging: false,
@@ -35,8 +26,15 @@ export const generatePDF = async (reportContainer: HTMLDivElement): Promise<jsPD
       windowWidth: 800,
       height: reportContainer.offsetHeight,
       onclone: (clonedDoc, element) => {
-        element.style.height = 'auto';
-        element.style.overflow = 'visible';
+        // Ensure all images are loaded before capturing
+        const images = element.getElementsByTagName('img');
+        return Promise.all(Array.from(images).map(img => {
+          if (img.complete) return Promise.resolve();
+          return new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve;
+          });
+        }));
       }
     });
 
@@ -51,7 +49,6 @@ export const generatePDF = async (reportContainer: HTMLDivElement): Promise<jsPD
     let position = 0;
     const totalPages = Math.ceil(imgHeight / pageHeight);
 
-    // Add pages and split content
     for (let page = 1; page <= totalPages; page++) {
       if (page > 1) {
         pdf.addPage();
