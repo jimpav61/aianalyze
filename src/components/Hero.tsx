@@ -3,6 +3,7 @@ import { DetailedAnalysisDialog } from "./DetailedAnalysisDialog";
 import { HeroHeader } from "./hero/HeroHeader";
 import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
+import { useToast } from "@/hooks/use-toast";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -22,6 +23,7 @@ export const Hero = ({
   const [showDetailedDialog, setShowDetailedDialog] = useState(false);
   const [showAnalysisCard, setShowAnalysisCard] = useState(false);
   const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (analyses && analyses.length > 0) {
@@ -41,8 +43,15 @@ export const Hero = ({
       setCurrentAnalysis(primaryAnalysis);
       setShowAnalysisCard(true);
       setShowDetailedDialog(true);
+
+      // Show toast notification about the number of departments
+      toast({
+        title: "AI Implementation Opportunities",
+        description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
+        duration: 5000,
+      });
     }
-  }, [analyses, selectedIndustry]);
+  }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
     setShowAnalysisCard(false);
