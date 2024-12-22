@@ -4,6 +4,7 @@ import { HeroHeader } from "./hero/HeroHeader";
 import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
 import { useToast } from "@/hooks/use-toast";
+import { AnalysisSection } from "./AnalysisSection";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -55,19 +56,29 @@ export const Hero = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto text-center mb-12">
-      <HeroHeader />
+    <>
+      <div className="max-w-4xl mx-auto text-center mb-12">
+        <HeroHeader />
 
-      <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <HeroActions
-            selectedIndustry={selectedIndustry}
-            setSelectedIndustry={setSelectedIndustry}
-            isLoading={isLoading}
-            handleAnalyze={handleAnalyzeClick}
-          />
-          <BenefitsList position="right" />
+        <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <HeroActions
+              selectedIndustry={selectedIndustry}
+              setSelectedIndustry={setSelectedIndustry}
+              isLoading={isLoading}
+              handleAnalyze={handleAnalyzeClick}
+            />
+            <BenefitsList position="right" />
+          </div>
         </div>
+
+        {analyses.length === 0 && (
+          <AnalysisSection 
+            analyses={[]} 
+            isMobile={false}
+            analysisGridRef={null}
+          />
+        )}
       </div>
 
       <DetailedAnalysisDialog
@@ -80,6 +91,6 @@ export const Hero = ({
         analysis={currentAnalysis}
         showFormOnly={false}
       />
-    </div>
+    </>
   );
 };

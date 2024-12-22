@@ -41,11 +41,6 @@ const Index = () => {
           handleAnalyze={handleAnalyze}
           analyses={analyses}
         />
-        <AnalysisSection 
-          analyses={analyses} 
-          isMobile={false} 
-          analysisGridRef={analysisGridRef}
-        />
       </main>
       <Footer />
     </div>

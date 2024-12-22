@@ -24,12 +24,29 @@ export const CalendarEmbed = ({ onSubmit, formData, analysis }: CalendarEmbedPro
   });
 
   useEffect(() => {
-    if (formData) {
-      console.log("CalendarEmbed - Setting up Calendly with form data");
-      const prefill = getPrefillData();
-      console.log("CalendarEmbed - Prefill data:", prefill);
-      initCalendly(prefill);
-    }
+    const setupCalendly = () => {
+      if (formData && window.Calendly) {
+        console.log("CalendarEmbed - Setting up Calendly with form data");
+        const prefill = getPrefillData();
+        console.log("CalendarEmbed - Prefill data:", prefill);
+        initCalendly(prefill);
+      }
+    };
+
+    // Initial setup
+    setupCalendly();
+
+    // Retry setup if Calendly isn't loaded yet
+    const retryInterval = setInterval(() => {
+      if (window.Calendly) {
+        setupCalendly();
+        clearInterval(retryInterval);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(retryInterval);
+    };
   }, [formData, getPrefillData, initCalendly]);
 
   useEffect(() => {
