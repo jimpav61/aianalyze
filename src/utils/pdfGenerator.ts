@@ -29,69 +29,93 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     // Create a clone of the report element to modify for PDF
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
-    // Replace purple backgrounds with white and adjust text colors
-    const purpleElements = clonedReport.querySelectorAll('[class*="bg-[#E5DEFF]"], [class*="bg-[#F1F0FB]"]');
+    // Replace purple backgrounds with white
+    const purpleElements = clonedReport.querySelectorAll('[class*="bg-"]');
     purpleElements.forEach(element => {
-      element.classList.remove('bg-[#E5DEFF]', 'bg-[#F1F0FB]');
-      element.classList.add('bg-white');
+      const classes = element.className.split(' ');
+      const newClasses = classes
+        .filter(cls => !cls.startsWith('bg-'))
+        .concat(['bg-white'])
+        .join(' ');
+      element.className = newClasses;
     });
 
-    // Process all text colors to #f65228
-    const textElements = clonedReport.querySelectorAll('[class*="text-"]');
+    // Update text colors
+    const textElements = clonedReport.querySelectorAll('*');
     textElements.forEach(element => {
-      const classes = element.className.split(' ');
-      const newClasses = classes.filter(cls => !cls.startsWith('text-')).join(' ');
-      element.className = `${newClasses} text-[#f65228]`;
+      if (element instanceof HTMLElement) {
+        const classes = element.className.split(' ');
+        const newClasses = classes
+          .filter(cls => !cls.startsWith('text-'))
+          .join(' ');
+        element.className = `${newClasses} text-[#f65228]`;
+        
+        // Ensure text is visible
+        element.style.color = '#f65228';
+      }
     });
 
     // Create temporary container with proper styling
     const tempContainer = document.createElement('div');
-    tempContainer.id = 'temp-report-container';
     tempContainer.style.cssText = `
-      position: absolute;
+      position: fixed;
       left: -9999px;
       width: 800px;
-      background-color: #ffffff;
+      background-color: white;
       padding: 40px;
       font-family: Arial, sans-serif;
     `;
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Ensure all content is properly styled
+    // Style all elements for PDF
     const allElements = tempContainer.getElementsByTagName('*');
-    for (let i = 0; i < allElements.length; i++) {
-      const el = allElements[i] as HTMLElement;
-      if (el.style) {
+    Array.from(allElements).forEach((el) => {
+      if (el instanceof HTMLElement) {
+        // Base styles for all elements
+        el.style.margin = '0';
+        el.style.padding = '8px';
         el.style.whiteSpace = 'pre-wrap';
         el.style.wordBreak = 'break-word';
+        el.style.pageBreakInside = 'avoid';
         
-        // Ensure proper spacing
-        if (el.tagName === 'DIV') {
-          el.style.marginBottom = '16px';
-        }
-        
-        // Ensure proper text sizing
-        if (el.tagName === 'H2' || el.tagName === 'H3') {
+        // Specific styles for headings
+        if (/^h[1-6]$/i.test(el.tagName)) {
           el.style.fontSize = '20px';
           el.style.fontWeight = '600';
           el.style.marginBottom = '16px';
+          el.style.color = '#f65228';
+        }
+        
+        // Specific styles for cards
+        if (el.classList.contains('card')) {
+          el.style.border = '1px solid #e2e8f0';
+          el.style.borderRadius = '8px';
+          el.style.marginBottom = '16px';
+          el.style.backgroundColor = 'white';
+        }
+        
+        // Ensure all text is properly sized
+        if (el.tagName === 'P') {
+          el.style.fontSize = '14px';
+          el.style.lineHeight = '1.5';
+          el.style.marginBottom = '8px';
         }
       }
-    }
+    });
 
-    // Generate PDF with proper scaling
+    // Generate canvas with proper scaling
     const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      logging: false,
+      logging: true,
       width: 800,
       height: tempContainer.scrollHeight,
       windowWidth: 800,
       onclone: (document, element) => {
-        // Additional styling for cloned element
+        element.style.transform = 'none';
         element.style.height = 'auto';
         element.style.overflow = 'visible';
       }
@@ -110,11 +134,23 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     let position = 0;
     
     // Add pages as needed
-    for (let page = 1; page <= Math.ceil(imgHeight / pageHeight); page++) {
-      if (page > 1) {
-        pdf.addPage();
-      }
+    pdf.addImage(
+      canvas.toDataURL('image/png'),
+      'PNG',
+      0,
+      position,
+      imgWidth,
+      imgHeight,
+      '',
+      'FAST'
+    );
 
+    // Add additional pages if content exceeds page height
+    while (heightLeft >= pageHeight) {
+      position = position - pageHeight;
+      heightLeft = heightLeft - pageHeight;
+      
+      pdf.addPage();
       pdf.addImage(
         canvas.toDataURL('image/png'),
         'PNG',
@@ -125,9 +161,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
         '',
         'FAST'
       );
-
-      heightLeft -= pageHeight;
-      position -= pageHeight;
     }
 
     return pdf;
