@@ -19,7 +19,19 @@ export const useBookingSuccess = ({
   const { toast } = useToast();
 
   const handleDownload = useCallback(() => {
+    console.log("Download attempt - Starting with data:", {
+      hasFormData: !!formData,
+      formDataContent: formData,
+      hasAnalysis: !!analysis,
+      analysisContent: analysis
+    });
+
     if (!formData || !analysis) {
+      console.error("Download failed - Missing required data:", {
+        formData,
+        analysis
+      });
+      
       toast({
         title: "Error",
         description: "Report data not available. Please try again.",
@@ -29,15 +41,24 @@ export const useBookingSuccess = ({
     }
 
     try {
-      const doc = generateAnalysisReport(formData, analysis);
-      doc.save("chatsites-analysis-report.pdf");
+      console.log("Generating PDF with data:", {
+        formData,
+        analysis
+      });
+      
+      const doc = generateAnalysisReport({ formData, analysis });
+      console.log("PDF generated successfully, attempting save...");
+      
+      doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      
+      console.log("PDF saved successfully");
       
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
       });
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("PDF Generation/Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
@@ -47,7 +68,7 @@ export const useBookingSuccess = ({
   }, [formData, analysis, toast]);
 
   const handleBookingSuccess = useCallback(() => {
-    console.log("Booking successful with data:", {
+    console.log("Booking success handler triggered with data:", {
       formData,
       analysis
     });

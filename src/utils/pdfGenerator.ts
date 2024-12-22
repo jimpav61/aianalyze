@@ -18,10 +18,14 @@ interface GenerateReportParams {
 }
 
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  console.log('PDF Generation - Starting with data:', { formData, analysis });
+  console.log('PDF Generation - Starting with data:', { 
+    formData, 
+    analysis,
+    timestamp: new Date().toISOString()
+  });
   
   try {
-    // Create a temporary container for the report
+    console.log('Creating temporary container');
     const tempContainer = document.createElement('div');
     tempContainer.id = 'temp-report-container';
     tempContainer.style.position = 'absolute';
@@ -30,7 +34,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     tempContainer.style.backgroundColor = '#ffffff';
     document.body.appendChild(tempContainer);
 
-    // Generate report content with proper line breaks
+    console.log('Generating HTML content');
     tempContainer.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; white-space: pre-wrap; word-wrap: break-word;">
         <div style="margin-bottom: 30px;">
@@ -61,9 +65,10 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       </div>
     `;
 
-    // Process images if any
+    console.log('Processing images');
     await processAllImages(tempContainer);
 
+    console.log('Creating canvas');
     const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
@@ -71,25 +76,39 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       backgroundColor: '#ffffff',
       logging: true,
       onclone: (_, element) => {
+        console.log('Canvas clone callback triggered');
         element.style.width = '800px';
         element.style.margin = '0';
         element.style.padding = '0';
       }
     });
 
-    // Clean up the temporary container
+    console.log('Cleaning up temporary container');
     document.body.removeChild(tempContainer);
 
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    console.log('Creating PDF with dimensions:', {
+      imgWidth,
+      pageHeight,
+      imgHeight,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height
+    });
+    
     const pdf = new jsPDF('p', 'mm', 'a4');
     
     let heightLeft = imgHeight;
     let position = 0;
     const totalPages = Math.ceil(imgHeight / pageHeight);
 
+    console.log(`Adding ${totalPages} pages to PDF`);
+    
     for (let page = 1; page <= totalPages; page++) {
+      console.log(`Processing page ${page} of ${totalPages}`);
+      
       if (page > 1) {
         pdf.addPage();
       }
@@ -109,9 +128,10 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       position -= pageHeight;
     }
 
+    console.log('PDF generation completed successfully');
     return pdf;
   } catch (error) {
-    console.error('PDF Generation - Error:', error);
+    console.error('PDF Generation - Critical error:', error);
     throw error;
   }
 };
