@@ -7,6 +7,7 @@ interface AnalysisResultsProps {
     explanation: string;
     marketingStrategy: string;
     actualProfitIncrease: string;
+    savingsPercentage: string;
   }>;
   revenue: string;
 }
@@ -31,7 +32,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
           <p className="font-medium text-gray-700">Projected Annual Savings:</p>
           <div className="flex items-baseline gap-2">
             <p className="text-green-600 font-bold">${parseInt(primaryAnalysis.savings).toLocaleString()}</p>
-            <p className="text-green-600">({(parseInt(primaryAnalysis.savings) / parseFloat(revenue.replace(/[^0-9.]/g, '')) * 100).toFixed(1)}% of revenue)</p>
+            <p className="text-green-600">({primaryAnalysis.savingsPercentage}% of revenue)</p>
           </div>
           <p className="text-sm text-gray-500">Based on your annual revenue of {revenue}</p>
           
@@ -58,7 +59,7 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
                 <div className="mt-2 grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm">Savings: <span className="text-green-600">${parseInt(analysis.savings).toLocaleString()}</span></p>
-                    <p className="text-green-600 text-xs">({(parseInt(analysis.savings) / parseFloat(revenue.replace(/[^0-9.]/g, '')) * 100).toFixed(1)}% of revenue)</p>
+                    <p className="text-green-600 text-xs">({analysis.savingsPercentage}% of revenue)</p>
                   </div>
                   <div>
                     <p className="text-sm">Additional Profit: <span className="text-green-600">${parseInt(analysis.actualProfitIncrease).toLocaleString()}</span></p>
