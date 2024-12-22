@@ -18,24 +18,26 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
     <div id="detailed-report" className="space-y-6 bg-white p-4 sm:p-8 rounded-lg max-w-full overflow-x-hidden">
       <ReportHeader />
       
-      <div className="company-info">
+      <div className="company-info whitespace-pre-line">
         <CompanyInformation data={formData} industry={analysis?.industry} />
       </div>
       
-      <div className="current-operations">
+      <div className="current-operations whitespace-pre-line">
         <CurrentOperations data={formData} />
       </div>
       
-      <div className="analysis-results">
+      <div className="analysis-results whitespace-pre-line">
         <AnalysisResults 
           analyses={analysis.allAnalyses || [analysis]} 
           revenue={formData.revenue}
         />
       </div>
 
-      <ImplementationRecommendations analysis={analysis} formData={formData} />
+      <div className="implementation-recommendations whitespace-pre-line">
+        <ImplementationRecommendations analysis={analysis} formData={formData} />
+      </div>
       
-      <div className="implementation-plan">
+      <div className="implementation-plan whitespace-pre-line">
         <ImplementationPlan data={{
           objectives: formData.objectives,
           timeline: formData.timeline,
