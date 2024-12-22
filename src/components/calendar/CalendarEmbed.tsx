@@ -24,21 +24,23 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
 
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
   const { handleEventScheduled } = useCalendlyEvents({ 
-    formData: formData || null, 
+    formData: formData || undefined, 
     onBookingSuccess: onSubmit || (() => {}) 
   });
 
   useEffect(() => {
-    const maxAttempts = 10;
-    const attemptInterval = 1000; // 1 second between attempts
+    const maxAttempts = 20;
+    const attemptInterval = 500; // 0.5 second between attempts
 
     const initializeCalendly = () => {
       if (!window.Calendly) {
         if (initAttempts.current < maxAttempts) {
+          console.log(`CalendarEmbed - Attempt ${initAttempts.current + 1} to initialize Calendly`);
           initAttempts.current++;
           setTimeout(initializeCalendly, attemptInterval);
           return;
         }
+        console.error("CalendarEmbed - Failed to initialize Calendly after maximum attempts");
         toast({
           title: "Error",
           description: "Failed to load calendar. Please refresh the page.",
@@ -84,10 +86,10 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   }, [formData, getPrefillData, handleEventScheduled, toast]);
 
   return (
-    <div className="calendly-embed min-h-[600px] w-full">
+    <div className="calendly-embed min-h-[700px] w-full">
       <div 
         ref={calendarRef}
-        className="calendly-inline-widget w-full min-h-[600px]"
+        className="calendly-inline-widget w-full min-h-[700px]"
       />
     </div>
   );
