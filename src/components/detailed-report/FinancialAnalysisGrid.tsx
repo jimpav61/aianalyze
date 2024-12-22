@@ -17,23 +17,23 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
     
     return {
       ...item,
-      savings: financials.savings.amount.toString(),
-      profit_increase: financials.profit.percentage.toString(),
+      savings: financials.savingsAmount.toString(),
+      profit_increase: financials.profitPercentage.toString(),
       explanation: item.explanation,
       marketingStrategy: item.marketingStrategy,
-      actualProfitIncrease: financials.profit.amount.toString(),
-      savingsPercentage: financials.savings.percentage.toString()
+      actualProfitIncrease: financials.profitAmount.toString(),
+      savingsPercentage: financials.savingsPercentage.toString()
     };
   }) || [{
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
-    savings: calculateFinancials(revenue, analysis.department).savings.amount.toString(),
-    profit_increase: calculateFinancials(revenue, analysis.department).profit.percentage.toString(),
+    savings: calculateFinancials(revenue, analysis.department).savingsAmount.toString(),
+    profit_increase: calculateFinancials(revenue, analysis.department).profitPercentage.toString(),
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy,
-    actualProfitIncrease: calculateFinancials(revenue, analysis.department).profit.amount.toString(),
-    savingsPercentage: calculateFinancials(revenue, analysis.department).savings.percentage.toString()
+    actualProfitIncrease: calculateFinancials(revenue, analysis.department).profitAmount.toString(),
+    savingsPercentage: calculateFinancials(revenue, analysis.department).savingsPercentage.toString()
   }];
 
   return (
