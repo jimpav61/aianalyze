@@ -32,7 +32,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
 
     // Generate report content with proper line breaks
     tempContainer.innerHTML = `
-      <div style="font-family: Arial, sans-serif; padding: 40px; white-space: pre-wrap; word-wrap: break-word;">
+      <div style="font-family: Arial, sans-serif; padding: 40px; white-space: pre-line;">
         <div style="margin-bottom: 30px;">
           <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">AI Analysis Report</h1>
           <h2 style="color: #666; font-size: 18px;">Company Information</h2>
@@ -47,16 +47,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           <p><strong>Function:</strong> ${analysis.bot_function}</p>
           <p><strong>Annual Savings:</strong> $${analysis.savings.toLocaleString()}</p>
           <p><strong>Profit Increase:</strong> ${analysis.profit_increase}%</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
+          <p><strong>Implementation Strategy:</strong>\n${analysis.explanation}</p>
+          <p><strong>Marketing Strategy:</strong>\n${analysis.marketing_strategy}</p>
         </div>
 
         <div style="margin-bottom: 30px;">
           <h2 style="color: #666; font-size: 18px;">Implementation Details</h2>
           <p><strong>Timeline:</strong> ${formData.timeline}</p>
           <p><strong>Budget Range:</strong> ${formData.budget}</p>
-          <p style="white-space: pre-wrap; margin: 15px 0;"><strong>Objectives:</strong>\n${formData.objectives}</p>
-          ${formData.additionalInfo ? `<p style="white-space: pre-wrap; margin: 15px 0;"><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
+          <p><strong>Objectives:</strong>\n${formData.objectives}</p>
+          ${formData.additionalInfo ? `<p><strong>Additional Information:</strong>\n${formData.additionalInfo}</p>` : ''}
         </div>
       </div>
     `;
