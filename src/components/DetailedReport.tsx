@@ -24,8 +24,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   }
 
   return (
-    <div className="relative w-full">
-      <div className="mb-6 px-4 sm:px-0">
+    <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
+      <div className="mb-6">
         <ReportActions 
           formData={data}
           analysis={analysis}
