@@ -43,16 +43,26 @@ export const DetailedAnalysisDialog = ({
     hasFormData: !!formData,
     showFormOnly,
     hasAnalysis: !!analysis,
+    formDataContent: formData,
+    analysisContent: analysis
   });
 
   const onBookDemo = () => {
+    console.log("DetailedAnalysisDialog - Book demo clicked with data:", {
+      formData,
+      analysis
+    });
+    
     const success = handleBookDemo(formData);
     if (!success) {
+      console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
       toast({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
       });
+    } else {
+      console.log("DetailedAnalysisDialog - Book demo successful");
     }
   };
 

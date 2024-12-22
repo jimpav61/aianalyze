@@ -27,7 +27,18 @@ export const CloseConfirmationDialog = ({
       e.stopPropagation();
     }
 
+    console.log("CloseConfirmationDialog - Starting download with:", {
+      hasFormData: !!formData,
+      formDataContent: formData,
+      hasAnalysis: !!analysis,
+      analysisContent: analysis
+    });
+
     if (!formData || !analysis) {
+      console.error("CloseConfirmationDialog - Missing required data:", {
+        formData,
+        analysis
+      });
       toast({
         title: "Error",
         description: "Report data not available.",
@@ -37,9 +48,14 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      console.log("Starting PDF generation with data:", { formData, analysis });
+      console.log("CloseConfirmationDialog - Generating PDF with data:", {
+        formData,
+        analysis
+      });
+      
       const pdf = await generateAnalysisReport({ formData, analysis });
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      console.log("CloseConfirmationDialog - PDF saved successfully");
       
       toast({
         title: "Success",
@@ -59,7 +75,7 @@ export const CloseConfirmationDialog = ({
         ),
       });
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("CloseConfirmationDialog - Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
