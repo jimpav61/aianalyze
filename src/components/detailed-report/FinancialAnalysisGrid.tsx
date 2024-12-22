@@ -12,7 +12,7 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
   console.log('Calculated revenue:', revenue);
   
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => {
-    const financials = calculateFinancials(revenue, item.department);
+    const financials = calculateFinancials(revenue, item.department, formData.industry);
     console.log('Financials for', item.department, ':', financials);
     
     return {
@@ -28,12 +28,12 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
     id: crypto.randomUUID(),
     department: analysis.department,
     function: analysis.bot_function,
-    savings: calculateFinancials(revenue, analysis.department).savingsAmount.toString(),
-    profit_increase: calculateFinancials(revenue, analysis.department).profitPercentage.toString(),
+    savings: calculateFinancials(revenue, analysis.department, formData.industry).savingsAmount.toString(),
+    profit_increase: calculateFinancials(revenue, analysis.department, formData.industry).profitPercentage.toString(),
     explanation: analysis.explanation,
     marketingStrategy: analysis.marketing_strategy,
-    actualProfitIncrease: calculateFinancials(revenue, analysis.department).profitAmount.toString(),
-    savingsPercentage: calculateFinancials(revenue, analysis.department).savingsPercentage.toString()
+    actualProfitIncrease: calculateFinancials(revenue, analysis.department, formData.industry).profitAmount.toString(),
+    savingsPercentage: calculateFinancials(revenue, analysis.department, formData.industry).savingsPercentage.toString()
   }];
 
   return (
