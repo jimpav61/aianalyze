@@ -63,6 +63,21 @@ export const DetailedAnalysisForm = ({
     console.log("DetailedAnalysisForm - Input changed:", { name, value });
   };
 
+  const getFieldLabel = (field: string): string => {
+    const labels: { [key: string]: string } = {
+      companyName: "Company Name",
+      ownerName: "Owner Name",
+      email: "Email Address",
+      revenue: "Annual Revenue",
+      serviceChannels: "Service Channels",
+      monthlyInteractions: "Monthly Interactions",
+      objectives: "Business Objectives",
+      timeline: "Implementation Timeline",
+      budget: "Budget Range"
+    };
+    return labels[field] || field.replace(/([A-Z])/g, ' $1').toLowerCase();
+  };
+
   const validateStep = (step: number) => {
     console.log("DetailedAnalysisForm - Validating step:", step);
     
@@ -79,9 +94,9 @@ export const DetailedAnalysisForm = ({
     if (missingFields.length > 0) {
       console.warn("DetailedAnalysisForm - Missing required fields:", missingFields);
       toast({
-        title: "Required Fields Missing",
-        description: `Please fill out the following fields: ${missingFields
-          .map((f) => f.replace(/([A-Z])/g, " $1").toLowerCase())
+        title: "Required Information Missing",
+        description: `Please provide your ${missingFields
+          .map((f) => getFieldLabel(f))
           .join(", ")}`,
         variant: "destructive",
       });
@@ -108,8 +123,8 @@ export const DetailedAnalysisForm = ({
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
       toast({
-        title: "Error",
-        description: "Unable to generate report. Please try again.",
+        title: "Unable to Generate Report",
+        description: "We encountered an issue while processing your request. Please try again.",
         variant: "destructive",
       });
       return;
