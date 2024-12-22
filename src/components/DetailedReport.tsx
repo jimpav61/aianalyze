@@ -24,12 +24,14 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   }
 
   return (
-    <div className="relative">
-      <ReportActions 
-        formData={data}
-        analysis={analysis}
-        onBookDemo={onBookDemo}
-      />
+    <div className="relative w-full">
+      <div className="mb-6 px-4 sm:px-0">
+        <ReportActions 
+          formData={data}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
+      </div>
       <div className="mt-6">
         <ReportContent 
           formData={data}

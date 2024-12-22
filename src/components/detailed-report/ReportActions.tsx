@@ -11,7 +11,7 @@ interface ReportActionsProps {
 
 export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsProps) => {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full sm:w-auto">
       <DownloadReportButton 
         formData={formData} 
         analysis={analysis}
@@ -20,7 +20,7 @@ export const ReportActions = ({ onBookDemo, formData, analysis }: ReportActionsP
       {onBookDemo && (
         <Button 
           onClick={onBookDemo}
-          className="bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+          className="bg-[#f65228] hover:bg-[#f65228]/90 text-white w-full sm:w-auto"
         >
           Book a Demo
         </Button>
