@@ -13,40 +13,41 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    console.log("DownloadReportButton - Starting download with:", {
+    console.log("[DOWNLOAD TEST] DownloadReportButton - Starting download with:", {
       hasFormData: !!formData,
       formDataContent: formData,
       hasAnalysis: !!analysis,
+      analysisContent: analysis,
       timestamp: new Date().toISOString()
     });
 
     try {
       if (!formData || !analysis) {
-        console.error("DownloadReportButton - Missing required data:", {
+        console.error("[DOWNLOAD TEST] DownloadReportButton - Missing required data:", {
           formData,
           analysis
         });
         throw new Error("Report data not available");
       }
 
-      console.log("DownloadReportButton - Generating full PDF report with data:", {
+      console.log("[DOWNLOAD TEST] DownloadReportButton - Generating full PDF report with data:", {
         formData,
         analysis,
         timestamp: new Date().toISOString()
       });
       
       const pdf = await generateAnalysisReport({ formData, analysis });
-      console.log("DownloadReportButton - PDF generated successfully");
+      console.log("[DOWNLOAD TEST] DownloadReportButton - PDF generated successfully");
       
       pdf.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-      console.log("DownloadReportButton - PDF saved successfully");
+      console.log("[DOWNLOAD TEST] DownloadReportButton - PDF saved successfully");
 
       toast({
         title: "Success",
-        description: "Your detailed analysis report has been downloaded",
+        description: "Full report downloaded successfully",
       });
     } catch (error) {
-      console.error('DownloadReportButton - Error generating PDF:', error);
+      console.error('[DOWNLOAD TEST] DownloadReportButton - Error generating PDF:', error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",

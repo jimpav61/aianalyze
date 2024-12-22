@@ -19,15 +19,16 @@ export const useBookingSuccess = ({
   const { toast } = useToast();
 
   const handleDownload = useCallback(async () => {
-    console.log("BookingSuccess - Download attempt with data:", {
+    console.log("[DOWNLOAD TEST] BookingSuccess - Download attempt with data:", {
       hasFormData: !!formData,
       formDataContent: formData,
       hasAnalysis: !!analysis,
+      analysisContent: analysis,
       timestamp: new Date().toISOString()
     });
 
     if (!formData || !analysis) {
-      console.error("BookingSuccess - Missing required data:", {
+      console.error("[DOWNLOAD TEST] BookingSuccess - Missing required data:", {
         formData,
         analysis
       });
@@ -41,23 +42,23 @@ export const useBookingSuccess = ({
     }
 
     try {
-      console.log("BookingSuccess - Generating full PDF report with data:", {
+      console.log("[DOWNLOAD TEST] BookingSuccess - Generating full PDF report with data:", {
         formData,
         analysis,
         timestamp: new Date().toISOString()
       });
       
       const doc = await generateAnalysisReport({ formData, analysis });
-      console.log("BookingSuccess - PDF generated successfully, attempting save...");
+      console.log("[DOWNLOAD TEST] BookingSuccess - PDF generated successfully, attempting save...");
       doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
-      console.log("BookingSuccess - PDF saved successfully");
+      console.log("[DOWNLOAD TEST] BookingSuccess - PDF saved successfully");
       
       toast({
         title: "Success",
-        description: "Your detailed analysis report has been downloaded",
+        description: "Full report downloaded successfully!",
       });
     } catch (error) {
-      console.error("BookingSuccess - PDF Generation/Download error:", error);
+      console.error("[DOWNLOAD TEST] BookingSuccess - PDF Generation/Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
@@ -67,7 +68,7 @@ export const useBookingSuccess = ({
   }, [formData, analysis, toast]);
 
   const handleBookingSuccess = useCallback(() => {
-    console.log("BookingSuccess - Booking success handler triggered with data:", {
+    console.log("[DOWNLOAD TEST] BookingSuccess - Booking success handler triggered with data:", {
       formData,
       analysis,
       timestamp: new Date().toISOString()

@@ -15,29 +15,29 @@ interface ReportContentProps {
 
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   return (
-    <div id="detailed-report" className="space-y-8 bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-full overflow-x-hidden">
+    <div id="detailed-report" className="space-y-6 bg-white p-4 sm:p-8 rounded-lg max-w-full overflow-x-hidden">
       <ReportHeader />
       
-      <div className="company-info">
+      <div className="company-info whitespace-pre-line">
         <CompanyInformation data={formData} industry={analysis?.industry} />
       </div>
       
-      <div className="current-operations">
+      <div className="current-operations whitespace-pre-line">
         <CurrentOperations data={formData} />
       </div>
       
-      <div className="analysis-results">
+      <div className="analysis-results whitespace-pre-line">
         <AnalysisResults 
           analyses={analysis.allAnalyses || [analysis]} 
           revenue={formData.revenue}
         />
       </div>
 
-      <div className="implementation-recommendations">
+      <div className="implementation-recommendations whitespace-pre-line">
         <ImplementationRecommendations analysis={analysis} formData={formData} />
       </div>
       
-      <div className="implementation-plan">
+      <div className="implementation-plan whitespace-pre-line">
         <ImplementationPlan data={{
           objectives: formData.objectives,
           timeline: formData.timeline,

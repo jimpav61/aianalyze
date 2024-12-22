@@ -16,11 +16,10 @@ export const generateAnalysis = async (industry: string) => {
       throw error;
     }
 
-    // Always show sample data if no data exists for the industry
     if (!data || data.length === 0) {
       console.log('generateAnalysis - No data found for industry:', industry);
       
-      // Sample data for display
+      // Insert sample data for the industry
       const sampleAnalyses = [
         {
           industry,
@@ -51,9 +50,20 @@ export const generateAnalysis = async (industry: string) => {
         }
       ];
 
-      // Return the sample data directly without inserting into database
-      return sampleAnalyses.map(item => ({
-        id: crypto.randomUUID(),
+      // Insert the sample analyses
+      const { data: insertedData, error: insertError } = await supabase
+        .from('analyses')
+        .insert(sampleAnalyses)
+        .select();
+
+      if (insertError) {
+        console.error('generateAnalysis - Error inserting sample data:', insertError);
+        throw insertError;
+      }
+
+      console.log('generateAnalysis - Inserted sample data:', insertedData);
+      return insertedData.map(item => ({
+        id: item.id,
         department: item.department,
         function: item.bot_function,
         savings: item.savings.toString(),
