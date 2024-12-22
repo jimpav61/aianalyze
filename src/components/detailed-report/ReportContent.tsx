@@ -16,25 +16,22 @@ interface ReportContentProps {
 export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   console.log("ReportContent - Analysis data:", analysis);
   
-  // Calculate actual savings and profit based on revenue
+  // Calculate actual savings and profit based on revenue and department
   const calculateFinancials = () => {
     // Extract the revenue range and convert to a number for calculations
     const revenueStr = formData.revenue;
     let revenue: number;
 
     if (revenueStr.includes('million')) {
-      // Handle million+ range
       if (revenueStr.includes('1 million+')) {
-        revenue = 1000000; // Use 1 million as base for calculations
+        revenue = 1000000;
       } else {
         const match = revenueStr.match(/\$(\d+(?:\.\d+)?)/);
         revenue = match ? parseFloat(match[1]) * 1000000 : 0;
       }
     } else {
-      // Handle ranges like "$10,000 - $50,000"
       const match = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
       if (match && match.length >= 1) {
-        // Use the lower bound of the range for conservative estimates
         revenue = parseFloat(match[0].replace(/[$,]/g, ''));
       } else {
         revenue = 0;
@@ -50,12 +47,34 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
       };
     }
 
-    // Calculate savings based on the provided savings value from analysis
-    const savingsAmount = parseFloat(analysis.savings);
-    const savingsPercentage = (savingsAmount / revenue) * 100;
+    // Department-specific calculation factors
+    const departmentFactors: Record<string, { savingsPercent: number, profitPercent: number }> = {
+      'Customer Service': {
+        savingsPercent: 25, // 25% potential savings in customer service costs
+        profitPercent: 8    // 8% profit increase through better customer retention
+      },
+      'Marketing': {
+        savingsPercent: 15, // 15% savings in marketing spend
+        profitPercent: 12   // 12% profit increase through better targeting
+      },
+      'Sales': {
+        savingsPercent: 20, // 20% savings in sales operations
+        profitPercent: 15   // 15% profit increase through better conversion
+      }
+    };
+
+    // Get department-specific factors or use default values
+    const factors = departmentFactors[analysis.department] || {
+      savingsPercent: 10,
+      profitPercent: 5
+    };
+
+    // Calculate department-specific savings
+    const savingsAmount = (revenue * (factors.savingsPercent / 100));
+    const savingsPercentage = factors.savingsPercent;
     
-    // Calculate profit increase based on the provided percentage
-    const profitPercentage = parseFloat(analysis.profit_increase);
+    // Calculate department-specific profit increase
+    const profitPercentage = factors.profitPercent;
     const profitAmount = (revenue * (profitPercentage / 100));
     
     console.log("Financial calculations:", {
@@ -63,7 +82,8 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
       savingsAmount,
       savingsPercentage,
       profitAmount,
-      profitPercentage
+      profitPercentage,
+      department: analysis.department
     });
 
     return {
@@ -81,14 +101,39 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   const financials = calculateFinancials();
 
   const analysesForGrid = analysis.allAnalyses?.map((item: any) => {
+    // Calculate department-specific financials for each analysis
+    const departmentFactors: Record<string, { savingsPercent: number, profitPercent: number }> = {
+      'Customer Service': {
+        savingsPercent: 25,
+        profitPercent: 8
+      },
+      'Marketing': {
+        savingsPercent: 15,
+        profitPercent: 12
+      },
+      'Sales': {
+        savingsPercent: 20,
+        profitPercent: 15
+      }
+    };
+
+    const factors = departmentFactors[item.department] || {
+      savingsPercent: 10,
+      profitPercent: 5
+    };
+
+    const revenueNum = parseFloat(formData.revenue.replace(/[^0-9.]/g, '')) || 0;
+    const savingsAmount = Math.round(revenueNum * (factors.savingsPercent / 100));
+    const profitAmount = Math.round(revenueNum * (factors.profitPercent / 100));
+
     return {
       ...item,
-      savings: financials.savings.amount.toString(),
-      profit_increase: financials.profit.percentage.toString(),
+      savings: savingsAmount.toString(),
+      profit_increase: factors.profitPercent.toString(),
       explanation: item.explanation,
-      marketingStrategy: item.marketing_strategy,
-      actualProfitIncrease: financials.profit.amount.toString(),
-      savingsPercentage: financials.savings.percentage.toString()
+      marketingStrategy: item.marketingStrategy,
+      actualProfitIncrease: profitAmount.toString(),
+      savingsPercentage: factors.savingsPercent.toString()
     };
   }) || [{
     id: crypto.randomUUID(),
