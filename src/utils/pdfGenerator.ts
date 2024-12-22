@@ -1,8 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import html2canvas from 'html2canvas';
-import { processAllImages } from "./pdf/imageProcessing";
-import { formatCurrency, formatPercentage, formatText } from "./pdf/formatters";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -32,12 +30,11 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
     // Replace purple backgrounds with white and adjust text colors
-    const elements = clonedReport.getElementsByClassName('bg-[#E5DEFF]');
-    while (elements.length > 0) {
-      const element = elements[0];
-      element.classList.remove('bg-[#E5DEFF]');
+    const purpleElements = clonedReport.querySelectorAll('[class*="bg-[#E5DEFF]"], [class*="bg-[#F1F0FB]"]');
+    purpleElements.forEach(element => {
+      element.classList.remove('bg-[#E5DEFF]', 'bg-[#F1F0FB]');
       element.classList.add('bg-white');
-    }
+    });
 
     // Process all text colors to #f65228
     const textElements = clonedReport.querySelectorAll('[class*="text-"]');
@@ -47,17 +44,43 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       element.className = `${newClasses} text-[#f65228]`;
     });
 
-    // Create temporary container
+    // Create temporary container with proper styling
     const tempContainer = document.createElement('div');
     tempContainer.id = 'temp-report-container';
-    tempContainer.style.cssText = 'position: absolute; left: -9999px; width: 800px; background-color: #ffffff;';
+    tempContainer.style.cssText = `
+      position: absolute;
+      left: -9999px;
+      width: 800px;
+      background-color: #ffffff;
+      padding: 40px;
+      font-family: Arial, sans-serif;
+    `;
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Process images
-    await processAllImages(tempContainer);
+    // Ensure all content is properly styled
+    const allElements = tempContainer.getElementsByTagName('*');
+    for (let i = 0; i < allElements.length; i++) {
+      const el = allElements[i] as HTMLElement;
+      if (el.style) {
+        el.style.whiteSpace = 'pre-wrap';
+        el.style.wordBreak = 'break-word';
+        
+        // Ensure proper spacing
+        if (el.tagName === 'DIV') {
+          el.style.marginBottom = '16px';
+        }
+        
+        // Ensure proper text sizing
+        if (el.tagName === 'H2' || el.tagName === 'H3') {
+          el.style.fontSize = '20px';
+          el.style.fontWeight = '600';
+          el.style.marginBottom = '16px';
+        }
+      }
+    }
 
-    // Generate PDF from the actual content
+    // Generate PDF with proper scaling
     const canvas = await html2canvas(tempContainer, {
       scale: 2,
       useCORS: true,
@@ -68,20 +91,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       height: tempContainer.scrollHeight,
       windowWidth: 800,
       onclone: (document, element) => {
-        // Ensure proper text wrapping
-        const allTextElements = element.getElementsByTagName('*');
-        for (let i = 0; i < allTextElements.length; i++) {
-          const el = allTextElements[i] as HTMLElement;
-          if (el.style) {
-            el.style.whiteSpace = 'pre-wrap';
-            el.style.wordBreak = 'break-word';
-          }
-        }
+        // Additional styling for cloned element
+        element.style.height = 'auto';
+        element.style.overflow = 'visible';
       }
     });
 
+    // Clean up temporary container
     document.body.removeChild(tempContainer);
 
+    // Create PDF with proper dimensions
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
