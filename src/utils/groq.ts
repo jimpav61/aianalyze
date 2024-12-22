@@ -30,6 +30,24 @@ export const generateAnalysis = async (industry: string) => {
           profit_increase: 15,
           explanation: "Implementation of AI chatbot system to handle customer inquiries and support tickets automatically, reducing response time and staff workload.",
           marketing_strategy: "Enhance customer experience with instant support availability and consistent service quality."
+        },
+        {
+          industry,
+          department: "Sales",
+          bot_function: "Lead Qualification & Scoring",
+          savings: 35000,
+          profit_increase: 12,
+          explanation: "AI-powered lead scoring system to automatically qualify and prioritize sales leads, improving conversion rates and sales efficiency.",
+          marketing_strategy: "Accelerate sales cycle and improve prospect engagement through intelligent lead nurturing."
+        },
+        {
+          industry,
+          department: "Marketing",
+          bot_function: "Content Personalization",
+          savings: 25000,
+          profit_increase: 10,
+          explanation: "AI-driven content personalization engine to deliver targeted marketing messages and recommendations to different customer segments.",
+          marketing_strategy: "Increase engagement and conversion rates through personalized customer experiences."
         }
       ];
 
