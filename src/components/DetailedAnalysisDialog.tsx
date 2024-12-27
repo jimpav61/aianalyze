@@ -32,7 +32,7 @@ export const DetailedAnalysisDialog = ({
   } = useDialogHandling({ 
     onClose, 
     showFormOnly,
-    resetOnClose: false // Changed to false to preserve form state
+    resetOnClose: false
   });
 
   const {
@@ -69,10 +69,7 @@ export const DetailedAnalysisDialog = ({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
-        duration: 1500, // Set to 1.5 seconds
-        onCloseComplete: () => {
-          // Do nothing on close to prevent page refresh
-        }
+        duration: 1500
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
