@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
 import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
@@ -7,7 +8,6 @@ import { useBookingHandling } from "./detailed-analysis/hooks/useBookingHandling
 import { DialogStateManager } from "./detailed-analysis/dialog/DialogStateManager";
 import { DialogDebugger } from "./detailed-analysis/dialog/DialogDebugger";
 import { DialogMainContent } from "./detailed-analysis/dialog/DialogMainContent";
-import { useEffect } from "react";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
