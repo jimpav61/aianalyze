@@ -19,11 +19,6 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
-  if (!data || !analysis) {
-    console.error("DetailedReport - Missing required data:", { data, analysis });
-    return null;
-  }
-
   console.log("DetailedReport - Rendering with data:", {
     formData: data,
     analysis,
@@ -31,6 +26,11 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     hasAllAnalyses: !!analysis.allAnalyses,
     analysesLength: analyses.length
   });
+
+  if (!data || !analysis) {
+    console.error("DetailedReport - Missing required data:", { data, analysis });
+    return null;
+  }
 
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
