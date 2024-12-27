@@ -45,7 +45,11 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
 
   return (
     <div className="flex flex-wrap gap-4 items-center justify-end">
-      <Button onClick={onBookDemo} size="sm" className="bg-[#f65228] hover:bg-[#d43d16] text-white">
+      <Button 
+        onClick={onBookDemo} 
+        size="sm" 
+        className="bg-[#f65228] hover:bg-[#d43d16] text-white"
+      >
         Book Demo
       </Button>
       <Button 

@@ -41,7 +41,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   }
 
   // Ensure analyses are properly structured
-  const processedAnalyses = analysis.allAnalyses || [analysis];
+  const processedAnalyses = analysis.allAnalyses || analyses || [analysis];
   const primaryAnalysis = {
     ...analysis,
     allAnalyses: processedAnalyses
