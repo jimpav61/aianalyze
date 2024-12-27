@@ -5,15 +5,15 @@ export interface DetailedFormData {
   phoneNumber: string;
   employees: string;
   revenue: string;
+  serviceChannels: string;
+  monthlyInteractions: string;
+  currentTools: string;
+  painPoints: string;
   objectives: string;
   timeline: string;
   budget: string;
   additionalInfo: string;
   industry: string;
-  serviceChannels: string;
-  monthlyInteractions: string;
-  currentTools: string;
-  painPoints: string;
 }
 
 export interface AnalysisData {

@@ -22,6 +22,7 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
       timeline: "",
       budget: "",
       additionalInfo: "",
+      industry: "",
     };
   });
 
