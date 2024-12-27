@@ -28,12 +28,6 @@ export const StepNavigation = ({
       onNext();
     } else {
       console.log("StepNavigation - Validation failed");
-      toast({
-        title: "Validation Error",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-        duration: 3000,
-      });
     }
   };
 

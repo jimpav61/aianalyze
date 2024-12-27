@@ -5,6 +5,7 @@ const getFieldLabel = (field: string): string => {
   const labels: { [key: string]: string } = {
     companyName: "Company Name",
     ownerName: "Owner Name",
+    revenue: "Annual Revenue",
     email: "Email",
     serviceChannels: "Service Channels",
     monthlyInteractions: "Monthly Interactions",
@@ -24,7 +25,7 @@ export function useFormValidation() {
     console.log("ValidationUtils - Validating step:", step, "Current form data:", formData);
     
     const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "ownerName", "email"],
+      1: ["companyName", "ownerName", "revenue"],
       2: ["serviceChannels", "monthlyInteractions", "currentTools", "painPoints"],
       3: ["objectives", "timeline", "budget"]
     };
