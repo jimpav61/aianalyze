@@ -57,7 +57,7 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
 
       try {
         window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/chatsites/demo',
+          url: 'https://calendly.com/jimmy-chatsites/30min',
           parentElement: calendarRef.current,
           prefill,
           utm: {
