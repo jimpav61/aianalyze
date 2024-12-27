@@ -92,7 +92,7 @@ export const useBookingSuccess = ({
       duration: 1500,
     });
 
-    // Use setTimeout to delay the submit callback
+    // Call submit callback without refreshing
     if (onSubmit) {
       setTimeout(() => {
         onSubmit();

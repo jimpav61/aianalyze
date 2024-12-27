@@ -1,17 +1,30 @@
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { DetailedFormData } from "@/types/analysis";
 
-interface UseEmailHandlerProps {
-  formData?: any;
+interface EmailHandlerProps {
+  formData?: DetailedFormData;
   analysis?: any;
   onSuccess?: () => void;
 }
 
-export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandlerProps) => {
+export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerProps) => {
   const { toast } = useToast();
 
   const sendEmails = async () => {
-    if (!formData || !analysis) {
-      console.error('EmailHandler - Missing required data:', { formData, analysis });
+    console.log('EmailHandler - Attempting to send emails with data:', {
+      formData,
+      analysis
+    });
+
+    if (!formData?.email) {
+      console.error('EmailHandler - Missing email address');
+      toast({
+        title: "Error",
+        description: "Email address is required.",
+        variant: "destructive",
+        duration: 1500,
+      });
       return;
     }
 
@@ -37,7 +50,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
         duration: 1500,
       });
 
-      // Use setTimeout to delay the success callback
+      // Call success callback without refreshing
       if (onSuccess) {
         setTimeout(() => {
           onSuccess();

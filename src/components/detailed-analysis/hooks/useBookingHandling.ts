@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { DetailedFormData } from "@/types/analysis";
 import { useToast } from "@/hooks/use-toast";
+import { DetailedFormData } from "@/types/analysis";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
 
 interface UseBookingHandlingProps {
-  formData: DetailedFormData | null;
-  analysis: any;
+  formData?: DetailedFormData;
+  analysis?: any;
   onClose: () => void;
 }
 
@@ -17,13 +17,15 @@ export const useBookingHandling = ({
   const { toast } = useToast();
 
   const handleBookingSubmit = useCallback(async () => {
-    console.log("DetailedAnalysisDialog - Booking submitted successfully");
-    
+    console.log("DetailedAnalysisDialog - Handling booking submit with data:", {
+      formData,
+      analysis
+    });
+
     if (formData && analysis) {
       try {
-        const pdf = await generateAnalysisReport({ formData, analysis });
-        const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
-        pdf.save(fileName);
+        const doc = await generateAnalysisReport({ formData, analysis });
+        doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
         
         toast({
           title: "Demo Scheduled Successfully",
@@ -31,10 +33,9 @@ export const useBookingHandling = ({
           duration: 1500,
         });
 
-        // Use setTimeout to delay the close and reload
+        // Only close the dialog, no page refresh
         setTimeout(() => {
           onClose();
-          window.location.reload();
         }, 1500);
       } catch (error) {
         console.error("PDF Generation Error:", error);
