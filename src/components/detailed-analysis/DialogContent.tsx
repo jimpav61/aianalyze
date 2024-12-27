@@ -22,12 +22,13 @@ export const DialogContent = ({
     showReport, 
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
-    industry 
+    industry,
+    analysisData: analysis
   });
 
   // Show report if we have analysis data
   if (showReport && analysis) {
-    console.log("DialogContent - Showing report view");
+    console.log("DialogContent - Showing report view with analysis:", analysis);
     const defaultFormData: DetailedFormData = {
       companyName: "",
       ownerName: "",

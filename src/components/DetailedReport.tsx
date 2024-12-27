@@ -12,6 +12,7 @@ interface DetailedReportProps {
     profit_increase: number;
     explanation: string;
     marketing_strategy: string;
+    allAnalyses?: any[];
   };
   analyses: any[];
   onBookDemo?: () => void;
@@ -22,6 +23,12 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     console.error("DetailedReport - Missing required data:", { data, analysis });
     return null;
   }
+
+  console.log("DetailedReport - Rendering with data:", {
+    formData: data,
+    analysis,
+    analyses
+  });
 
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
