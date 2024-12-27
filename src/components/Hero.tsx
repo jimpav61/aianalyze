@@ -30,7 +30,7 @@ export const Hero = ({
     if (analyses && analyses.length > 0) {
       console.log("Hero - Setting up analysis with data:", analyses);
       
-      // Create initial form data
+      // Create initial form data with all required fields
       const initialFormData: DetailedFormData = {
         companyName: "",
         ownerName: "",
@@ -38,6 +38,10 @@ export const Hero = ({
         phoneNumber: "",
         employees: "",
         revenue: "",
+        serviceChannels: "",
+        monthlyInteractions: "",
+        currentTools: "",
+        painPoints: "",
         objectives: "",
         timeline: "",
         budget: "",

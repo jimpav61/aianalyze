@@ -19,6 +19,7 @@ export const useDetailedAnalysisForm = (onSubmit: (data: DetailedFormData) => vo
     timeline: "",
     budget: "",
     additionalInfo: "",
+    industry: ""
   });
 
   const handleInputChange = (
