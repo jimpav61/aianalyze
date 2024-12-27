@@ -6,6 +6,7 @@ import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
 import { useDialogHandling } from "./detailed-analysis/useDialogHandling";
 import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -32,7 +33,7 @@ export const DetailedAnalysisDialog = ({
   } = useDialogHandling({ 
     onClose, 
     showFormOnly,
-    resetOnClose: true // Add this to ensure proper cleanup
+    resetOnClose: true
   });
 
   const {
@@ -42,9 +43,19 @@ export const DetailedAnalysisDialog = ({
   } = useCalendarHandling({ 
     onClose, 
     setShowReport,
-    formData, // Pass formData to ensure it's available for the calendar
-    analysis // Pass analysis to ensure it's available for the calendar
+    formData,
+    analysis
   });
+
+  // Add effect to scroll dialog to top when opened
+  useEffect(() => {
+    if (isOpen) {
+      const dialogContent = document.querySelector('[role="dialog"]');
+      if (dialogContent) {
+        dialogContent.scrollTop = 0;
+      }
+    }
+  }, [isOpen]);
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
