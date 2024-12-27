@@ -42,11 +42,11 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, onClick, ...props }, ref) => {
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (onClick) {
-      onClick(e);
+      onClick(e as React.MouseEvent<HTMLLIElement>);
     }
   };
 
