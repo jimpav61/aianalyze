@@ -27,11 +27,10 @@ export const DialogContent = ({
     analysisData: analysis
   });
 
-  // Show report if we have analysis data and form data
   if (showReport && analysis && formData) {
-    console.log("DialogContent - Showing report view with analysis and formData:", {
-      analysis,
-      formData
+    console.log("DialogContent - Showing report view with complete data:", {
+      formData,
+      analysis
     });
     
     return (

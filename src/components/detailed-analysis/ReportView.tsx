@@ -9,13 +9,18 @@ interface ReportViewProps {
 }
 
 export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportViewProps) => {
-  console.log("ReportView - Render:", { 
+  console.log("ReportView - Render with complete data:", { 
     formData,
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
     industry,
     analysisContent: analysis
   });
+
+  if (!formData || !analysis) {
+    console.error("ReportView - Missing required data:", { formData, analysis });
+    return null;
+  }
 
   const analysesForGrid = analysis.allAnalyses || [{
     id: crypto.randomUUID(),

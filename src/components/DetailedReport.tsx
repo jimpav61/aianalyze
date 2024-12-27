@@ -19,7 +19,7 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
-  console.log("DetailedReport - Rendering with data:", {
+  console.log("DetailedReport - Rendering with complete data:", {
     formData: data,
     analysis,
     analyses,

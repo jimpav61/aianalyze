@@ -51,17 +51,24 @@ export const DetailedAnalysisForm = ({
   }, [currentStep]);
 
   const handleNext = () => {
+    console.log("DetailedAnalysisForm - Moving to next step, current data:", formData);
     setCurrentStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
+    console.log("DetailedAnalysisForm - Moving to previous step");
     setCurrentStep((prev) => prev - 1);
   };
 
   const handleSubmit = async () => {
     try {
+      if (!formData) {
+        console.error("DetailedAnalysisForm - No form data available");
+        throw new Error("Form data is required");
+      }
+
       console.log("DetailedAnalysisForm - Submitting form with data:", {
-        ...formData,
+        formData,
         industry
       });
 
