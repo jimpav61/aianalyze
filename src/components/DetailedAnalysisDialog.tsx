@@ -49,6 +49,7 @@ export const DetailedAnalysisDialog = ({
 
   useEffect(() => {
     if (isOpen) {
+      // Reset scroll position when dialog opens or content changes
       window.scrollTo(0, 0);
       const dialogContent = document.querySelector('.dialog-content');
       if (dialogContent) {
@@ -73,8 +74,7 @@ export const DetailedAnalysisDialog = ({
       analysis
     });
     
-    const success = handleBookDemo(formData);
-    if (!success) {
+    if (!formData) {
       console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
       toast({
         title: "Error",
@@ -82,7 +82,11 @@ export const DetailedAnalysisDialog = ({
         variant: "destructive",
         duration: 1500,
       });
-    } else {
+      return;
+    }
+
+    const success = handleBookDemo(formData);
+    if (success) {
       console.log("DetailedAnalysisDialog - Book demo successful");
     }
   };
