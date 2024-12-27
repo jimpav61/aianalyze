@@ -54,7 +54,8 @@ export const ContactForm = () => {
       toast({
         title: "Form submitted!",
         description: "Thank you for your interest. We'll be in touch soon.",
-        className: "preserve-state"
+        className: "preserve-state",
+        duration: 5000,
       });
       form.reset();
     } catch (error) {
@@ -63,7 +64,8 @@ export const ContactForm = () => {
         title: "Error",
         description: "There was a problem submitting your form. Please try again.",
         variant: "destructive",
-        className: "preserve-state"
+        className: "preserve-state",
+        duration: 5000,
       });
     }
   }

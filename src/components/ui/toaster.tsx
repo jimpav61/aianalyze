@@ -23,10 +23,7 @@ export function Toaster() {
               )}
             </div>
             {action}
-            <ToastClose onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }} />
+            <ToastClose />
           </Toast>
         );
       })}
