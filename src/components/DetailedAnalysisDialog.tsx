@@ -47,15 +47,13 @@ export const DetailedAnalysisDialog = ({
     analysis
   });
 
-  // Add effect to scroll dialog to top when opened
+  // Add effect to scroll dialog to top when showReport changes
   useEffect(() => {
-    if (isOpen) {
-      const dialogContent = document.querySelector('[role="dialog"]');
-      if (dialogContent) {
-        dialogContent.scrollTop = 0;
-      }
+    const dialogContent = document.querySelector('.dialog-content');
+    if (dialogContent) {
+      dialogContent.scrollTop = 0;
     }
-  }, [isOpen]);
+  }, [showReport, showCalendar]);
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
@@ -89,22 +87,24 @@ export const DetailedAnalysisDialog = ({
   return (
     <>
       <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-        {showCalendar ? (
-          <CalendarView
-            onSubmit={handleBookingSubmit}
-            formData={formData}
-            analysis={analysis}
-          />
-        ) : (
-          <DialogContent
-            showReport={showReport && !showFormOnly}
-            formData={formData}
-            onSubmit={handleSubmit}
-            industry={industry}
-            analysis={analysis}
-            onBookDemo={onBookDemo}
-          />
-        )}
+        <div className="dialog-content">
+          {showCalendar ? (
+            <CalendarView
+              onSubmit={handleBookingSubmit}
+              formData={formData}
+              analysis={analysis}
+            />
+          ) : (
+            <DialogContent
+              showReport={showReport && !showFormOnly}
+              formData={formData}
+              onSubmit={handleSubmit}
+              industry={industry}
+              analysis={analysis}
+              onBookDemo={onBookDemo}
+            />
+          )}
+        </div>
       </DialogWrapper>
 
       <CloseConfirmationDialog
