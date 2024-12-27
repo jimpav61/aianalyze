@@ -26,7 +26,7 @@ export const AnalysisGrid = ({ analyses }: AnalysisGridProps) => {
         >
           <div>
             <h4 className="text-lg font-semibold mb-2 flex items-center gap-2">
-              <LineChart className="h-5 w-5 text-[#9b87f5]" />
+              <LineChart className="h-5 w-5 text-[#f65228]" />
               {analysis.department}
             </h4>
             <p className="text-sm text-gray-600 mb-4">{analysis.function}</p>
@@ -34,20 +34,20 @@ export const AnalysisGrid = ({ analyses }: AnalysisGridProps) => {
             <div className="mb-4 space-y-3">
               <div className="p-3 bg-[#F8F9FC] rounded-lg">
                 <p className="font-medium text-gray-700 flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-[#9b87f5]" />
+                  <DollarSign className="h-4 w-4 text-[#f65228]" />
                   Projected Annual Savings:
                 </p>
-                <p className="text-[#9b87f5] font-bold text-lg">
+                <p className="text-[#f65228] font-bold text-lg">
                   ${analysis.savings}
                 </p>
               </div>
               
               <div className="p-3 bg-[#F8F9FC] rounded-lg">
                 <p className="font-medium text-gray-700 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-[#9b87f5]" />
+                  <TrendingUp className="h-4 w-4 text-[#f65228]" />
                   Profit Increase:
                 </p>
-                <p className="text-[#9b87f5] font-bold text-lg">
+                <p className="text-[#f65228] font-bold text-lg">
                   {analysis.profit_increase}%
                 </p>
               </div>

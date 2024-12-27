@@ -8,15 +8,21 @@ export const calculateRevenue = (revenueStr: string): number => {
   }
 
   // Handle ranges like "$100,000 - $500,000"
-  const matches = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
+  const matches = revenueStr.match(/\$?(\d+(?:,\d{3})*(?:\.\d+)?)/g);
   if (matches && matches.length >= 1) {
-    if (matches.length === 2) {
-      const lowerBound = parseFloat(matches[0].replace(/[$,]/g, ''));
-      const upperBound = parseFloat(matches[1].replace(/[$,]/g, ''));
-      return Math.round((lowerBound + upperBound) / 2);
+    const numbers = matches.map(str => parseFloat(str.replace(/[$,]/g, '')));
+    if (numbers.length === 2) {
+      return Math.round((numbers[0] + numbers[1]) / 2);
     }
-    return parseFloat(matches[0].replace(/[$,]/g, ''));
+    return numbers[0];
   }
+
+  // Handle plain numbers
+  const plainNumber = parseFloat(revenueStr.replace(/[$,]/g, ''));
+  if (!isNaN(plainNumber)) {
+    return plainNumber;
+  }
+
   return 0;
 };
 
