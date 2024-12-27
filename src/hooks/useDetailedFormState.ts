@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DetailedFormData } from "@/types/analysis";
 
 export const useDetailedFormState = (initialData: DetailedFormData | null) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<DetailedFormData>(
-    initialData || {
+  const [formData, setFormData] = useState<DetailedFormData>(() => {
+    if (initialData) {
+      return { ...initialData };
+    }
+    return {
       companyName: "",
       ownerName: "",
       phoneNumber: "",
@@ -19,8 +22,15 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
       timeline: "",
       budget: "",
       additionalInfo: "",
+    };
+  });
+
+  // Preserve form data when component remounts
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
     }
-  );
+  }, [initialData]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

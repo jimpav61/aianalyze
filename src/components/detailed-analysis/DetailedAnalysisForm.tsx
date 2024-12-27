@@ -5,6 +5,8 @@ import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
+import { StepIndicator } from "./form/StepIndicator";
+import { useEffect } from "react";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -34,6 +36,14 @@ export const DetailedAnalysisForm = ({
     handleInputChange
   } = useDetailedFormState(initialData);
 
+  // Reset scroll position when step changes
+  useEffect(() => {
+    const scrollArea = document.querySelector('.scroll-area-viewport');
+    if (scrollArea) {
+      scrollArea.scrollTop = 0;
+    }
+  }, [currentStep]);
+
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
     formData, 
@@ -61,6 +71,7 @@ export const DetailedAnalysisForm = ({
 
   return (
     <>
+      <StepIndicator currentStep={currentStep} totalSteps={3} />
       <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
