@@ -31,26 +31,26 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
 
   // Use client's form data for the report
   const clientData = {
-    companyName: formData.companyName || "Not provided",
-    ownerName: formData.ownerName || "Not provided",
-    email: formData.email || "Not provided",
-    phoneNumber: formData.phoneNumber || "Not provided",
-    employees: formData.employees || "Not provided",
-    revenue: formData.revenue || "Not provided"
+    companyName: formData.companyName,
+    ownerName: formData.ownerName,
+    email: formData.email,
+    phoneNumber: formData.phoneNumber,
+    employees: formData.employees,
+    revenue: formData.revenue
   };
 
   const operationsData = {
-    serviceChannels: formData.serviceChannels || "Not provided",
-    monthlyInteractions: formData.monthlyInteractions || "Not provided",
-    currentTools: formData.currentTools || "Not provided",
-    painPoints: formData.painPoints || "Not provided"
+    serviceChannels: formData.serviceChannels,
+    monthlyInteractions: formData.monthlyInteractions,
+    currentTools: formData.currentTools,
+    painPoints: formData.painPoints
   };
 
   const implementationData = {
-    objectives: formData.objectives || "Not provided",
-    timeline: formData.timeline || "Not provided",
-    budget: formData.budget || "Not provided",
-    additionalInfo: formData.additionalInfo || "Not provided"
+    objectives: formData.objectives,
+    timeline: formData.timeline,
+    budget: formData.budget,
+    additionalInfo: formData.additionalInfo
   };
 
   return (

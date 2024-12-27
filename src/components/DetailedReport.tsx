@@ -40,19 +40,26 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
+  // Ensure analyses are properly structured
+  const processedAnalyses = analysis.allAnalyses || [analysis];
+  const primaryAnalysis = {
+    ...analysis,
+    allAnalyses: processedAnalyses
+  };
+
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
       <div className="mb-6">
         <ReportActions 
           formData={data}
-          analysis={analysis}
+          analysis={primaryAnalysis}
           onBookDemo={onBookDemo}
         />
       </div>
       <div className="mt-6">
         <ReportContent 
           formData={data}
-          analysis={analysis}
+          analysis={primaryAnalysis}
           onBookDemo={onBookDemo}
         />
       </div>
