@@ -47,7 +47,6 @@ export const DetailedAnalysisDialog = ({
     analysis
   });
 
-  // Reset scroll position when dialog opens or view changes
   useEffect(() => {
     if (isOpen) {
       window.scrollTo(0, 0);
@@ -81,7 +80,7 @@ export const DetailedAnalysisDialog = ({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
-        duration: 3000, // Added duration for consistency
+        duration: 1500,
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
