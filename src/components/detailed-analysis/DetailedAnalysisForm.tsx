@@ -5,8 +5,6 @@ import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
-import { useEffect, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -29,21 +27,12 @@ export const DetailedAnalysisForm = ({
   analysis,
   initialData
 }: DetailedAnalysisFormProps) => {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
   const {
     currentStep,
     setCurrentStep,
     formData,
     handleInputChange
   } = useDetailedFormState(initialData);
-
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      console.log("DetailedAnalysisForm - Forcing scroll to top");
-      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [currentStep]);
 
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
@@ -53,51 +42,26 @@ export const DetailedAnalysisForm = ({
     hasInitialData: !!initialData
   });
 
-  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("DetailedAnalysisForm - Moving to next step:", currentStep + 1);
+  const handleNext = () => {
     setCurrentStep((prev) => prev + 1);
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   };
 
-  const handleBack = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("DetailedAnalysisForm - Moving to previous step:", currentStep - 1);
+  const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("DetailedAnalysisForm - Attempting to submit form with data:", formData);
+  const handleSubmit = () => {
+    console.log("DetailedAnalysisForm - Attempting to submit form");
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
-      toast({
-        title: "Error",
-        description: "Unable to submit form. Missing analysis data.",
-        variant: "destructive",
-        duration: 3000,
-      });
       return;
     }
     onSubmit(formData);
   };
 
-  const preventFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   return (
-    <form onSubmit={preventFormSubmit} className="w-full">
-      <ScrollArea ref={scrollAreaRef} className="h-[calc(80vh-10rem)] pr-4">
+    <>
+      <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
             formData={formData}
@@ -125,6 +89,6 @@ export const DetailedAnalysisForm = ({
         onBack={handleBack}
         onSubmit={handleSubmit}
       />
-    </form>
+    </>
   );
 };

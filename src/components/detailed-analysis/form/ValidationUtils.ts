@@ -1,58 +1,50 @@
 import { DetailedFormData } from "@/types/analysis";
 import { useToast } from "@/hooks/use-toast";
 
-const getFieldLabel = (field: string): string => {
+export const getFieldLabel = (field: string): string => {
   const labels: { [key: string]: string } = {
     companyName: "Company Name",
     ownerName: "Owner Name",
+    email: "Email Address",
     revenue: "Annual Revenue",
-    email: "Email",
     serviceChannels: "Service Channels",
     monthlyInteractions: "Monthly Interactions",
-    currentTools: "Current Tools",
-    painPoints: "Pain Points",
-    objectives: "Objectives",
-    timeline: "Timeline",
-    budget: "Budget"
+    objectives: "Business Objectives",
+    timeline: "Implementation Timeline",
+    budget: "Budget Range"
   };
-  return labels[field] || field;
+  return labels[field] || field.replace(/([A-Z])/g, ' $1').toLowerCase();
 };
 
-export function useFormValidation() {
+export const useFormValidation = () => {
   const { toast } = useToast();
-  
+
   const validateStep = (step: number, formData: DetailedFormData) => {
-    console.log("ValidationUtils - Validating step:", step, "Current form data:", formData);
+    console.log("Validating step:", step, "Current form data:", formData);
     
     const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "ownerName", "revenue"],
-      2: ["serviceChannels", "monthlyInteractions", "currentTools", "painPoints"],
-      3: ["objectives", "timeline", "budget"]
+      1: ["companyName", "ownerName", "email", "revenue"],
+      2: ["serviceChannels", "monthlyInteractions"],
+      3: ["objectives", "timeline", "budget"],
     };
 
-    const missingFields = requiredFields[step]?.filter(
-      (field) => {
-        const value = formData[field as keyof DetailedFormData];
-        return !value || (typeof value === 'string' && !value.trim());
-      }
+    const missingFields = requiredFields[step].filter(
+      (field) => !formData[field as keyof DetailedFormData]?.trim()
     );
 
-    if (missingFields?.length > 0) {
-      console.warn("ValidationUtils - Missing required fields:", missingFields);
+    if (missingFields.length > 0) {
+      console.warn("Missing required fields:", missingFields);
       toast({
-        title: "Required Fields Missing",
-        description: `Please fill out: ${missingFields
+        title: "Required Information Missing",
+        description: `Please provide your ${missingFields
           .map((f) => getFieldLabel(f))
           .join(", ")}`,
         variant: "destructive",
-        duration: 3000,
       });
       return false;
     }
-    
-    console.log("ValidationUtils - Validation passed for step:", step);
     return true;
   };
 
   return { validateStep };
-}
+};

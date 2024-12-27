@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useFormValidation } from "./ValidationUtils";
 import { DetailedFormData } from "@/types/analysis";
-import { useToast } from "@/hooks/use-toast";
 
 interface StepNavigationProps {
   currentStep: number;
   formData: DetailedFormData;
-  onNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onNext: () => void;
+  onBack: () => void;
+  onSubmit: () => void;
 }
 
 export const StepNavigation = ({
@@ -19,48 +18,26 @@ export const StepNavigation = ({
   onSubmit,
 }: StepNavigationProps) => {
   const { validateStep } = useFormValidation();
-  const { toast } = useToast();
 
-  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleNext = () => {
     console.log("StepNavigation - Attempting to move to next step");
     if (validateStep(currentStep, formData)) {
-      console.log("StepNavigation - Validation passed, moving to next step");
-      onNext(e);
-    } else {
-      console.log("StepNavigation - Validation failed");
-    }
-  };
-
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("StepNavigation - Attempting to submit");
-    if (validateStep(currentStep, formData)) {
-      console.log("StepNavigation - Validation passed, submitting");
-      onSubmit(e);
-    } else {
-      console.log("StepNavigation - Validation failed");
+      onNext();
+      console.log("StepNavigation - Moving to next step");
     }
   };
 
   return (
     <div className="flex justify-between mt-6">
       {currentStep > 1 && (
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={onBack}
-          className="w-24"
-        >
+        <Button type="button" variant="outline" onClick={onBack} className="w-24">
           Back
         </Button>
       )}
       <div className="ml-auto">
         <Button
           type="button"
-          onClick={currentStep === 3 ? handleSubmit : handleNext}
+          onClick={currentStep === 3 ? onSubmit : handleNext}
           className="w-24 bg-[#f65228] hover:bg-[#f65228]/90"
         >
           {currentStep === 3 ? "Submit" : "Next"}

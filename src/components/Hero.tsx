@@ -46,24 +46,13 @@ export const Hero = ({
       toast({
         title: "AI Implementation Opportunities",
         description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
-        duration: 1500,
-        className: "preserve-state"
+        duration: 5000,
       });
     }
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
     console.log("Hero - Analyze button clicked");
-    if (!selectedIndustry) {
-      toast({
-        title: "Error",
-        description: "Please select an industry first",
-        variant: "destructive",
-        duration: 1500,
-        className: "preserve-state"
-      });
-      return;
-    }
     handleAnalyze();
   };
 
