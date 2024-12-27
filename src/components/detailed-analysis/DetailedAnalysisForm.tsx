@@ -53,8 +53,9 @@ export const DetailedAnalysisForm = ({
     hasInitialData: !!initialData
   });
 
-  const handleNext = (e?: React.MouseEvent) => {
-    e?.preventDefault();
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("DetailedAnalysisForm - Moving to next step:", currentStep + 1);
     setCurrentStep((prev) => prev + 1);
     if (scrollAreaRef.current) {
@@ -62,8 +63,9 @@ export const DetailedAnalysisForm = ({
     }
   };
 
-  const handleBack = (e?: React.MouseEvent) => {
-    e?.preventDefault();
+  const handleBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("DetailedAnalysisForm - Moving to previous step:", currentStep - 1);
     setCurrentStep((prev) => prev - 1);
     if (scrollAreaRef.current) {
@@ -71,8 +73,9 @@ export const DetailedAnalysisForm = ({
     }
   };
 
-  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
-    e?.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("DetailedAnalysisForm - Attempting to submit form with data:", formData);
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
@@ -87,8 +90,13 @@ export const DetailedAnalysisForm = ({
     onSubmit(formData);
   };
 
+  const preventFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="w-full">
+    <form onSubmit={preventFormSubmit} className="w-full">
       <ScrollArea ref={scrollAreaRef} className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep

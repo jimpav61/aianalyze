@@ -6,9 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 interface StepNavigationProps {
   currentStep: number;
   formData: DetailedFormData;
-  onNext: (e: React.MouseEvent) => void;
-  onBack: (e: React.MouseEvent) => void;
-  onSubmit: (e: React.MouseEvent) => void;
+  onNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onBack: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const StepNavigation = ({
@@ -21,8 +21,9 @@ export const StepNavigation = ({
   const { validateStep } = useFormValidation();
   const { toast } = useToast();
 
-  const handleNext = (e: React.MouseEvent) => {
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     console.log("StepNavigation - Attempting to move to next step");
     if (validateStep(currentStep, formData)) {
       console.log("StepNavigation - Validation passed, moving to next step");
@@ -32,8 +33,9 @@ export const StepNavigation = ({
     }
   };
 
-  const handleSubmit = (e: React.MouseEvent) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     console.log("StepNavigation - Attempting to submit");
     if (validateStep(currentStep, formData)) {
       console.log("StepNavigation - Validation passed, submitting");
