@@ -26,7 +26,8 @@ export const DetailedAnalysisDialog = ({
     showCalendar,
     setShowCloseConfirm,
     setShowReport,
-    setShowCalendar
+    setShowCalendar,
+    setFormData
   } = useDialogState();
 
   const {
@@ -65,6 +66,14 @@ export const DetailedAnalysisDialog = ({
     }
   }, [isOpen, showReport, showCalendar]);
 
+  useEffect(() => {
+    // When analysis data is available and dialog is opened, show the report
+    if (analysis && isOpen && !showFormOnly) {
+      console.log("DetailedAnalysisDialog - Analysis data available, showing report");
+      setShowReport(true);
+    }
+  }, [analysis, isOpen, showFormOnly]);
+
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
     showCalendar,
@@ -87,7 +96,7 @@ export const DetailedAnalysisDialog = ({
             />
           ) : (
             <DialogContent
-              showReport={showReport && !showFormOnly}
+              showReport={showReport}
               formData={formData}
               onSubmit={handleSubmit}
               industry={industry}

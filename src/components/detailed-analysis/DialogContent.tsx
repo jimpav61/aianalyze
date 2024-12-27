@@ -25,11 +25,12 @@ export const DialogContent = ({
     industry 
   });
 
-  if (showReport && formData && analysis) {
+  // Show report if we have both form data and analysis
+  if (showReport && analysis) {
     console.log("DialogContent - Showing report view");
     return (
       <ReportView 
-        formData={formData}
+        formData={formData || {}} // Ensure we always pass an object
         analysis={analysis}
         onBookDemo={onBookDemo}
         industry={industry}
