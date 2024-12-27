@@ -21,7 +21,7 @@ export function useFormValidation() {
   const { toast } = useToast();
   
   const validateStep = (step: number, formData: DetailedFormData) => {
-    console.log("Validating step:", step, "Current form data:", formData);
+    console.log("ValidationUtils - Validating step:", step, "Current form data:", formData);
     
     const requiredFields: { [key: number]: string[] } = {
       1: ["companyName", "ownerName", "email"],
@@ -34,18 +34,20 @@ export function useFormValidation() {
     );
 
     if (missingFields?.length > 0) {
-      console.warn("Missing required fields:", missingFields);
+      console.warn("ValidationUtils - Missing required fields:", missingFields);
       toast({
         title: "Required Fields Missing",
-        description: `Please fill out the following fields: ${missingFields
+        description: `Please fill out: ${missingFields
           .map((f) => getFieldLabel(f))
           .join(", ")}`,
         variant: "destructive",
-        duration: 1000,
+        duration: 3000,
         className: "preserve-state"
       });
       return false;
     }
+    
+    console.log("ValidationUtils - Validation passed for step:", step);
     return true;
   };
 
