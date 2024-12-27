@@ -10,6 +10,7 @@ interface ReportViewProps {
 
 export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportViewProps) => {
   console.log("ReportView - Render:", { 
+    formData,
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
     industry 

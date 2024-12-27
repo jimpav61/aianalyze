@@ -23,7 +23,8 @@ export const DialogContent = ({
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
     industry,
-    analysisData: analysis
+    analysisData: analysis,
+    formDataContent: formData
   });
 
   // Show report if we have analysis data
