@@ -25,12 +25,29 @@ export const DialogContent = ({
     industry 
   });
 
-  // Show report if we have both form data and analysis
+  // Show report if we have analysis data
   if (showReport && analysis) {
     console.log("DialogContent - Showing report view");
+    const defaultFormData: DetailedFormData = {
+      companyName: "",
+      ownerName: "",
+      phoneNumber: "",
+      email: "",
+      employees: "",
+      revenue: "",
+      serviceChannels: "",
+      monthlyInteractions: "",
+      currentTools: "",
+      painPoints: "",
+      objectives: "",
+      timeline: "",
+      budget: "",
+      additionalInfo: "",
+    };
+
     return (
       <ReportView 
-        formData={formData || {}} // Ensure we always pass an object
+        formData={formData || defaultFormData}
         analysis={analysis}
         onBookDemo={onBookDemo}
         industry={industry}
