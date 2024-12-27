@@ -3,15 +3,15 @@ import * as ToastPrimitives from "@radix-ui/react-toast"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const ToastClose = React.forwardRef<
+export const ToastClose = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Close>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
 >(({ className, ...props }, ref) => {
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (props.onClick) {
-      props.onClick(e as React.MouseEvent<HTMLButtonElement>);
+      props.onClick(e);
     }
   };
 
@@ -30,5 +30,3 @@ const ToastClose = React.forwardRef<
   )
 })
 ToastClose.displayName = ToastPrimitives.Close.displayName
-
-export { ToastClose }
