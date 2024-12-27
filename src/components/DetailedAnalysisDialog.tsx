@@ -70,6 +70,9 @@ export const DetailedAnalysisDialog = ({
         description: "Please complete the form first.",
         variant: "destructive",
         duration: 1500, // Set to 1.5 seconds
+        onCloseComplete: () => {
+          // Do nothing on close to prevent page refresh
+        }
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
