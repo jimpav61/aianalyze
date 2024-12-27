@@ -32,7 +32,7 @@ export const DetailedAnalysisDialog = ({
   } = useDialogHandling({ 
     onClose, 
     showFormOnly,
-    resetOnClose: true // Add this to ensure proper cleanup
+    resetOnClose: false // Changed to false to preserve form state
   });
 
   const {
@@ -42,8 +42,8 @@ export const DetailedAnalysisDialog = ({
   } = useCalendarHandling({ 
     onClose, 
     setShowReport,
-    formData, // Pass formData to ensure it's available for the calendar
-    analysis // Pass analysis to ensure it's available for the calendar
+    formData,
+    analysis
   });
 
   console.log("DetailedAnalysisDialog - Current state:", {
@@ -69,6 +69,7 @@ export const DetailedAnalysisDialog = ({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
+        duration: 1500, // Set to 1.5 seconds
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
