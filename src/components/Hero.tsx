@@ -40,6 +40,7 @@ export const Hero = ({
         allAnalyses: analyses
       };
       
+      console.log("Hero - Created primary analysis:", primaryAnalysis);
       setCurrentAnalysis(primaryAnalysis);
       setShowDetailedDialog(true);
 

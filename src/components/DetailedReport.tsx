@@ -27,7 +27,9 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   console.log("DetailedReport - Rendering with data:", {
     formData: data,
     analysis,
-    analyses
+    analyses,
+    hasAllAnalyses: !!analysis.allAnalyses,
+    analysesLength: analyses.length
   });
 
   return (
