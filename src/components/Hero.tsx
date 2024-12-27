@@ -64,6 +64,12 @@ export const Hero = ({
       console.log("Hero - Created primary analysis:", primaryAnalysis);
       setCurrentAnalysis(primaryAnalysis);
       setShowDetailedDialog(true);
+
+      toast({
+        title: "AI Implementation Opportunities",
+        description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
+        duration: 3000,
+      });
     }
   }, [analyses, selectedIndustry, toast]);
 
