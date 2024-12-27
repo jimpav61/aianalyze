@@ -27,7 +27,7 @@ export const DialogContent = ({
     analysisData: analysis
   });
 
-  if (showReport && analysis && formData) {
+  if (showReport && formData) {
     console.log("DialogContent - Showing report view with complete data:", {
       formData,
       analysis
