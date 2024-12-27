@@ -47,12 +47,22 @@ export const Hero = ({
         title: "AI Implementation Opportunities",
         description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
         duration: 5000,
+        className: "preserve-state"
       });
     }
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
     console.log("Hero - Analyze button clicked");
+    if (!selectedIndustry) {
+      toast({
+        title: "Error",
+        description: "Please select an industry first",
+        variant: "destructive",
+        className: "preserve-state"
+      });
+      return;
+    }
     handleAnalyze();
   };
 
