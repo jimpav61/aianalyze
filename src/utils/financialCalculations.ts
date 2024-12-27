@@ -80,6 +80,12 @@ const getScalingFactor = (revenue: number) => {
 };
 
 export const calculateFinancials = (revenue: number, department: string, industry?: string) => {
+  console.log('Financial calculation details:', {
+    revenue,
+    department,
+    industry,
+  });
+
   const baseFactors = getBaseFactors(department);
   const scalingFactor = getScalingFactor(revenue);
   const industryMultiplier = industry ? getIndustryMultiplier(industry) : 1.0;
@@ -92,10 +98,7 @@ export const calculateFinancials = (revenue: number, department: string, industr
   const savingsAmount = Math.round(revenue * (adjustedSavingsPercent / 100));
   const profitAmount = Math.round(revenue * (adjustedProfitPercent / 100));
 
-  console.log('Financial calculation details:', {
-    revenue,
-    department,
-    industry,
+  console.log('Financial calculation results:', {
     baseFactors,
     scalingFactor,
     industryMultiplier,
