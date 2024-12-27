@@ -6,9 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 interface StepNavigationProps {
   currentStep: number;
   formData: DetailedFormData;
-  onNext: () => void;
-  onBack: () => void;
-  onSubmit: () => void;
+  onNext: (e: React.MouseEvent) => void;
+  onBack: (e: React.MouseEvent) => void;
+  onSubmit: (e: React.MouseEvent) => void;
 }
 
 export const StepNavigation = ({
@@ -22,20 +22,24 @@ export const StepNavigation = ({
   const { toast } = useToast();
 
   const handleNext = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
     console.log("StepNavigation - Attempting to move to next step");
     if (validateStep(currentStep, formData)) {
       console.log("StepNavigation - Validation passed, moving to next step");
-      onNext();
+      onNext(e);
     } else {
       console.log("StepNavigation - Validation failed");
     }
   };
 
   const handleSubmit = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
+    console.log("StepNavigation - Attempting to submit");
     if (validateStep(currentStep, formData)) {
-      onSubmit();
+      console.log("StepNavigation - Validation passed, submitting");
+      onSubmit(e);
+    } else {
+      console.log("StepNavigation - Validation failed");
     }
   };
 
@@ -45,10 +49,7 @@ export const StepNavigation = ({
         <Button 
           type="button" 
           variant="outline" 
-          onClick={(e) => {
-            e.preventDefault();
-            onBack();
-          }} 
+          onClick={onBack}
           className="w-24"
         >
           Back

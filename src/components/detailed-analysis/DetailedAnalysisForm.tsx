@@ -38,7 +38,6 @@ export const DetailedAnalysisForm = ({
     handleInputChange
   } = useDetailedFormState(initialData);
 
-  // Force scroll to top whenever step changes
   useEffect(() => {
     if (scrollAreaRef.current) {
       console.log("DetailedAnalysisForm - Forcing scroll to top");
@@ -54,7 +53,8 @@ export const DetailedAnalysisForm = ({
     hasInitialData: !!initialData
   });
 
-  const handleNext = () => {
+  const handleNext = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     console.log("DetailedAnalysisForm - Moving to next step:", currentStep + 1);
     setCurrentStep((prev) => prev + 1);
     if (scrollAreaRef.current) {
@@ -62,7 +62,8 @@ export const DetailedAnalysisForm = ({
     }
   };
 
-  const handleBack = () => {
+  const handleBack = (e?: React.MouseEvent) => {
+    e?.preventDefault();
     console.log("DetailedAnalysisForm - Moving to previous step:", currentStep - 1);
     setCurrentStep((prev) => prev - 1);
     if (scrollAreaRef.current) {
@@ -70,7 +71,8 @@ export const DetailedAnalysisForm = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault();
     console.log("DetailedAnalysisForm - Attempting to submit form with data:", formData);
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
@@ -86,7 +88,7 @@ export const DetailedAnalysisForm = ({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
+    <form onSubmit={handleSubmit} className="w-full">
       <ScrollArea ref={scrollAreaRef} className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
