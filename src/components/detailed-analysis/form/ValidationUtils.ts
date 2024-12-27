@@ -1,9 +1,25 @@
 import { DetailedFormData } from "@/types/analysis";
 import { useToast } from "@/hooks/use-toast";
 
-export const useFormValidation = () => {
-  const { toast } = useToast();
+const getFieldLabel = (field: string): string => {
+  const labels: { [key: string]: string } = {
+    companyName: "Company Name",
+    ownerName: "Owner Name",
+    email: "Email",
+    serviceChannels: "Service Channels",
+    monthlyInteractions: "Monthly Interactions",
+    currentTools: "Current Tools",
+    painPoints: "Pain Points",
+    objectives: "Objectives",
+    timeline: "Timeline",
+    budget: "Budget"
+  };
+  return labels[field] || field;
+};
 
+export function useFormValidation() {
+  const { toast } = useToast();
+  
   const validateStep = (step: number, formData: DetailedFormData) => {
     console.log("Validating step:", step, "Current form data:", formData);
     
@@ -11,22 +27,6 @@ export const useFormValidation = () => {
       1: ["companyName", "ownerName", "email"],
       2: ["serviceChannels", "monthlyInteractions", "currentTools", "painPoints"],
       3: ["objectives", "timeline", "budget"]
-    };
-
-    const getFieldLabel = (field: string): string => {
-      const labels: { [key: string]: string } = {
-        companyName: "Company Name",
-        ownerName: "Owner Name",
-        email: "Email",
-        serviceChannels: "Service Channels",
-        monthlyInteractions: "Monthly Interactions",
-        currentTools: "Current Tools",
-        painPoints: "Pain Points",
-        objectives: "Objectives",
-        timeline: "Timeline",
-        budget: "Budget"
-      };
-      return labels[field] || field;
     };
 
     const missingFields = requiredFields[step]?.filter(
@@ -50,4 +50,4 @@ export const useFormValidation = () => {
   };
 
   return { validateStep };
-};
+}
