@@ -42,7 +42,6 @@ export const useDialogActions = ({
 
       console.log("useDialogActions - Generated analysis:", analysisData);
       
-      // Always show report after form submission
       setShowReport(true);
 
       toast({

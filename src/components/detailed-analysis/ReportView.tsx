@@ -1,43 +1,36 @@
-import { DetailedReport } from "../DetailedReport";
 import { DetailedFormData } from "@/types/analysis";
+import { ReportContent } from "../detailed-report/ReportContent";
+import { ReportActions } from "../detailed-report/ReportActions";
 
 interface ReportViewProps {
   formData: DetailedFormData;
   analysis: any;
-  onBookDemo: () => void;
+  onBookDemo?: () => void;
   industry?: string;
 }
 
-export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportViewProps) => {
-  console.log("ReportView - Render with complete data:", { 
+export const ReportView = ({ 
+  formData, 
+  analysis, 
+  onBookDemo,
+  industry 
+}: ReportViewProps) => {
+  console.log("ReportView - Rendering with data:", {
     formData,
-    hasFormData: !!formData, 
-    hasAnalysis: !!analysis,
-    industry,
-    analysisContent: analysis
+    analysis,
+    industry
   });
-
-  if (!formData || !analysis) {
-    console.error("ReportView - Missing required data:", { formData, analysis });
-    return null;
-  }
-
-  const analysesForGrid = analysis.allAnalyses || [{
-    id: crypto.randomUUID(),
-    department: analysis.department,
-    function: analysis.bot_function,
-    savings: analysis.savings.toString(),
-    profit_increase: analysis.profit_increase.toString(),
-    explanation: analysis.explanation,
-    marketingStrategy: analysis.marketing_strategy
-  }];
 
   return (
     <div className="space-y-6">
-      <DetailedReport 
-        data={formData} 
+      <ReportContent
+        formData={formData}
         analysis={analysis}
-        analyses={analysesForGrid}
+        industry={industry}
+      />
+      <ReportActions
+        formData={formData}
+        analysis={analysis}
         onBookDemo={onBookDemo}
       />
     </div>
