@@ -1,4 +1,5 @@
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -13,6 +14,7 @@ import {
   crmToolOptions 
 } from "./constants/dropdownOptions";
 import { createHandlers } from "./utils/dropdownHandlers";
+import { useState } from "react";
 
 interface OperationsStepProps {
   formData: {
@@ -28,35 +30,56 @@ export const OperationsStep = ({
   formData,
   handleInputChange,
 }: OperationsStepProps) => {
+  const [selectedChannels, setSelectedChannels] = useState<string[]>(
+    formData.serviceChannels ? formData.serviceChannels.split(', ') : []
+  );
+
   const { 
-    handleServiceChannelsChange, 
     handleMonthlyInteractionsChange,
     handleCurrentToolsChange,
     handlePainPointChange 
   } = createHandlers(handleInputChange);
 
+  const handleChannelChange = (channel: string, checked: boolean) => {
+    const updatedChannels = checked
+      ? [...selectedChannels, channel]
+      : selectedChannels.filter((c) => c !== channel);
+    
+    setSelectedChannels(updatedChannels);
+    
+    handleInputChange({
+      target: {
+        name: 'serviceChannels',
+        value: updatedChannels.join(', ')
+      }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
+      <div className="space-y-4">
         <Label htmlFor="serviceChannels" className="flex items-center">
           Current Service Channels <span className="text-red-500 ml-1">*</span>
         </Label>
-        <Select 
-          value={serviceChannelOptions.find(opt => opt.label === formData.serviceChannels)?.value} 
-          onValueChange={handleServiceChannelsChange}
-        >
-          <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select service channels" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            {serviceChannelOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {serviceChannelOptions.map((option) => (
+            <div key={option.value} className="flex items-center space-x-2">
+              <Checkbox
+                id={option.value}
+                checked={selectedChannels.includes(option.label)}
+                onCheckedChange={(checked) => handleChannelChange(option.label, checked as boolean)}
+              />
+              <Label
+                htmlFor={option.value}
+                className="text-sm font-normal cursor-pointer"
+              >
                 {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="monthlyInteractions" className="flex items-center">
           Monthly Customer Interactions <span className="text-red-500 ml-1">*</span>
@@ -77,6 +100,7 @@ export const OperationsStep = ({
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="currentTools">Current Tools & Software</Label>
         <Select 
@@ -95,6 +119,7 @@ export const OperationsStep = ({
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="painPoints">Current Pain Points</Label>
         <Select 
