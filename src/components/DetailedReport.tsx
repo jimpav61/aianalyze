@@ -24,7 +24,15 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     analysis,
     analyses,
     hasAllAnalyses: !!analysis.allAnalyses,
-    analysesLength: analyses.length
+    analysesLength: analyses.length,
+    clientInfo: {
+      companyName: data.companyName,
+      ownerName: data.ownerName,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      employees: data.employees,
+      revenue: data.revenue
+    }
   });
 
   if (!data || !analysis) {

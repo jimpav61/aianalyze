@@ -21,33 +21,22 @@ export const DialogContent = ({
   console.log("DialogContent - Render state:", { 
     showReport, 
     hasFormData: !!formData, 
+    formDataContent: formData,
     hasAnalysis: !!analysis,
     industry,
-    analysisData: analysis,
-    formDataContent: formData
+    analysisData: analysis
   });
 
   // Show report if we have analysis data
   if (showReport && analysis) {
-    console.log("DialogContent - Showing report view with analysis:", analysis);
+    console.log("DialogContent - Showing report view with analysis and formData:", {
+      analysis,
+      formData
+    });
+    
     return (
       <ReportView 
-        formData={formData || {
-          companyName: "",
-          ownerName: "",
-          phoneNumber: "",
-          email: "",
-          employees: "",
-          revenue: "",
-          serviceChannels: "",
-          monthlyInteractions: "",
-          currentTools: "",
-          painPoints: "",
-          objectives: "",
-          timeline: "",
-          budget: "",
-          additionalInfo: "",
-        }}
+        formData={formData!}
         analysis={analysis}
         onBookDemo={onBookDemo}
         industry={industry}

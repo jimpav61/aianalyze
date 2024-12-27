@@ -13,7 +13,8 @@ export const ReportView = ({ formData, analysis, onBookDemo, industry }: ReportV
     formData,
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
-    industry 
+    industry,
+    analysisContent: analysis
   });
 
   const analysesForGrid = analysis.allAnalyses || [{
