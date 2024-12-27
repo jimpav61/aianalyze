@@ -64,12 +64,6 @@ export const Hero = ({
       console.log("Hero - Created primary analysis:", primaryAnalysis);
       setCurrentAnalysis(primaryAnalysis);
       setShowDetailedDialog(true);
-
-      toast({
-        title: "AI Implementation Opportunities",
-        description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
-        duration: 1500,
-      });
     }
   }, [analyses, selectedIndustry, toast]);
 
@@ -118,7 +112,7 @@ export const Hero = ({
         }}
         industry={selectedIndustry}
         analysis={currentAnalysis}
-        showFormOnly={false}
+        showFormOnly={true}
       />
     </div>
   );
