@@ -14,7 +14,7 @@ interface ReportContentProps {
   onBookDemo?: () => void;
 }
 
-export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
+export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
   return (
     <div 
       id="detailed-report" 

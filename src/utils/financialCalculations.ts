@@ -64,7 +64,8 @@ const getIndustryMultiplier = (industry: string): number => {
     'Professional Services': 1.25,
     'Media & Entertainment': 1.2,
     'Telecommunications': 1.3,
-    'Architecture & Design': 1.3
+    'Architecture & Design': 1.3,
+    'Banking & Financial Services': 1.35
   };
   return multipliers[industry] || 1.0;
 };
