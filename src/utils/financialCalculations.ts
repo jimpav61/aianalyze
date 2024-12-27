@@ -75,16 +75,6 @@ const getScalingFactor = (revenue: number) => {
 };
 
 export const calculateFinancials = (revenue: number, department: string, industry?: string) => {
-  if (!revenue || revenue <= 0) {
-    console.warn('Invalid revenue value:', revenue);
-    return {
-      savingsAmount: 0,
-      savingsPercentage: 0,
-      profitPercentage: 0,
-      profitAmount: 0
-    };
-  }
-
   const baseFactors = getBaseFactors(department);
   const scalingFactor = getScalingFactor(revenue);
   const industryMultiplier = industry ? getIndustryMultiplier(industry) : 1.0;
