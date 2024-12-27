@@ -17,7 +17,8 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
   const { handleEventScheduled } = useCalendlyEvents({ 
     formData: formData || undefined, 
-    onBookingSuccess: onSubmit || (() => {}) 
+    onBookingSuccess: onSubmit || (() => {}),
+    analysis 
   });
 
   useCalendarInitialization({
@@ -28,7 +29,7 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   });
 
   return (
-    <div className="calendly-embed h-[calc(100vh-200px)] w-full" style={{ marginTop: '0' }}>
+    <div className="calendly-embed h-[calc(100vh-200px)] w-full relative bg-white rounded-lg shadow-sm">
       <div 
         ref={calendarRef}
         className="calendly-inline-widget w-full h-full"
