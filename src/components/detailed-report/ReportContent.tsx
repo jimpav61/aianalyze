@@ -23,6 +23,36 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
     hasBookDemo: !!onBookDemo
   });
 
+  // Ensure we have valid data
+  if (!formData || !analysis) {
+    console.error("Missing required data for report generation");
+    return null;
+  }
+
+  // Use client's form data for the report
+  const clientData = {
+    companyName: formData.companyName || "Not provided",
+    ownerName: formData.ownerName || "Not provided",
+    email: formData.email || "Not provided",
+    phoneNumber: formData.phoneNumber || "Not provided",
+    employees: formData.employees || "Not provided",
+    revenue: formData.revenue || "Not provided"
+  };
+
+  const operationsData = {
+    serviceChannels: formData.serviceChannels || "Not provided",
+    monthlyInteractions: formData.monthlyInteractions || "Not provided",
+    currentTools: formData.currentTools || "Not provided",
+    painPoints: formData.painPoints || "Not provided"
+  };
+
+  const implementationData = {
+    objectives: formData.objectives || "Not provided",
+    timeline: formData.timeline || "Not provided",
+    budget: formData.budget || "Not provided",
+    additionalInfo: formData.additionalInfo || "Not provided"
+  };
+
   return (
     <div 
       id="detailed-report" 
@@ -32,14 +62,14 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Company Overview</h2>
-        <CompanyInformation data={formData} industry={industry || analysis?.industry} />
+        <CompanyInformation data={clientData} industry={industry || analysis?.industry} />
       </div>
       
       <Separator className="my-8" />
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Current Operations Analysis</h2>
-        <CurrentOperations data={formData} />
+        <CurrentOperations data={operationsData} />
       </div>
       
       <Separator className="my-8" />
@@ -63,12 +93,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Implementation Plan</h2>
-        <ImplementationPlan data={{
-          objectives: formData.objectives,
-          timeline: formData.timeline,
-          budget: formData.budget,
-          additionalInfo: formData.additionalInfo
-        }} />
+        <ImplementationPlan data={implementationData} />
       </div>
       
       <Separator className="my-8" />
