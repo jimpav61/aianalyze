@@ -38,10 +38,15 @@ export const DetailedAnalysisForm = ({
     handleInputChange
   } = useDetailedFormState(initialData);
 
+  // Force scroll to top whenever step changes
   useEffect(() => {
     if (scrollAreaRef.current) {
-      console.log("DetailedAnalysisForm - Scrolling to top after step change");
-      scrollAreaRef.current.scrollTop = 0;
+      console.log("DetailedAnalysisForm - Forcing scroll to top");
+      setTimeout(() => {
+        if (scrollAreaRef.current) {
+          scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 0);
     }
   }, [currentStep]);
 
