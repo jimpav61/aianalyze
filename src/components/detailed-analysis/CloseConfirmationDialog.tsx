@@ -3,12 +3,13 @@ import { Button } from "../ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { DetailedFormData } from "@/types/analysis";
 
 interface CloseConfirmationDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  formData?: any;
+  formData?: DetailedFormData;
   analysis?: any;
 }
 
@@ -27,6 +28,13 @@ export const CloseConfirmationDialog = ({
       e.stopPropagation();
     }
 
+    console.log("Download attempt - Starting with data:", {
+      hasFormData: !!formData,
+      formDataContent: formData,
+      hasAnalysis: !!analysis,
+      analysisContent: analysis
+    });
+
     if (!formData || !analysis) {
       console.error("Download failed - Missing required data:", {
         formData,
@@ -35,16 +43,24 @@ export const CloseConfirmationDialog = ({
       
       toast({
         title: "Error",
-        description: "Report data not available.",
+        description: "Report data not available. Please try again.",
         variant: "destructive",
       });
       return;
     }
 
     try {
+      console.log("Generating PDF with data:", {
+        formData,
+        analysis
+      });
+      
       const doc = await generateAnalysisReport({ formData, analysis });
-      const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      console.log("PDF generated successfully, attempting save as:", fileName);
       doc.save(fileName);
+      console.log("PDF saved successfully");
       
       toast({
         title: "Success",
