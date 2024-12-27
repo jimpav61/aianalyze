@@ -98,7 +98,7 @@ export const CloseConfirmationDialog = ({
             <p>Don't worry, you can still access and download your analysis report after closing this window.</p>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-50 border border-gray-200"
               onClick={handleDownload}
             >
               <Download className="h-4 w-4" />
