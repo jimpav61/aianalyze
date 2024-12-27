@@ -6,7 +6,7 @@ import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDi
 import { useDialogState } from "./detailed-analysis/hooks/useDialogState";
 import { useDialogActions } from "./detailed-analysis/hooks/useDialogActions";
 import { useBookingHandling } from "./detailed-analysis/hooks/useBookingHandling";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -42,7 +42,7 @@ export const DetailedAnalysisDialog = ({
     setShowCloseConfirm,
     setShowCalendar,
     onClose,
-    industry // Pass industry to handleSubmit for calculations
+    industry
   });
 
   const { handleBookingSubmit } = useBookingHandling({

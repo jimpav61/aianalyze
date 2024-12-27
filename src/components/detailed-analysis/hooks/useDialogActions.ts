@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,12 +24,8 @@ export const useDialogActions = ({
   industry
 }: UseDialogActionsProps) => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (data: DetailedFormData) => {
-    if (isSubmitting) return;
-    
-    setIsSubmitting(true);
     console.log("useDialogActions - Submitting form with data:", { ...data, industry });
 
     try {
@@ -65,8 +60,6 @@ export const useDialogActions = ({
         variant: "destructive",
         duration: 3000,
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -86,7 +79,6 @@ export const useDialogActions = ({
   return {
     handleSubmit,
     handleClose,
-    handleBookDemo,
-    isSubmitting
+    handleBookDemo
   };
 };
