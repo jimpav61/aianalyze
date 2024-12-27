@@ -35,7 +35,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   });
 
   if (!data || !analysis) {
-    console.error("DetailedReport - Missing required data:", { data, analysis });
+    console.error("DetailedReport - Missing required data");
     return null;
   }
 
@@ -49,7 +49,10 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   console.log("DetailedReport - Processed analysis:", primaryAnalysis);
 
   return (
-    <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
+    <div 
+      id="detailed-report" 
+      className="relative w-full bg-white p-8 rounded-lg shadow-sm"
+    >
       <div className="mb-6">
         <ReportActions 
           formData={data}

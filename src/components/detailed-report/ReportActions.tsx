@@ -26,6 +26,12 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         analysis
       });
 
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
       
@@ -49,10 +55,24 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
     }
   };
 
+  const handleBookDemoClick = () => {
+    console.log("ReportActions - Book demo clicked");
+    if (onBookDemo) {
+      onBookDemo();
+    } else {
+      toast({
+        title: "Error",
+        description: "Demo booking is not available at the moment.",
+        variant: "destructive",
+        duration: 1500,
+      });
+    }
+  };
+
   return (
     <div className="flex flex-wrap gap-4 items-center justify-end">
       <Button 
-        onClick={onBookDemo} 
+        onClick={handleBookDemoClick} 
         size="sm" 
         className="bg-[#f65228] hover:bg-[#d43d16] text-white"
       >
