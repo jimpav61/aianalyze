@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const formSchema = z.object({
@@ -46,11 +46,15 @@ export const ContactForm = () => {
 
       console.log('Response:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error submitting form:', error);
+        throw error;
+      }
 
       toast({
         title: "Form submitted!",
         description: "Thank you for your interest. We'll be in touch soon.",
+        className: "preserve-state"
       });
       form.reset();
     } catch (error) {
@@ -59,6 +63,7 @@ export const ContactForm = () => {
         title: "Error",
         description: "There was a problem submitting your form. Please try again.",
         variant: "destructive",
+        className: "preserve-state"
       });
     }
   }
