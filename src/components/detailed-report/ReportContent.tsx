@@ -23,21 +23,21 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
       <ReportHeader />
       
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Company Overview</h2>
+        <h2 className="text-2xl font-semibold text-[#1A1F2C]">Company Overview</h2>
         <CompanyInformation data={formData} industry={analysis?.industry} />
       </div>
       
       <Separator className="my-8" />
       
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Current Operations Analysis</h2>
+        <h2 className="text-2xl font-semibold text-[#1A1F2C]">Current Operations Analysis</h2>
         <CurrentOperations data={formData} />
       </div>
       
       <Separator className="my-8" />
       
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">AI Analysis Results</h2>
+        <h2 className="text-2xl font-semibold text-[#1A1F2C]">AI Analysis Results</h2>
         <AnalysisResults 
           analyses={analysis.allAnalyses || [analysis]} 
           revenue={formData.revenue}
@@ -47,14 +47,14 @@ export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
       <Separator className="my-8" />
 
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Implementation Strategy</h2>
+        <h2 className="text-2xl font-semibold text-[#1A1F2C]">Implementation Strategy</h2>
         <ImplementationRecommendations analysis={analysis} formData={formData} />
       </div>
       
       <Separator className="my-8" />
       
       <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Implementation Plan</h2>
+        <h2 className="text-2xl font-semibold text-[#1A1F2C]">Implementation Plan</h2>
         <ImplementationPlan data={{
           objectives: formData.objectives,
           timeline: formData.timeline,

@@ -11,11 +11,11 @@ export const ImplementationDetails = ({ explanation, marketingStrategy }: Implem
       <div className="space-y-6">
         <div>
           <p className="font-medium text-gray-700 mb-3">Implementation Strategy:</p>
-          <p className="text-[#f65228] whitespace-pre-line leading-relaxed break-words">{explanation}</p>
+          <p className="text-[#9b87f5] whitespace-pre-line leading-relaxed break-words">{explanation}</p>
         </div>
         <div>
           <p className="font-medium text-gray-700 mb-3">Marketing Strategy:</p>
-          <p className="text-[#f65228] whitespace-pre-line leading-relaxed break-words">{marketingStrategy}</p>
+          <p className="text-[#9b87f5] whitespace-pre-line leading-relaxed break-words">{marketingStrategy}</p>
         </div>
       </div>
     </Card>
