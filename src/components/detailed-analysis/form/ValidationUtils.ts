@@ -42,7 +42,6 @@ export function useFormValidation() {
           .join(", ")}`,
         variant: "destructive",
         duration: 3000,
-        className: "preserve-state"
       });
       return false;
     }
