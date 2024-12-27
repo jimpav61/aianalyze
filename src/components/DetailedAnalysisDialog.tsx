@@ -42,11 +42,13 @@ export const DetailedAnalysisDialog = ({
     handleBookingSubmit
   } = useCalendarHandling({ 
     onClose: () => {
+      console.log("DetailedAnalysisDialog - Closing dialog and resetting state after booking");
       // Reset all states and close dialog
       setShowReport(false);
       setShowCloseConfirm(false);
       onClose();
       // Force reload the page to show the full sample report
+      console.log("DetailedAnalysisDialog - Reloading page to show full sample report");
       window.location.reload();
     }, 
     setShowReport,
@@ -56,6 +58,7 @@ export const DetailedAnalysisDialog = ({
 
   useEffect(() => {
     if (isOpen) {
+      console.log("DetailedAnalysisDialog - Dialog opened, resetting scroll position");
       // Reset scroll position when dialog opens or content changes
       window.scrollTo(0, 0);
       const dialogContent = document.querySelector('.dialog-content');
