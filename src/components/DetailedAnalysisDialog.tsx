@@ -41,7 +41,14 @@ export const DetailedAnalysisDialog = ({
     handleBookDemo,
     handleBookingSubmit
   } = useCalendarHandling({ 
-    onClose, 
+    onClose: () => {
+      // Reset all states and close dialog
+      setShowReport(false);
+      setShowCloseConfirm(false);
+      onClose();
+      // Force reload the page to show the full sample report
+      window.location.reload();
+    }, 
     setShowReport,
     formData,
     analysis
