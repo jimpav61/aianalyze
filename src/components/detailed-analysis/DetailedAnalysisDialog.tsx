@@ -1,12 +1,12 @@
-import { DetailedAnalysisProps } from "./detailed-analysis/types";
-import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
-import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
-import { useDialogState } from "./detailed-analysis/hooks/useDialogState";
-import { useDialogActions } from "./detailed-analysis/hooks/useDialogActions";
-import { useBookingHandling } from "./detailed-analysis/hooks/useBookingHandling";
-import { DialogStateManager } from "./detailed-analysis/dialog/DialogStateManager";
-import { DialogDebugger } from "./detailed-analysis/dialog/DialogDebugger";
-import { DialogMainContent } from "./detailed-analysis/dialog/DialogMainContent";
+import { DetailedAnalysisProps } from "./types";
+import { DialogWrapper } from "./DialogWrapper";
+import { CloseConfirmationDialog } from "./CloseConfirmationDialog";
+import { useDialogState } from "./hooks/useDialogState";
+import { useDialogActions } from "./hooks/useDialogActions";
+import { useBookingHandling } from "./hooks/useBookingHandling";
+import { DialogStateManager } from "./dialog/DialogStateManager";
+import { DialogDebugger } from "./dialog/DialogDebugger";
+import { DialogMainContent } from "./dialog/DialogMainContent";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
