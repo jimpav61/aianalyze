@@ -67,12 +67,15 @@ export const DetailedAnalysisDialog = ({
   }, [isOpen, showReport, showCalendar]);
 
   useEffect(() => {
-    // When analysis data is available and dialog is opened, show the report
+    // Only show report if we have analysis data AND the dialog is open
     if (analysis && isOpen && !showFormOnly) {
       console.log("DetailedAnalysisDialog - Analysis data available, showing report");
       setShowReport(true);
+    } else {
+      // Otherwise, make sure we show the form
+      setShowReport(false);
     }
-  }, [analysis, isOpen, showFormOnly]);
+  }, [analysis, isOpen, showFormOnly, setShowReport]);
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
