@@ -49,7 +49,7 @@ export const useDialogActions = ({
       toast({
         title: "Analysis Generated",
         description: "Your custom analysis report is ready.",
-        duration: 3000,
+        duration: 1500,
       });
 
     } catch (error) {
@@ -58,7 +58,7 @@ export const useDialogActions = ({
         title: "Error",
         description: "Failed to generate analysis. Please try again.",
         variant: "destructive",
-        duration: 3000,
+        duration: 1500,
       });
     }
   };

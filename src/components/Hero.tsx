@@ -68,7 +68,7 @@ export const Hero = ({
       toast({
         title: "AI Implementation Opportunities",
         description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
-        duration: 3000,
+        duration: 1500,
       });
     }
   }, [analyses, selectedIndustry, toast]);
