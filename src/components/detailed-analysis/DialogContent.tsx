@@ -35,15 +35,15 @@ export const DialogContent = ({
     }
   }, [showReport, formData, analysis, onSubmit]);
 
-  if (showReport && (formData || analysis?.formData)) {
+  if (showReport && formData) {
     console.log("DialogContent - Showing report view with complete data:", {
-      formData: formData || analysis?.formData,
+      formData,
       analysis
     });
     
     return (
       <ReportView 
-        formData={formData || analysis?.formData}
+        formData={formData}
         analysis={analysis}
         onBookDemo={onBookDemo}
         industry={industry}
