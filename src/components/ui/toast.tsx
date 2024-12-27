@@ -63,10 +63,10 @@ const ToastClose = React.forwardRef<
       className
     )}
     onClick={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault()
+      e.stopPropagation()
       if (props.onClick) {
-        props.onClick(e);
+        props.onClick(e)
       }
     }}
     {...props}
