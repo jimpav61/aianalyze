@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface UseDialogActionsProps {
   formData: DetailedFormData | null;
@@ -10,6 +11,7 @@ interface UseDialogActionsProps {
   setShowCloseConfirm: (show: boolean) => void;
   setShowCalendar: (show: boolean) => void;
   onClose: () => void;
+  industry?: string;
 }
 
 export const useDialogActions = ({
@@ -19,52 +21,72 @@ export const useDialogActions = ({
   setShowReport,
   setShowCloseConfirm,
   setShowCalendar,
-  onClose
+  onClose,
+  industry
 }: UseDialogActionsProps) => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = useCallback((data: DetailedFormData) => {
-    console.log("DetailedAnalysisDialog - Form submitted with data:", data);
-    setShowReport(true);
-  }, [setShowReport]);
-
-  const handleClose = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Handle close triggered", {
-      showReport,
-      showFormOnly,
-      hasFormData: !!formData
-    });
+  const handleSubmit = async (data: DetailedFormData) => {
+    if (isSubmitting) return;
     
-    if (showReport && !showFormOnly && formData) {
+    setIsSubmitting(true);
+    console.log("useDialogActions - Submitting form with data:", { ...data, industry });
+
+    try {
+      const { data: analysisData, error } = await supabase.functions.invoke('generate-analysis', {
+        body: JSON.stringify({ 
+          formData: {
+            ...data,
+            industry
+          }
+        })
+      });
+
+      if (error) throw error;
+
+      console.log("useDialogActions - Generated analysis:", analysisData);
+      
+      if (!showFormOnly) {
+        setShowReport(true);
+      }
+
+      toast({
+        title: "Analysis Generated",
+        description: "Your custom analysis report is ready.",
+        duration: 3000,
+      });
+
+    } catch (error) {
+      console.error("Error generating analysis:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate analysis. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (formData && !showReport) {
       setShowCloseConfirm(true);
     } else {
       onClose();
     }
-  }, [onClose, showReport, showFormOnly, formData, setShowCloseConfirm]);
+  };
 
-  const handleBookDemo = useCallback(() => {
-    console.log("DetailedAnalysisDialog - Book demo clicked with data:", {
-      formData
-    });
-    
-    if (!formData) {
-      console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
-      toast({
-        title: "Error",
-        description: "Please complete the form first.",
-        variant: "destructive",
-        duration: 1500,
-      });
-      return false;
-    }
-
+  const handleBookDemo = () => {
+    console.log("useDialogActions - Booking demo");
     setShowCalendar(true);
-    return true;
-  }, [formData, toast, setShowCalendar]);
+  };
 
   return {
     handleSubmit,
     handleClose,
-    handleBookDemo
+    handleBookDemo,
+    isSubmitting
   };
 };

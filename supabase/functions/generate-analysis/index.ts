@@ -15,39 +15,58 @@ serve(async (req) => {
     const { formData } = await req.json();
     console.log("Received form data:", formData);
 
-    // Generate analyses for different departments based on form data
+    // Calculate base metrics based on revenue and industry
+    const baseRevenue = parseInt(formData.revenue.replace(/[^0-9]/g, ''));
+    const industryMultipliers = {
+      "Technology": { savings: 1.4, profit: 1.5 },
+      "Healthcare": { savings: 1.2, profit: 1.3 },
+      "Manufacturing": { savings: 1.3, profit: 1.2 },
+      "Retail": { savings: 0.9, profit: 1.1 },
+      "Financial Services": { savings: 1.35, profit: 1.4 },
+      // Add more industry multipliers as needed
+    };
+
+    const multiplier = industryMultipliers[formData.industry] || { savings: 1.0, profit: 1.0 };
+
+    // Generate analyses for different departments based on form data and industry
     const departments = [
-      { name: "Client Services", focus: "customer interaction and support" },
-      { name: "Project Management", focus: "project coordination and delivery" },
-      { name: "Design Studio", focus: "creative and design processes" },
-      { name: "Resource Planning", focus: "resource allocation and scheduling" }
+      { 
+        name: "Customer Service",
+        focus: "customer interaction and support",
+        baseSavings: 0.25,
+        baseProfit: 0.12
+      },
+      { 
+        name: "Operations",
+        focus: "operational efficiency and automation",
+        baseSavings: 0.35,
+        baseProfit: 0.18
+      },
+      { 
+        name: "Sales",
+        focus: "sales process optimization",
+        baseSavings: 0.30,
+        baseProfit: 0.20
+      }
     ];
 
     const analyses = departments.map(dept => {
-      const savings = calculateSavings(formData.revenue, dept.name);
-      const profitIncrease = calculateProfitIncrease(formData.revenue, dept.name);
+      const savings = Math.round(baseRevenue * dept.baseSavings * multiplier.savings);
+      const profitIncrease = Math.round(dept.baseProfit * multiplier.profit * 100);
       
       return {
         department: dept.name,
         bot_function: generateBotFunction(dept, formData),
         savings: savings,
         profit_increase: profitIncrease,
-        explanation: generateExplanation(dept, formData),
-        marketing_strategy: generateMarketingStrategy(dept, formData)
+        explanation: generateExplanation(dept, formData, savings),
+        marketing_strategy: generateMarketingStrategy(dept, formData, profitIncrease)
       };
     });
 
-    // Store analyses in the database
-    const { data: storedAnalyses, error } = await supabaseAdmin.from('analyses')
-      .insert(analyses.map(analysis => ({
-        ...analysis,
-        industry: formData.industry
-      })))
-      .select();
+    console.log("Generated analyses:", analyses);
 
-    if (error) throw error;
-
-    return new Response(JSON.stringify({ analyses: storedAnalyses }), {
+    return new Response(JSON.stringify({ analyses }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
@@ -59,45 +78,27 @@ serve(async (req) => {
   }
 });
 
-function calculateSavings(revenue: string, department: string): number {
-  const baseRevenue = parseInt(revenue.replace(/[^0-9]/g, ''));
-  const savingsPercentages: { [key: string]: number } = {
-    "Client Services": 0.15,
-    "Project Management": 0.12,
-    "Design Studio": 0.10,
-    "Resource Planning": 0.08
-  };
-  return Math.round(baseRevenue * (savingsPercentages[department] || 0.10));
-}
-
-function calculateProfitIncrease(revenue: string, department: string): number {
-  const baseRevenue = parseInt(revenue.replace(/[^0-9]/g, ''));
-  const profitPercentages: { [key: string]: number } = {
-    "Client Services": 25,
-    "Project Management": 20,
-    "Design Studio": 18,
-    "Resource Planning": 15
-  };
-  return profitPercentages[department] || 15;
-}
-
-function generateBotFunction(dept: { name: string, focus: string }, formData: any): string {
-  const painPoints = formData.painPoints.split(', ');
-  const tools = formData.currentTools.split(', ');
+function generateBotFunction(dept: any, formData: any): string {
+  const painPoints = formData.painPoints?.split(',') || [];
+  const tools = formData.currentTools?.split(',') || [];
   
-  return `AI-powered ${dept.focus} automation system that addresses ${painPoints[0]} and integrates with ${tools[0]}, optimizing ${dept.name.toLowerCase()} operations.`;
+  return `AI-powered ${dept.focus} system that addresses ${
+    painPoints[0] || 'efficiency challenges'
+  } and integrates with ${
+    tools[0] || 'existing tools'
+  }, optimizing ${dept.name.toLowerCase()} processes with industry-specific solutions for ${formData.industry}.`;
 }
 
-function generateExplanation(dept: { name: string, focus: string }, formData: any): string {
-  const monthlyVolume = formData.monthlyInteractions;
-  const timeline = formData.timeline;
+function generateExplanation(dept: any, formData: any, savings: number): string {
+  const monthlyVolume = formData.monthlyInteractions || '1000+';
+  const timeline = formData.timeline || '3-6 months';
   
-  return `Based on your ${monthlyVolume} monthly interactions and current tools, we recommend implementing an AI system in the ${dept.name} department within a ${timeline} timeline. This will streamline ${dept.focus}, reducing manual work and improving efficiency.`;
+  return `Based on your ${monthlyVolume} monthly interactions in the ${formData.industry} industry, we recommend implementing an AI system in the ${dept.name} department within a ${timeline} timeline. This implementation is projected to save approximately $${savings.toLocaleString()} annually by streamlining ${dept.focus}, reducing manual work, and improving efficiency.`;
 }
 
-function generateMarketingStrategy(dept: { name: string, focus: string }, formData: any): string {
-  const objectives = formData.objectives;
-  const budget = formData.budget;
+function generateMarketingStrategy(dept: any, formData: any, profitIncrease: number): string {
+  const objectives = formData.objectives || 'efficiency improvement';
+  const budget = formData.budget || 'planned investment';
   
-  return `Leverage the AI implementation in ${dept.name} to showcase innovation and efficiency in ${dept.focus}. With a ${budget} budget allocation, focus on achieving ${objectives} while maintaining competitive advantage.`;
+  return `Leverage the AI implementation in ${dept.name} to showcase innovation and efficiency in ${dept.focus} within the ${formData.industry} sector. With a ${budget} budget allocation, focus on achieving ${objectives} while maintaining competitive advantage. Projected ${profitIncrease}% profit increase through optimized processes and enhanced customer experience.`;
 }

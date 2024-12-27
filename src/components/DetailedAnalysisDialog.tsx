@@ -41,7 +41,8 @@ export const DetailedAnalysisDialog = ({
     setShowReport,
     setShowCloseConfirm,
     setShowCalendar,
-    onClose
+    onClose,
+    industry // Pass industry to handleSubmit for calculations
   });
 
   const { handleBookingSubmit } = useBookingHandling({
@@ -92,7 +93,8 @@ export const DetailedAnalysisDialog = ({
     hasAnalysis: !!analysis,
     formDataContent: formData,
     analysisContent: analysis,
-    isDialogOpen: isOpen
+    isDialogOpen: isOpen,
+    currentIndustry: industry
   });
 
   return (
