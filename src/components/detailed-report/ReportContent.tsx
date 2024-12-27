@@ -12,9 +12,17 @@ interface ReportContentProps {
   formData: DetailedFormData;
   analysis: any;
   onBookDemo?: () => void;
+  industry?: string;
 }
 
-export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
+export const ReportContent = ({ formData, analysis, onBookDemo, industry }: ReportContentProps) => {
+  console.log("ReportContent - Rendering with data:", {
+    formData,
+    analysis,
+    industry,
+    hasBookDemo: !!onBookDemo
+  });
+
   return (
     <div 
       id="detailed-report" 
@@ -24,7 +32,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Company Overview</h2>
-        <CompanyInformation data={formData} industry={analysis?.industry} />
+        <CompanyInformation data={formData} industry={industry || analysis?.industry} />
       </div>
       
       <Separator className="my-8" />
