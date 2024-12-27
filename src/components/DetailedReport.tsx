@@ -19,19 +19,18 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
-  console.log("DetailedReport - Rendering with complete data:", {
+  console.log("DetailedReport - Starting render with data:", {
     formData: data,
     analysis,
     analyses,
-    hasAllAnalyses: !!analysis.allAnalyses,
-    analysesLength: analyses.length,
+    hasBookDemo: !!onBookDemo,
     clientInfo: {
-      companyName: data.companyName,
-      ownerName: data.ownerName,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      employees: data.employees,
-      revenue: data.revenue
+      companyName: data?.companyName,
+      ownerName: data?.ownerName,
+      email: data?.email,
+      phoneNumber: data?.phoneNumber,
+      employees: data?.employees,
+      revenue: data?.revenue
     }
   });
 
@@ -46,6 +45,8 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     ...analysis,
     allAnalyses: processedAnalyses
   };
+
+  console.log("DetailedReport - Processed analysis:", primaryAnalysis);
 
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">

@@ -20,16 +20,22 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
     formData,
     analysis,
     industry,
-    hasBookDemo: !!onBookDemo
+    hasBookDemo: !!onBookDemo,
+    clientInfo: {
+      companyName: formData?.companyName,
+      ownerName: formData?.ownerName,
+      email: formData?.email,
+      phoneNumber: formData?.phoneNumber,
+      employees: formData?.employees,
+      revenue: formData?.revenue
+    }
   });
 
-  // Ensure we have valid data
   if (!formData || !analysis) {
-    console.error("Missing required data for report generation");
+    console.error("ReportContent - Missing required data");
     return null;
   }
 
-  // Use client's form data for the report
   const clientData = {
     companyName: formData.companyName,
     ownerName: formData.ownerName,

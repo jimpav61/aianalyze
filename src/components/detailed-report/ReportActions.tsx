@@ -13,6 +13,12 @@ interface ReportActionsProps {
 export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
   const { toast } = useToast();
 
+  console.log("ReportActions - Rendering with props:", {
+    hasFormData: !!formData,
+    hasAnalysis: !!analysis,
+    hasBookDemo: !!onBookDemo
+  });
+
   const handleDownload = async () => {
     try {
       console.log("ReportActions - Starting download with data:", {
@@ -22,8 +28,8 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
 
       const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("ReportActions - Generated PDF, attempting to save as:", fileName);
       
+      console.log("ReportActions - Generated PDF, saving as:", fileName);
       pdf.save(fileName);
       
       console.log("ReportActions - PDF saved successfully");
