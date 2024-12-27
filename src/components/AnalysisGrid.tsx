@@ -44,10 +44,10 @@ export const AnalysisGrid = ({ analyses }: AnalysisGridProps) => {
               
               <div className="p-3 bg-[#F8F9FC] rounded-lg">
                 <p className="font-medium text-gray-700 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-[#f65228]" />
+                  <TrendingUp className="h-4 w-4 text-green-500" />
                   Profit Increase:
                 </p>
-                <p className="text-[#f65228] font-bold text-lg">
+                <p className="text-green-500 font-bold text-lg">
                   {analysis.profit_increase}%
                 </p>
               </div>

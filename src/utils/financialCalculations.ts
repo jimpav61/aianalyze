@@ -38,7 +38,11 @@ const getBaseFactors = (department: string) => {
     'Legal': { savingsPercent: 15, profitPercent: 8 },
     'Manufacturing': { savingsPercent: 28, profitPercent: 16 },
     'Supply Chain': { savingsPercent: 32, profitPercent: 18 },
-    'Research & Development': { savingsPercent: 20, profitPercent: 15 }
+    'Research & Development': { savingsPercent: 20, profitPercent: 15 },
+    'Client Services': { savingsPercent: 25, profitPercent: 15 },
+    'Design Studio': { savingsPercent: 30, profitPercent: 20 },
+    'Project Management': { savingsPercent: 28, profitPercent: 18 },
+    'Resource Planning': { savingsPercent: 25, profitPercent: 15 }
   };
   return factors[department] || { savingsPercent: 20, profitPercent: 10 };
 };
@@ -59,7 +63,8 @@ const getIndustryMultiplier = (industry: string): number => {
     'Hospitality': 0.9,
     'Professional Services': 1.25,
     'Media & Entertainment': 1.2,
-    'Telecommunications': 1.3
+    'Telecommunications': 1.3,
+    'Architecture & Design': 1.3
   };
   return multipliers[industry] || 1.0;
 };
