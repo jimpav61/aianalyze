@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { FormView } from "./FormView";
 import { ReportView } from "./ReportView";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
-import { useEffect } from "react";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;

@@ -14,7 +14,8 @@ export interface DetailedAnalysisProps {
     profit_increase: number;
     explanation: string;
     marketing_strategy: string;
-    allAnalyses?: any[]; // Add this field to support multiple analyses
+    allAnalyses?: any[];
+    formData?: DetailedFormData;
   } | null;
 }
 
