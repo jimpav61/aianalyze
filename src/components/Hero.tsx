@@ -52,6 +52,15 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
+    if (!selectedIndustry) {
+      toast({
+        title: "Error",
+        description: "Please select an industry first",
+        variant: "destructive",
+        duration: 3000, // Added duration for error toast
+      });
+      return;
+    }
     console.log("Hero - Analyze button clicked");
     handleAnalyze();
   };

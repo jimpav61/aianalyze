@@ -47,13 +47,16 @@ export const DetailedAnalysisDialog = ({
     analysis
   });
 
-  // Add effect to scroll dialog to top when showReport changes
+  // Reset scroll position when dialog opens or view changes
   useEffect(() => {
-    const dialogContent = document.querySelector('.dialog-content');
-    if (dialogContent) {
-      dialogContent.scrollTop = 0;
+    if (isOpen) {
+      window.scrollTo(0, 0);
+      const dialogContent = document.querySelector('.dialog-content');
+      if (dialogContent) {
+        dialogContent.scrollTop = 0;
+      }
     }
-  }, [showReport, showCalendar]);
+  }, [isOpen, showReport, showCalendar]);
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
@@ -78,6 +81,7 @@ export const DetailedAnalysisDialog = ({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
+        duration: 3000, // Added duration for consistency
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
@@ -87,7 +91,7 @@ export const DetailedAnalysisDialog = ({
   return (
     <>
       <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-        <div className="dialog-content">
+        <div className="dialog-content overflow-y-auto max-h-[calc(90vh-2rem)]">
           {showCalendar ? (
             <CalendarView
               onSubmit={handleBookingSubmit}
