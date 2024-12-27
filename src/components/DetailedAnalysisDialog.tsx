@@ -55,6 +55,7 @@ export const DetailedAnalysisDialog = ({
     }
   });
 
+  // Reset scroll position when dialog content changes
   useEffect(() => {
     if (isOpen) {
       console.log("DetailedAnalysisDialog - Dialog opened, resetting scroll position");
@@ -66,21 +67,22 @@ export const DetailedAnalysisDialog = ({
     }
   }, [isOpen, showReport, showCalendar]);
 
-  // Initialize form state when dialog opens
+  // Always show the form first when dialog opens
   useEffect(() => {
     if (isOpen) {
       setShowReport(false);
-      console.log("DetailedAnalysisDialog - Dialog opened, showing form");
+      setFormData(null);
+      console.log("DetailedAnalysisDialog - Dialog opened, showing initial form");
     }
-  }, [isOpen, setShowReport]);
+  }, [isOpen, setShowReport, setFormData]);
 
-  // Only show report after analysis is available
+  // Only show report after form submission and analysis is available
   useEffect(() => {
-    if (analysis && !showFormOnly) {
-      console.log("DetailedAnalysisDialog - Analysis data available, showing report");
+    if (analysis && formData && !showFormOnly) {
+      console.log("DetailedAnalysisDialog - Analysis data available after form submission, showing report");
       setShowReport(true);
     }
-  }, [analysis, showFormOnly, setShowReport]);
+  }, [analysis, formData, showFormOnly, setShowReport]);
 
   console.log("DetailedAnalysisDialog - Current state:", {
     showReport,
@@ -89,7 +91,8 @@ export const DetailedAnalysisDialog = ({
     showFormOnly,
     hasAnalysis: !!analysis,
     formDataContent: formData,
-    analysisContent: analysis
+    analysisContent: analysis,
+    isDialogOpen: isOpen
   });
 
   return (
