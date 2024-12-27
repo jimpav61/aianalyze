@@ -36,6 +36,7 @@ export const useBookingSuccess = ({
         title: "Error",
         description: "Report data not available. Please try again.",
         variant: "destructive",
+        duration: 1500,
       });
       return;
     }
@@ -54,6 +55,7 @@ export const useBookingSuccess = ({
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
+        duration: 1500,
       });
     } catch (error) {
       console.error("PDF Generation/Download error:", error);
@@ -61,6 +63,7 @@ export const useBookingSuccess = ({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
+        duration: 1500,
       });
     }
   }, [formData, analysis, toast]);
@@ -86,7 +89,7 @@ export const useBookingSuccess = ({
           </Button>
         </div>
       ),
-      duration: 5000,
+      duration: 1500,
     });
 
     if (onSubmit) {
