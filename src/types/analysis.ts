@@ -15,3 +15,16 @@ export interface DetailedFormData {
   currentTools: string;
   painPoints: string;
 }
+
+export interface AnalysisData {
+  industry: string;
+  department: string;
+  bot_function: string;
+  savings: number;
+  profit_increase: number;
+  explanation: string;
+  marketing_strategy: string;
+}
+
+// New type for calendar-specific form data
+export type CalendarFormData = Partial<DetailedFormData>;
