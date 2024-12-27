@@ -81,12 +81,6 @@ export const Hero = ({
         </div>
       </div>
 
-      <AnalysisSection 
-        analyses={analyses.length > 0 ? analyses : []} 
-        isMobile={false}
-        analysisGridRef={null}
-      />
-
       <DetailedAnalysisDialog
         isOpen={showDetailedDialog}
         onClose={() => {

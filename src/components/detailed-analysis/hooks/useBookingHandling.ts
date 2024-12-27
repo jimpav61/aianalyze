@@ -33,9 +33,10 @@ export const useBookingHandling = ({
           duration: 1500,
         });
 
-        // Only close the dialog, no page refresh
         setTimeout(() => {
           onClose();
+          // Reset the form state by clearing the URL
+          window.history.pushState({}, '', '/');
         }, 1500);
       } catch (error) {
         console.error("PDF Generation Error:", error);
