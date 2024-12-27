@@ -69,7 +69,8 @@ export const DetailedAnalysisDialog = ({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
-        duration: 1500
+        duration: 1500,
+        className: "preserve-state"
       });
     } else {
       console.log("DetailedAnalysisDialog - Book demo successful");
