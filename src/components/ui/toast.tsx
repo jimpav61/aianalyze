@@ -75,7 +75,7 @@ const ToastClose = React.forwardRef<
     e.preventDefault();
     e.stopPropagation();
     if (props.onClick) {
-      props.onClick(e as any);
+      props.onClick(e);
     }
   };
 
