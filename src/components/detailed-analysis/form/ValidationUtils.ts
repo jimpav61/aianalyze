@@ -50,6 +50,8 @@ export const useFormValidation = () => {
           .map((f) => getFieldLabel(f))
           .join(", ")}`,
         variant: "destructive",
+        duration: 1500,
+        className: "preserve-state"
       });
       return false;
     }
