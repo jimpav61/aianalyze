@@ -30,6 +30,17 @@ export const DetailedAnalysisDialog = ({
     setFormData
   } = useDialogState();
 
+  // Initialize form data from analysis if available
+  useEffect(() => {
+    if (analysis?.formData && !formData) {
+      console.log("DetailedAnalysisDialog - Initializing form data from analysis:", analysis.formData);
+      setFormData(analysis.formData);
+      if (!showFormOnly) {
+        setShowReport(true);
+      }
+    }
+  }, [analysis, formData, setFormData, setShowReport, showFormOnly]);
+
   const {
     handleSubmit,
     handleClose,

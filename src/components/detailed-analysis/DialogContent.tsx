@@ -2,6 +2,7 @@ import { FormView } from "./FormView";
 import { ReportView } from "./ReportView";
 import { DetailedFormData } from "@/types/analysis";
 import { DetailedAnalysisProps } from "./types";
+import { useEffect } from "react";
 
 interface DialogContentProps extends Pick<DetailedAnalysisProps, 'industry' | 'analysis'> {
   showReport: boolean;
@@ -27,15 +28,22 @@ export const DialogContent = ({
     analysisData: analysis
   });
 
-  if (showReport && formData) {
+  useEffect(() => {
+    if (showReport && !formData && analysis?.formData) {
+      console.log("DialogContent - Using analysis form data:", analysis.formData);
+      onSubmit(analysis.formData);
+    }
+  }, [showReport, formData, analysis, onSubmit]);
+
+  if (showReport && (formData || analysis?.formData)) {
     console.log("DialogContent - Showing report view with complete data:", {
-      formData,
+      formData: formData || analysis?.formData,
       analysis
     });
     
     return (
       <ReportView 
-        formData={formData}
+        formData={formData || analysis?.formData}
         analysis={analysis}
         onBookDemo={onBookDemo}
         industry={industry}

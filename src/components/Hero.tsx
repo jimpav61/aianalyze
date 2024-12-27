@@ -5,6 +5,7 @@ import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
 import { useToast } from "@/hooks/use-toast";
 import { AnalysisSection } from "./AnalysisSection";
+import { DetailedFormData } from "@/types/analysis";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -29,6 +30,21 @@ export const Hero = ({
     if (analyses && analyses.length > 0) {
       console.log("Hero - Setting up analysis with data:", analyses);
       
+      // Create initial form data
+      const initialFormData: DetailedFormData = {
+        companyName: "",
+        ownerName: "",
+        email: "",
+        phoneNumber: "",
+        employees: "",
+        revenue: "",
+        objectives: "",
+        timeline: "",
+        budget: "",
+        additionalInfo: "",
+        industry: selectedIndustry || ""
+      };
+      
       const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
@@ -37,7 +53,8 @@ export const Hero = ({
         profit_increase: Number(analyses[0].profit_increase),
         explanation: analyses[0].explanation,
         marketing_strategy: analyses[0].marketingStrategy,
-        allAnalyses: analyses
+        allAnalyses: analyses,
+        formData: initialFormData
       };
       
       console.log("Hero - Created primary analysis:", primaryAnalysis);
