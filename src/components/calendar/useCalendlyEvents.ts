@@ -31,7 +31,10 @@ export const useCalendlyEvents = ({
       duration: 1500,
     });
 
-    onBookingSuccess();
+    // Use setTimeout to delay the success callback
+    setTimeout(() => {
+      onBookingSuccess();
+    }, 1500);
   }, [formData, onBookingSuccess, analysis, toast]);
 
   return {

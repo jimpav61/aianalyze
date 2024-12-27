@@ -92,8 +92,11 @@ export const useBookingSuccess = ({
       duration: 1500,
     });
 
+    // Use setTimeout to delay the submit callback
     if (onSubmit) {
-      onSubmit();
+      setTimeout(() => {
+        onSubmit();
+      }, 1500);
     }
   }, [formData, analysis, onSubmit, toast, handleDownload]);
 

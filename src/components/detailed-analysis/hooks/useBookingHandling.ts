@@ -28,20 +28,24 @@ export const useBookingHandling = ({
         toast({
           title: "Demo Scheduled Successfully",
           description: "Your report has been downloaded. You can close this window when you're done.",
-          duration: 5000,
+          duration: 1500,
         });
+
+        // Use setTimeout to delay the close and reload
+        setTimeout(() => {
+          onClose();
+          window.location.reload();
+        }, 1500);
       } catch (error) {
         console.error("PDF Generation Error:", error);
         toast({
           title: "Error",
           description: "Failed to generate report. Please try again.",
           variant: "destructive",
+          duration: 1500,
         });
       }
     }
-
-    onClose();
-    window.location.reload();
   }, [formData, analysis, onClose, toast]);
 
   return {

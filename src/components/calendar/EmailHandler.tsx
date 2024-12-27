@@ -34,10 +34,14 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
       toast({
         title: "Success",
         description: "Booking confirmed! Check your email for details.",
+        duration: 1500,
       });
 
+      // Use setTimeout to delay the success callback
       if (onSuccess) {
-        onSuccess();
+        setTimeout(() => {
+          onSuccess();
+        }, 1500);
       }
     } catch (error) {
       console.error('EmailHandler - Error sending emails:', error);
@@ -45,6 +49,7 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandl
         title: "Error",
         description: "There was an issue sending the confirmation emails.",
         variant: "destructive",
+        duration: 1500,
       });
       throw error;
     }
