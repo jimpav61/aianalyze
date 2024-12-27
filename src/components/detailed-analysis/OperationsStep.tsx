@@ -15,6 +15,7 @@ import {
 } from "./constants/dropdownOptions";
 import { createHandlers } from "./utils/dropdownHandlers";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface OperationsStepProps {
   formData: {
@@ -30,6 +31,7 @@ export const OperationsStep = ({
   formData,
   handleInputChange,
 }: OperationsStepProps) => {
+  const { toast } = useToast();
   const [selectedChannels, setSelectedChannels] = useState<string[]>(
     formData.serviceChannels ? formData.serviceChannels.split(', ') : []
   );
@@ -55,6 +57,15 @@ export const OperationsStep = ({
         value: updatedChannels.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
+
+    // Show warning if no channels are selected
+    if (updatedChannels.length === 0) {
+      toast({
+        title: "Required Field",
+        description: "Please select at least one service channel",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleToolChange = (tool: string, checked: boolean) => {
@@ -70,6 +81,15 @@ export const OperationsStep = ({
         value: updatedTools.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
+
+    // Show warning if no tools are selected
+    if (updatedTools.length === 0) {
+      toast({
+        title: "Required Field",
+        description: "Please select at least one tool",
+        variant: "destructive",
+      });
+    }
   };
 
   const handlePainPointChange = (painPoint: string, checked: boolean) => {
@@ -85,6 +105,15 @@ export const OperationsStep = ({
         value: updatedPainPoints.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
+
+    // Show warning if no pain points are selected
+    if (updatedPainPoints.length === 0) {
+      toast({
+        title: "Required Field",
+        description: "Please select at least one pain point",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -135,7 +164,9 @@ export const OperationsStep = ({
       </div>
 
       <div className="space-y-4">
-        <Label htmlFor="currentTools">Current Tools & Software</Label>
+        <Label htmlFor="currentTools" className="flex items-center">
+          Current Tools & Software <span className="text-red-500 ml-1">*</span>
+        </Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {crmToolOptions.map((option) => (
             <div key={option.value} className="flex items-center space-x-2">
@@ -157,7 +188,9 @@ export const OperationsStep = ({
       </div>
 
       <div className="space-y-4">
-        <Label htmlFor="painPoints">Current Pain Points</Label>
+        <Label htmlFor="painPoints" className="flex items-center">
+          Current Pain Points <span className="text-red-500 ml-1">*</span>
+        </Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {commonPainPoints.map((option) => (
             <div key={option.value} className="flex items-center space-x-2">
