@@ -21,7 +21,8 @@ export const StepNavigation = ({
   const { validateStep } = useFormValidation();
   const { toast } = useToast();
 
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     console.log("StepNavigation - Attempting to move to next step");
     if (validateStep(currentStep, formData)) {
       console.log("StepNavigation - Validation passed, moving to next step");
@@ -31,13 +32,23 @@ export const StepNavigation = ({
     }
   };
 
+  const handleSubmit = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
+    if (validateStep(currentStep, formData)) {
+      onSubmit();
+    }
+  };
+
   return (
     <div className="flex justify-between mt-6">
       {currentStep > 1 && (
         <Button 
           type="button" 
           variant="outline" 
-          onClick={onBack} 
+          onClick={(e) => {
+            e.preventDefault();
+            onBack();
+          }} 
           className="w-24"
         >
           Back
@@ -46,7 +57,7 @@ export const StepNavigation = ({
       <div className="ml-auto">
         <Button
           type="button"
-          onClick={currentStep === 3 ? onSubmit : handleNext}
+          onClick={currentStep === 3 ? handleSubmit : handleNext}
           className="w-24 bg-[#f65228] hover:bg-[#f65228]/90"
         >
           {currentStep === 3 ? "Submit" : "Next"}

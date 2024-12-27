@@ -42,11 +42,7 @@ export const DetailedAnalysisForm = ({
   useEffect(() => {
     if (scrollAreaRef.current) {
       console.log("DetailedAnalysisForm - Forcing scroll to top");
-      setTimeout(() => {
-        if (scrollAreaRef.current) {
-          scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 0);
+      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentStep]);
 
@@ -61,11 +57,17 @@ export const DetailedAnalysisForm = ({
   const handleNext = () => {
     console.log("DetailedAnalysisForm - Moving to next step:", currentStep + 1);
     setCurrentStep((prev) => prev + 1);
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleBack = () => {
     console.log("DetailedAnalysisForm - Moving to previous step:", currentStep - 1);
     setCurrentStep((prev) => prev - 1);
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleSubmit = () => {
@@ -84,7 +86,7 @@ export const DetailedAnalysisForm = ({
   };
 
   return (
-    <>
+    <form onSubmit={(e) => e.preventDefault()}>
       <ScrollArea ref={scrollAreaRef} className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
@@ -113,6 +115,6 @@ export const DetailedAnalysisForm = ({
         onBack={handleBack}
         onSubmit={handleSubmit}
       />
-    </>
+    </form>
   );
 };

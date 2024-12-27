@@ -31,7 +31,10 @@ export function useFormValidation() {
     };
 
     const missingFields = requiredFields[step]?.filter(
-      (field) => !formData[field as keyof DetailedFormData]?.trim()
+      (field) => {
+        const value = formData[field as keyof DetailedFormData];
+        return !value || (typeof value === 'string' && !value.trim());
+      }
     );
 
     if (missingFields?.length > 0) {
