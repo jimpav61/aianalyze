@@ -14,6 +14,7 @@ interface CalendarEmbedProps {
 export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
   const initAttempts = useRef(0);
+  const scriptLoaded = useRef(false);
   const { toast } = useToast();
   
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
@@ -65,6 +66,13 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
             utmCampaign: 'Demo_Booking'
           }
         });
+
+        // Add event listener only once
+        if (!scriptLoaded.current) {
+          window.addEventListener('calendly.event_scheduled', handleEventScheduled);
+          scriptLoaded.current = true;
+        }
+
       } catch (error) {
         console.error("CalendarEmbed - Error initializing Calendly widget:", error);
         toast({
@@ -75,20 +83,34 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
       }
     };
 
-    // Start initialization process
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    script.onload = initializeCalendly;
-    document.head.appendChild(script);
+    // Load Calendly script if not already present
+    if (!document.querySelector('script[src*="calendly.com/assets/external/widget.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://assets.calendly.com/assets/external/widget.js';
+      script.async = true;
+      script.crossOrigin = "anonymous";
+      script.onload = initializeCalendly;
+      script.onerror = (error) => {
+        console.error("Failed to load Calendly script:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load calendar. Please refresh and try again.",
+          variant: "destructive",
+        });
+      };
+      document.head.appendChild(script);
+    } else {
+      // If script already exists, just initialize
+      initializeCalendly();
+    }
 
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      const script = document.querySelector('script[src*="calendly.com"]');
-      if (script) {
-        script.remove();
+      if (scriptLoaded.current) {
+        window.removeEventListener('calendly.event_scheduled', handleEventScheduled);
+        scriptLoaded.current = false;
       }
       if (calendarRef.current) {
         calendarRef.current.innerHTML = '';
