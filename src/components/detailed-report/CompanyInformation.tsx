@@ -18,7 +18,7 @@ export const CompanyInformation = ({ data, industry }: CompanyInformationProps) 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Company Name</p>
-          <p className="text-lg text-[#f65228]">{data.companyName}</p>
+          <p className="text-lg text-[#f65228]">{data.companyName || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
@@ -28,27 +28,27 @@ export const CompanyInformation = ({ data, industry }: CompanyInformationProps) 
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Contact Person</p>
-          <p className="text-lg text-[#f65228]">{data.ownerName}</p>
+          <p className="text-lg text-[#f65228]">{data.ownerName || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Email</p>
-          <p className="text-lg text-[#f65228]">{data.email}</p>
+          <p className="text-lg text-[#f65228]">{data.email || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Phone</p>
-          <p className="text-lg text-[#f65228]">{data.phoneNumber}</p>
+          <p className="text-lg text-[#f65228]">{data.phoneNumber || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Number of Employees</p>
-          <p className="text-lg text-[#f65228]">{data.employees}</p>
+          <p className="text-lg text-[#f65228]">{data.employees || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Annual Revenue</p>
-          <p className="text-lg text-[#f65228]">{data.revenue}</p>
+          <p className="text-lg text-[#f65228]">{data.revenue || "Not provided"}</p>
         </div>
       </div>
     </Card>

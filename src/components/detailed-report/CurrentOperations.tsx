@@ -15,22 +15,22 @@ export const CurrentOperations = ({ data }: CurrentOperationsProps) => {
       <div className="space-y-6">
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Service Channels</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.serviceChannels}</p>
+          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.serviceChannels || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Monthly Interactions</p>
-          <p className="text-lg text-[#f65228]">{data.monthlyInteractions}</p>
+          <p className="text-lg text-[#f65228]">{data.monthlyInteractions || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Current Tools</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.currentTools}</p>
+          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.currentTools || "Not provided"}</p>
         </div>
         
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-500">Pain Points</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.painPoints}</p>
+          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.painPoints || "Not provided"}</p>
         </div>
       </div>
     </Card>
