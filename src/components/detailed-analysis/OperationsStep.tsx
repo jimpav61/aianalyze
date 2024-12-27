@@ -33,12 +33,14 @@ export const OperationsStep = ({
   const [selectedChannels, setSelectedChannels] = useState<string[]>(
     formData.serviceChannels ? formData.serviceChannels.split(', ') : []
   );
+  const [selectedTools, setSelectedTools] = useState<string[]>(
+    formData.currentTools ? formData.currentTools.split(', ') : []
+  );
+  const [selectedPainPoints, setSelectedPainPoints] = useState<string[]>(
+    formData.painPoints ? formData.painPoints.split(', ') : []
+  );
 
-  const { 
-    handleMonthlyInteractionsChange,
-    handleCurrentToolsChange,
-    handlePainPointChange 
-  } = createHandlers(handleInputChange);
+  const { handleMonthlyInteractionsChange } = createHandlers(handleInputChange);
 
   const handleChannelChange = (channel: string, checked: boolean) => {
     const updatedChannels = checked
@@ -51,6 +53,36 @@ export const OperationsStep = ({
       target: {
         name: 'serviceChannels',
         value: updatedChannels.join(', ')
+      }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  const handleToolChange = (tool: string, checked: boolean) => {
+    const updatedTools = checked
+      ? [...selectedTools, tool]
+      : selectedTools.filter((t) => t !== tool);
+    
+    setSelectedTools(updatedTools);
+    
+    handleInputChange({
+      target: {
+        name: 'currentTools',
+        value: updatedTools.join(', ')
+      }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  const handlePainPointChange = (painPoint: string, checked: boolean) => {
+    const updatedPainPoints = checked
+      ? [...selectedPainPoints, painPoint]
+      : selectedPainPoints.filter((p) => p !== painPoint);
+    
+    setSelectedPainPoints(updatedPainPoints);
+    
+    handleInputChange({
+      target: {
+        name: 'painPoints',
+        value: updatedPainPoints.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
   };
@@ -68,6 +100,7 @@ export const OperationsStep = ({
                 id={option.value}
                 checked={selectedChannels.includes(option.label)}
                 onCheckedChange={(checked) => handleChannelChange(option.label, checked as boolean)}
+                className="rounded-none"
               />
               <Label
                 htmlFor={option.value}
@@ -101,42 +134,48 @@ export const OperationsStep = ({
         </Select>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         <Label htmlFor="currentTools">Current Tools & Software</Label>
-        <Select 
-          value={crmToolOptions.find(opt => opt.label === formData.currentTools)?.value} 
-          onValueChange={handleCurrentToolsChange}
-        >
-          <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select your CRM/tools" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            {crmToolOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {crmToolOptions.map((option) => (
+            <div key={option.value} className="flex items-center space-x-2">
+              <Checkbox
+                id={option.value}
+                checked={selectedTools.includes(option.label)}
+                onCheckedChange={(checked) => handleToolChange(option.label, checked as boolean)}
+                className="rounded-none"
+              />
+              <Label
+                htmlFor={option.value}
+                className="text-sm font-normal cursor-pointer"
+              >
                 {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-4">
         <Label htmlFor="painPoints">Current Pain Points</Label>
-        <Select 
-          value={commonPainPoints.find(point => point.label === formData.painPoints)?.value} 
-          onValueChange={handlePainPointChange}
-        >
-          <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select your main pain point" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            {commonPainPoints.map((point) => (
-              <SelectItem key={point.value} value={point.value}>
-                {point.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {commonPainPoints.map((option) => (
+            <div key={option.value} className="flex items-center space-x-2">
+              <Checkbox
+                id={option.value}
+                checked={selectedPainPoints.includes(option.label)}
+                onCheckedChange={(checked) => handlePainPointChange(option.label, checked as boolean)}
+                className="rounded-none"
+              />
+              <Label
+                htmlFor={option.value}
+                className="text-sm font-normal cursor-pointer"
+              >
+                {option.label}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
