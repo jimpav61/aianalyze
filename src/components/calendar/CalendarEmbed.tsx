@@ -88,8 +88,16 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
       const script = document.createElement('script');
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
+      script.defer = true; // Add defer to ensure proper loading
       script.crossOrigin = "anonymous";
-      script.onload = initializeCalendly;
+      
+      // Add load event listener to track when script is loaded
+      script.onload = () => {
+        console.log("CalendarEmbed - Calendly script loaded successfully");
+        // Wait a brief moment before initializing to ensure everything is ready
+        setTimeout(initializeCalendly, 100);
+      };
+      
       script.onerror = (error) => {
         console.error("Failed to load Calendly script:", error);
         toast({
@@ -98,10 +106,11 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
           variant: "destructive",
         });
       };
+      
       document.head.appendChild(script);
     } else {
-      // If script already exists, just initialize
-      initializeCalendly();
+      // If script already exists, just initialize after a brief delay
+      setTimeout(initializeCalendly, 100);
     }
 
     return () => {
