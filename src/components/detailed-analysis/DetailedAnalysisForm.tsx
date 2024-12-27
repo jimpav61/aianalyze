@@ -5,6 +5,7 @@ import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
+import { useEffect, useRef } from "react";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -27,12 +28,19 @@ export const DetailedAnalysisForm = ({
   analysis,
   initialData
 }: DetailedAnalysisFormProps) => {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const {
     currentStep,
     setCurrentStep,
     formData,
     handleInputChange
   } = useDetailedFormState(initialData);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = 0;
+    }
+  }, [currentStep]);
 
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
@@ -61,7 +69,7 @@ export const DetailedAnalysisForm = ({
 
   return (
     <>
-      <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
+      <ScrollArea ref={scrollAreaRef} className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
             formData={formData}
