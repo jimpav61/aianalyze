@@ -128,7 +128,7 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   }, [getPrefillData, handleEventScheduled, toast]);
 
   return (
-    <div className="calendly-embed h-[calc(100vh-200px)] w-full">
+    <div className="calendly-embed h-[calc(100vh-200px)] w-full" style={{ marginTop: '-66px' }}>
       <div 
         ref={calendarRef}
         className="calendly-inline-widget w-full h-full"
