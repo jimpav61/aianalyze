@@ -21,11 +21,10 @@ export const ReportContent = ({
   onBookDemo,
   industry 
 }: ReportContentProps) => {
-  console.log("ReportContent - Rendering with complete data:", {
+  console.log("ReportContent - Rendering with data:", {
     formData,
     analysis,
     industry,
-    hasBookDemo: !!onBookDemo,
     clientInfo: {
       companyName: formData?.companyName,
       ownerName: formData?.ownerName,
@@ -50,7 +49,10 @@ export const ReportContent = ({
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Company Overview</h2>
-        <CompanyInformation data={formData} industry={industry || analysis?.industry} />
+        <CompanyInformation 
+          data={formData} 
+          industry={industry || analysis?.industry || formData?.industry} 
+        />
       </div>
       
       <Separator className="my-8" />

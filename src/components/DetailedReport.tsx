@@ -24,6 +24,19 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
+  console.log("DetailedReport - Processing data:", {
+    formData: data,
+    analysis,
+    clientInfo: {
+      companyName: data.companyName,
+      ownerName: data.ownerName,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      employees: data.employees,
+      revenue: data.revenue
+    }
+  });
+
   // Ensure we have the complete analysis data
   const processedAnalyses = analysis.allAnalyses || analyses || [analysis];
   const primaryAnalysis = {
