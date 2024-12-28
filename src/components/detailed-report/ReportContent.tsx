@@ -21,20 +21,6 @@ export const ReportContent = ({
   onBookDemo,
   industry 
 }: ReportContentProps) => {
-  console.log("ReportContent - Rendering with data:", {
-    formData,
-    analysis,
-    industry,
-    clientInfo: {
-      companyName: formData?.companyName,
-      ownerName: formData?.ownerName,
-      email: formData?.email,
-      phoneNumber: formData?.phoneNumber,
-      employees: formData?.employees,
-      revenue: formData?.revenue
-    }
-  });
-
   if (!formData || !analysis) {
     console.error("ReportContent - Missing required data:", { formData, analysis });
     return null;

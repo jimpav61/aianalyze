@@ -13,8 +13,6 @@ interface CompanyInformationProps {
 }
 
 export const CompanyInformation = ({ data, industry }: CompanyInformationProps) => {
-  console.log("CompanyInformation - Rendering with data:", { data, industry });
-  
   return (
     <Card className="p-6 bg-[#F8F9FC] border border-gray-100">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

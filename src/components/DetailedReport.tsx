@@ -24,19 +24,6 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
-  console.log("DetailedReport - Processing data:", {
-    formData: data,
-    analysis,
-    clientInfo: {
-      companyName: data.companyName,
-      ownerName: data.ownerName,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      employees: data.employees,
-      revenue: data.revenue
-    }
-  });
-
   // Ensure we have the complete analysis data
   const processedAnalyses = analysis.allAnalyses || analyses || [analysis];
   const primaryAnalysis = {
@@ -51,15 +38,13 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
       id="detailed-report" 
       className="relative w-full bg-white p-8 rounded-lg shadow-sm"
     >
-      <div className="mb-6">
-        <ReportActions 
-          formData={data}
-          analysis={primaryAnalysis}
-          onBookDemo={onBookDemo}
-        />
-      </div>
+      <ReportContent 
+        formData={data}
+        analysis={primaryAnalysis}
+        onBookDemo={onBookDemo}
+      />
       <div className="mt-6">
-        <ReportContent 
+        <ReportActions 
           formData={data}
           analysis={primaryAnalysis}
           onBookDemo={onBookDemo}
