@@ -50,6 +50,12 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       console.log("Generating PDF with data:", {
         formData,
         analysis

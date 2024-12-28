@@ -3,6 +3,8 @@ import { CompanyInformation } from "./CompanyInformation";
 import { CurrentOperations } from "./CurrentOperations";
 import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
+import { ReportHeader } from "./ReportHeader";
+import { ReportFooter } from "./ReportFooter";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -20,6 +22,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div id="detailed-report" className="space-y-8 print:space-y-6">
+      <ReportHeader />
       <CompanyInformation data={formData} industry={analysis.industry} />
       <CurrentOperations data={formData} />
       <AnalysisResults 
@@ -34,6 +37,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
           additionalInfo: analysis.additionalInfo
         }} 
       />
+      <ReportFooter />
     </div>
   );
 };
