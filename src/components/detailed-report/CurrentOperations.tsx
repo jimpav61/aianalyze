@@ -1,15 +1,16 @@
 import { Card } from "../ui/card";
+import { DetailedFormData } from "@/types/analysis";
 
 interface CurrentOperationsProps {
-  data: {
-    serviceChannels: string;
-    monthlyInteractions: string;
-    currentTools: string;
-    painPoints: string;
-  };
+  data: DetailedFormData;
 }
 
 export const CurrentOperations = ({ data }: CurrentOperationsProps) => {
+  if (!data) {
+    console.error("CurrentOperations - Missing required data");
+    return null;
+  }
+
   return (
     <Card className="p-6 mb-8">
       <h2 className="text-xl font-semibold mb-4">Current Operations</h2>

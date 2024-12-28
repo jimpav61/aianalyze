@@ -20,10 +20,20 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div id="detailed-report" className="space-y-8 print:space-y-6">
-      <CompanyInformation formData={formData} industry={analysis.industry} />
-      <CurrentOperations formData={formData} />
-      <AnalysisResults analyses={[analysis]} />
-      <ImplementationPlan data={analysis} onBookDemo={onBookDemo} />
+      <CompanyInformation data={formData} industry={analysis.industry} />
+      <CurrentOperations data={formData} />
+      <AnalysisResults 
+        analyses={[analysis]} 
+        revenue={formData.revenue || "0"} 
+      />
+      <ImplementationPlan 
+        data={{
+          objectives: analysis.objectives || "",
+          timeline: analysis.timeline || "",
+          budget: analysis.budget || "",
+          additionalInfo: analysis.additionalInfo
+        }} 
+      />
     </div>
   );
 };
