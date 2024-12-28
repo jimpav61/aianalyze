@@ -28,60 +28,34 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
 
     console.log('PDF Generation - Found report element, preparing for capture');
 
-    // Create temporary container with fixed width
-    const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '-9999px';
-    tempContainer.style.width = '800px';
-    
-    // Clone the report element
-    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
-    
-    // Style updates for better PDF rendering
-    const elements = clonedReport.querySelectorAll('*');
-    elements.forEach(element => {
-      if (element instanceof HTMLElement) {
-        element.style.backgroundColor = 'white';
-        element.style.color = '#000000';
-        
-        if (element.classList.contains('section-card')) {
-          element.style.border = '1px solid #e2e8f0';
-          element.style.borderRadius = '8px';
-          element.style.padding = '16px';
-          element.style.marginBottom = '16px';
-        }
-        
-        if (element.tagName === 'P') {
-          element.style.lineHeight = '1.6';
-          element.style.marginBottom = '8px';
-          element.style.whiteSpace = 'normal';
-          element.style.wordBreak = 'break-word';
-        }
-
-        if (['H1', 'H2', 'H3'].includes(element.tagName)) {
-          element.style.marginBottom = '16px';
-          element.style.marginTop = '24px';
-          element.style.fontWeight = 'bold';
-        }
-      }
-    });
-
-    tempContainer.appendChild(clonedReport);
-    document.body.appendChild(tempContainer);
-
-    console.log('PDF Generation - Preparing to capture content');
-
-    const canvas = await html2canvas(tempContainer, {
+    const canvas = await html2canvas(reportElement, {
       scale: 2,
       useCORS: true,
       logging: true,
       backgroundColor: '#ffffff',
-      width: 800,
-      height: tempContainer.scrollHeight
+      onclone: (document, element) => {
+        // Preserve all styles and spacing
+        element.style.padding = '40px';
+        element.style.width = '800px';
+        element.style.margin = '0 auto';
+        
+        // Ensure all elements maintain their styles
+        const allElements = element.getElementsByTagName('*');
+        for (let i = 0; i < allElements.length; i++) {
+          const el = allElements[i] as HTMLElement;
+          const computedStyle = window.getComputedStyle(el);
+          el.style.color = computedStyle.color;
+          el.style.backgroundColor = computedStyle.backgroundColor;
+          el.style.padding = computedStyle.padding;
+          el.style.margin = computedStyle.margin;
+          el.style.fontSize = computedStyle.fontSize;
+          el.style.fontWeight = computedStyle.fontWeight;
+          el.style.lineHeight = computedStyle.lineHeight;
+          el.style.borderRadius = computedStyle.borderRadius;
+          el.style.border = computedStyle.border;
+        }
+      }
     });
-
-    // Clean up temporary container
-    document.body.removeChild(tempContainer);
 
     console.log('PDF Generation - Content captured successfully');
 
