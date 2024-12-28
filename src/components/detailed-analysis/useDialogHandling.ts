@@ -25,11 +25,10 @@ export const useDialogHandling = ({
   const handleClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Handle close triggered", {
       showReport,
-      showFormOnly,
-      hasFormData: !!formData
+      showFormOnly
     });
     
-    if (showReport && !showFormOnly && formData) {
+    if (showReport && !showFormOnly) {
       setShowCloseConfirm(true);
     } else {
       if (resetOnClose) {
@@ -38,7 +37,7 @@ export const useDialogHandling = ({
       }
       onClose();
     }
-  }, [onClose, showReport, showFormOnly, resetOnClose, formData]);
+  }, [onClose, showReport, showFormOnly, resetOnClose]);
 
   const confirmClose = useCallback(() => {
     console.log("DetailedAnalysisDialog - Confirming close");

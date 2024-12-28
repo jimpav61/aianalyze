@@ -45,7 +45,7 @@ export const useCalendarHandling = ({
         toast({
           title: "Demo Scheduled Successfully",
           description: "Your report has been downloaded. You can close this window when you're done.",
-          duration: 1500,
+          duration: 5000,
         });
       } catch (error) {
         console.error("PDF Generation Error:", error);
@@ -53,7 +53,6 @@ export const useCalendarHandling = ({
           title: "Error",
           description: "Failed to generate report. Please try again.",
           variant: "destructive",
-          duration: 1500,
         });
       }
     }

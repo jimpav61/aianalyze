@@ -1,14 +1,5 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
+import { Button } from "../ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
@@ -18,7 +9,7 @@ interface CloseConfirmationDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  formData: DetailedFormData | null;
+  formData?: DetailedFormData;
   analysis?: any;
 }
 
@@ -27,63 +18,98 @@ export const CloseConfirmationDialog = ({
   onOpenChange,
   onConfirm,
   formData,
-  analysis,
+  analysis
 }: CloseConfirmationDialogProps) => {
   const { toast } = useToast();
 
-  const handleDownload = async () => {
-    try {
-      console.log("CloseConfirmationDialog - Starting download with data:", {
+  const handleDownload = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log("Download attempt - Starting with data:", {
+      hasFormData: !!formData,
+      formDataContent: formData,
+      hasAnalysis: !!analysis,
+      analysisContent: analysis
+    });
+
+    if (!formData || !analysis) {
+      console.error("Download failed - Missing required data:", {
         formData,
         analysis
       });
+      
+      toast({
+        title: "Error",
+        description: "Report data not available. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      const pdf = await generateAnalysisReport({ formData, analysis });
-      const fileName = `AI_Analysis_Report_${formData?.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("CloseConfirmationDialog - Generated PDF, attempting to save as:", fileName);
+    try {
+      console.log("Generating PDF with data:", {
+        formData,
+        analysis
+      });
       
-      pdf.save(fileName);
+      const doc = await generateAnalysisReport({ formData, analysis });
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       
-      console.log("CloseConfirmationDialog - PDF saved successfully");
+      console.log("PDF generated successfully, attempting save as:", fileName);
+      doc.save(fileName);
+      console.log("PDF saved successfully");
+      
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
-        duration: 1500,
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Report downloaded successfully!</p>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="w-full flex items-center justify-center gap-2 mt-2"
+              onClick={() => handleDownload()}
+            >
+              <Download className="h-4 w-4" />
+              Download Again
+            </Button>
+          </div>
+        ),
       });
     } catch (error) {
-      console.error("CloseConfirmationDialog - Download error:", error);
+      console.error("PDF Generation/Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
-        duration: 1500,
       });
     }
   };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Save Your Analysis Report</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure you want to close?</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
-            <p>Would you like to download your analysis report before closing?</p>
-            <div className="flex flex-col gap-3 mt-4">
-              <Button
-                variant="outline"
-                className="w-full flex items-center justify-center gap-2"
-                onClick={handleDownload}
-              >
-                <Download className="h-4 w-4" />
-                Download Report
-              </Button>
-            </div>
+            <p>Don't worry, you can still access and download your analysis report after closing this window.</p>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+              onClick={handleDownload}
+            >
+              <Download className="h-4 w-4" />
+              Download Report
+            </Button>
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="gap-2 sm:gap-0">
-          <AlertDialogCancel>Go Back</AlertDialogCancel>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} className="bg-red-500 hover:bg-red-600">
-            Close Without Saving
+            Yes, close window
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

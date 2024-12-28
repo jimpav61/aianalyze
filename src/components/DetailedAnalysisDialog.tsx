@@ -1,13 +1,11 @@
-import { useEffect } from "react";
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
+import { DialogContent } from "./detailed-analysis/DialogContent";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
+import { CalendarView } from "./detailed-analysis/CalendarView";
+import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
+import { useDialogHandling } from "./detailed-analysis/useDialogHandling";
 import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
-import { useDialogState } from "./detailed-analysis/hooks/useDialogState";
-import { useDialogActions } from "./detailed-analysis/hooks/useDialogActions";
-import { useBookingHandling } from "./detailed-analysis/hooks/useBookingHandling";
-import { DialogStateManager } from "./detailed-analysis/dialog/DialogStateManager";
-import { DialogDebugger } from "./detailed-analysis/dialog/DialogDebugger";
-import { DialogMainContent } from "./detailed-analysis/dialog/DialogMainContent";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -20,94 +18,88 @@ export const DetailedAnalysisDialog = ({
   analysis,
   showFormOnly = false,
 }: ExtendedDetailedAnalysisProps) => {
+  const { toast } = useToast();
+  
   const {
     formData,
     showCloseConfirm,
     showReport,
-    showCalendar,
     setShowCloseConfirm,
     setShowReport,
-    setShowCalendar,
-    setFormData
-  } = useDialogState();
-
-  // Initialize form data from analysis if available
-  useEffect(() => {
-    if (analysis?.formData && !formData) {
-      console.log("DetailedAnalysisDialog - Initializing form data from analysis:", analysis.formData);
-      setFormData(analysis.formData);
-      if (!showFormOnly) {
-        setShowReport(true);
-      }
-    }
-  }, [analysis, formData, setFormData, setShowReport, showFormOnly]);
-
-  const {
     handleSubmit,
     handleClose,
-    handleBookDemo
-  } = useDialogActions({
-    formData,
-    showReport,
+    confirmClose
+  } = useDialogHandling({ 
+    onClose, 
     showFormOnly,
-    setShowReport,
-    setShowCloseConfirm,
-    setShowCalendar,
-    onClose,
-    industry
+    resetOnClose: true // Add this to ensure proper cleanup
   });
 
-  const { handleBookingSubmit } = useBookingHandling({
-    formData,
-    analysis,
-    onClose: () => {
-      console.log("DetailedAnalysisDialog - Closing dialog and resetting state after booking");
-      setShowReport(false);
-      setShowCloseConfirm(false);
-      onClose();
-    }
+  const {
+    showCalendar,
+    handleBookDemo,
+    handleBookingSubmit
+  } = useCalendarHandling({ 
+    onClose, 
+    setShowReport,
+    formData, // Pass formData to ensure it's available for the calendar
+    analysis // Pass analysis to ensure it's available for the calendar
   });
+
+  console.log("DetailedAnalysisDialog - Current state:", {
+    showReport,
+    showCalendar,
+    hasFormData: !!formData,
+    showFormOnly,
+    hasAnalysis: !!analysis,
+    formDataContent: formData,
+    analysisContent: analysis
+  });
+
+  const onBookDemo = () => {
+    console.log("DetailedAnalysisDialog - Book demo clicked with data:", {
+      formData,
+      analysis
+    });
+    
+    const success = handleBookDemo(formData);
+    if (!success) {
+      console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
+      toast({
+        title: "Error",
+        description: "Please complete the form first.",
+        variant: "destructive",
+      });
+    } else {
+      console.log("DetailedAnalysisDialog - Book demo successful");
+    }
+  };
 
   return (
     <>
-      <DialogStateManager
-        isOpen={isOpen}
-        formData={formData}
-        analysis={analysis}
-        showFormOnly={showFormOnly}
-        setShowReport={setShowReport}
-        setFormData={setFormData}
-      />
-
-      <DialogDebugger
-        showReport={showReport}
-        showCalendar={showCalendar}
-        formData={formData}
-        analysis={analysis}
-        isOpen={isOpen}
-        industry={industry || ''}
-      />
-
       <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-        <DialogMainContent
-          showCalendar={showCalendar}
-          showReport={showReport}
-          formData={formData}
-          onSubmit={handleSubmit}
-          industry={industry}
-          analysis={analysis}
-          onBookDemo={handleBookDemo}
-          handleBookingSubmit={handleBookingSubmit}
-        />
+        {showCalendar ? (
+          <CalendarView
+            onSubmit={handleBookingSubmit}
+            formData={formData}
+            analysis={analysis}
+          />
+        ) : (
+          <DialogContent
+            showReport={showReport && !showFormOnly}
+            formData={formData}
+            onSubmit={handleSubmit}
+            industry={industry}
+            analysis={analysis}
+            onBookDemo={onBookDemo}
+          />
+        )}
       </DialogWrapper>
 
       <CloseConfirmationDialog
         isOpen={showCloseConfirm}
         onOpenChange={setShowCloseConfirm}
-        onConfirm={() => {
-          setShowCloseConfirm(false);
-          onClose();
-        }}
+        onConfirm={confirmClose}
         formData={formData}
         analysis={analysis}
       />

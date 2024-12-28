@@ -1,9 +1,8 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "../ui/card";
 
 interface CompanyInformationProps {
   data: {
     companyName: string;
-    ownerName: string;
     email: string;
     phoneNumber: string;
     employees: string;
@@ -14,41 +13,32 @@ interface CompanyInformationProps {
 
 export const CompanyInformation = ({ data, industry }: CompanyInformationProps) => {
   return (
-    <Card className="p-6 bg-[#F8F9FC] border border-gray-100">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Company Name</p>
-          <p className="text-lg text-[#f65228]">{data.companyName || "Not provided"}</p>
+    <Card className="p-6 mb-8">
+      <h2 className="text-xl font-semibold mb-4">Company Information</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <p className="font-medium">Company Name:</p>
+          <p className="text-gray-600 break-words">{data.companyName}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Industry</p>
-          <p className="text-lg text-[#f65228]">{industry || "Not specified"}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Industry:</p>
+          <p className="text-gray-600 break-words">{industry}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Contact Person</p>
-          <p className="text-lg text-[#f65228]">{data.ownerName || "Not provided"}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Contact Email:</p>
+          <p className="text-gray-600 break-all">{data.email}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Email</p>
-          <p className="text-lg text-[#f65228]">{data.email || "Not provided"}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Contact Phone:</p>
+          <p className="text-gray-600">{data.phoneNumber}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Phone</p>
-          <p className="text-lg text-[#f65228]">{data.phoneNumber || "Not provided"}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Number of Employees:</p>
+          <p className="text-gray-600">{data.employees}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Number of Employees</p>
-          <p className="text-lg text-[#f65228]">{data.employees || "Not provided"}</p>
-        </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Annual Revenue</p>
-          <p className="text-lg text-[#f65228]">{data.revenue || "Not provided"}</p>
+        <div className="space-y-1">
+          <p className="font-medium">Annual Revenue:</p>
+          <p className="text-gray-600">{data.revenue}</p>
         </div>
       </div>
     </Card>

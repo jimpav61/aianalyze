@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useFormValidation } from "./ValidationUtils";
 import { DetailedFormData } from "@/types/analysis";
-import { useEffect } from "react";
 
 interface StepNavigationProps {
   currentStep: number;
@@ -19,14 +18,6 @@ export const StepNavigation = ({
   onSubmit,
 }: StepNavigationProps) => {
   const { validateStep } = useFormValidation();
-
-  // Scroll to top whenever step changes
-  useEffect(() => {
-    const scrollArea = document.querySelector('.scroll-area-viewport');
-    if (scrollArea) {
-      scrollArea.scrollTop = 0;
-    }
-  }, [currentStep]);
 
   const handleNext = () => {
     console.log("StepNavigation - Attempting to move to next step");

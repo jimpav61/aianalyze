@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "../ui/card";
 
 interface CurrentOperationsProps {
   data: {
@@ -11,26 +11,24 @@ interface CurrentOperationsProps {
 
 export const CurrentOperations = ({ data }: CurrentOperationsProps) => {
   return (
-    <Card className="p-6 bg-[#F8F9FC] border border-gray-100">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Service Channels</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.serviceChannels || "Not provided"}</p>
+    <Card className="p-6 mb-8">
+      <h2 className="text-xl font-semibold mb-4">Current Operations</h2>
+      <div className="space-y-4">
+        <div>
+          <p className="font-medium">Service Channels:</p>
+          <p className="text-gray-600">{data.serviceChannels || "Not specified"}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Monthly Interactions</p>
-          <p className="text-lg text-[#f65228]">{data.monthlyInteractions || "Not provided"}</p>
+        <div>
+          <p className="font-medium">Monthly Interactions:</p>
+          <p className="text-gray-600">{data.monthlyInteractions || "Not specified"}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Current Tools</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.currentTools || "Not provided"}</p>
+        <div>
+          <p className="font-medium">Current Tools:</p>
+          <p className="text-gray-600">{data.currentTools || "Not specified"}</p>
         </div>
-        
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-500">Pain Points</p>
-          <p className="text-lg text-[#f65228] whitespace-pre-line">{data.painPoints || "Not provided"}</p>
+        <div>
+          <p className="font-medium">Pain Points:</p>
+          <p className="text-gray-600">{data.painPoints || "Not specified"}</p>
         </div>
       </div>
     </Card>

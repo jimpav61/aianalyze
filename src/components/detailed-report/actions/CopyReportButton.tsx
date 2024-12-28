@@ -15,7 +15,6 @@ export const CopyReportButton = ({ reportRef }: CopyReportButtonProps) => {
         title: "Error",
         description: "Could not copy report content",
         variant: "destructive",
-        duration: 1500,
       });
       return;
     }
@@ -26,14 +25,12 @@ export const CopyReportButton = ({ reportRef }: CopyReportButtonProps) => {
       toast({
         title: "Success",
         description: "Report copied to clipboard",
-        duration: 1500,
       });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to copy report",
         variant: "destructive",
-        duration: 1500,
       });
     }
   };

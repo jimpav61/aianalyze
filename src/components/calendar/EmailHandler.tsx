@@ -1,30 +1,17 @@
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { DetailedFormData } from "@/types/analysis";
 
-interface EmailHandlerProps {
-  formData?: DetailedFormData;
+interface UseEmailHandlerProps {
+  formData?: any;
   analysis?: any;
   onSuccess?: () => void;
 }
 
-export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerProps) => {
+export const useEmailHandler = ({ formData, analysis, onSuccess }: UseEmailHandlerProps) => {
   const { toast } = useToast();
 
   const sendEmails = async () => {
-    console.log('EmailHandler - Attempting to send emails with data:', {
-      formData,
-      analysis
-    });
-
-    if (!formData?.email) {
-      console.error('EmailHandler - Missing email address');
-      toast({
-        title: "Error",
-        description: "Email address is required.",
-        variant: "destructive",
-        duration: 1500,
-      });
+    if (!formData || !analysis) {
+      console.error('EmailHandler - Missing required data:', { formData, analysis });
       return;
     }
 
@@ -47,14 +34,10 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
       toast({
         title: "Success",
         description: "Booking confirmed! Check your email for details.",
-        duration: 1500,
       });
 
-      // Call success callback without refreshing
       if (onSuccess) {
-        setTimeout(() => {
-          onSuccess();
-        }, 1500);
+        onSuccess();
       }
     } catch (error) {
       console.error('EmailHandler - Error sending emails:', error);
@@ -62,7 +45,6 @@ export const useEmailHandler = ({ formData, analysis, onSuccess }: EmailHandlerP
         title: "Error",
         description: "There was an issue sending the confirmation emails.",
         variant: "destructive",
-        duration: 1500,
       });
       throw error;
     }

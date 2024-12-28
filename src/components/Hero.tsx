@@ -5,7 +5,6 @@ import { BenefitsList } from "./hero/BenefitsList";
 import { HeroActions } from "./hero/HeroActions";
 import { useToast } from "@/hooks/use-toast";
 import { AnalysisSection } from "./AnalysisSection";
-import { DetailedFormData } from "@/types/analysis";
 
 interface HeroProps {
   selectedIndustry?: string;
@@ -30,25 +29,6 @@ export const Hero = ({
     if (analyses && analyses.length > 0) {
       console.log("Hero - Setting up analysis with data:", analyses);
       
-      // Create initial form data with all required fields
-      const initialFormData: DetailedFormData = {
-        companyName: "",
-        ownerName: "",
-        email: "",
-        phoneNumber: "",
-        employees: "",
-        revenue: "",
-        serviceChannels: "",
-        monthlyInteractions: "",
-        currentTools: "",
-        painPoints: "",
-        objectives: "",
-        timeline: "",
-        budget: "",
-        additionalInfo: "",
-        industry: selectedIndustry || ""
-      };
-      
       const primaryAnalysis = {
         industry: selectedIndustry,
         department: analyses[0].department,
@@ -57,32 +37,21 @@ export const Hero = ({
         profit_increase: Number(analyses[0].profit_increase),
         explanation: analyses[0].explanation,
         marketing_strategy: analyses[0].marketingStrategy,
-        allAnalyses: analyses,
-        formData: initialFormData
+        allAnalyses: analyses
       };
       
-      console.log("Hero - Created primary analysis:", primaryAnalysis);
       setCurrentAnalysis(primaryAnalysis);
       setShowDetailedDialog(true);
 
       toast({
         title: "AI Implementation Opportunities",
         description: `We've identified ${analyses.length} departments where AI can be implemented to improve efficiency and reduce costs.`,
-        duration: 1500,
+        duration: 5000,
       });
     }
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
-    if (!selectedIndustry) {
-      toast({
-        title: "Error",
-        description: "Please select an industry first",
-        variant: "destructive",
-        duration: 1500,
-      });
-      return;
-    }
     console.log("Hero - Analyze button clicked");
     handleAnalyze();
   };
@@ -104,7 +73,7 @@ export const Hero = ({
       </div>
 
       <AnalysisSection 
-        analyses={analyses} 
+        analyses={analyses.length > 0 ? analyses : []} 
         isMobile={false}
         analysisGridRef={null}
       />
@@ -118,7 +87,7 @@ export const Hero = ({
         }}
         industry={selectedIndustry}
         analysis={currentAnalysis}
-        showFormOnly={true}
+        showFormOnly={false}
       />
     </div>
   );

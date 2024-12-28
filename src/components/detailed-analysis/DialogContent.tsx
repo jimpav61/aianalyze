@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { FormView } from "./FormView";
 import { ReportView } from "./ReportView";
 import { DetailedFormData } from "@/types/analysis";
@@ -22,25 +21,12 @@ export const DialogContent = ({
   console.log("DialogContent - Render state:", { 
     showReport, 
     hasFormData: !!formData, 
-    formDataContent: formData,
     hasAnalysis: !!analysis,
-    industry,
-    analysisData: analysis
+    industry 
   });
 
-  useEffect(() => {
-    if (showReport && !formData && analysis?.formData) {
-      console.log("DialogContent - Using analysis form data:", analysis.formData);
-      onSubmit(analysis.formData);
-    }
-  }, [showReport, formData, analysis, onSubmit]);
-
-  if (showReport && formData) {
-    console.log("DialogContent - Showing report view with complete data:", {
-      formData,
-      analysis
-    });
-    
+  if (showReport && formData && analysis) {
+    console.log("DialogContent - Showing report view");
     return (
       <ReportView 
         formData={formData}

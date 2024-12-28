@@ -8,21 +8,15 @@ export const calculateRevenue = (revenueStr: string): number => {
   }
 
   // Handle ranges like "$100,000 - $500,000"
-  const matches = revenueStr.match(/\$?(\d+(?:,\d{3})*(?:\.\d+)?)/g);
+  const matches = revenueStr.match(/\$(\d+(?:,\d{3})*)/g);
   if (matches && matches.length >= 1) {
-    const numbers = matches.map(str => parseFloat(str.replace(/[$,]/g, '')));
-    if (numbers.length === 2) {
-      return Math.round((numbers[0] + numbers[1]) / 2);
+    if (matches.length === 2) {
+      const lowerBound = parseFloat(matches[0].replace(/[$,]/g, ''));
+      const upperBound = parseFloat(matches[1].replace(/[$,]/g, ''));
+      return Math.round((lowerBound + upperBound) / 2);
     }
-    return numbers[0];
+    return parseFloat(matches[0].replace(/[$,]/g, ''));
   }
-
-  // Handle plain numbers
-  const plainNumber = parseFloat(revenueStr.replace(/[$,]/g, ''));
-  if (!isNaN(plainNumber)) {
-    return plainNumber;
-  }
-
   return 0;
 };
 
@@ -38,11 +32,7 @@ const getBaseFactors = (department: string) => {
     'Legal': { savingsPercent: 15, profitPercent: 8 },
     'Manufacturing': { savingsPercent: 28, profitPercent: 16 },
     'Supply Chain': { savingsPercent: 32, profitPercent: 18 },
-    'Research & Development': { savingsPercent: 20, profitPercent: 15 },
-    'Client Services': { savingsPercent: 25, profitPercent: 15 },
-    'Design Studio': { savingsPercent: 30, profitPercent: 20 },
-    'Project Management': { savingsPercent: 28, profitPercent: 18 },
-    'Resource Planning': { savingsPercent: 25, profitPercent: 15 }
+    'Research & Development': { savingsPercent: 20, profitPercent: 15 }
   };
   return factors[department] || { savingsPercent: 20, profitPercent: 10 };
 };
@@ -63,9 +53,7 @@ const getIndustryMultiplier = (industry: string): number => {
     'Hospitality': 0.9,
     'Professional Services': 1.25,
     'Media & Entertainment': 1.2,
-    'Telecommunications': 1.3,
-    'Architecture & Design': 1.3,
-    'Banking & Financial Services': 1.35
+    'Telecommunications': 1.3
   };
   return multipliers[industry] || 1.0;
 };
@@ -81,11 +69,15 @@ const getScalingFactor = (revenue: number) => {
 };
 
 export const calculateFinancials = (revenue: number, department: string, industry?: string) => {
-  console.log('Financial calculation details:', {
-    revenue,
-    department,
-    industry,
-  });
+  if (!revenue || revenue <= 0) {
+    console.warn('Invalid revenue value:', revenue);
+    return {
+      savingsAmount: 0,
+      savingsPercentage: 0,
+      profitPercentage: 0,
+      profitAmount: 0
+    };
+  }
 
   const baseFactors = getBaseFactors(department);
   const scalingFactor = getScalingFactor(revenue);
@@ -99,7 +91,10 @@ export const calculateFinancials = (revenue: number, department: string, industr
   const savingsAmount = Math.round(revenue * (adjustedSavingsPercent / 100));
   const profitAmount = Math.round(revenue * (adjustedProfitPercent / 100));
 
-  console.log('Financial calculation results:', {
+  console.log('Financial calculation details:', {
+    revenue,
+    department,
+    industry,
     baseFactors,
     scalingFactor,
     industryMultiplier,

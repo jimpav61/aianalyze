@@ -18,7 +18,6 @@ const Index = () => {
         title: "Error",
         description: "Please select an industry first",
         variant: "destructive",
-        duration: 1500,
       });
       return;
     }
@@ -28,23 +27,20 @@ const Index = () => {
       const results = await generateAnalysis(selectedIndustry);
       console.log("Analysis results:", results);
       setAnalyses(results);
+
+      if (analysisGridRef.current) {
+        analysisGridRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     } catch (error) {
       console.error("Error generating analysis:", error);
       toast({
         title: "Error",
         description: "Failed to generate analysis. Please try again.",
         variant: "destructive",
-        duration: 1500,
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Reset analyses when industry changes
-  const handleIndustryChange = (industry: string) => {
-    setSelectedIndustry(industry);
-    setAnalyses([]);
   };
 
   return (
@@ -53,7 +49,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <Hero
           selectedIndustry={selectedIndustry}
-          setSelectedIndustry={handleIndustryChange}
+          setSelectedIndustry={setSelectedIndustry}
           isLoading={isLoading}
           handleAnalyze={handleAnalyze}
           analyses={analyses}

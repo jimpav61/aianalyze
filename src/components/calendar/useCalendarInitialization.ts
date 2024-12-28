@@ -37,7 +37,6 @@ export const useCalendarInitialization = ({
           title: "Error",
           description: "Failed to load calendar. Please refresh the page.",
           variant: "destructive",
-          duration: 1500,
         });
         return;
       }
@@ -65,10 +64,6 @@ export const useCalendarInitialization = ({
         if (!scriptLoaded.current) {
           window.addEventListener('calendly.event_scheduled', handleEventScheduled);
           scriptLoaded.current = true;
-          console.log("CalendarEmbed - Calendar initialized successfully with data:", {
-            prefill,
-            formData
-          });
         }
 
       } catch (error) {
@@ -77,7 +72,6 @@ export const useCalendarInitialization = ({
           title: "Error",
           description: "Failed to initialize calendar. Please try again.",
           variant: "destructive",
-          duration: 1500,
         });
       }
     };
@@ -100,7 +94,6 @@ export const useCalendarInitialization = ({
           title: "Error",
           description: "Failed to load calendar. Please refresh and try again.",
           variant: "destructive",
-          duration: 1500,
         });
       };
       
@@ -121,5 +114,5 @@ export const useCalendarInitialization = ({
         calendarRef.current.innerHTML = '';
       }
     };
-  }, [calendarRef, getPrefillData, handleEventScheduled, toast, formData]);
+  }, [calendarRef, getPrefillData, handleEventScheduled, toast]);
 };

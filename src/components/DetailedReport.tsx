@@ -12,7 +12,6 @@ interface DetailedReportProps {
     profit_increase: number;
     explanation: string;
     marketing_strategy: string;
-    allAnalyses?: any[];
   };
   analyses: any[];
   onBookDemo?: () => void;
@@ -24,29 +23,19 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
-  // Ensure we have the complete analysis data
-  const processedAnalyses = analysis.allAnalyses || analyses || [analysis];
-  const primaryAnalysis = {
-    ...analysis,
-    allAnalyses: processedAnalyses,
-    formData: data,
-    industry: analysis.industry || data.industry || "Not specified"
-  };
-
   return (
-    <div 
-      id="detailed-report" 
-      className="relative w-full bg-white p-8 rounded-lg shadow-sm"
-    >
-      <ReportContent 
-        formData={data}
-        analysis={primaryAnalysis}
-        onBookDemo={onBookDemo}
-      />
-      <div className="mt-6">
+    <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
+      <div className="mb-6">
         <ReportActions 
           formData={data}
-          analysis={primaryAnalysis}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
+      </div>
+      <div className="mt-6">
+        <ReportContent 
+          formData={data}
+          analysis={analysis}
           onBookDemo={onBookDemo}
         />
       </div>

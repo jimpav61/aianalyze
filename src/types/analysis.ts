@@ -1,8 +1,8 @@
 export interface DetailedFormData {
   companyName: string;
   ownerName: string;
-  email: string;
   phoneNumber: string;
+  email: string;
   employees: string;
   revenue: string;
   serviceChannels: string;
@@ -13,7 +13,7 @@ export interface DetailedFormData {
   timeline: string;
   budget: string;
   additionalInfo: string;
-  industry: string;
+  industry?: string;
 }
 
 export interface AnalysisData {

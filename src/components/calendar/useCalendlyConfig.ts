@@ -13,17 +13,15 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
     const phoneNumber = formData?.phoneNumber || '';
     const ownerName = formData?.ownerName || '';
     const email = formData?.email || '';
-    const companyName = formData?.companyName || '';
     
     console.log('[CALENDLY_DEBUG] Building prefill data:', {
       phoneNumber,
       ownerName,
       email,
-      companyName,
       formData
     });
 
-    // Map form data to all possible Calendly question field IDs
+    // Map phone number to all possible Calendly question field IDs
     const questions: Record<string, string> = {
       'a1': phoneNumber,
       'phone': phoneNumber,
@@ -31,10 +29,6 @@ export const useCalendlyConfig = (formData?: DetailedFormData) => {
       'phone_number': phoneNumber,
       'phoneNumber': phoneNumber,
       '1': phoneNumber,
-      'company': companyName,
-      'Company': companyName,
-      'company_name': companyName,
-      'companyName': companyName,
     };
 
     const prefillData = {
