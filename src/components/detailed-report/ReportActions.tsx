@@ -13,15 +13,17 @@ interface ReportActionsProps {
 export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
   const { toast } = useToast();
 
-  console.log("ReportActions - Rendering with props:", {
+  console.log("ReportActions - Rendering with complete props:", {
     hasFormData: !!formData,
+    formDataContent: formData,
     hasAnalysis: !!analysis,
+    analysisContent: analysis,
     hasBookDemo: !!onBookDemo
   });
 
   const handleDownload = async () => {
     try {
-      console.log("ReportActions - Starting download with data:", {
+      console.log("ReportActions - Starting download with complete data:", {
         formData,
         analysis
       });

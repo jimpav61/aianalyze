@@ -21,7 +21,7 @@ export const ReportContent = ({
   onBookDemo,
   industry 
 }: ReportContentProps) => {
-  console.log("ReportContent - Rendering with data:", {
+  console.log("ReportContent - Rendering with complete data:", {
     formData,
     analysis,
     industry,
