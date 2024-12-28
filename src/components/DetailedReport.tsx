@@ -19,7 +19,7 @@ interface DetailedReportProps {
 }
 
 export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: DetailedReportProps) => {
-  console.log("DetailedReport - Starting render with complete data:", {
+  console.log("DetailedReport - Testing data flow:", {
     formData: data,
     analysis,
     analyses,
@@ -39,15 +39,16 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
     return null;
   }
 
-  // Ensure analyses are properly structured
+  // Process analyses with form data
   const processedAnalyses = analysis.allAnalyses || analyses || [analysis];
   const primaryAnalysis = {
     ...analysis,
     allAnalyses: processedAnalyses,
-    formData: data // Ensure form data is passed through
+    formData: data,
+    industry: analysis.industry || data.industry
   };
 
-  console.log("DetailedReport - Processed analysis:", primaryAnalysis);
+  console.log("DetailedReport - Processed analysis for rendering:", primaryAnalysis);
 
   return (
     <div 
