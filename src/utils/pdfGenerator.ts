@@ -28,30 +28,29 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
 
     console.log('PDF Generation - Found report element, preparing for capture');
 
+    // Create temporary container with fixed width
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.width = '800px';
+    
+    // Clone the report element
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
     // Style updates for better PDF rendering
     const elements = clonedReport.querySelectorAll('*');
     elements.forEach(element => {
       if (element instanceof HTMLElement) {
-        // Reset background colors
         element.style.backgroundColor = 'white';
+        element.style.color = '#000000';
         
-        // Update text colors
-        if (element.style.color?.includes('purple') || element.style.color?.includes('rgb(147, 51, 234)')) {
-          element.style.color = '#f65228';
-        }
-        
-        // Add card-like styling to sections
         if (element.classList.contains('section-card')) {
           element.style.border = '1px solid #e2e8f0';
           element.style.borderRadius = '8px';
           element.style.padding = '16px';
           element.style.marginBottom = '16px';
-          element.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
         }
         
-        // Improve text readability
         if (element.tagName === 'P') {
           element.style.lineHeight = '1.6';
           element.style.marginBottom = '8px';
@@ -59,7 +58,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
           element.style.wordBreak = 'break-word';
         }
 
-        // Style headings
         if (['H1', 'H2', 'H3'].includes(element.tagName)) {
           element.style.marginBottom = '16px';
           element.style.marginTop = '24px';
@@ -68,11 +66,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       }
     });
 
-    // Create temporary container with fixed width
-    const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '-9999px';
-    tempContainer.style.width = '800px';
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
@@ -84,19 +77,13 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       logging: true,
       backgroundColor: '#ffffff',
       width: 800,
-      height: tempContainer.scrollHeight,
-      onclone: (document, element) => {
-        console.log('PDF Generation - Cloning document for capture');
-        element.style.transform = 'none';
-        element.style.height = 'auto';
-        element.style.overflow = 'visible';
-      }
+      height: tempContainer.scrollHeight
     });
-
-    console.log('PDF Generation - Content captured successfully');
 
     // Clean up temporary container
     document.body.removeChild(tempContainer);
+
+    console.log('PDF Generation - Content captured successfully');
 
     // Create PDF with proper dimensions
     const imgWidth = 210; // A4 width in mm
@@ -107,8 +94,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     let heightLeft = imgHeight;
     let position = 0;
     
-    console.log('PDF Generation - Creating PDF pages');
-
     // Add first page
     pdf.addImage(
       canvas.toDataURL('image/png'),

@@ -20,10 +20,20 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         analysis
       });
 
+      if (!formData || !analysis) {
+        throw new Error("Missing required data for report generation");
+      }
+
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       const pdf = await generateAnalysisReport({ formData, analysis });
-      const fileName = `AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("ReportActions - Generated PDF, attempting to save as:", fileName);
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       
+      console.log("ReportActions - Generated PDF, attempting to save as:", fileName);
       pdf.save(fileName);
       
       console.log("ReportActions - PDF saved successfully");
@@ -35,7 +45,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       console.error("ReportActions - Download error:", error);
       toast({
         title: "Error",
-        description: "Failed to download report. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to download report. Please try again.",
         variant: "destructive",
       });
     }
