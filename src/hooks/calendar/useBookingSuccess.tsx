@@ -41,14 +41,22 @@ export const useBookingSuccess = ({
     }
 
     try {
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       console.log("Generating PDF with data:", {
         formData,
         analysis
       });
       
       const doc = await generateAnalysisReport({ formData, analysis });
-      console.log("PDF generated successfully, attempting save...");
-      doc.save(`AI_Analysis_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      console.log("PDF generated successfully, attempting save as:", fileName);
+      doc.save(fileName);
       console.log("PDF saved successfully");
       
       toast({
@@ -79,9 +87,9 @@ export const useBookingSuccess = ({
           <Button 
             onClick={handleDownload}
             variant="outline" 
-            className="w-full flex items-center justify-center gap-2"
+            className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-4 w-4 text-[#f65228]" />
             Download Report
           </Button>
         </div>

@@ -22,8 +22,8 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
     <div id="detailed-report" className="space-y-8 print:space-y-6">
       <CompanyInformation formData={formData} industry={analysis.industry} />
       <CurrentOperations formData={formData} />
-      <AnalysisResults analysis={analysis} />
-      <ImplementationPlan analysis={analysis} onBookDemo={onBookDemo} />
+      <AnalysisResults analyses={[analysis]} />
+      <ImplementationPlan data={analysis} onBookDemo={onBookDemo} />
     </div>
   );
 };
