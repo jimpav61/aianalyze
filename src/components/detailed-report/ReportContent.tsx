@@ -15,7 +15,12 @@ interface ReportContentProps {
   industry?: string;
 }
 
-export const ReportContent = ({ formData, analysis, onBookDemo, industry }: ReportContentProps) => {
+export const ReportContent = ({ 
+  formData, 
+  analysis, 
+  onBookDemo,
+  industry 
+}: ReportContentProps) => {
   console.log("ReportContent - Rendering with data:", {
     formData,
     analysis,
@@ -32,32 +37,9 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
   });
 
   if (!formData || !analysis) {
-    console.error("ReportContent - Missing required data");
+    console.error("ReportContent - Missing required data:", { formData, analysis });
     return null;
   }
-
-  const clientData = {
-    companyName: formData.companyName,
-    ownerName: formData.ownerName,
-    email: formData.email,
-    phoneNumber: formData.phoneNumber,
-    employees: formData.employees,
-    revenue: formData.revenue
-  };
-
-  const operationsData = {
-    serviceChannels: formData.serviceChannels,
-    monthlyInteractions: formData.monthlyInteractions,
-    currentTools: formData.currentTools,
-    painPoints: formData.painPoints
-  };
-
-  const implementationData = {
-    objectives: formData.objectives,
-    timeline: formData.timeline,
-    budget: formData.budget,
-    additionalInfo: formData.additionalInfo
-  };
 
   return (
     <div 
@@ -68,14 +50,14 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Company Overview</h2>
-        <CompanyInformation data={clientData} industry={industry || analysis?.industry} />
+        <CompanyInformation data={formData} industry={industry || analysis?.industry} />
       </div>
       
       <Separator className="my-8" />
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Current Operations Analysis</h2>
-        <CurrentOperations data={operationsData} />
+        <CurrentOperations data={formData} />
       </div>
       
       <Separator className="my-8" />
@@ -99,7 +81,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo, industry }: Repo
       
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-[#1A1F2C]">Implementation Plan</h2>
-        <ImplementationPlan data={implementationData} />
+        <ImplementationPlan data={formData} />
       </div>
       
       <Separator className="my-8" />

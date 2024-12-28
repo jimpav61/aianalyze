@@ -35,7 +35,7 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
   });
 
   if (!data || !analysis) {
-    console.error("DetailedReport - Missing required data");
+    console.error("DetailedReport - Missing required data:", { data, analysis });
     return null;
   }
 
