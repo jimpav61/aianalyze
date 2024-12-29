@@ -17,12 +17,7 @@ interface GenerateReportParams {
 }
 
 export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  console.log('PDF Generation - Starting with data:', { 
-    formData, 
-    analysis,
-    hasAllAnalyses: !!analysis.allAnalyses,
-    analysesCount: analysis.allAnalyses?.length
-  });
+  console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
     const reportElement = document.getElementById('detailed-report');
@@ -31,21 +26,22 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report element not found");
     }
 
-    // Create a temporary container and append it to the body
+    // Create a temporary container with proper styling
     const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'fixed';
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
-    tempContainer.style.left = '0';
-    tempContainer.style.width = '100%';
-    tempContainer.style.height = 'auto';
+    tempContainer.style.width = '900px'; // Fixed width for consistent rendering
     tempContainer.style.backgroundColor = 'white';
-    tempContainer.style.zIndex = '-1000';
     
     // Clone the report for PDF generation
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     clonedReport.style.width = '100%';
     clonedReport.style.padding = '40px';
     clonedReport.style.backgroundColor = 'white';
+    clonedReport.style.position = 'relative';
+    clonedReport.style.opacity = '1';
+    clonedReport.style.visibility = 'visible';
     
     // Ensure all elements are visible
     const allElements = clonedReport.getElementsByTagName('*');
@@ -54,6 +50,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       element.style.display = 'block';
       element.style.visibility = 'visible';
       element.style.opacity = '1';
+      element.style.position = 'relative';
       
       // Preserve text formatting
       if (element.classList.contains('whitespace-pre-line')) {
@@ -64,8 +61,8 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Wait for images and fonts to load
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait for fonts and images to load
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     console.log('PDF Generation - Creating canvas');
     const canvas = await html2canvas(clonedReport, {
@@ -76,7 +73,14 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       width: clonedReport.offsetWidth,
       height: clonedReport.offsetHeight,
       windowWidth: clonedReport.offsetWidth,
-      windowHeight: clonedReport.offsetHeight
+      windowHeight: clonedReport.offsetHeight,
+      onclone: (doc) => {
+        const clonedElement = doc.getElementById('detailed-report');
+        if (clonedElement) {
+          clonedElement.style.transform = 'none';
+          clonedElement.style.opacity = '1';
+        }
+      }
     });
 
     // Clean up
