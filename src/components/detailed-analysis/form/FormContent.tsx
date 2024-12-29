@@ -3,7 +3,7 @@ import { CompanyBasicsStep } from "../CompanyBasicsStep";
 import { OperationsStep } from "../OperationsStep";
 import { GoalsStep } from "../GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface FormContentProps {
   currentStep: number;
@@ -18,18 +18,16 @@ export const FormContent = ({
   handleInputChange,
   errors,
 }: FormContentProps) => {
-  // Handle scrolling to top when step changes
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    setTimeout(() => {
-      const scrollArea = document.querySelector('.scroll-area-viewport');
-      if (scrollArea) {
-        scrollArea.scrollTop = 0;
-      }
-    }, 0);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   }, [currentStep]);
 
   return (
-    <ScrollArea className="h-[calc(80vh-10rem)] pr-4 scroll-area">
+    <ScrollArea ref={scrollRef} className="h-[calc(80vh-10rem)] pr-4">
       {currentStep === 1 && (
         <CompanyBasicsStep
           formData={formData}

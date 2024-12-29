@@ -1,5 +1,11 @@
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TimelineQuestionProps {
   value: string;
@@ -19,20 +25,11 @@ export const TimelineQuestion = ({
   onChange,
   error,
 }: TimelineQuestionProps) => {
-  const selectedTimelines = value ? value.split(",") : [];
-
-  const handleTimelineChange = (timeline: string, checked: boolean) => {
-    let newTimelines = [...selectedTimelines];
-    if (checked) {
-      newTimelines.push(timeline);
-    } else {
-      newTimelines = newTimelines.filter((time) => time !== timeline);
-    }
-    
+  const handleSelectChange = (selectedValue: string) => {
     const event = {
       target: {
         name: "timeline",
-        value: newTimelines.join(","),
+        value: selectedValue,
       },
     } as React.ChangeEvent<HTMLInputElement>;
     
@@ -44,24 +41,18 @@ export const TimelineQuestion = ({
       <Label htmlFor="timeline" className="text-gray-700 text-base font-medium flex items-center">
         What is your expected implementation timeline? <span className="text-red-500 ml-1">*</span>
       </Label>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-        {timelineOptions.map((option) => (
-          <div key={option.value} className="flex items-center space-x-2">
-            <Checkbox
-              id={option.value}
-              checked={selectedTimelines.includes(option.label)}
-              onCheckedChange={(checked) => handleTimelineChange(option.label, checked as boolean)}
-              className={`rounded-none bg-white ${error ? 'border-red-500' : ''}`}
-            />
-            <Label
-              htmlFor={option.value}
-              className="text-sm font-normal cursor-pointer"
-            >
+      <Select value={value} onValueChange={handleSelectChange}>
+        <SelectTrigger className={`w-full ${error ? 'border-red-500' : ''}`}>
+          <SelectValue placeholder="Select a timeline" />
+        </SelectTrigger>
+        <SelectContent>
+          {timelineOptions.map((option) => (
+            <SelectItem key={option.value} value={option.label}>
               {option.label}
-            </Label>
-          </div>
-        ))}
-      </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {error && (
         <p className="text-sm text-red-500 mt-1">{error}</p>
       )}

@@ -1,5 +1,11 @@
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface BudgetQuestionProps {
   value: string;
@@ -20,20 +26,11 @@ export const BudgetQuestion = ({
   onChange,
   error,
 }: BudgetQuestionProps) => {
-  const selectedBudgets = value ? value.split(",") : [];
-
-  const handleBudgetChange = (budget: string, checked: boolean) => {
-    let newBudgets = [...selectedBudgets];
-    if (checked) {
-      newBudgets.push(budget);
-    } else {
-      newBudgets = newBudgets.filter((b) => b !== budget);
-    }
-    
+  const handleSelectChange = (selectedValue: string) => {
     const event = {
       target: {
         name: "budget",
-        value: newBudgets.join(","),
+        value: selectedValue,
       },
     } as React.ChangeEvent<HTMLInputElement>;
     
@@ -45,24 +42,18 @@ export const BudgetQuestion = ({
       <Label htmlFor="budget" className="text-gray-700 text-base font-medium flex items-center">
         What is your budget range for this implementation? <span className="text-red-500 ml-1">*</span>
       </Label>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-        {budgetOptions.map((option) => (
-          <div key={option.value} className="flex items-center space-x-2">
-            <Checkbox
-              id={option.value}
-              checked={selectedBudgets.includes(option.label)}
-              onCheckedChange={(checked) => handleBudgetChange(option.label, checked as boolean)}
-              className={`rounded-none bg-white ${error ? 'border-red-500' : ''}`}
-            />
-            <Label
-              htmlFor={option.value}
-              className="text-sm font-normal cursor-pointer"
-            >
+      <Select value={value} onValueChange={handleSelectChange}>
+        <SelectTrigger className={`w-full ${error ? 'border-red-500' : ''}`}>
+          <SelectValue placeholder="Select a budget range" />
+        </SelectTrigger>
+        <SelectContent>
+          {budgetOptions.map((option) => (
+            <SelectItem key={option.value} value={option.label}>
               {option.label}
-            </Label>
-          </div>
-        ))}
-      </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {error && (
         <p className="text-sm text-red-500 mt-1">{error}</p>
       )}
