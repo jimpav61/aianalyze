@@ -34,8 +34,15 @@ export const useCalendarHandling = ({
   }, []);
 
   const handleDownload = useCallback(async () => {
+    console.log("Download attempt with:", { formData, analysis });
+    
     if (!formData || !analysis) {
       console.error("Download failed - Missing required data");
+      toast({
+        title: "Error",
+        description: "Report data not available. Please try again.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -87,7 +94,7 @@ export const useCalendarHandling = ({
               variant="outline" 
               size="sm"
               className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={() => handleDownload()}
+              onClick={handleDownload}
             >
               <Download className="h-4 w-4" />
               Download Again
