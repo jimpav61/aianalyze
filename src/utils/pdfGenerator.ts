@@ -25,67 +25,62 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   });
   
   try {
-    // Wait a brief moment to ensure the DOM is fully rendered
-    await new Promise(resolve => setTimeout(resolve, 100));
-
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
       console.error("PDF Generation - Report element not found");
       throw new Error("Report element not found");
     }
 
-    // Create a deep clone of the report element
-    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+    // Create a temporary container and append it to the body
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'fixed';
+    tempContainer.style.top = '0';
+    tempContainer.style.left = '0';
+    tempContainer.style.width = '100%';
+    tempContainer.style.height = 'auto';
+    tempContainer.style.backgroundColor = 'white';
+    tempContainer.style.zIndex = '-1000';
     
-    // Apply PDF-specific styles to the clone
-    const style = document.createElement('style');
-    style.textContent = `
-      * {
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-        print-color-adjust: exact !important;
+    // Clone the report for PDF generation
+    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+    clonedReport.style.width = '100%';
+    clonedReport.style.padding = '40px';
+    clonedReport.style.backgroundColor = 'white';
+    
+    // Ensure all elements are visible
+    const allElements = clonedReport.getElementsByTagName('*');
+    Array.from(allElements).forEach((el) => {
+      const element = el as HTMLElement;
+      element.style.display = 'block';
+      element.style.visibility = 'visible';
+      element.style.opacity = '1';
+      
+      // Preserve text formatting
+      if (element.classList.contains('whitespace-pre-line')) {
+        element.style.whiteSpace = 'pre-line';
       }
-      .whitespace-pre-line {
-        white-space: pre-line !important;
-      }
-    `;
-    clonedReport.appendChild(style);
-
-    // Make all elements visible for capture
-    Array.from(clonedReport.getElementsByTagName('*')).forEach((el) => {
-      (el as HTMLElement).style.display = 'block';
-      (el as HTMLElement).style.visibility = 'visible';
-      (el as HTMLElement).style.height = 'auto';
-      (el as HTMLElement).style.overflow = 'visible';
     });
 
-    // Create temporary container for the clone
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.left = '-9999px';
-    container.style.top = '0';
-    container.appendChild(clonedReport);
-    document.body.appendChild(container);
+    tempContainer.appendChild(clonedReport);
+    document.body.appendChild(tempContainer);
 
-    // Create canvas with proper scaling
+    // Wait for images and fonts to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     console.log('PDF Generation - Creating canvas');
     const canvas = await html2canvas(clonedReport, {
       scale: 2,
       useCORS: true,
-      logging: true,
+      logging: false,
       backgroundColor: '#ffffff',
-      windowWidth: reportElement.scrollWidth,
-      windowHeight: reportElement.scrollHeight,
-      onclone: (document, element) => {
-        console.log('PDF Generation - Cloning element');
-        element.style.width = '100%';
-        element.style.margin = '0';
-        element.style.padding = '20px';
-      }
+      width: clonedReport.offsetWidth,
+      height: clonedReport.offsetHeight,
+      windowWidth: clonedReport.offsetWidth,
+      windowHeight: clonedReport.offsetHeight
     });
 
-    // Clean up temporary container
-    document.body.removeChild(container);
+    // Clean up
+    document.body.removeChild(tempContainer);
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
