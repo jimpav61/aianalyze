@@ -1,4 +1,3 @@
-import { ReportActions } from "./detailed-report/ReportActions";
 import { ReportContent } from "./detailed-report/ReportContent";
 import { DetailedFormData } from "@/types/analysis";
 
@@ -25,20 +24,11 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
-      <div className="mb-6">
-        <ReportActions 
-          formData={data}
-          analysis={analysis}
-          onBookDemo={onBookDemo}
-        />
-      </div>
-      <div className="mt-6">
-        <ReportContent 
-          formData={data}
-          analysis={analysis}
-          onBookDemo={onBookDemo}
-        />
-      </div>
+      <ReportContent 
+        formData={data}
+        analysis={analysis}
+        onBookDemo={onBookDemo}
+      />
     </div>
   );
 };

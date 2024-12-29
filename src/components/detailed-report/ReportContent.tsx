@@ -8,6 +8,10 @@ import { ReportFooter } from "./ReportFooter";
 import { ImplementationRecommendations } from "./ImplementationRecommendations";
 import { FinancialAnalysisGrid } from "./FinancialAnalysisGrid";
 import { calculateFinancials, calculateRevenue } from "@/utils/financialCalculations";
+import { Button } from "../ui/button";
+import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { generateAnalysisReport } from "@/utils/pdfGenerator";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -16,6 +20,7 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
+  const { toast } = useToast();
   console.log("ReportContent - Render with data:", { formData, analysis });
 
   if (!formData || !analysis) {
@@ -26,8 +31,58 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
   const revenue = calculateRevenue(formData.revenue);
   const financials = calculateFinancials(revenue, analysis.department, analysis.industry);
 
+  const handleDownload = async () => {
+    try {
+      console.log("ReportContent - Starting download with data:", {
+        formData,
+        analysis,
+        hasAllAnalyses: !!analysis.allAnalyses,
+        analysesCount: analysis.allAnalyses?.length || 1
+      });
+
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const pdf = await generateAnalysisReport({ formData, analysis });
+      
+      console.log("ReportContent - PDF generated successfully, saving as:", fileName);
+      pdf.save(fileName);
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("ReportContent - Download error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
+  };
+
   return (
     <div id="detailed-report" className="space-y-8 print:space-y-6">
+      <div className="flex justify-end space-x-4 mb-6">
+        <Button
+          onClick={onBookDemo}
+          size="sm"
+          className="bg-[#f65228] hover:bg-[#d43d16] text-white"
+        >
+          Book Demo
+        </Button>
+        <Button 
+          onClick={handleDownload}
+          variant="outline" 
+          size="sm" 
+          className="bg-white hover:bg-gray-50 flex items-center gap-2"
+        >
+          <Download className="h-4 w-4 text-[#f65228]" />
+          Download Report
+        </Button>
+      </div>
+
       <ReportHeader />
       <CompanyInformation data={formData} industry={analysis.industry} />
       <CurrentOperations data={formData} />
