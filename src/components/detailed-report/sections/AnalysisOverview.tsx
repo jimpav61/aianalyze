@@ -7,7 +7,9 @@ interface AnalysisOverviewProps {
 }
 
 export const AnalysisOverview = ({ analysis, formData }: AnalysisOverviewProps) => {
-  const revenue = calculateFinancials(formData.revenue, analysis.department, analysis.industry);
+  // Convert revenue string to number before calculation
+  const revenueAmount = parseInt(formData.revenue?.replace(/[^0-9]/g, '') || '0');
+  const revenue = calculateFinancials(revenueAmount, analysis.department, analysis.industry);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

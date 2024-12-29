@@ -4,7 +4,6 @@ import { CurrentOperations } from "./CurrentOperations";
 import { ImplementationPlan } from "./ImplementationPlan";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
-import { FinancialAnalysisGrid } from "./FinancialAnalysisGrid";
 import { ReportActions } from "./sections/ReportActions";
 import { AnalysisOverview } from "./sections/AnalysisOverview";
 import { StrategySection } from "./sections/StrategySection";
@@ -46,13 +45,6 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
             explanation={analysis.explanation}
             marketingStrategy={analysis.marketing_strategy}
           />
-
-          {analysis.allAnalyses && analysis.allAnalyses.length > 1 && (
-            <div className="mt-8">
-              <h4 className="font-medium text-gray-700 mb-4">Additional Department Analyses</h4>
-              <FinancialAnalysisGrid analysis={analysis} formData={formData} />
-            </div>
-          )}
         </div>
 
         <ImplementationPlan 
