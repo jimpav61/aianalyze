@@ -40,11 +40,6 @@ export const useCalendarHandling = ({
     }
 
     try {
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        throw new Error("Report element not found");
-      }
-
       const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       pdf.save(fileName);
@@ -92,7 +87,7 @@ export const useCalendarHandling = ({
               variant="outline" 
               size="sm"
               className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={handleDownload}
+              onClick={() => handleDownload()}
             >
               <Download className="h-4 w-4" />
               Download Again
