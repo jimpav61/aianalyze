@@ -33,7 +33,7 @@ export const useCalendarHandling = ({
     return true;
   }, []);
 
-  const handleDownload = async () => {
+  const handleDownload = useCallback(async () => {
     if (!formData || !analysis) {
       console.error("Download failed - Missing required data");
       return;
@@ -58,7 +58,7 @@ export const useCalendarHandling = ({
               variant="outline" 
               size="sm"
               className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={() => handleDownload()}
+              onClick={handleDownload}
             >
               <Download className="h-4 w-4" />
               Download Again
@@ -74,7 +74,7 @@ export const useCalendarHandling = ({
         variant: "destructive",
       });
     }
-  };
+  }, [formData, analysis, toast]);
 
   const handleBookingSubmit = useCallback(async () => {
     console.log("useCalendarHandling - Booking submitted successfully");
@@ -82,14 +82,27 @@ export const useCalendarHandling = ({
     
     if (formData && analysis) {
       showSuccessToast();
-      handleDownload();
+      await handleDownload();
       toast({
         title: "Demo Scheduled Successfully",
-        description: "Your report has been downloaded. You can close this window when you're done.",
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Your report has been downloaded. You can close this window when you're done.</p>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="w-full flex items-center justify-center gap-2 mt-2"
+              onClick={handleDownload}
+            >
+              <Download className="h-4 w-4" />
+              Download Again
+            </Button>
+          </div>
+        ),
         duration: 5000,
       });
     }
-  }, [showSuccessToast, toast, formData, analysis]);
+  }, [showSuccessToast, toast, formData, analysis, handleDownload]);
 
   return {
     showCalendar,
