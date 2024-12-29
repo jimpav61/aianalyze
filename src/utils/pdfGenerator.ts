@@ -27,14 +27,23 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report element not found");
     }
 
+    console.log('PDF Generation - Report element found with dimensions:', {
+      offsetWidth: reportElement.offsetWidth,
+      offsetHeight: reportElement.offsetHeight,
+      scrollWidth: reportElement.scrollWidth,
+      scrollHeight: reportElement.scrollHeight
+    });
+
     // Force the element to be visible during capture
     const originalDisplay = reportElement.style.display;
     const originalVisibility = reportElement.style.visibility;
     const originalOpacity = reportElement.style.opacity;
+    const originalPosition = reportElement.style.position;
     
     reportElement.style.display = 'block';
     reportElement.style.visibility = 'visible';
     reportElement.style.opacity = '1';
+    reportElement.style.position = 'relative';
 
     // Create temporary container with fixed dimensions
     const tempContainer = document.createElement('div');
@@ -76,8 +85,15 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Wait for rendering
+    // Wait for rendering and log dimensions
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    console.log('PDF Generation - Cloned report dimensions:', {
+      offsetWidth: clonedReport.offsetWidth,
+      offsetHeight: clonedReport.offsetHeight,
+      scrollWidth: clonedReport.scrollWidth,
+      scrollHeight: clonedReport.scrollHeight
+    });
 
     console.log('PDF Generation - Creating canvas');
     const canvas = await html2canvas(clonedReport, {
@@ -85,7 +101,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       useCORS: true,
       logging: true,
       backgroundColor: '#ffffff',
-      width: 900, // Fixed width
+      width: 900,
       height: clonedReport.scrollHeight,
       onclone: (doc) => {
         const clonedElement = doc.getElementById('detailed-report');
@@ -104,6 +120,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     reportElement.style.display = originalDisplay;
     reportElement.style.visibility = originalVisibility;
     reportElement.style.opacity = originalOpacity;
+    reportElement.style.position = originalPosition;
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
