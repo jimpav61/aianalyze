@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { CompanyBasicsStep } from "./CompanyBasicsStep";
-import { OperationsStep } from "./OperationsStep";
-import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
 import { useToast } from "@/hooks/use-toast";
+import { FormHeader } from "./form/FormHeader";
+import { FormContent } from "./form/FormContent";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (data: DetailedFormData) => void;
@@ -31,17 +28,6 @@ export const DetailedAnalysisForm = ({
     errors,
     setErrors,
   } = useDetailedFormState(initialData);
-
-  // Add effect to scroll to top when step changes
-  useEffect(() => {
-    // Use setTimeout to ensure DOM is updated before scrolling
-    setTimeout(() => {
-      const scrollArea = document.querySelector('.scroll-area-viewport');
-      if (scrollArea) {
-        scrollArea.scrollTop = 0;
-      }
-    }, 0);
-  }, [currentStep]);
 
   const handleNext = () => {
     const stepValidation = validateStep(currentStep);
@@ -80,46 +66,13 @@ export const DetailedAnalysisForm = ({
 
   return (
     <>
-      <div id="form-top" className="mb-6">
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <span>Step {currentStep} of 3</span>
-          <div className="flex gap-1">
-            {[1, 2, 3].map((step) => (
-              <div
-                key={step}
-                className={`w-16 h-1 rounded ${
-                  step <= currentStep ? 'bg-[#f65228]' : 'bg-gray-200'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <ScrollArea className="h-[calc(80vh-10rem)] pr-4 scroll-area">
-        {currentStep === 1 && (
-          <CompanyBasicsStep
-            formData={formData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-          />
-        )}
-        {currentStep === 2 && (
-          <OperationsStep
-            formData={formData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-          />
-        )}
-        {currentStep === 3 && (
-          <GoalsStep
-            formData={formData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-          />
-        )}
-      </ScrollArea>
-
+      <FormHeader currentStep={currentStep} />
+      <FormContent
+        currentStep={currentStep}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        errors={errors}
+      />
       <StepNavigation
         currentStep={currentStep}
         onNext={handleNext}
