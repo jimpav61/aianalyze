@@ -29,24 +29,40 @@ export const CloseConfirmationDialog = ({
     }
 
     try {
-      console.log("Download attempt starting with data:", {
+      console.log("CloseConfirmationDialog - Download attempt starting with data:", {
         hasFormData: !!formData,
-        hasAnalysis: !!analysis
+        hasAnalysis: !!analysis,
+        analysisContent: analysis,
+        hasAllAnalyses: !!analysis?.allAnalyses,
+        analysesCount: analysis?.allAnalyses?.length || 1
       });
 
       if (!formData || !analysis) {
-        console.error("Download failed - Missing required data");
+        console.error("CloseConfirmationDialog - Download failed - Missing required data");
         throw new Error("Report data not available");
       }
 
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        console.error("CloseConfirmationDialog - Report element not found in DOM");
+        throw new Error("Report element not found");
+      }
+
+      console.log("CloseConfirmationDialog - Found report element, checking content:", {
+        childNodes: reportElement.childNodes.length,
+        cards: reportElement.getElementsByClassName('card').length,
+        height: reportElement.offsetHeight,
+        scrollHeight: reportElement.scrollHeight
+      });
+
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("Generating PDF with filename:", fileName);
+      console.log("CloseConfirmationDialog - Generating PDF with filename:", fileName);
       
       const pdf = await generateAnalysisReport({ formData, analysis });
-      console.log("PDF generated successfully, saving file");
+      console.log("CloseConfirmationDialog - PDF generated successfully, saving file");
       
       pdf.save(fileName);
-      console.log("PDF saved successfully");
+      console.log("CloseConfirmationDialog - PDF saved successfully");
       
       toast({
         title: "Success",
@@ -54,7 +70,7 @@ export const CloseConfirmationDialog = ({
         duration: 1500,
       });
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("CloseConfirmationDialog - Download error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to download report. Please try again.",
