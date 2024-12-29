@@ -21,14 +21,18 @@ export const FormContent = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  console.log("FormContent - Rendering step:", currentStep, "with formData:", formData);
+
   useEffect(() => {
+    console.log("FormContent - Step changed to:", currentStep);
+    
     // Immediately reset scroll positions
     if (containerRef.current) {
       containerRef.current.scrollTo(0, 0);
     }
     
-    // Use a short timeout to ensure content is rendered
-    const timeoutId = setTimeout(() => {
+    // Use RAF to ensure DOM is ready
+    requestAnimationFrame(() => {
       // Reset container scroll
       if (containerRef.current) {
         containerRef.current.scrollTo(0, 0);
@@ -39,9 +43,7 @@ export const FormContent = ({
       if (scrollAreaViewport instanceof HTMLElement) {
         scrollAreaViewport.scrollTo(0, 0);
       }
-    }, 0);
-
-    return () => clearTimeout(timeoutId);
+    });
   }, [currentStep]);
 
   return (
