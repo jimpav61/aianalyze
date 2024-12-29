@@ -34,10 +34,13 @@ export const DetailedAnalysisForm = ({
 
   // Add effect to scroll to top when step changes
   useEffect(() => {
-    const formTop = document.getElementById('form-top');
-    if (formTop) {
-      formTop.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Use setTimeout to ensure DOM is updated before scrolling
+    setTimeout(() => {
+      const scrollArea = document.querySelector('.scroll-area-viewport');
+      if (scrollArea) {
+        scrollArea.scrollTop = 0;
+      }
+    }, 0);
   }, [currentStep]);
 
   const handleNext = () => {
@@ -93,7 +96,7 @@ export const DetailedAnalysisForm = ({
         </div>
       </div>
 
-      <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
+      <ScrollArea className="h-[calc(80vh-10rem)] pr-4 scroll-area">
         {currentStep === 1 && (
           <CompanyBasicsStep
             formData={formData}
