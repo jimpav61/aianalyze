@@ -34,31 +34,17 @@ export const useCalendarHandling = ({
   }, []);
 
   const handleDownload = useCallback(async () => {
-    console.log("Download attempt with:", { formData, analysis });
-    
-    if (!formData || !analysis) {
-      console.error("Download failed - Missing required data");
-      toast({
-        title: "Error",
-        description: "Report data not available. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     try {
-      console.log("Generating PDF with data:", {
-        formData,
-        analysis
-      });
-      
-      const doc = await generateAnalysisReport({ formData, analysis });
+      if (!formData || !analysis) {
+        throw new Error("Report data not available");
+      }
+
+      console.log("Download attempt with:", { formData, analysis });
+
+      const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      console.log("PDF generated successfully, attempting save as:", fileName);
-      doc.save(fileName);
-      console.log("PDF saved successfully");
-      
+      pdf.save(fileName);
+
       toast({
         title: "Success",
         description: (
@@ -77,10 +63,10 @@ export const useCalendarHandling = ({
         ),
       });
     } catch (error) {
-      console.error("PDF Generation/Download error:", error);
+      console.error('Error generating PDF:', error);
       toast({
         title: "Error",
-        description: "Failed to download report. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
         variant: "destructive",
       });
     }
