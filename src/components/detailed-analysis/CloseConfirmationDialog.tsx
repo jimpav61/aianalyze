@@ -57,7 +57,7 @@ export const CloseConfirmationDialog = ({
       toast({
         title: "Success",
         description: "Report downloaded successfully",
-        duration: 1500, // 1.5 seconds
+        duration: 1500,
       });
     } catch (error) {
       console.error("Download error:", error);
