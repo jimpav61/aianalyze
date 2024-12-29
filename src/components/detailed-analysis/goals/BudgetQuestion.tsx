@@ -46,9 +46,9 @@ export const BudgetQuestion = ({
         <SelectTrigger className={`w-full ${error ? 'border-red-500' : ''}`}>
           <SelectValue placeholder="Select a budget range" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           {budgetOptions.map((option) => (
-            <SelectItem key={option.value} value={option.label}>
+            <SelectItem key={option.value} value={option.label} className="hover:bg-gray-100">
               {option.label}
             </SelectItem>
           ))}

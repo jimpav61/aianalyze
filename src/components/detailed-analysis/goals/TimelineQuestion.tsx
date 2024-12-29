@@ -45,9 +45,9 @@ export const TimelineQuestion = ({
         <SelectTrigger className={`w-full ${error ? 'border-red-500' : ''}`}>
           <SelectValue placeholder="Select a timeline" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           {timelineOptions.map((option) => (
-            <SelectItem key={option.value} value={option.label}>
+            <SelectItem key={option.value} value={option.label} className="hover:bg-gray-100">
               {option.label}
             </SelectItem>
           ))}
