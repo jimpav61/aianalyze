@@ -31,37 +31,28 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report element not found");
     }
 
-    // Force all content to be visible
-    const originalStyles = {
-      overflow: reportElement.style.overflow,
-      height: reportElement.style.height,
-      position: reportElement.style.position,
-      visibility: reportElement.style.visibility
-    };
+    // Store original styles
+    const originalStyles = Array.from(reportElement.getElementsByTagName('*')).map(el => ({
+      element: el,
+      display: (el as HTMLElement).style.display,
+      visibility: (el as HTMLElement).style.visibility,
+      height: (el as HTMLElement).style.height,
+      overflow: (el as HTMLElement).style.overflow
+    }));
 
-    // Make sure all content is visible for capture
-    reportElement.style.overflow = 'visible';
-    reportElement.style.height = 'auto';
-    reportElement.style.position = 'relative';
-    reportElement.style.visibility = 'visible';
+    // Make all elements visible for capture
+    Array.from(reportElement.getElementsByTagName('*')).forEach((el) => {
+      (el as HTMLElement).style.display = 'block';
+      (el as HTMLElement).style.visibility = 'visible';
+      (el as HTMLElement).style.height = 'auto';
+      (el as HTMLElement).style.overflow = 'visible';
+    });
 
     // Log dimensions before capture
     console.log('PDF Generation - Element dimensions:', {
       width: reportElement.offsetWidth,
       height: reportElement.scrollHeight,
       clientHeight: reportElement.clientHeight
-    });
-
-    // Ensure all cards are visible
-    const cards = reportElement.getElementsByClassName('card');
-    console.log('PDF Generation - Number of cards:', cards.length);
-    Array.from(cards).forEach((card, index) => {
-      (card as HTMLElement).style.display = 'block';
-      (card as HTMLElement).style.visibility = 'visible';
-      console.log(`PDF Generation - Card ${index + 1} dimensions:`, {
-        width: (card as HTMLElement).offsetWidth,
-        height: (card as HTMLElement).offsetHeight
-      });
     });
 
     // Create canvas with proper scaling
@@ -74,22 +65,23 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       windowHeight: reportElement.scrollHeight,
       onclone: (document, element) => {
         console.log('PDF Generation - Cloning element');
-        element.style.overflow = 'visible';
-        element.style.height = 'auto';
-        element.style.position = 'relative';
-        element.style.visibility = 'visible';
-        
-        // Ensure all cards are visible in clone
-        const clonedCards = element.getElementsByClassName('card');
-        Array.from(clonedCards).forEach((card) => {
-          (card as HTMLElement).style.display = 'block';
-          (card as HTMLElement).style.visibility = 'visible';
+        // Make all elements visible in clone
+        Array.from(element.getElementsByTagName('*')).forEach((el) => {
+          (el as HTMLElement).style.display = 'block';
+          (el as HTMLElement).style.visibility = 'visible';
+          (el as HTMLElement).style.height = 'auto';
+          (el as HTMLElement).style.overflow = 'visible';
         });
       }
     });
 
     // Restore original styles
-    Object.assign(reportElement.style, originalStyles);
+    originalStyles.forEach(({ element, display, visibility, height, overflow }) => {
+      (element as HTMLElement).style.display = display;
+      (element as HTMLElement).style.visibility = visibility;
+      (element as HTMLElement).style.height = height;
+      (element as HTMLElement).style.overflow = overflow;
+    });
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,

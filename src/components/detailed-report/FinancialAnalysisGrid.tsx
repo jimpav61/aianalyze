@@ -1,6 +1,5 @@
-import { AnalysisGrid } from "../AnalysisGrid";
-import { calculateFinancials, calculateRevenue } from "@/utils/financialCalculations";
 import { DetailedFormData } from "@/types/analysis";
+import { calculateFinancials, calculateRevenue } from "@/utils/financialCalculations";
 
 interface FinancialAnalysisGridProps {
   analysis: any;
@@ -9,36 +8,40 @@ interface FinancialAnalysisGridProps {
 
 export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisGridProps) => {
   const revenue = calculateRevenue(formData.revenue);
-  console.log('Calculated revenue:', revenue);
-  
-  const analysesForGrid = analysis.allAnalyses?.map((item: any) => {
-    const financials = calculateFinancials(revenue, item.department, formData.industry);
-    console.log('Financials for', item.department, ':', financials);
-    
-    return {
-      ...item,
-      savings: financials.savingsAmount.toString(),
-      profit_increase: financials.profitPercentage.toString(),
-      explanation: item.explanation,
-      marketingStrategy: item.marketingStrategy,
-      actualProfitIncrease: financials.profitAmount.toString(),
-      savingsPercentage: financials.savingsPercentage.toString()
-    };
-  }) || [{
-    id: crypto.randomUUID(),
-    department: analysis.department,
-    function: analysis.bot_function,
-    savings: calculateFinancials(revenue, analysis.department, formData.industry).savingsAmount.toString(),
-    profit_increase: calculateFinancials(revenue, analysis.department, formData.industry).profitPercentage.toString(),
-    explanation: analysis.explanation,
-    marketingStrategy: analysis.marketing_strategy,
-    actualProfitIncrease: calculateFinancials(revenue, analysis.department, formData.industry).profitAmount.toString(),
-    savingsPercentage: calculateFinancials(revenue, analysis.department, formData.industry).savingsPercentage.toString()
-  }];
 
   return (
-    <div className="overflow-x-auto">
-      <AnalysisGrid analyses={analysesForGrid} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {analysis.allAnalyses.slice(1).map((dept: any, index: number) => {
+        const deptFinancials = calculateFinancials(revenue, dept.department, analysis.industry);
+        
+        return (
+          <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+            <h4 className="font-medium text-gray-700 mb-2">{dept.department}</h4>
+            <p className="text-[#f65228] mb-4">{dept.function}</p>
+            
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-600">Annual Savings</p>
+                <p className="text-xl font-semibold text-[#f65228]">
+                  ${deptFinancials.savingsAmount.toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-500">
+                  ({deptFinancials.savingsPercentage}% of revenue)
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Profit Increase</p>
+                <p className="text-xl font-semibold text-[#f65228]">
+                  ${deptFinancials.profitAmount.toLocaleString()}
+                </p>
+                <p className="text-sm text-gray-500">
+                  ({deptFinancials.profitPercentage}% increase)
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
