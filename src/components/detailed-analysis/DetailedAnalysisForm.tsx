@@ -5,6 +5,7 @@ import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;
@@ -34,6 +35,9 @@ export const DetailedAnalysisForm = ({
     handleInputChange
   } = useDetailedFormState(initialData);
 
+  const { toast } = useToast();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   console.log("DetailedAnalysisForm - Current state:", { 
     currentStep, 
     formData, 
@@ -42,16 +46,46 @@ export const DetailedAnalysisForm = ({
     hasInitialData: !!initialData
   });
 
+  const validateStep = (step: number) => {
+    const requiredFields: { [key: number]: string[] } = {
+      1: ["companyName", "ownerName", "email", "revenue"],
+      2: ["serviceChannels", "monthlyInteractions"],
+      3: ["objectives", "timeline", "budget"]
+    };
+
+    const missingFields = requiredFields[step]?.filter(
+      field => !formData[field as keyof DetailedFormData]?.trim()
+    );
+
+    if (missingFields?.length) {
+      toast({
+        title: "Required Fields Missing",
+        description: `Please fill out: ${missingFields.map(f => f.replace(/([A-Z])/g, ' $1').toLowerCase()).join(', ')}`,
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleNext = () => {
+    if (!validateStep(currentStep)) return;
     setCurrentStep((prev) => prev + 1);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   };
 
   const handleSubmit = () => {
     console.log("DetailedAnalysisForm - Attempting to submit form");
+    if (!validateStep(currentStep)) return;
     if (!analysis) {
       console.error("DetailedAnalysisForm - Missing analysis data");
       return;
@@ -61,7 +95,23 @@ export const DetailedAnalysisForm = ({
 
   return (
     <>
-      <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
+      <div className="mb-6">
+        <div className="flex justify-between items-center text-sm text-gray-600">
+          <span>Step {currentStep} of 3</span>
+          <div className="flex gap-1">
+            {[1, 2, 3].map((step) => (
+              <div
+                key={step}
+                className={`w-16 h-1 rounded ${
+                  step <= currentStep ? 'bg-[#f65228]' : 'bg-gray-200'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <ScrollArea className="h-[calc(80vh-10rem)] pr-4" ref={scrollRef}>
         {currentStep === 1 && (
           <CompanyBasicsStep
             formData={formData}
