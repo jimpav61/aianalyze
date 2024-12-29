@@ -33,24 +33,28 @@ export const useCalendarHandling = ({
 
   const handleDownload = useCallback(async () => {
     try {
+      console.log("Download attempt starting with data:", {
+        hasFormData: !!formData,
+        hasAnalysis: !!analysis
+      });
+
       if (!formData || !analysis) {
+        console.error("Download failed - Missing required data");
         throw new Error("Report data not available");
       }
 
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
+        console.error("Download failed - Report element not found");
         throw new Error("Report element not found");
       }
 
-      console.log("Download attempt with data:", {
-        formData,
-        analysis
-      });
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      console.log("Generating PDF with filename:", fileName);
       
       const pdf = await generateAnalysisReport({ formData, analysis });
-      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      console.log("PDF generated successfully, saving file");
       
-      console.log("PDF generated successfully, attempting save as:", fileName);
       pdf.save(fileName);
       console.log("PDF saved successfully");
       
