@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { objectiveOptions } from "./constants/dropdownOptions";
 
 interface GoalsStepProps {
   formData: {
@@ -50,14 +51,28 @@ export const GoalsStep = ({
           <Label htmlFor="objectives" className="text-base font-medium">
             Question 1: What are your main business objectives for implementing AI? <span className="text-red-500">*</span>
           </Label>
-          <Textarea
-            id="objectives"
-            name="objectives"
+          <Select
             value={formData.objectives}
-            onChange={handleInputChange}
-            placeholder="e.g., Reduce response time, improve customer satisfaction..."
-            className={`min-h-[100px] ${errors.objectives ? 'border-red-500' : ''}`}
-          />
+            onValueChange={(value) =>
+              handleInputChange({
+                target: { name: "objectives", value },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
+          >
+            <SelectTrigger 
+              id="objectives"
+              className={`bg-white ${errors.objectives ? 'border-red-500' : ''}`}
+            >
+              <SelectValue placeholder="Select your main objective" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              {objectiveOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {errors.objectives && (
             <p className="text-sm text-red-500">{errors.objectives}</p>
           )}
@@ -81,7 +96,7 @@ export const GoalsStep = ({
             >
               <SelectValue placeholder="Select implementation timeline" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               {timelineOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -112,7 +127,7 @@ export const GoalsStep = ({
             >
               <SelectValue placeholder="Select budget range" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               {budgetOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
