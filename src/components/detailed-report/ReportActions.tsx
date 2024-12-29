@@ -24,12 +24,6 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         throw new Error("Missing required data for report generation");
       }
 
-      // Get the report element to capture
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        throw new Error("Report element not found");
-      }
-
       const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       
@@ -40,7 +34,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       toast({
         title: "Success",
         description: "Report downloaded successfully",
-        duration: 1500, // 1.5 seconds
+        duration: 1500,
       });
     } catch (error) {
       console.error("ReportActions - Download error:", error);

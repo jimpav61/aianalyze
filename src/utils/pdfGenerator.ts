@@ -20,83 +20,71 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    const reportElement = document.getElementById('detailed-report');
-    if (!reportElement) {
-      console.error('PDF Generation - Report element not found');
-      throw new Error('Report element not found');
-    }
-
-    console.log('PDF Generation - Found report element, preparing for capture');
-
-    const canvas = await html2canvas(reportElement, {
+    // Create a temporary div to render the report content
+    const tempDiv = document.createElement('div');
+    tempDiv.id = 'temp-report';
+    tempDiv.style.padding = '40px';
+    tempDiv.style.width = '800px';
+    tempDiv.style.backgroundColor = '#ffffff';
+    
+    // Add report content
+    tempDiv.innerHTML = `
+      <div style="font-family: Arial, sans-serif;">
+        <h1 style="color: #333; font-size: 24px; margin-bottom: 20px;">AI Implementation Analysis Report</h1>
+        
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Company Information</h2>
+          <p><strong>Company Name:</strong> ${formData.companyName}</p>
+          <p><strong>Industry:</strong> ${analysis.industry}</p>
+          <p><strong>Contact:</strong> ${formData.ownerName}</p>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Analysis Results</h2>
+          <p><strong>Department:</strong> ${analysis.department}</p>
+          <p><strong>Proposed Solution:</strong> ${analysis.bot_function}</p>
+          <p><strong>Projected Annual Savings:</strong> $${analysis.savings.toLocaleString()}</p>
+          <p><strong>Projected Profit Increase:</strong> ${analysis.profit_increase}%</p>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Implementation Details</h2>
+          <p>${analysis.explanation}</p>
+        </div>
+        
+        <div style="margin-bottom: 30px;">
+          <h2 style="color: #666; font-size: 18px;">Marketing Strategy</h2>
+          <p>${analysis.marketing_strategy}</p>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(tempDiv);
+    
+    const canvas = await html2canvas(tempDiv, {
       scale: 2,
       useCORS: true,
       logging: true,
-      backgroundColor: '#ffffff',
-      onclone: (document, element) => {
-        // Preserve all styles and spacing
-        element.style.padding = '40px';
-        element.style.width = '800px';
-        element.style.margin = '0 auto';
-        
-        // Ensure all elements maintain their styles
-        const allElements = element.getElementsByTagName('*');
-        for (let i = 0; i < allElements.length; i++) {
-          const el = allElements[i] as HTMLElement;
-          const computedStyle = window.getComputedStyle(el);
-          el.style.color = computedStyle.color;
-          el.style.backgroundColor = computedStyle.backgroundColor;
-          el.style.padding = computedStyle.padding;
-          el.style.margin = computedStyle.margin;
-          el.style.fontSize = computedStyle.fontSize;
-          el.style.fontWeight = computedStyle.fontWeight;
-          el.style.lineHeight = computedStyle.lineHeight;
-          el.style.borderRadius = computedStyle.borderRadius;
-          el.style.border = computedStyle.border;
-        }
-      }
+      backgroundColor: '#ffffff'
     });
-
-    console.log('PDF Generation - Content captured successfully');
-
-    // Create PDF with proper dimensions
+    
+    document.body.removeChild(tempDiv);
+    
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
     const pdf = new jsPDF('p', 'mm', 'a4');
-    let heightLeft = imgHeight;
-    let position = 0;
-    
-    // Add first page
     pdf.addImage(
       canvas.toDataURL('image/png'),
       'PNG',
       0,
-      position,
+      0,
       imgWidth,
       imgHeight,
       '',
       'FAST'
     );
-
-    // Add additional pages if needed
-    while (heightLeft >= pageHeight) {
-      position = position - pageHeight;
-      heightLeft = heightLeft - pageHeight;
-      
-      pdf.addPage();
-      pdf.addImage(
-        canvas.toDataURL('image/png'),
-        'PNG',
-        0,
-        position,
-        imgWidth,
-        imgHeight,
-        '',
-        'FAST'
-      );
-    }
 
     console.log('PDF Generation - PDF created successfully');
     return pdf;
