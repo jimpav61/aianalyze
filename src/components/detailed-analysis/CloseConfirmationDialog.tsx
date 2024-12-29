@@ -42,6 +42,9 @@ export const CloseConfirmationDialog = ({
         throw new Error("Report data not available");
       }
 
+      // Wait a brief moment to ensure the report is rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
         console.error("CloseConfirmationDialog - Report element not found in DOM");

@@ -5,6 +5,7 @@ import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
+import { ImplementationRecommendations } from "./ImplementationRecommendations";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -28,6 +29,10 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
       <AnalysisResults 
         analyses={[analysis]} 
         revenue={formData.revenue || "0"} 
+      />
+      <ImplementationRecommendations 
+        analysis={analysis}
+        formData={formData}
       />
       <ImplementationPlan 
         data={{
