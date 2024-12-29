@@ -120,6 +120,7 @@ export const DetailedAnalysisForm = ({
         onNext={handleNext}
         onBack={handleBack}
         onSubmit={handleSubmit}
+        formData={formData}
       />
     </>
   );
