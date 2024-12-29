@@ -90,7 +90,7 @@ export const useCalendarHandling = ({
     
     if (formData && analysis) {
       showSuccessToast();
-      await handleDownload();
+      await handleDownload(); // Ensure we await the download
       toast({
         title: "Demo Scheduled Successfully",
         description: (
