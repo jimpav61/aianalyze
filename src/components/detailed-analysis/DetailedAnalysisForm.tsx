@@ -6,6 +6,7 @@ import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
 import { useToast } from "@/components/ui/use-toast";
+import { useRef } from "react";
 
 interface DetailedAnalysisFormProps {
   onSubmit: (formData: DetailedFormData) => void;

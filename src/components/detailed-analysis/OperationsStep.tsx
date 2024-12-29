@@ -1,21 +1,10 @@
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { 
-  commonPainPoints, 
-  serviceChannelOptions, 
-  monthlyInteractionsOptions,
-  crmToolOptions 
-} from "./constants/dropdownOptions";
-import { createHandlers } from "./utils/dropdownHandlers";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { createHandlers } from "./utils/dropdownHandlers";
+import { ServiceChannelsSection } from "./operations/ServiceChannelsSection";
+import { InteractionsSection } from "./operations/InteractionsSection";
+import { ToolsSection } from "./operations/ToolsSection";
+import { PainPointsSection } from "./operations/PainPointsSection";
 
 interface OperationsStepProps {
   formData: {
@@ -58,7 +47,6 @@ export const OperationsStep = ({
       }
     } as React.ChangeEvent<HTMLInputElement>);
 
-    // Show warning if no channels are selected
     if (updatedChannels.length === 0) {
       toast({
         title: "Required Field",
@@ -82,7 +70,6 @@ export const OperationsStep = ({
       }
     } as React.ChangeEvent<HTMLInputElement>);
 
-    // Show warning if no tools are selected
     if (updatedTools.length === 0) {
       toast({
         title: "Required Field",
@@ -106,7 +93,6 @@ export const OperationsStep = ({
       }
     } as React.ChangeEvent<HTMLInputElement>);
 
-    // Show warning if no pain points are selected
     if (updatedPainPoints.length === 0) {
       toast({
         title: "Required Field",
@@ -117,99 +103,26 @@ export const OperationsStep = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-4">
-        <Label htmlFor="serviceChannels" className="flex items-center">
-          Current Service Channels <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {serviceChannelOptions.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <Checkbox
-                id={option.value}
-                checked={selectedChannels.includes(option.label)}
-                onCheckedChange={(checked) => handleChannelChange(option.label, checked as boolean)}
-                className="rounded-none"
-              />
-              <Label
-                htmlFor={option.value}
-                className="text-sm font-normal cursor-pointer"
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="monthlyInteractions" className="flex items-center">
-          Monthly Customer Interactions <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <Select 
-          value={monthlyInteractionsOptions.find(opt => opt.label === formData.monthlyInteractions)?.value} 
-          onValueChange={handleMonthlyInteractionsChange}
-        >
-          <SelectTrigger className="w-full bg-white">
-            <SelectValue placeholder="Select monthly interactions range" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            {monthlyInteractionsOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-4">
-        <Label htmlFor="currentTools" className="flex items-center">
-          Current Tools & Software <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {crmToolOptions.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <Checkbox
-                id={option.value}
-                checked={selectedTools.includes(option.label)}
-                onCheckedChange={(checked) => handleToolChange(option.label, checked as boolean)}
-                className="rounded-none"
-              />
-              <Label
-                htmlFor={option.value}
-                className="text-sm font-normal cursor-pointer"
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <Label htmlFor="painPoints" className="flex items-center">
-          Current Pain Points <span className="text-red-500 ml-1">*</span>
-        </Label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {commonPainPoints.map((option) => (
-            <div key={option.value} className="flex items-center space-x-2">
-              <Checkbox
-                id={option.value}
-                checked={selectedPainPoints.includes(option.label)}
-                onCheckedChange={(checked) => handlePainPointChange(option.label, checked as boolean)}
-                className="rounded-none"
-              />
-              <Label
-                htmlFor={option.value}
-                className="text-sm font-normal cursor-pointer"
-              >
-                {option.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="space-y-8 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
+      <ServiceChannelsSection
+        selectedChannels={selectedChannels}
+        handleChannelChange={handleChannelChange}
+      />
+      
+      <InteractionsSection
+        monthlyInteractions={formData.monthlyInteractions}
+        handleMonthlyInteractionsChange={handleMonthlyInteractionsChange}
+      />
+      
+      <ToolsSection
+        selectedTools={selectedTools}
+        handleToolChange={handleToolChange}
+      />
+      
+      <PainPointsSection
+        selectedPainPoints={selectedPainPoints}
+        handlePainPointChange={handlePainPointChange}
+      />
     </div>
   );
 };
