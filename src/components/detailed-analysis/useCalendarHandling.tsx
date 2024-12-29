@@ -3,8 +3,6 @@ import { DetailedFormData } from "@/types/analysis";
 import { useSuccessToast } from "./SuccessToast";
 import { useToast } from "@/hooks/use-toast";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
-import { Button } from "../ui/button";
-import { Download } from "lucide-react";
 
 interface UseCalendarHandlingProps {
   onClose: () => void;
@@ -39,16 +37,9 @@ export const useCalendarHandling = ({
         throw new Error("Report data not available");
       }
 
-      // Get the report element to capture
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
-        console.error("Report element not found, retrying...");
-        // Add a small delay and retry once
-        await new Promise(resolve => setTimeout(resolve, 100));
-        const retryElement = document.getElementById('detailed-report');
-        if (!retryElement) {
-          throw new Error("Report element not found after retry");
-        }
+        throw new Error("Report element not found");
       }
 
       console.log("Download attempt with data:", {
@@ -62,6 +53,12 @@ export const useCalendarHandling = ({
       console.log("PDF generated successfully, attempting save as:", fileName);
       pdf.save(fileName);
       console.log("PDF saved successfully");
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+        duration: 1500, // 1.5 seconds
+      });
       
       return true;
     } catch (error) {
@@ -81,30 +78,9 @@ export const useCalendarHandling = ({
     
     if (formData && analysis) {
       showSuccessToast();
-      const downloadSuccess = await handleDownload();
-      
-      if (downloadSuccess) {
-        toast({
-          title: "Demo Scheduled Successfully",
-          description: (
-            <div className="flex flex-col gap-2">
-              <p>Your report has been downloaded. You can close this window when you're ready.</p>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="w-full flex items-center justify-center gap-2 mt-2"
-                onClick={() => handleDownload()}
-              >
-                <Download className="h-4 w-4" />
-                Download Again
-              </Button>
-            </div>
-          ),
-          duration: 5000,
-        });
-      }
+      await handleDownload();
     }
-  }, [showSuccessToast, toast, formData, analysis, handleDownload]);
+  }, [showSuccessToast, formData, analysis, handleDownload]);
 
   return {
     showCalendar,
