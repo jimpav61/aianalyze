@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CompanyBasicsStep } from "./CompanyBasicsStep";
 import { OperationsStep } from "./OperationsStep";
@@ -32,6 +32,14 @@ export const DetailedAnalysisForm = ({
     setErrors,
   } = useDetailedFormState(initialData);
 
+  // Add effect to scroll to top when step changes
+  useEffect(() => {
+    const formTop = document.getElementById('form-top');
+    if (formTop) {
+      formTop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [currentStep]);
+
   const handleNext = () => {
     const stepValidation = validateStep(currentStep);
     if (!stepValidation.isValid) {
@@ -41,21 +49,15 @@ export const DetailedAnalysisForm = ({
         description: "Please fill out all required fields before proceeding.",
         variant: "destructive",
       });
-      // Scroll to top of form
-      document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
     setCurrentStep((prev) => prev + 1);
     setErrors({});
-    // Scroll to top of form
-    document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
     setErrors({});
-    // Scroll to top of form
-    document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSubmit = () => {
