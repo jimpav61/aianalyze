@@ -20,21 +20,33 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
+    // First, ensure the report element exists and is visible
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
-      console.error("PDF Generation - Report element not found");
+      console.error("PDF Generation - Report element not found in DOM");
       throw new Error("Report element not found");
     }
 
-    // Create a temporary container with proper styling
+    // Force the element to be visible during capture
+    const originalDisplay = reportElement.style.display;
+    const originalVisibility = reportElement.style.visibility;
+    const originalOpacity = reportElement.style.opacity;
+    
+    reportElement.style.display = 'block';
+    reportElement.style.visibility = 'visible';
+    reportElement.style.opacity = '1';
+
+    // Create temporary container with fixed dimensions
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
-    tempContainer.style.width = '900px'; // Fixed width for consistent rendering
+    tempContainer.style.width = '900px';
     tempContainer.style.backgroundColor = 'white';
+    tempContainer.style.margin = '0';
+    tempContainer.style.padding = '0';
     
-    // Clone the report for PDF generation
+    // Clone and prepare the report
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     clonedReport.style.width = '100%';
     clonedReport.style.padding = '40px';
@@ -42,8 +54,10 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     clonedReport.style.position = 'relative';
     clonedReport.style.opacity = '1';
     clonedReport.style.visibility = 'visible';
+    clonedReport.style.display = 'block';
+    clonedReport.style.transform = 'none';
     
-    // Ensure all elements are visible
+    // Process all child elements
     const allElements = clonedReport.getElementsByTagName('*');
     Array.from(allElements).forEach((el) => {
       const element = el as HTMLElement;
@@ -51,6 +65,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       element.style.visibility = 'visible';
       element.style.opacity = '1';
       element.style.position = 'relative';
+      element.style.transform = 'none';
       
       // Preserve text formatting
       if (element.classList.contains('whitespace-pre-line')) {
@@ -61,30 +76,34 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     tempContainer.appendChild(clonedReport);
     document.body.appendChild(tempContainer);
 
-    // Wait for fonts and images to load
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for rendering
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('PDF Generation - Creating canvas');
     const canvas = await html2canvas(clonedReport, {
       scale: 2,
       useCORS: true,
-      logging: false,
+      logging: true,
       backgroundColor: '#ffffff',
-      width: clonedReport.offsetWidth,
-      height: clonedReport.offsetHeight,
-      windowWidth: clonedReport.offsetWidth,
-      windowHeight: clonedReport.offsetHeight,
+      width: 900, // Fixed width
+      height: clonedReport.scrollHeight,
       onclone: (doc) => {
         const clonedElement = doc.getElementById('detailed-report');
         if (clonedElement) {
           clonedElement.style.transform = 'none';
           clonedElement.style.opacity = '1';
+          clonedElement.style.display = 'block';
         }
       }
     });
 
-    // Clean up
+    // Cleanup
     document.body.removeChild(tempContainer);
+    
+    // Restore original element styles
+    reportElement.style.display = originalDisplay;
+    reportElement.style.visibility = originalVisibility;
+    reportElement.style.opacity = originalOpacity;
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
