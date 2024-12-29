@@ -39,12 +39,24 @@ export const useCalendarHandling = ({
         throw new Error("Report data not available");
       }
 
-      console.log("Download attempt with:", { formData, analysis });
+      // Get the report element to capture
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
 
+      console.log("Download attempt with data:", {
+        formData,
+        analysis
+      });
+      
       const pdf = await generateAnalysisReport({ formData, analysis });
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      console.log("PDF generated successfully, attempting save as:", fileName);
       pdf.save(fileName);
-
+      console.log("PDF saved successfully");
+      
       toast({
         title: "Success",
         description: (
@@ -54,7 +66,7 @@ export const useCalendarHandling = ({
               variant="outline" 
               size="sm"
               className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={handleDownload}
+              onClick={() => handleDownload()}
             >
               <Download className="h-4 w-4" />
               Download Again
@@ -88,7 +100,7 @@ export const useCalendarHandling = ({
               variant="outline" 
               size="sm"
               className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={handleDownload}
+              onClick={() => handleDownload()}
             >
               <Download className="h-4 w-4" />
               Download Again
