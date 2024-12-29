@@ -3,8 +3,6 @@ import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { generateAnalysisReport } from "@/utils/pdfGenerator";
-import { ReportHeader } from "./ReportHeader";
-import { ReportFooter } from "./ReportFooter";
 
 interface ReportActionsProps {
   formData: DetailedFormData;
@@ -41,20 +39,8 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       console.log("ReportActions - PDF saved successfully");
       toast({
         title: "Success",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Report downloaded successfully!</p>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={handleDownload}
-            >
-              <Download className="h-4 w-4" />
-              Download Again
-            </Button>
-          </div>
-        ),
+        description: "Report downloaded successfully",
+        duration: 1500, // 1.5 seconds
       });
     } catch (error) {
       console.error("ReportActions - Download error:", error);

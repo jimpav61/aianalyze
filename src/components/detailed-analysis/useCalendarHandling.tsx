@@ -60,7 +60,7 @@ export const useCalendarHandling = ({
       
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
+        description: "Report downloaded successfully",
         duration: 1500, // 1.5 seconds
       });
       
