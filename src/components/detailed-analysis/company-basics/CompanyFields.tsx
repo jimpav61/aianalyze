@@ -16,6 +16,7 @@ interface CompanyFieldsProps {
   employees: string;
   revenue: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: { [key: string]: string };
 }
 
 export const CompanyFields = ({
@@ -24,6 +25,7 @@ export const CompanyFields = ({
   employees,
   revenue,
   handleInputChange,
+  errors,
 }: CompanyFieldsProps) => {
   const { handleEmployeeChange, handleRevenueChange } = createHandlers(handleInputChange);
 
@@ -46,8 +48,11 @@ export const CompanyFields = ({
           value={companyName}
           onChange={handleInputChange}
           placeholder="Enter your company name"
-          className={!companyName ? "border-red-300" : ""}
+          className={errors.companyName ? "border-red-300" : ""}
         />
+        {errors.companyName && (
+          <p className="text-sm text-red-500 mt-1">{errors.companyName}</p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="ownerName" className="flex items-center">
@@ -59,8 +64,11 @@ export const CompanyFields = ({
           value={ownerName}
           onChange={handleInputChange}
           placeholder="Enter owner's name"
-          className={!ownerName ? "border-red-300" : ""}
+          className={errors.ownerName ? "border-red-300" : ""}
         />
+        {errors.ownerName && (
+          <p className="text-sm text-red-500 mt-1">{errors.ownerName}</p>
+        )}
       </div>
     </>
   );

@@ -3,10 +3,10 @@ import { DetailedFormData } from "@/types/analysis";
 
 interface StepNavigationProps {
   currentStep: number;
-  formData: DetailedFormData;
   onNext: () => void;
   onBack: () => void;
   onSubmit: () => void;
+  formData: DetailedFormData;
 }
 
 export const StepNavigation = ({
@@ -14,6 +14,7 @@ export const StepNavigation = ({
   onNext,
   onBack,
   onSubmit,
+  formData,
 }: StepNavigationProps) => {
   return (
     <div className="flex justify-between mt-6">

@@ -5,11 +5,13 @@ import { serviceChannelOptions } from "../constants/dropdownOptions";
 interface ServiceChannelsSectionProps {
   selectedChannels: string[];
   handleChannelChange: (channel: string, checked: boolean) => void;
+  error?: string;
 }
 
 export const ServiceChannelsSection = ({
   selectedChannels,
   handleChannelChange,
+  error,
 }: ServiceChannelsSectionProps) => {
   return (
     <div className="space-y-4">
@@ -24,7 +26,7 @@ export const ServiceChannelsSection = ({
               id={option.value}
               checked={selectedChannels.includes(option.label)}
               onCheckedChange={(checked) => handleChannelChange(option.label, checked as boolean)}
-              className="rounded-none"
+              className={`rounded-none ${error ? 'border-red-500' : ''}`}
             />
             <Label
               htmlFor={option.value}
@@ -35,6 +37,9 @@ export const ServiceChannelsSection = ({
           </div>
         ))}
       </div>
+      {error && (
+        <p className="text-sm text-red-500 mt-1">{error}</p>
+      )}
     </div>
   );
 };

@@ -11,11 +11,13 @@ import { monthlyInteractionsOptions } from "../constants/dropdownOptions";
 interface InteractionsSectionProps {
   monthlyInteractions: string;
   handleMonthlyInteractionsChange: (value: string) => void;
+  error?: string;
 }
 
 export const InteractionsSection = ({
   monthlyInteractions,
   handleMonthlyInteractionsChange,
+  error,
 }: InteractionsSectionProps) => {
   return (
     <div className="space-y-4">
@@ -28,7 +30,7 @@ export const InteractionsSection = ({
           value={monthlyInteractionsOptions.find(opt => opt.label === monthlyInteractions)?.value} 
           onValueChange={handleMonthlyInteractionsChange}
         >
-          <SelectTrigger className="w-full bg-white">
+          <SelectTrigger className={`w-full bg-white ${error ? 'border-red-500' : ''}`}>
             <SelectValue placeholder="Select monthly interactions range" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -39,6 +41,9 @@ export const InteractionsSection = ({
             ))}
           </SelectContent>
         </Select>
+        {error && (
+          <p className="text-sm text-red-500 mt-1">{error}</p>
+        )}
       </div>
     </div>
   );

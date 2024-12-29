@@ -6,12 +6,14 @@ interface ContactFieldsProps {
   phoneNumber: string;
   email: string;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: { [key: string]: string };
 }
 
 export const ContactFields = ({
   phoneNumber,
   email,
   handleInputChange,
+  errors,
 }: ContactFieldsProps) => {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedNumber = formatPhoneNumber(e.target.value);
@@ -34,15 +36,15 @@ export const ContactFields = ({
           value={phoneNumber}
           onChange={handlePhoneChange}
           placeholder="(555) 555-5555"
-          className={`bg-white ${phoneError ? 'border-red-500' : ''}`}
+          className={`bg-white ${phoneError || errors.phoneNumber ? 'border-red-500' : ''}`}
         />
-        {phoneError && (
-          <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+        {(phoneError || errors.phoneNumber) && (
+          <p className="text-sm text-red-500 mt-1">{errors.phoneNumber || phoneError}</p>
         )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email" className="text-gray-700">
-          Email Address
+          Email Address <span className="text-red-500 ml-1">*</span>
         </Label>
         <Input
           id="email"
@@ -51,9 +53,12 @@ export const ContactFields = ({
           value={email}
           onChange={handleInputChange}
           placeholder="your@email.com"
-          className="bg-white"
+          className={`bg-white ${errors.email ? 'border-red-500' : ''}`}
           required
         />
+        {errors.email && (
+          <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+        )}
       </div>
     </div>
   );

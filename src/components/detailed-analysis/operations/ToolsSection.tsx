@@ -5,11 +5,13 @@ import { crmToolOptions } from "../constants/dropdownOptions";
 interface ToolsSectionProps {
   selectedTools: string[];
   handleToolChange: (tool: string, checked: boolean) => void;
+  error?: string;
 }
 
 export const ToolsSection = ({
   selectedTools,
   handleToolChange,
+  error,
 }: ToolsSectionProps) => {
   return (
     <div className="space-y-4">
@@ -24,7 +26,7 @@ export const ToolsSection = ({
               id={option.value}
               checked={selectedTools.includes(option.label)}
               onCheckedChange={(checked) => handleToolChange(option.label, checked as boolean)}
-              className="rounded-none"
+              className={`rounded-none ${error ? 'border-red-500' : ''}`}
             />
             <Label
               htmlFor={option.value}
@@ -35,6 +37,9 @@ export const ToolsSection = ({
           </div>
         ))}
       </div>
+      {error && (
+        <p className="text-sm text-red-500 mt-1">{error}</p>
+      )}
     </div>
   );
 };

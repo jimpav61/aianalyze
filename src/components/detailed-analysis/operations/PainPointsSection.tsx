@@ -5,11 +5,13 @@ import { commonPainPoints } from "../constants/dropdownOptions";
 interface PainPointsSectionProps {
   selectedPainPoints: string[];
   handlePainPointChange: (painPoint: string, checked: boolean) => void;
+  error?: string;
 }
 
 export const PainPointsSection = ({
   selectedPainPoints,
   handlePainPointChange,
+  error,
 }: PainPointsSectionProps) => {
   return (
     <div className="space-y-4">
@@ -24,7 +26,7 @@ export const PainPointsSection = ({
               id={option.value}
               checked={selectedPainPoints.includes(option.label)}
               onCheckedChange={(checked) => handlePainPointChange(option.label, checked as boolean)}
-              className="rounded-none"
+              className={`rounded-none ${error ? 'border-red-500' : ''}`}
             />
             <Label
               htmlFor={option.value}
@@ -35,6 +37,9 @@ export const PainPointsSection = ({
           </div>
         ))}
       </div>
+      {error && (
+        <p className="text-sm text-red-500 mt-1">{error}</p>
+      )}
     </div>
   );
 };
