@@ -18,38 +18,39 @@ export const FormContent = ({
   handleInputChange,
   errors,
 }: FormContentProps) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Reset scroll position when step changes
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = 0;
+    // Immediately reset scroll positions
+    if (containerRef.current) {
+      containerRef.current.scrollTo(0, 0);
     }
     
-    // Force scroll to top after a brief delay to ensure content is rendered
+    // Use a short timeout to ensure content is rendered
     const timeoutId = setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = 0;
+      // Reset container scroll
+      if (containerRef.current) {
+        containerRef.current.scrollTo(0, 0);
       }
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
+      
+      // Reset ScrollArea scroll
+      const scrollAreaViewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollAreaViewport instanceof HTMLElement) {
+        scrollAreaViewport.scrollTo(0, 0);
       }
-    }, 50);
+    }, 0);
 
     return () => clearTimeout(timeoutId);
   }, [currentStep]);
 
   return (
-    <div ref={scrollRef} className="flex-1 overflow-y-auto">
+    <div ref={containerRef} className="flex-1 overflow-hidden">
       <ScrollArea 
-        ref={scrollAreaRef} 
+        ref={scrollAreaRef}
         className="h-[60vh] w-full rounded-md px-4"
       >
-        <div className="min-h-full">
+        <div className="py-1">
           {currentStep === 1 && (
             <CompanyBasicsStep
               formData={formData}
