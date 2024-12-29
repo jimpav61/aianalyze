@@ -1,5 +1,5 @@
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
@@ -7,8 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { objectiveOptions, timelineOptions, budgetOptions } from "./constants/dropdownOptions";
-import { createHandlers } from "./utils/dropdownHandlers";
 
 interface GoalsStepProps {
   formData: {
@@ -17,54 +15,73 @@ interface GoalsStepProps {
     budget: string;
     additionalInfo: string;
   };
-  handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  errors: { [key: string]: string };
 }
 
-export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
-  const { handleObjectiveChange, handleTimelineChange, handleBudgetChange } = createHandlers(handleInputChange);
+const timelineOptions = [
+  { value: "1-3months", label: "1-3 months" },
+  { value: "3-6months", label: "3-6 months" },
+  { value: "6-12months", label: "6-12 months" },
+  { value: "12+months", label: "12+ months" },
+];
 
+const budgetOptions = [
+  { value: "10k-25k", label: "$10,000 - $25,000" },
+  { value: "25k-50k", label: "$25,000 - $50,000" },
+  { value: "50k-100k", label: "$50,000 - $100,000" },
+  { value: "100k+", label: "$100,000+" },
+];
+
+export const GoalsStep = ({
+  formData,
+  handleInputChange,
+  errors,
+}: GoalsStepProps) => {
   return (
     <div className="space-y-8 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Project Goals</h3>
-        <div className="space-y-2">
-          <Label htmlFor="objectives" className="text-gray-700 text-base font-medium flex items-center">
-            What are your key objectives for this project? <span className="text-red-500 ml-1">*</span>
-          </Label>
-          <Select
-            value={objectiveOptions.find((o) => o.label === formData.objectives)?.value}
-            onValueChange={handleObjectiveChange}
-          >
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select key objective" />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              {objectiveOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Implementation Goals</h3>
+        <p className="text-sm text-gray-600">Tell us about your AI implementation objectives:</p>
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Implementation Details</h3>
-        <div className="space-y-2">
-          <Label htmlFor="timeline" className="text-gray-700 text-base font-medium flex items-center">
-            When would you like to implement this solution? <span className="text-red-500 ml-1">*</span>
+      <div className="space-y-8">
+        <div className="space-y-4">
+          <Label htmlFor="objectives" className="text-base font-medium">
+            Question 1: What are your main business objectives for implementing AI? <span className="text-red-500">*</span>
+          </Label>
+          <Textarea
+            id="objectives"
+            name="objectives"
+            value={formData.objectives}
+            onChange={handleInputChange}
+            placeholder="e.g., Reduce response time, improve customer satisfaction..."
+            className={`min-h-[100px] ${errors.objectives ? 'border-red-500' : ''}`}
+          />
+          {errors.objectives && (
+            <p className="text-sm text-red-500">{errors.objectives}</p>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <Label htmlFor="timeline" className="text-base font-medium">
+            Question 2: What is your desired implementation timeline? <span className="text-red-500">*</span>
           </Label>
           <Select
-            value={timelineOptions.find((t) => t.label === formData.timeline)?.value}
-            onValueChange={handleTimelineChange}
+            value={formData.timeline}
+            onValueChange={(value) =>
+              handleInputChange({
+                target: { name: "timeline", value },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
           >
-            <SelectTrigger className="w-full bg-white">
+            <SelectTrigger 
+              id="timeline"
+              className={`bg-white ${errors.timeline ? 'border-red-500' : ''}`}
+            >
               <SelectValue placeholder="Select implementation timeline" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent>
               {timelineOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -72,23 +89,30 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
               ))}
             </SelectContent>
           </Select>
+          {errors.timeline && (
+            <p className="text-sm text-red-500">{errors.timeline}</p>
+          )}
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Budget</h3>
-        <div className="space-y-2">
-          <Label htmlFor="budget" className="text-gray-700 text-base font-medium flex items-center">
-            What is your estimated budget for this project? <span className="text-red-500 ml-1">*</span>
+        <div className="space-y-4">
+          <Label htmlFor="budget" className="text-base font-medium">
+            Question 3: What is your budget range for this project? <span className="text-red-500">*</span>
           </Label>
           <Select
-            value={budgetOptions.find((b) => b.label === formData.budget)?.value}
-            onValueChange={handleBudgetChange}
+            value={formData.budget}
+            onValueChange={(value) =>
+              handleInputChange({
+                target: { name: "budget", value },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
           >
-            <SelectTrigger className="w-full bg-white">
-              <SelectValue placeholder="Select estimated budget" />
+            <SelectTrigger 
+              id="budget"
+              className={`bg-white ${errors.budget ? 'border-red-500' : ''}`}
+            >
+              <SelectValue placeholder="Select budget range" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent>
               {budgetOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -96,21 +120,21 @@ export const GoalsStep = ({ formData, handleInputChange }: GoalsStepProps) => {
               ))}
             </SelectContent>
           </Select>
+          {errors.budget && (
+            <p className="text-sm text-red-500">{errors.budget}</p>
+          )}
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Additional Information</h3>
-        <div className="space-y-2">
-          <Label htmlFor="additionalInfo" className="text-gray-700 text-base font-medium">
-            Is there anything else you'd like to share with us?
+        <div className="space-y-4">
+          <Label htmlFor="additionalInfo" className="text-base font-medium">
+            Question 4: Any additional information you'd like to share? (Optional)
           </Label>
           <Textarea
             id="additionalInfo"
             name="additionalInfo"
             value={formData.additionalInfo}
             onChange={handleInputChange}
-            placeholder="Share any other details that might be relevant..."
+            placeholder="Share any other relevant details..."
             className="min-h-[100px]"
           />
         </div>

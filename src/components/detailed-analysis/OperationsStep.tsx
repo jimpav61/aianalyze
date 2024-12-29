@@ -14,11 +14,13 @@ interface OperationsStepProps {
     painPoints: string;
   };
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  errors: { [key: string]: string };
 }
 
 export const OperationsStep = ({
   formData,
   handleInputChange,
+  errors,
 }: OperationsStepProps) => {
   const { toast } = useToast();
   const [selectedChannels, setSelectedChannels] = useState<string[]>(
@@ -46,14 +48,6 @@ export const OperationsStep = ({
         value: updatedChannels.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
-
-    if (updatedChannels.length === 0) {
-      toast({
-        title: "Required Field",
-        description: "Please select at least one service channel",
-        variant: "destructive",
-      });
-    }
   };
 
   const handleToolChange = (tool: string, checked: boolean) => {
@@ -69,14 +63,6 @@ export const OperationsStep = ({
         value: updatedTools.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
-
-    if (updatedTools.length === 0) {
-      toast({
-        title: "Required Field",
-        description: "Please select at least one tool",
-        variant: "destructive",
-      });
-    }
   };
 
   const handlePainPointChange = (painPoint: string, checked: boolean) => {
@@ -92,37 +78,60 @@ export const OperationsStep = ({
         value: updatedPainPoints.join(', ')
       }
     } as React.ChangeEvent<HTMLInputElement>);
-
-    if (updatedPainPoints.length === 0) {
-      toast({
-        title: "Required Field",
-        description: "Please select at least one pain point",
-        variant: "destructive",
-      });
-    }
   };
 
   return (
     <div className="space-y-8 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-sm">
-      <ServiceChannelsSection
-        selectedChannels={selectedChannels}
-        handleChannelChange={handleChannelChange}
-      />
-      
-      <InteractionsSection
-        monthlyInteractions={formData.monthlyInteractions}
-        handleMonthlyInteractionsChange={handleMonthlyInteractionsChange}
-      />
-      
-      <ToolsSection
-        selectedTools={selectedTools}
-        handleToolChange={handleToolChange}
-      />
-      
-      <PainPointsSection
-        selectedPainPoints={selectedPainPoints}
-        handlePainPointChange={handlePainPointChange}
-      />
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Current Operations</h3>
+        <p className="text-sm text-gray-600">Help us understand your current service operations:</p>
+      </div>
+
+      <div className="space-y-8">
+        <div>
+          <h4 className="text-base font-medium text-gray-900 mb-2">
+            Question 1: Which channels do you use to provide customer service? <span className="text-red-500">*</span>
+          </h4>
+          <ServiceChannelsSection
+            selectedChannels={selectedChannels}
+            handleChannelChange={handleChannelChange}
+            error={errors.serviceChannels}
+          />
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900 mb-2">
+            Question 2: How many customer interactions do you handle monthly? <span className="text-red-500">*</span>
+          </h4>
+          <InteractionsSection
+            monthlyInteractions={formData.monthlyInteractions}
+            handleMonthlyInteractionsChange={handleMonthlyInteractionsChange}
+            error={errors.monthlyInteractions}
+          />
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900 mb-2">
+            Question 3: What tools do you currently use? <span className="text-red-500">*</span>
+          </h4>
+          <ToolsSection
+            selectedTools={selectedTools}
+            handleToolChange={handleToolChange}
+            error={errors.currentTools}
+          />
+        </div>
+
+        <div>
+          <h4 className="text-base font-medium text-gray-900 mb-2">
+            Question 4: What are your main operational challenges? <span className="text-red-500">*</span>
+          </h4>
+          <PainPointsSection
+            selectedPainPoints={selectedPainPoints}
+            handlePainPointChange={handlePainPointChange}
+            error={errors.painPoints}
+          />
+        </div>
+      </div>
     </div>
   );
 };

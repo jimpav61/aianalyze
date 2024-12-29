@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CompanyBasicsStep } from "./CompanyBasicsStep";
 import { OperationsStep } from "./OperationsStep";
@@ -5,98 +6,76 @@ import { GoalsStep } from "./GoalsStep";
 import { DetailedFormData } from "@/types/analysis";
 import { StepNavigation } from "./form/StepNavigation";
 import { useDetailedFormState } from "@/hooks/useDetailedFormState";
-import { useToast } from "@/components/ui/use-toast";
-import { useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface DetailedAnalysisFormProps {
-  onSubmit: (formData: DetailedFormData) => void;
+  onSubmit: (data: DetailedFormData) => void;
   industry?: string;
-  analysis?: {
-    industry: string;
-    department: string;
-    bot_function: string;
-    savings: number;
-    profit_increase: number;
-    explanation: string;
-    marketing_strategy: string;
-  };
+  analysis?: any;
   initialData: DetailedFormData | null;
 }
 
-export const DetailedAnalysisForm = ({ 
-  onSubmit, 
+export const DetailedAnalysisForm = ({
+  onSubmit,
   industry,
   analysis,
-  initialData
+  initialData,
 }: DetailedAnalysisFormProps) => {
+  const { toast } = useToast();
   const {
     currentStep,
     setCurrentStep,
     formData,
-    handleInputChange
+    handleInputChange,
+    validateStep,
+    errors,
+    setErrors,
   } = useDetailedFormState(initialData);
 
-  const { toast } = useToast();
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  console.log("DetailedAnalysisForm - Current state:", { 
-    currentStep, 
-    formData, 
-    industry, 
-    analysis,
-    hasInitialData: !!initialData
-  });
-
-  const validateStep = (step: number) => {
-    const requiredFields: { [key: number]: string[] } = {
-      1: ["companyName", "ownerName", "email", "revenue"],
-      2: ["serviceChannels", "monthlyInteractions"],
-      3: ["objectives", "timeline", "budget"]
-    };
-
-    const missingFields = requiredFields[step]?.filter(
-      field => !formData[field as keyof DetailedFormData]?.trim()
-    );
-
-    if (missingFields?.length) {
+  const handleNext = () => {
+    const stepValidation = validateStep(currentStep);
+    if (!stepValidation.isValid) {
+      setErrors(stepValidation.errors);
       toast({
         title: "Required Fields Missing",
-        description: `Please fill out: ${missingFields.map(f => f.replace(/([A-Z])/g, ' $1').toLowerCase()).join(', ')}`,
+        description: "Please fill out all required fields before proceeding.",
         variant: "destructive",
       });
-      return false;
+      // Scroll to top of form
+      document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
+      return;
     }
-    return true;
-  };
-
-  const handleNext = () => {
-    if (!validateStep(currentStep)) return;
     setCurrentStep((prev) => prev + 1);
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
+    setErrors({});
+    // Scroll to top of form
+    document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleBack = () => {
     setCurrentStep((prev) => prev - 1);
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
-    }
+    setErrors({});
+    // Scroll to top of form
+    document.getElementById('form-top')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSubmit = () => {
-    console.log("DetailedAnalysisForm - Attempting to submit form");
-    if (!validateStep(currentStep)) return;
-    if (!analysis) {
-      console.error("DetailedAnalysisForm - Missing analysis data");
+    const stepValidation = validateStep(currentStep);
+    if (!stepValidation.isValid) {
+      setErrors(stepValidation.errors);
+      toast({
+        title: "Required Fields Missing",
+        description: "Please fill out all required fields before submitting.",
+        variant: "destructive",
+      });
       return;
     }
+    console.log("Form submitted with data:", formData);
     onSubmit(formData);
   };
 
   return (
     <>
-      <div className="mb-6">
+      <div id="form-top" className="mb-6">
         <div className="flex justify-between items-center text-sm text-gray-600">
           <span>Step {currentStep} of 3</span>
           <div className="flex gap-1">
@@ -112,30 +91,32 @@ export const DetailedAnalysisForm = ({
         </div>
       </div>
 
-      <ScrollArea className="h-[calc(80vh-10rem)] pr-4" ref={scrollRef}>
+      <ScrollArea className="h-[calc(80vh-10rem)] pr-4">
         {currentStep === 1 && (
           <CompanyBasicsStep
             formData={formData}
             handleInputChange={handleInputChange}
+            errors={errors}
           />
         )}
         {currentStep === 2 && (
           <OperationsStep
             formData={formData}
             handleInputChange={handleInputChange}
+            errors={errors}
           />
         )}
         {currentStep === 3 && (
           <GoalsStep
             formData={formData}
             handleInputChange={handleInputChange}
+            errors={errors}
           />
         )}
       </ScrollArea>
 
       <StepNavigation
         currentStep={currentStep}
-        formData={formData}
         onNext={handleNext}
         onBack={handleBack}
         onSubmit={handleSubmit}
