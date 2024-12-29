@@ -42,7 +42,13 @@ export const useCalendarHandling = ({
       // Get the report element to capture
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
-        throw new Error("Report element not found");
+        console.error("Report element not found, retrying...");
+        // Add a small delay and retry once
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const retryElement = document.getElementById('detailed-report');
+        if (!retryElement) {
+          throw new Error("Report element not found after retry");
+        }
       }
 
       console.log("Download attempt with data:", {
@@ -57,23 +63,7 @@ export const useCalendarHandling = ({
       pdf.save(fileName);
       console.log("PDF saved successfully");
       
-      toast({
-        title: "Success",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Report downloaded successfully!</p>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={() => handleDownload()}
-            >
-              <Download className="h-4 w-4" />
-              Download Again
-            </Button>
-          </div>
-        ),
-      });
+      return true;
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast({
@@ -81,6 +71,7 @@ export const useCalendarHandling = ({
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
         variant: "destructive",
       });
+      return false;
     }
   }, [formData, analysis, toast]);
 
@@ -90,31 +81,35 @@ export const useCalendarHandling = ({
     
     if (formData && analysis) {
       showSuccessToast();
-      await handleDownload(); // Ensure we await the download
-      toast({
-        title: "Demo Scheduled Successfully",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Your report has been downloaded. You can close this window when you're ready.</p>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="w-full flex items-center justify-center gap-2 mt-2"
-              onClick={() => handleDownload()}
-            >
-              <Download className="h-4 w-4" />
-              Download Again
-            </Button>
-          </div>
-        ),
-        duration: 5000,
-      });
+      const downloadSuccess = await handleDownload();
+      
+      if (downloadSuccess) {
+        toast({
+          title: "Demo Scheduled Successfully",
+          description: (
+            <div className="flex flex-col gap-2">
+              <p>Your report has been downloaded. You can close this window when you're ready.</p>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full flex items-center justify-center gap-2 mt-2"
+                onClick={() => handleDownload()}
+              >
+                <Download className="h-4 w-4" />
+                Download Again
+              </Button>
+            </div>
+          ),
+          duration: 5000,
+        });
+      }
     }
   }, [showSuccessToast, toast, formData, analysis, handleDownload]);
 
   return {
     showCalendar,
     handleBookDemo,
-    handleBookingSubmit
+    handleBookingSubmit,
+    handleDownload
   };
 };
