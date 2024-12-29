@@ -22,33 +22,35 @@ export const FormContent = ({
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
+      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentStep]);
 
   return (
-    <ScrollArea ref={scrollRef} className="h-[calc(80vh-10rem)] pr-4">
-      {currentStep === 1 && (
-        <CompanyBasicsStep
-          formData={formData}
-          handleInputChange={handleInputChange}
-          errors={errors}
-        />
-      )}
-      {currentStep === 2 && (
-        <OperationsStep
-          formData={formData}
-          handleInputChange={handleInputChange}
-          errors={errors}
-        />
-      )}
-      {currentStep === 3 && (
-        <GoalsStep
-          formData={formData}
-          handleInputChange={handleInputChange}
-          errors={errors}
-        />
-      )}
-    </ScrollArea>
+    <div ref={scrollRef} className="flex-1 overflow-y-auto">
+      <ScrollArea className="h-[60vh] w-full rounded-md px-4">
+        {currentStep === 1 && (
+          <CompanyBasicsStep
+            formData={formData}
+            handleInputChange={handleInputChange}
+            errors={errors}
+          />
+        )}
+        {currentStep === 2 && (
+          <OperationsStep
+            formData={formData}
+            handleInputChange={handleInputChange}
+            errors={errors}
+          />
+        )}
+        {currentStep === 3 && (
+          <GoalsStep
+            formData={formData}
+            handleInputChange={handleInputChange}
+            errors={errors}
+          />
+        )}
+      </ScrollArea>
+    </div>
   );
 };

@@ -42,7 +42,7 @@ export const CloseConfirmationDialog = ({
         throw new Error("Report data not available");
       }
 
-      // Wait a brief moment to ensure the report is rendered
+      // Wait for the report element to be ready
       await new Promise(resolve => setTimeout(resolve, 100));
 
       const reportElement = document.getElementById('detailed-report');
@@ -50,13 +50,6 @@ export const CloseConfirmationDialog = ({
         console.error("CloseConfirmationDialog - Report element not found in DOM");
         throw new Error("Report element not found");
       }
-
-      console.log("CloseConfirmationDialog - Found report element, checking content:", {
-        childNodes: reportElement.childNodes.length,
-        cards: reportElement.getElementsByClassName('card').length,
-        height: reportElement.offsetHeight,
-        scrollHeight: reportElement.scrollHeight
-      });
 
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       console.log("CloseConfirmationDialog - Generating PDF with filename:", fileName);
@@ -76,7 +69,7 @@ export const CloseConfirmationDialog = ({
       console.error("CloseConfirmationDialog - Download error:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to download report. Please try again.",
+        description: "Failed to download report. Please try again.",
         variant: "destructive",
       });
     }
@@ -91,7 +84,7 @@ export const CloseConfirmationDialog = ({
             <p>Don't worry, you can still access and download your analysis report after closing this window.</p>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-100"
               onClick={handleDownload}
             >
               <Download className="h-4 w-4" />

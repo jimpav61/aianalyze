@@ -31,32 +31,42 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       throw new Error("Report element not found");
     }
 
-    // Store original styles
-    const originalStyles = Array.from(reportElement.getElementsByTagName('*')).map(el => ({
-      element: el,
-      display: (el as HTMLElement).style.display,
-      visibility: (el as HTMLElement).style.visibility,
-      height: (el as HTMLElement).style.height,
-      overflow: (el as HTMLElement).style.overflow
-    }));
+    // Clone the report element to modify it for PDF generation
+    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+    
+    // Apply PDF-specific styles to the clone
+    const style = document.createElement('style');
+    style.textContent = `
+      * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      p {
+        margin: 1em 0 !important;
+        white-space: pre-line !important;
+      }
+      .whitespace-pre-line {
+        white-space: pre-line !important;
+      }
+    `;
+    clonedReport.appendChild(style);
 
     // Make all elements visible for capture
-    Array.from(reportElement.getElementsByTagName('*')).forEach((el) => {
+    Array.from(clonedReport.getElementsByTagName('*')).forEach((el) => {
       (el as HTMLElement).style.display = 'block';
       (el as HTMLElement).style.visibility = 'visible';
       (el as HTMLElement).style.height = 'auto';
       (el as HTMLElement).style.overflow = 'visible';
-    });
-
-    // Log dimensions before capture
-    console.log('PDF Generation - Element dimensions:', {
-      width: reportElement.offsetWidth,
-      height: reportElement.scrollHeight,
-      clientHeight: reportElement.clientHeight
+      
+      // Preserve line breaks in text content
+      if ((el as HTMLElement).classList.contains('whitespace-pre-line')) {
+        (el as HTMLElement).style.whiteSpace = 'pre-line';
+      }
     });
 
     // Create canvas with proper scaling
-    const canvas = await html2canvas(reportElement, {
+    const canvas = await html2canvas(clonedReport, {
       scale: 2,
       useCORS: true,
       logging: true,
@@ -65,22 +75,10 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       windowHeight: reportElement.scrollHeight,
       onclone: (document, element) => {
         console.log('PDF Generation - Cloning element');
-        // Make all elements visible in clone
-        Array.from(element.getElementsByTagName('*')).forEach((el) => {
-          (el as HTMLElement).style.display = 'block';
-          (el as HTMLElement).style.visibility = 'visible';
-          (el as HTMLElement).style.height = 'auto';
-          (el as HTMLElement).style.overflow = 'visible';
-        });
+        element.style.width = '100%';
+        element.style.margin = '0';
+        element.style.padding = '20px';
       }
-    });
-
-    // Restore original styles
-    originalStyles.forEach(({ element, display, visibility, height, overflow }) => {
-      (element as HTMLElement).style.display = display;
-      (element as HTMLElement).style.visibility = visibility;
-      (element as HTMLElement).style.height = height;
-      (element as HTMLElement).style.overflow = overflow;
     });
 
     console.log('PDF Generation - Canvas created with dimensions:', {
