@@ -20,7 +20,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    // First, ensure the report element exists and is visible
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
       console.error("PDF Generation - Report element not found in DOM");
@@ -34,26 +33,24 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       scrollHeight: reportElement.scrollHeight
     });
 
-    // Force the element to be visible during capture
-    const originalDisplay = reportElement.style.display;
-    const originalVisibility = reportElement.style.visibility;
-    const originalOpacity = reportElement.style.opacity;
-    const originalPosition = reportElement.style.position;
-    
-    reportElement.style.display = 'block';
-    reportElement.style.visibility = 'visible';
-    reportElement.style.opacity = '1';
-    reportElement.style.position = 'relative';
+    // Store original styles
+    const originalStyles = {
+      display: reportElement.style.display,
+      visibility: reportElement.style.visibility,
+      opacity: reportElement.style.opacity,
+      position: reportElement.style.position,
+      transform: reportElement.style.transform,
+      margin: reportElement.style.margin,
+      padding: reportElement.style.padding
+    };
 
-    // Create temporary container with fixed dimensions
+    // Create temporary container
     const tempContainer = document.createElement('div');
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     tempContainer.style.top = '0';
     tempContainer.style.width = '900px';
     tempContainer.style.backgroundColor = 'white';
-    tempContainer.style.margin = '0';
-    tempContainer.style.padding = '0';
     
     // Clone and prepare the report
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
@@ -65,6 +62,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     clonedReport.style.visibility = 'visible';
     clonedReport.style.display = 'block';
     clonedReport.style.transform = 'none';
+    clonedReport.style.margin = '0';
     
     // Process all child elements
     const allElements = clonedReport.getElementsByTagName('*');
@@ -102,25 +100,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       logging: true,
       backgroundColor: '#ffffff',
       width: 900,
-      height: clonedReport.scrollHeight,
-      onclone: (doc) => {
-        const clonedElement = doc.getElementById('detailed-report');
-        if (clonedElement) {
-          clonedElement.style.transform = 'none';
-          clonedElement.style.opacity = '1';
-          clonedElement.style.display = 'block';
-        }
-      }
+      height: clonedReport.scrollHeight
     });
 
     // Cleanup
     document.body.removeChild(tempContainer);
     
-    // Restore original element styles
-    reportElement.style.display = originalDisplay;
-    reportElement.style.visibility = originalVisibility;
-    reportElement.style.opacity = originalOpacity;
-    reportElement.style.position = originalPosition;
+    // Restore original styles
+    Object.entries(originalStyles).forEach(([property, value]) => {
+      (reportElement.style as any)[property] = value;
+    });
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
