@@ -39,12 +39,6 @@ export const CloseConfirmationDialog = ({
         throw new Error("Report data not available");
       }
 
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        console.error("Download failed - Report element not found");
-        throw new Error("Report element not found");
-      }
-
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       console.log("Generating PDF with filename:", fileName);
       
