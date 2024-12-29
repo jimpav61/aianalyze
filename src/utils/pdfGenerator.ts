@@ -25,13 +25,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   });
   
   try {
+    // Wait a brief moment to ensure the DOM is fully rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
       console.error("PDF Generation - Report element not found");
       throw new Error("Report element not found");
     }
 
-    // Clone the report element to modify it for PDF generation
+    // Create a deep clone of the report element
     const clonedReport = reportElement.cloneNode(true) as HTMLElement;
     
     // Apply PDF-specific styles to the clone
@@ -41,10 +44,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
         print-color-adjust: exact !important;
-      }
-      p {
-        margin: 1em 0 !important;
-        white-space: pre-line !important;
       }
       .whitespace-pre-line {
         white-space: pre-line !important;
@@ -58,14 +57,18 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       (el as HTMLElement).style.visibility = 'visible';
       (el as HTMLElement).style.height = 'auto';
       (el as HTMLElement).style.overflow = 'visible';
-      
-      // Preserve line breaks in text content
-      if ((el as HTMLElement).classList.contains('whitespace-pre-line')) {
-        (el as HTMLElement).style.whiteSpace = 'pre-line';
-      }
     });
 
+    // Create temporary container for the clone
+    const container = document.createElement('div');
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+    container.style.top = '0';
+    container.appendChild(clonedReport);
+    document.body.appendChild(container);
+
     // Create canvas with proper scaling
+    console.log('PDF Generation - Creating canvas');
     const canvas = await html2canvas(clonedReport, {
       scale: 2,
       useCORS: true,
@@ -80,6 +83,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
         element.style.padding = '20px';
       }
     });
+
+    // Clean up temporary container
+    document.body.removeChild(container);
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
