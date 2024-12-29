@@ -1,24 +1,27 @@
-import { Label } from "../../ui/label";
-import { Textarea } from "../../ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface AdditionalInfoQuestionProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-export const AdditionalInfoQuestion = ({ value, onChange }: AdditionalInfoQuestionProps) => {
+export const AdditionalInfoQuestion = ({
+  value,
+  onChange,
+}: AdditionalInfoQuestionProps) => {
   return (
     <div className="space-y-4">
-      <Label htmlFor="additionalInfo" className="text-base font-medium">
-        Question 4: Any additional information you'd like to share? (Optional)
+      <Label htmlFor="additionalInfo" className="text-gray-700 text-base font-medium">
+        Additional Information or Requirements
       </Label>
       <Textarea
         id="additionalInfo"
         name="additionalInfo"
         value={value}
         onChange={onChange}
-        placeholder="Share any other relevant details..."
-        className="min-h-[100px]"
+        placeholder="Share any additional information or specific requirements for your AI implementation..."
+        className="min-h-[100px] bg-white"
       />
     </div>
   );
