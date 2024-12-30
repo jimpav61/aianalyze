@@ -10,6 +10,11 @@ interface UseCalendarHandlingProps {
   analysis?: any;
 }
 
+interface StoredData {
+  formData: DetailedFormData | null;
+  analysis: any;
+}
+
 export const useCalendarHandling = ({ 
   onClose, 
   setShowReport,
@@ -18,27 +23,52 @@ export const useCalendarHandling = ({
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
-  const storedDataRef = useRef<{
-    formData: DetailedFormData | null;
-    analysis: any;
-  } | null>(null);
+  const storedDataRef = useRef<StoredData | null>(null);
 
+  // Function to safely clone and store data
+  const storeData = useCallback((data: StoredData) => {
+    storedDataRef.current = {
+      formData: data.formData ? structuredClone(data.formData) : null,
+      analysis: data.analysis ? structuredClone(data.analysis) : null
+    };
+    console.log("Calendar - Data stored:", storedDataRef.current);
+  }, []);
+
+  // Function to get the current data
+  const getCurrentData = useCallback((): StoredData => {
+    return storedDataRef.current || { formData, analysis };
+  }, [formData, analysis]);
+
+  // Function to show download toast content
+  const ToastContent = useCallback(() => (
+    <div className="space-y-2">
+      <p>Your demo has been scheduled successfully!</p>
+      <button
+        onClick={(e) => handleDownload(e)}
+        className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+      >
+        Download Report
+      </button>
+    </div>
+  ), []);
+
+  // Handle PDF download
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    const dataToUse = storedDataRef.current || { formData, analysis };
+    const currentData = getCurrentData();
     
     console.log("Calendar - Download initiated with data:", {
-      hasFormData: !!dataToUse.formData,
-      hasAnalysis: !!dataToUse.analysis,
-      formDataContent: dataToUse.formData,
-      analysisContent: dataToUse.analysis
+      hasFormData: !!currentData.formData,
+      hasAnalysis: !!currentData.analysis,
+      formDataContent: currentData.formData,
+      analysisContent: currentData.analysis
     });
 
-    if (!dataToUse.formData || !dataToUse.analysis) {
+    if (!currentData.formData || !currentData.analysis) {
       console.error("Calendar - Download failed: Missing data");
       toast({
         title: "Error",
@@ -50,22 +80,10 @@ export const useCalendarHandling = ({
     }
 
     try {
-      const currentFormData = structuredClone(dataToUse.formData);
-      const currentAnalysis = structuredClone(dataToUse.analysis);
-
-      console.log("Calendar - Generating PDF with data:", {
-        formData: currentFormData,
-        analysis: currentAnalysis
-      });
-
-      const pdf = await generateFullReport({ 
-        formData: currentFormData, 
-        analysis: currentAnalysis 
-      });
+      const pdf = await generateFullReport(currentData);
+      const fileName = getReportFileName(currentData.formData.companyName);
       
-      const fileName = getReportFileName(currentFormData.companyName);
       console.log("Calendar - Saving PDF with filename:", fileName);
-      
       pdf.save(fileName);
       
       toast({
@@ -82,8 +100,9 @@ export const useCalendarHandling = ({
         duration: 3000,
       });
     }
-  }, [formData, analysis, toast]);
+  }, [getCurrentData, toast]);
 
+  // Handle booking demo request
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
     if (!formData) {
       console.warn("useCalendarHandling - No form data available");
@@ -93,39 +112,23 @@ export const useCalendarHandling = ({
     return true;
   }, []);
 
+  // Handle successful booking submission
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
-    // Store the data immediately when booking is submitted using useRef
-    storedDataRef.current = { 
-      formData: structuredClone(formData), 
-      analysis: structuredClone(analysis) 
-    };
-    
-    console.log("Calendar - Stored data in ref:", storedDataRef.current);
+    // Store the data immediately when booking is submitted
+    storeData({ formData, analysis });
     
     // Hide calendar but keep report visible
     setShowCalendar(false);
     setShowReport(true);
     
-    const ToastContent = () => (
-      <div className="space-y-2">
-        <p>Your demo has been scheduled successfully!</p>
-        <button
-          onClick={(e) => handleDownload(e)}
-          className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-        >
-          Download Report
-        </button>
-      </div>
-    );
-
     toast({
       title: "Success!",
       description: <ToastContent />,
       duration: 5000
     });
-  }, [setShowReport, toast, handleDownload, formData, analysis]);
+  }, [formData, analysis, setShowReport, toast, storeData, ToastContent]);
 
   return {
     showCalendar,
