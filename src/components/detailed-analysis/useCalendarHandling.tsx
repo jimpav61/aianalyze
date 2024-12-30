@@ -28,35 +28,6 @@ export const useCalendarHandling = ({
     return true;
   }, []);
 
-  const handleBookingSubmit = useCallback(() => {
-    console.log("Calendar - Booking submitted, maintaining report view");
-    
-    // Hide calendar and ensure report stays visible
-    setShowCalendar(false);
-    setShowReport(true);
-    
-    // Show success toast with download option, but don't refresh on close
-    toast({
-      title: "Success!",
-      description: (
-        <div className="space-y-2">
-          <p>Your demo has been scheduled successfully!</p>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleDownload();
-            }}
-            className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-          >
-            Download Report
-          </button>
-        </div>
-      ),
-      duration: 5000,
-    });
-  }, [setShowReport, toast]);
-
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -84,7 +55,7 @@ export const useCalendarHandling = ({
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
-        duration: 3000,
+        duration: 1500,
       });
     } catch (error) {
       console.error("Calendar - PDF Generation error:", error);
@@ -96,6 +67,41 @@ export const useCalendarHandling = ({
       });
     }
   }, [formData, analysis, toast]);
+
+  const handleBookingSubmit = useCallback(() => {
+    console.log("Calendar - Booking submitted, maintaining report view");
+    
+    // Hide calendar and ensure report stays visible
+    setShowCalendar(false);
+    setShowReport(true);
+    
+    // Show success toast with download option
+    const toastInstance = toast({
+      title: "Success!",
+      description: (
+        <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+          <p>Your demo has been scheduled successfully!</p>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleDownload();
+            }}
+            className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+          >
+            Download Report
+          </button>
+        </div>
+      ),
+      duration: 5000,
+    });
+
+    return () => {
+      if (toastInstance) {
+        toastInstance.dismiss();
+      }
+    };
+  }, [setShowReport, toast, handleDownload]);
 
   return {
     showCalendar,
