@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { DetailedFormData } from "@/types/analysis";
 import { useToast } from "@/hooks/use-toast";
+import { DetailedFormData } from "@/types/analysis";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface UseCalendarHandlingProps {
@@ -44,32 +44,60 @@ export const useCalendarHandling = ({
         ),
         duration: 5000,
       });
+      
+      // Keep the report visible
+      setShowReport(true);
     }
-  }, [formData, analysis, toast]);
+  }, [formData, analysis, toast, setShowReport]);
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log("useCalendarHandling - Download initiated with data:", {
+      hasFormData: !!formData,
+      hasAnalysis: !!analysis,
+      formDataContent: formData,
+      analysisContent: analysis
+    });
+
     try {
       if (!formData || !analysis) {
-        throw new Error("Report data not available");
+        console.error("useCalendarHandling - Download failed - Missing required data:", {
+          formData,
+          analysis
+        });
+        
+        toast({
+          title: "Error",
+          description: "Report data not available. Please try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
       }
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
+      console.log("useCalendarHandling - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
       
       toast({
         title: "Success",
-        description: "Report downloaded successfully",
+        description: "Report downloaded successfully!",
         duration: 1500,
       });
+
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      console.error("useCalendarHandling - PDF Generation/Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
-        duration: 2000,
+        duration: 5000,
       });
     }
   }, [formData, analysis, toast]);
