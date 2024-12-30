@@ -35,7 +35,7 @@ export const ContactForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log('Submitting form with values:', values);
+      console.log('[ContactForm] Starting form submission with values:', values);
       
       const { data, error } = await supabase.functions.invoke('sendemail', {
         body: JSON.stringify(values),
@@ -44,17 +44,21 @@ export const ContactForm = () => {
         },
       });
 
-      console.log('Response:', { data, error });
+      console.log('[ContactForm] Supabase response:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[ContactForm] Supabase error:', error);
+        throw error;
+      }
 
       toast({
         title: "Form submitted!",
         description: "Thank you for your interest. We'll be in touch soon.",
       });
       form.reset();
+      console.log('[ContactForm] Form submitted successfully');
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('[ContactForm] Error submitting form:', error);
       toast({
         title: "Error",
         description: "There was a problem submitting your form. Please try again.",

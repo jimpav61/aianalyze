@@ -8,15 +8,15 @@ interface GenerateReportParams {
 }
 
 export const generateFullReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
-  console.log('PDF Generation - Starting with data:', { formData, analysis });
+  console.log('[ReportHandler] Starting PDF generation with data:', { formData, analysis });
   
   const reportElement = document.getElementById('detailed-report');
   if (!reportElement) {
-    console.error("PDF Generation - Report element not found in DOM");
+    console.error("[ReportHandler] Report element not found in DOM");
     throw new Error("Report element not found");
   }
 
-  console.log('PDF Generation - Report element found with dimensions:', {
+  console.log('[ReportHandler] Report element found with dimensions:', {
     offsetWidth: reportElement.offsetWidth,
     offsetHeight: reportElement.offsetHeight,
     scrollWidth: reportElement.scrollWidth,
@@ -69,7 +69,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   // Wait for rendering
   await new Promise(resolve => setTimeout(resolve, 100));
   
-  console.log('PDF Generation - Creating canvas');
+  console.log('[ReportHandler] Creating canvas');
   const canvas = await html2canvas(reportElement, {
     scale: 2,
     useCORS: true,
@@ -92,7 +92,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     (reportElement.style as any)[property] = value;
   });
 
-  console.log('PDF Generation - Canvas created with dimensions:', {
+  console.log('[ReportHandler] Canvas created with dimensions:', {
     width: canvas.width,
     height: canvas.height
   });
@@ -104,7 +104,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   
   // Calculate number of pages needed
   const pageCount = Math.ceil(imgHeight / pageHeight);
-  console.log('PDF Generation - Pages needed:', pageCount);
+  console.log('[ReportHandler] Pages needed:', pageCount);
   
   const pdf = new jsPDF('p', 'mm', 'a4');
   
@@ -115,7 +115,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     }
     
     const position = -i * pageHeight;
-    console.log(`PDF Generation - Adding page ${i + 1} at position:`, position);
+    console.log(`[ReportHandler] Adding page ${i + 1} at position:`, position);
     
     pdf.addImage(
       canvas.toDataURL('image/png'),
@@ -129,7 +129,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     );
   }
 
-  console.log('PDF Generation - PDF created successfully with', pageCount, 'pages');
+  console.log('[ReportHandler] PDF created successfully with', pageCount, 'pages');
   return pdf;
 };
 
