@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
@@ -18,7 +18,7 @@ export const useCalendarHandling = ({
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
-  const [storedData, setStoredData] = useState<{
+  const storedDataRef = useRef<{
     formData: DetailedFormData | null;
     analysis: any;
   } | null>(null);
@@ -29,7 +29,7 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    const dataToUse = storedData || { formData, analysis };
+    const dataToUse = storedDataRef.current || { formData, analysis };
     
     console.log("Calendar - Download initiated with data:", {
       hasFormData: !!dataToUse.formData,
@@ -82,7 +82,7 @@ export const useCalendarHandling = ({
         duration: 3000,
       });
     }
-  }, [storedData, formData, analysis, toast]);
+  }, [formData, analysis, toast]);
 
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
     if (!formData) {
@@ -96,11 +96,13 @@ export const useCalendarHandling = ({
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
-    // Store the data immediately when booking is submitted
-    setStoredData({ 
+    // Store the data immediately when booking is submitted using useRef
+    storedDataRef.current = { 
       formData: structuredClone(formData), 
       analysis: structuredClone(analysis) 
-    });
+    };
+    
+    console.log("Calendar - Stored data in ref:", storedDataRef.current);
     
     // Hide calendar but keep report visible
     setShowCalendar(false);
