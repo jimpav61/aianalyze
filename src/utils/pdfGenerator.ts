@@ -14,103 +14,85 @@ interface GenerateReportParams {
     marketing_strategy: string;
     allAnalyses?: any[];
   };
+  reportElement?: HTMLElement;
 }
 
-export const generateAnalysisReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
+export const generateAnalysisReport = async ({ formData, analysis, reportElement }: GenerateReportParams): Promise<jsPDF> => {
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    const reportElement = document.getElementById('detailed-report');
-    if (!reportElement) {
+    const element = reportElement || document.getElementById('detailed-report');
+    if (!element) {
       console.error("PDF Generation - Report element not found in DOM");
       throw new Error("Report element not found");
     }
 
     console.log('PDF Generation - Report element found with dimensions:', {
-      offsetWidth: reportElement.offsetWidth,
-      offsetHeight: reportElement.offsetHeight,
-      scrollWidth: reportElement.scrollWidth,
-      scrollHeight: reportElement.scrollHeight
+      offsetWidth: element.offsetWidth,
+      offsetHeight: element.offsetHeight,
+      scrollWidth: element.scrollWidth,
+      scrollHeight: element.scrollHeight
     });
 
     // Store original styles
     const originalStyles = {
-      display: reportElement.style.display,
-      visibility: reportElement.style.visibility,
-      opacity: reportElement.style.opacity,
-      position: reportElement.style.position,
-      transform: reportElement.style.transform,
-      margin: reportElement.style.margin,
-      padding: reportElement.style.padding,
-      whiteSpace: reportElement.style.whiteSpace
+      display: element.style.display,
+      visibility: element.style.visibility,
+      opacity: element.style.opacity,
+      position: element.style.position,
+      transform: element.style.transform,
+      margin: element.style.margin,
+      padding: element.style.padding,
+      whiteSpace: element.style.whiteSpace
     };
 
-    // Create temporary container
-    const tempContainer = document.createElement('div');
-    tempContainer.style.position = 'absolute';
-    tempContainer.style.left = '-9999px';
-    tempContainer.style.top = '0';
-    tempContainer.style.width = '900px';
-    tempContainer.style.backgroundColor = 'white';
-    
-    // Clone and prepare the report
-    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
-    clonedReport.style.width = '100%';
-    clonedReport.style.padding = '40px';
-    clonedReport.style.backgroundColor = 'white';
-    clonedReport.style.position = 'relative';
-    clonedReport.style.opacity = '1';
-    clonedReport.style.visibility = 'visible';
-    clonedReport.style.display = 'block';
-    clonedReport.style.transform = 'none';
-    clonedReport.style.margin = '0';
-    clonedReport.style.whiteSpace = 'pre-line';
+    // Prepare the element for capture
+    element.style.width = '900px';
+    element.style.padding = '40px';
+    element.style.backgroundColor = 'white';
+    element.style.position = 'relative';
+    element.style.opacity = '1';
+    element.style.visibility = 'visible';
+    element.style.display = 'block';
+    element.style.transform = 'none';
+    element.style.margin = '0';
+    element.style.whiteSpace = 'pre-line';
     
     // Process all child elements
-    const allElements = clonedReport.getElementsByTagName('*');
+    const allElements = element.getElementsByTagName('*');
     Array.from(allElements).forEach((el) => {
-      const element = el as HTMLElement;
-      element.style.display = 'block';
-      element.style.visibility = 'visible';
-      element.style.opacity = '1';
-      element.style.position = 'relative';
-      element.style.transform = 'none';
+      const elem = el as HTMLElement;
+      elem.style.display = 'block';
+      elem.style.visibility = 'visible';
+      elem.style.opacity = '1';
+      elem.style.position = 'relative';
+      elem.style.transform = 'none';
       
       // Preserve text formatting and line breaks
-      if (element.classList.contains('whitespace-pre-line')) {
-        element.style.whiteSpace = 'pre-line';
+      if (elem.classList.contains('whitespace-pre-line')) {
+        elem.style.whiteSpace = 'pre-line';
       }
       
       // Convert <br> tags to newlines in text content
-      if (element.innerHTML.includes('<br>')) {
-        element.innerHTML = element.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+      if (elem.innerHTML.includes('<br>')) {
+        elem.innerHTML = elem.innerHTML.replace(/<br\s*\/?>/gi, '\n');
       }
     });
 
-    tempContainer.appendChild(clonedReport);
-    document.body.appendChild(tempContainer);
-
-    // Wait for rendering and log dimensions
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Wait for rendering
+    await new Promise(resolve => setTimeout(resolve, 100));
     
-    console.log('PDF Generation - Cloned report dimensions:', {
-      offsetWidth: clonedReport.offsetWidth,
-      offsetHeight: clonedReport.offsetHeight,
-      scrollWidth: clonedReport.scrollWidth,
-      scrollHeight: clonedReport.scrollHeight
-    });
-
     console.log('PDF Generation - Creating canvas');
-    const canvas = await html2canvas(clonedReport, {
+    const canvas = await html2canvas(element, {
       scale: 2,
       useCORS: true,
       logging: true,
       backgroundColor: '#ffffff',
       width: 900,
-      height: clonedReport.scrollHeight,
-      onclone: (_, element) => {
+      height: element.scrollHeight,
+      onclone: (_, clonedElement) => {
         // Additional line break handling during canvas creation
-        const textElements = element.getElementsByTagName('*');
+        const textElements = clonedElement.getElementsByTagName('*');
         Array.from(textElements).forEach((el) => {
           if (el.innerHTML.includes('<br>')) {
             el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '\n');
@@ -119,13 +101,13 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       }
     });
 
-    // Cleanup
-    document.body.removeChild(tempContainer);
-    
-    // Restore original styles
-    Object.entries(originalStyles).forEach(([property, value]) => {
-      (reportElement.style as any)[property] = value;
-    });
+    // Only restore styles if it's not a temporary element
+    if (!reportElement) {
+      // Restore original styles
+      Object.entries(originalStyles).forEach(([property, value]) => {
+        (element.style as any)[property] = value;
+      });
+    }
 
     console.log('PDF Generation - Canvas created with dimensions:', {
       width: canvas.width,
