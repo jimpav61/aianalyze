@@ -50,24 +50,26 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   };
 
   return (
-    <div className="sticky top-0 right-0 z-50 flex gap-4 bg-white py-4 px-6 border-b shadow-sm">
-      <Button
-        onClick={onBookDemo}
-        size="sm"
-        className="min-w-[120px] bg-[#f65228] hover:bg-[#d43d16] text-white"
-      >
-        Book Demo
-      </Button>
-      <Button 
-        onClick={handleDownload}
-        disabled={isDownloading}
-        variant="outline" 
-        size="sm" 
-        className="min-w-[160px] bg-white hover:bg-gray-50 flex items-center gap-2"
-      >
-        <Download className="h-4 w-4 text-[#f65228]" />
-        {isDownloading ? 'Downloading...' : 'Download Report'}
-      </Button>
+    <div className="sticky top-0 z-50 flex gap-4 bg-white py-4 px-6 border-b shadow-sm w-full">
+      <div className="flex gap-4 ml-auto">
+        <Button
+          onClick={onBookDemo}
+          size="sm"
+          className="min-w-[120px] bg-[#f65228] hover:bg-[#d43d16] text-white"
+        >
+          Book Demo
+        </Button>
+        <Button 
+          onClick={handleDownload}
+          disabled={isDownloading}
+          variant="outline" 
+          size="sm" 
+          className="min-w-[160px] bg-white hover:bg-gray-50 flex items-center gap-2"
+        >
+          <Download className="h-4 w-4 text-[#f65228]" />
+          {isDownloading ? 'Downloading...' : 'Download Report'}
+        </Button>
+      </div>
     </div>
   );
 };
