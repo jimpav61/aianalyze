@@ -50,8 +50,8 @@ export const useCalendarHandling = ({
     }
 
     try {
-      const currentFormData = JSON.parse(JSON.stringify(dataToUse.formData));
-      const currentAnalysis = JSON.parse(JSON.stringify(dataToUse.analysis));
+      const currentFormData = structuredClone(dataToUse.formData);
+      const currentAnalysis = structuredClone(dataToUse.analysis);
 
       console.log("Calendar - Generating PDF with data:", {
         formData: currentFormData,
@@ -96,8 +96,11 @@ export const useCalendarHandling = ({
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
-    // Immediately store the data
-    setStoredData({ formData, analysis });
+    // Store the data immediately when booking is submitted
+    setStoredData({ 
+      formData: structuredClone(formData), 
+      analysis: structuredClone(analysis) 
+    });
     
     // Hide calendar but keep report visible
     setShowCalendar(false);
