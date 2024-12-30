@@ -1,22 +1,25 @@
 import { Card } from "@/components/ui/card";
 import { TrendingUp } from "lucide-react";
-import { calculateFinancials } from "@/utils/financialCalculations";
+import { calculateFinancials, calculateRevenue } from "@/utils/financialCalculations";
 
 interface ProjectedMetricsProps {
   savingsAmount: string;
   profitPercentage: string;
   revenue: string;
   industry?: string;
+  department?: string;
 }
 
 export const ProjectedMetrics = ({ 
-  savingsAmount, 
-  profitPercentage, 
   revenue,
-  industry 
+  industry,
+  department = "Customer Service"
 }: ProjectedMetricsProps) => {
-  const revenueAmount = parseFloat(revenue.replace(/[^0-9.-]+/g, ""));
-  const financials = calculateFinancials(revenueAmount, "Customer Service", industry);
+  // Parse revenue string to number using the same utility
+  const revenueAmount = calculateRevenue(revenue);
+  
+  // Use the same calculation function as other components
+  const financials = calculateFinancials(revenueAmount, department, industry);
 
   return (
     <Card className="p-6 bg-[#F8F9FC] border border-gray-100">
