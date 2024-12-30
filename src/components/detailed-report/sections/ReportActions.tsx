@@ -40,11 +40,11 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   };
 
   return (
-    <div className="flex justify-end space-x-4">
+    <div className="sticky top-0 z-50 flex justify-end space-x-4 bg-white py-4 px-4 border-b">
       <Button
         onClick={onBookDemo}
         size="sm"
-        className="bg-[#f65228] hover:bg-[#d43d16] text-white"
+        className="min-w-[120px] bg-[#f65228] hover:bg-[#d43d16] text-white"
       >
         Book Demo
       </Button>
@@ -52,7 +52,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         onClick={handleDownload}
         variant="outline" 
         size="sm" 
-        className="bg-white hover:bg-gray-50 flex items-center gap-2"
+        className="min-w-[160px] bg-white hover:bg-gray-50 flex items-center gap-2"
       >
         <Download className="h-4 w-4 text-[#f65228]" />
         Download Report

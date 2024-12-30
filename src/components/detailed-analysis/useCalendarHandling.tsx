@@ -33,20 +33,13 @@ export const useCalendarHandling = ({
 
   const handleDownload = useCallback(async () => {
     try {
-      console.log("Download attempt starting with data:", {
-        hasFormData: !!formData,
-        hasAnalysis: !!analysis
-      });
-
       if (!formData || !analysis) {
-        console.error("Download failed - Missing required data");
         throw new Error("Report data not available");
       }
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
-      console.log("PDF generated successfully, saving file");
       pdf.save(fileName);
       setHasDownloaded(true);
       
@@ -79,12 +72,12 @@ export const useCalendarHandling = ({
           description: (
             <div className="space-y-2">
               <p>Your demo has been scheduled successfully!</p>
-              <button
+              <Button
                 onClick={handleDownload}
                 className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
               >
                 Download Report
-              </button>
+              </Button>
             </div>
           ),
           duration: 5000,
