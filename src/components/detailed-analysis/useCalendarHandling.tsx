@@ -3,7 +3,6 @@ import { DetailedFormData } from "@/types/analysis";
 import { useSuccessToast } from "./SuccessToast";
 import { useToast } from "@/hooks/use-toast";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
-import { Button } from "@/components/ui/button";
 
 interface UseCalendarHandlingProps {
   onClose: () => void;
@@ -67,31 +66,13 @@ export const useCalendarHandling = ({
     setShowCalendar(false);
     
     if (formData && analysis) {
-      if (!hasDownloaded) {
-        toast({
-          title: "Success",
-          description: (
-            <div className="space-y-2">
-              <p>Your demo has been scheduled successfully!</p>
-              <Button
-                onClick={handleDownload}
-                className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-              >
-                Download Report
-              </Button>
-            </div>
-          ),
-          duration: 5000,
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Your demo has been scheduled successfully!",
-          duration: 1500,
-        });
-      }
+      toast({
+        title: "Success",
+        description: "Your demo has been scheduled successfully!",
+        duration: 1500,
+      });
     }
-  }, [formData, analysis, hasDownloaded, handleDownload, toast]);
+  }, [formData, analysis, toast]);
 
   return {
     showCalendar,
