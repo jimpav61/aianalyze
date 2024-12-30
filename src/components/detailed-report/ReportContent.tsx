@@ -4,6 +4,7 @@ import { CurrentOperations } from "./CurrentOperations";
 import { ImplementationPlan } from "./ImplementationPlan";
 import { ReportHeader } from "./ReportHeader";
 import { ReportFooter } from "./ReportFooter";
+import { ReportActions } from "./sections/ReportActions";
 import { AnalysisOverview } from "./sections/AnalysisOverview";
 import { StrategySection } from "./sections/StrategySection";
 import { FinancialAnalysisGrid } from "./FinancialAnalysisGrid";
@@ -24,7 +25,13 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div className="relative">
-      <div id="detailed-report" className="space-y-8 print:space-y-6">
+      <ReportActions 
+        formData={formData}
+        analysis={analysis}
+        onBookDemo={onBookDemo}
+      />
+      
+      <div id="detailed-report" className="space-y-8 print:space-y-6 mt-20">
         <ReportHeader />
         <CompanyInformation data={formData} industry={analysis.industry} />
         <CurrentOperations data={formData} />
