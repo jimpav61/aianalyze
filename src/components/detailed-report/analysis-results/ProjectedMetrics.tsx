@@ -6,11 +6,17 @@ interface ProjectedMetricsProps {
   savingsAmount: string;
   profitPercentage: string;
   revenue: string;
+  industry?: string;
 }
 
-export const ProjectedMetrics = ({ savingsAmount, profitPercentage, revenue }: ProjectedMetricsProps) => {
+export const ProjectedMetrics = ({ 
+  savingsAmount, 
+  profitPercentage, 
+  revenue,
+  industry 
+}: ProjectedMetricsProps) => {
   const revenueAmount = parseFloat(revenue.replace(/[^0-9.-]+/g, ""));
-  const financials = calculateFinancials(revenueAmount, "Customer Service");
+  const financials = calculateFinancials(revenueAmount, "Customer Service", industry);
 
   return (
     <Card className="p-6 bg-[#F8F9FC] border border-gray-100">

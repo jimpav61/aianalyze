@@ -16,13 +16,15 @@ interface AdditionalAnalysesProps {
   revenueAmount: number;
   formatCurrency: (value: string | number) => string;
   formatPercentage: (value: string | number) => string;
+  industry?: string;
 }
 
 export const AdditionalAnalyses = ({ 
   analyses, 
   revenueAmount,
   formatCurrency, 
-  formatPercentage 
+  formatPercentage,
+  industry
 }: AdditionalAnalysesProps) => {
   if (analyses.length <= 1) return null;
 
@@ -31,7 +33,7 @@ export const AdditionalAnalyses = ({
       <h4 className="font-medium text-gray-700 mb-4">Additional Department Analyses:</h4>
       <div className="space-y-4">
         {analyses.slice(1).map((analysis, index) => {
-          const deptFinancials = calculateFinancials(revenueAmount, analysis.department);
+          const deptFinancials = calculateFinancials(revenueAmount, analysis.department, industry);
           return (
             <Card key={index} className="p-6 bg-[#F8F9FC] border border-gray-100">
               <div className="mb-4">
