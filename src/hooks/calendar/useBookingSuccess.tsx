@@ -16,7 +16,19 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log("BookingSuccess - Download initiated with data:", {
+      hasFormData: !!formData,
+      hasAnalysis: !!analysis,
+      formDataContent: formData,
+      analysisContent: analysis
+    });
+
     try {
       if (!formData || !analysis) {
         console.error("BookingSuccess - Download failed - Missing required data:", {
@@ -33,11 +45,13 @@ export const useBookingSuccess = ({
         return;
       }
 
-      console.log("BookingSuccess - Starting download with data:", {
-        hasFormData: !!formData,
-        hasAnalysis: !!analysis,
-        formDataContent: formData,
-        analysisContent: analysis
+      // Store data in local variables to ensure it's available throughout the process
+      const currentFormData = { ...formData };
+      const currentAnalysis = { ...analysis };
+
+      console.log("BookingSuccess - Starting download with stored data:", {
+        currentFormData,
+        currentAnalysis
       });
 
       // Hide the actions bar before generating PDF
@@ -46,8 +60,11 @@ export const useBookingSuccess = ({
         actionsBar.style.display = 'none';
       }
 
-      const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
+      const pdf = await generateFullReport({ 
+        formData: currentFormData, 
+        analysis: currentAnalysis 
+      });
+      const fileName = getReportFileName(currentFormData.companyName);
       
       console.log("BookingSuccess - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
@@ -86,9 +103,8 @@ export const useBookingSuccess = ({
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
           <button
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleDownload();
+              console.log("BookingSuccess - Download button clicked in toast");
+              handleDownload(e);
             }}
             className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
           >
