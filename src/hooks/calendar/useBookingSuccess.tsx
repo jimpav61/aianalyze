@@ -33,6 +33,7 @@ export const useBookingSuccess = ({
         return;
       }
 
+      // Delay the onSubmit callback until after download completes
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
@@ -43,6 +44,11 @@ export const useBookingSuccess = ({
         description: "Report downloaded successfully!",
         duration: 3000,
       });
+
+      // Only call onSubmit after download completes
+      if (onSubmit) {
+        onSubmit();
+      }
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
       toast({
@@ -52,7 +58,7 @@ export const useBookingSuccess = ({
         duration: 5000,
       });
     }
-  }, [formData, analysis, toast]);
+  }, [formData, analysis, toast, onSubmit]);
 
   const handleBookingSuccess = useCallback(() => {
     console.log("BookingSuccess - Booking success handler triggered with data:", {
@@ -75,11 +81,7 @@ export const useBookingSuccess = ({
       ),
       duration: 5000,
     });
-
-    if (onSubmit) {
-      onSubmit();
-    }
-  }, [formData, analysis, onSubmit, toast, handleDownload]);
+  }, [formData, analysis, toast, handleDownload]);
 
   return { handleBookingSuccess };
 };
