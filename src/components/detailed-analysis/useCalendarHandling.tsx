@@ -31,17 +31,15 @@ export const useCalendarHandling = ({
   const handleBookingSubmit = useCallback(() => {
     setShowCalendar(false);
     
-    if (formData && analysis) {
-      toast({
-        title: "Success",
-        description: "Your demo has been scheduled successfully!",
-        duration: 3000,
-      });
-      
-      // Explicitly keep the report visible
-      setShowReport(true);
-    }
-  }, [formData, analysis, toast, setShowReport]);
+    // Ensure we keep the report visible
+    setShowReport(true);
+    
+    toast({
+      title: "Success",
+      description: "Your demo has been scheduled successfully!",
+      duration: 3000,
+    });
+  }, [setShowReport, toast]);
 
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
