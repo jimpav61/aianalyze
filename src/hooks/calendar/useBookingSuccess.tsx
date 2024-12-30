@@ -18,12 +18,7 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = useCallback(async (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
+  const handleDownload = useCallback(async () => {
     console.log("BookingSuccess - Download attempt starting with data:", {
       hasFormData: !!formData,
       formDataContent: formData,
@@ -41,6 +36,7 @@ export const useBookingSuccess = ({
         title: "Error",
         description: "Report data not available. Please try again.",
         variant: "destructive",
+        duration: 5000,
       });
       return;
     }
@@ -103,6 +99,7 @@ export const useBookingSuccess = ({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
+        duration: 5000,
       });
     }
   }, [formData, analysis, toast]);
