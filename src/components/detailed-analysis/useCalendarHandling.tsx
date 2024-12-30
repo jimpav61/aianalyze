@@ -29,9 +29,8 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    // Use stored data if available, otherwise use props
     const dataToUse = storedData || { formData, analysis };
-
+    
     console.log("Calendar - Download initiated with data:", {
       hasFormData: !!dataToUse.formData,
       hasAnalysis: !!dataToUse.analysis,
@@ -51,7 +50,6 @@ export const useCalendarHandling = ({
     }
 
     try {
-      // Create deep copies of the data
       const currentFormData = JSON.parse(JSON.stringify(dataToUse.formData));
       const currentAnalysis = JSON.parse(JSON.stringify(dataToUse.analysis));
 
@@ -98,7 +96,7 @@ export const useCalendarHandling = ({
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
-    // Store the current data for later use
+    // Immediately store the data
     setStoredData({ formData, analysis });
     
     // Hide calendar but keep report visible
