@@ -103,10 +103,14 @@ export const useCalendarHandling = ({
       title: "Success!",
       description: <ToastContent />,
       duration: 5000,
-      onDismiss: (e) => {
-        if (e) {
-          e.preventDefault();
-          e.stopPropagation();
+      onOpenChange: (open) => {
+        if (!open) {
+          // Prevent default behavior when toast is dismissed
+          const event = window.event;
+          if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
         }
       }
     });
