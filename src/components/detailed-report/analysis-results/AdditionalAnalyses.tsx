@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { calculateFinancials } from "@/utils/financialCalculations";
+import { TrendingUp } from "lucide-react";
 
 interface Analysis {
   department: string;
@@ -39,16 +40,24 @@ export const AdditionalAnalyses = ({
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-gray-700">Savings: <span className="text-[#f65228] font-semibold">
-                    {formatCurrency(deptFinancials.savingsAmount)}
-                  </span></p>
-                  <p className="text-sm text-gray-600">({formatPercentage(deptFinancials.savingsPercentage)} of revenue)</p>
+                  <p className="text-gray-700">Savings:</p>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-[#22A34A]" />
+                    <span className="text-[#22A34A] font-semibold">
+                      {formatCurrency(deptFinancials.savingsAmount)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#22A34A]">({formatPercentage(deptFinancials.savingsPercentage)} of revenue)</p>
                 </div>
                 <div>
-                  <p className="text-gray-700">Additional Profit: <span className="text-[#f65228] font-semibold">
-                    {formatCurrency(deptFinancials.profitAmount)}
-                  </span></p>
-                  <p className="text-sm text-gray-600">({formatPercentage(deptFinancials.profitPercentage)} increase)</p>
+                  <p className="text-gray-700">Additional Profit:</p>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-[#22A34A]" />
+                    <span className="text-[#22A34A] font-semibold">
+                      {formatCurrency(deptFinancials.profitAmount)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-[#22A34A]">({formatPercentage(deptFinancials.profitPercentage)} increase)</p>
                 </div>
               </div>
             </Card>

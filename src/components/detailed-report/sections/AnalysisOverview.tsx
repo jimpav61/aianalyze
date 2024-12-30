@@ -1,5 +1,6 @@
 import { DetailedFormData } from "@/types/analysis";
 import { calculateFinancials } from "@/utils/financialCalculations";
+import { TrendingUp } from "lucide-react";
 
 interface AnalysisOverviewProps {
   analysis: any;
@@ -9,7 +10,7 @@ interface AnalysisOverviewProps {
 export const AnalysisOverview = ({ analysis, formData }: AnalysisOverviewProps) => {
   // Convert revenue string to number before calculation
   const revenueAmount = parseInt(formData.revenue?.replace(/[^0-9]/g, '') || '0');
-  const revenue = calculateFinancials(revenueAmount, analysis.department, analysis.industry);
+  const financials = calculateFinancials(revenueAmount, analysis.department, analysis.industry);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -24,20 +25,26 @@ export const AnalysisOverview = ({ analysis, formData }: AnalysisOverviewProps) 
         <div className="space-y-4">
           <div>
             <p className="text-sm text-gray-600">Annual Savings</p>
-            <p className="text-2xl font-semibold text-[#f65228]">
-              ${revenue.savingsAmount.toLocaleString()}
-            </p>
-            <p className="text-sm text-gray-500">
-              ({revenue.savingsPercentage}% of revenue)
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-[#22A34A]" />
+              <p className="text-2xl font-semibold text-[#22A34A]">
+                ${financials.savingsAmount.toLocaleString()}
+              </p>
+            </div>
+            <p className="text-sm text-[#22A34A]">
+              ({financials.savingsPercentage}% of revenue)
             </p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Profit Increase</p>
-            <p className="text-2xl font-semibold text-[#f65228]">
-              ${revenue.profitAmount.toLocaleString()}
-            </p>
-            <p className="text-sm text-gray-500">
-              ({revenue.profitPercentage}% increase)
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-[#22A34A]" />
+              <p className="text-2xl font-semibold text-[#22A34A]">
+                ${financials.profitAmount.toLocaleString()}
+              </p>
+            </div>
+            <p className="text-sm text-[#22A34A]">
+              ({financials.profitPercentage}% increase)
             </p>
           </div>
         </div>
