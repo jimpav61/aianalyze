@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface DownloadReportButtonProps {
   formData?: DetailedFormData;
@@ -18,15 +18,11 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         throw new Error("Report data not available");
       }
 
-      // Get the report element to capture
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        throw new Error("Report element not found");
-      }
-
-      const pdf = await generateAnalysisReport({ formData, analysis });
-      pdf.save(`AI_Analysis_Report_${formData.companyName}_${new Date().toISOString().split('T')[0]}.pdf`);
-
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
+      
+      pdf.save(fileName);
+      
       toast({
         title: "Success",
         description: "Report downloaded successfully",

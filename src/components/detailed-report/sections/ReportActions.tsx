@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 import { DetailedFormData } from "@/types/analysis";
 
 interface ReportActionsProps {
@@ -22,8 +22,8 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         analysesCount: analysis.allAnalyses?.length || 1
       });
 
-      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      const pdf = await generateAnalysisReport({ formData, analysis });
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
       
       console.log("ReportContent - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);

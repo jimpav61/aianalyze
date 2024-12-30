@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { DetailedFormData } from "@/types/analysis";
 import { useSuccessToast } from "./SuccessToast";
 import { useToast } from "@/hooks/use-toast";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface UseCalendarHandlingProps {
   onClose: () => void;
@@ -43,25 +43,16 @@ export const useCalendarHandling = ({
         throw new Error("Report data not available");
       }
 
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        console.error("Download failed - Report element not found");
-        throw new Error("Report element not found");
-      }
-
-      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("Generating PDF with filename:", fileName);
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
       
-      const pdf = await generateAnalysisReport({ formData, analysis });
       console.log("PDF generated successfully, saving file");
-      
       pdf.save(fileName);
-      console.log("PDF saved successfully");
       
       toast({
         title: "Success",
         description: "Report downloaded successfully",
-        duration: 1500, // 1.5 seconds
+        duration: 1500,
       });
       
       return true;
