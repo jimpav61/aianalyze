@@ -48,6 +48,9 @@ export const useBookingSuccess = ({
     }
 
     try {
+      // Wait a brief moment to ensure the report element is ready
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       console.log("BookingSuccess - Generating PDF with data:", {
         formData,
         analysis

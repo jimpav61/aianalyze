@@ -41,7 +41,8 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       position: reportElement.style.position,
       transform: reportElement.style.transform,
       margin: reportElement.style.margin,
-      padding: reportElement.style.padding
+      padding: reportElement.style.padding,
+      whiteSpace: reportElement.style.whiteSpace
     };
 
     // Create temporary container
@@ -63,6 +64,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     clonedReport.style.display = 'block';
     clonedReport.style.transform = 'none';
     clonedReport.style.margin = '0';
+    clonedReport.style.whiteSpace = 'pre-line';
     
     // Process all child elements
     const allElements = clonedReport.getElementsByTagName('*');
@@ -74,9 +76,14 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       element.style.position = 'relative';
       element.style.transform = 'none';
       
-      // Preserve text formatting
+      // Preserve text formatting and line breaks
       if (element.classList.contains('whitespace-pre-line')) {
         element.style.whiteSpace = 'pre-line';
+      }
+      
+      // Convert <br> tags to newlines in text content
+      if (element.innerHTML.includes('<br>')) {
+        element.innerHTML = element.innerHTML.replace(/<br\s*\/?>/gi, '\n');
       }
     });
 
@@ -100,7 +107,16 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
       logging: true,
       backgroundColor: '#ffffff',
       width: 900,
-      height: clonedReport.scrollHeight
+      height: clonedReport.scrollHeight,
+      onclone: (_, element) => {
+        // Additional line break handling during canvas creation
+        const textElements = element.getElementsByTagName('*');
+        Array.from(textElements).forEach((el) => {
+          if (el.innerHTML.includes('<br>')) {
+            el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+          }
+        });
+      }
     });
 
     // Cleanup
