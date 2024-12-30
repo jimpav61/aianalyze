@@ -71,25 +71,18 @@ export const useCalendarHandling = ({
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted, maintaining report view");
     
-    // Hide calendar and ensure report stays visible
+    // Hide calendar but keep report visible
     setShowCalendar(false);
     setShowReport(true);
     
-    // Create a container div to prevent event bubbling
     const ToastContent = () => (
-      <div 
-        className="space-y-2" 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
+      <div className="space-y-2">
         <p>Your demo has been scheduled successfully!</p>
         <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleDownload(e);
+            handleDownload();
           }}
           className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
         >
@@ -98,28 +91,11 @@ export const useCalendarHandling = ({
       </div>
     );
 
-    // Show success toast with download option
-    const toastInstance = toast({
+    toast({
       title: "Success!",
       description: <ToastContent />,
-      duration: 5000,
-      onOpenChange: (open) => {
-        if (!open) {
-          // Prevent default behavior when toast is dismissed
-          const event = window.event;
-          if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        }
-      }
+      duration: 5000
     });
-
-    return () => {
-      if (toastInstance) {
-        toastInstance.dismiss();
-      }
-    };
   }, [setShowReport, toast, handleDownload]);
 
   return {
