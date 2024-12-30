@@ -25,7 +25,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div className="relative">
-      <div className="fixed top-4 right-4 z-[100]">
+      <div className="mb-6">
         <ReportActions 
           formData={formData}
           analysis={analysis}
@@ -33,7 +33,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         />
       </div>
 
-      <div id="detailed-report" className="space-y-8 print:space-y-6 mt-16">
+      <div id="detailed-report" className="space-y-8 print:space-y-6">
         <ReportHeader />
         <CompanyInformation data={formData} industry={analysis.industry} />
         <CurrentOperations data={formData} />
