@@ -1,15 +1,64 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { DetailedFormData } from "@/types/analysis";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface DownloadReportButtonProps {
   onClick: (e: React.MouseEvent) => void;
+  formData?: DetailedFormData;
+  analysis?: any;
 }
 
-export const DownloadReportButton = ({ onClick }: DownloadReportButtonProps) => {
-  const handleClick = (e: React.MouseEvent) => {
+export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadReportButtonProps) => {
+  const { toast } = useToast();
+
+  const handleDownload = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onClick(e);
+
+    try {
+      console.log("DownloadReportButton - Starting download with data:", {
+        hasFormData: !!formData,
+        formDataContent: formData,
+        hasAnalysis: !!analysis,
+        analysisContent: analysis
+      });
+
+      if (!formData || !analysis) {
+        console.error("DownloadReportButton - Missing required data:", {
+          formData,
+          analysis
+        });
+        
+        toast({
+          title: "Error",
+          description: "Report data not available. Please try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
+      }
+
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
+      
+      pdf.save(fileName);
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("DownloadReportButton - Error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
   };
 
   return (

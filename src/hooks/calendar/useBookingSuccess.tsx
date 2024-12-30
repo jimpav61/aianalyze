@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { DownloadReportButton } from "@/components/download/DownloadReportButton";
-import { generateAnalysisReport } from "@/utils/pdfGenerator";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface UseBookingSuccessProps {
   formData?: DetailedFormData;
@@ -44,19 +44,9 @@ export const useBookingSuccess = ({
     }
 
     try {
-      // Use the main detailed report element to ensure identical output
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        throw new Error("Report element not found");
-      }
-
-      const pdf = await generateAnalysisReport({ 
-        formData, 
-        analysis,
-        reportElement
-      });
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
       
-      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       pdf.save(fileName);
       
       toast({
@@ -86,7 +76,11 @@ export const useBookingSuccess = ({
       description: (
         <div className="space-y-2">
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
-          <DownloadReportButton onClick={handleDownload} />
+          <DownloadReportButton 
+            onClick={handleDownload}
+            formData={formData}
+            analysis={analysis}
+          />
         </div>
       ),
       duration: 5000,
