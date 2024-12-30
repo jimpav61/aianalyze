@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
-import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 
 interface UseBookingSuccessProps {
   formData?: DetailedFormData;
@@ -40,10 +41,69 @@ export const useBookingSuccess = ({
     }
 
     try {
-      const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
+      // Get the report element
+      const reportElement = document.getElementById('detailed-report');
       
-      pdf.save(fileName);
+      // Create a temporary container if the report element doesn't exist
+      let tempContainer = null;
+      if (!reportElement) {
+        console.log("BookingSuccess - Creating temporary report container");
+        tempContainer = document.createElement('div');
+        tempContainer.id = 'temp-report';
+        tempContainer.style.position = 'absolute';
+        tempContainer.style.left = '-9999px';
+        tempContainer.style.width = '900px';
+        tempContainer.innerHTML = `
+          <div id="detailed-report" class="bg-white p-8 rounded-lg shadow-lg space-y-8">
+            <h1 class="text-2xl font-bold">${formData.companyName} - AI Implementation Analysis</h1>
+            <div class="space-y-4">
+              <h2 class="text-xl font-semibold">Primary Implementation</h2>
+              <p>${analysis.explanation}</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 class="font-medium">Projected Savings</h3>
+                  <p>$${analysis.savings.toLocaleString()}</p>
+                </div>
+                <div>
+                  <h3 class="font-medium">Profit Increase</h3>
+                  <p>${analysis.profit_increase}%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(tempContainer);
+      }
+
+      const elementToCapture = reportElement || tempContainer?.querySelector('#detailed-report');
+      if (!elementToCapture) {
+        throw new Error("Could not create or find report element");
+      }
+
+      const canvas = await html2canvas(elementToCapture, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      // Clean up temporary container if we created one
+      if (tempContainer) {
+        document.body.removeChild(tempContainer);
+      }
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
       
       toast({
         title: "Success",
