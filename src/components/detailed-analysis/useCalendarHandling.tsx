@@ -3,6 +3,7 @@ import { DetailedFormData } from "@/types/analysis";
 import { useSuccessToast } from "./SuccessToast";
 import { useToast } from "@/hooks/use-toast";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
+import { Button } from "@/components/ui/button";
 
 interface UseCalendarHandlingProps {
   onClose: () => void;
