@@ -1,6 +1,7 @@
 import { Calendar } from "../Calendar";
 import { DetailedFormData } from "@/types/analysis";
 import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface CalendarViewProps {
   onSubmit: () => void;
@@ -15,6 +16,8 @@ export const CalendarView = ({
   analysis, 
   calLink = "chatsites/demo" 
 }: CalendarViewProps) => {
+  const { toast } = useToast();
+  
   console.log("CalendarView - Render:", { 
     hasFormData: !!formData, 
     hasAnalysis: !!analysis,
@@ -34,13 +37,23 @@ export const CalendarView = ({
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
     script.async = true;
     
-    // Add load event listener to track when script is loaded
     script.onload = () => {
       console.log("CalendarView - Calendly script loaded successfully");
+      toast({
+        title: "Calendar Ready",
+        description: "You can now schedule your demo",
+        duration: 1500
+      });
     };
     
     script.onerror = (error) => {
       console.error("CalendarView - Failed to load Calendly script:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load calendar. Please refresh the page.",
+        variant: "destructive",
+        duration: 2000
+      });
     };
     
     document.head.appendChild(script);
@@ -53,7 +66,7 @@ export const CalendarView = ({
         console.log("CalendarView - Removed Calendly script during cleanup");
       }
     };
-  }, []);
+  }, [toast]);
 
   return (
     <div className="flex flex-col items-center w-full">

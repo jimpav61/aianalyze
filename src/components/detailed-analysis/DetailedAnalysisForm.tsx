@@ -37,6 +37,7 @@ export const DetailedAnalysisForm = ({
         title: "Required Fields Missing",
         description: "Please fill out all required fields before proceeding.",
         variant: "destructive",
+        duration: 2000,
       });
       return;
     }
@@ -57,6 +58,7 @@ export const DetailedAnalysisForm = ({
         title: "Required Fields Missing",
         description: "Please fill out all required fields before submitting.",
         variant: "destructive",
+        duration: 2000,
       });
       return;
     }
