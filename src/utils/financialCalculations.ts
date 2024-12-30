@@ -23,54 +23,54 @@ export const calculateRevenue = (revenueStr: string): number => {
 
 const getBaseFactors = (department: string) => {
   const factors: { [key: string]: { savingsPercent: number; profitPercent: number } } = {
-    'Customer Service': { savingsPercent: 8, profitPercent: 5 },
-    'Marketing': { savingsPercent: 6, profitPercent: 4 },
-    'Sales': { savingsPercent: 7, profitPercent: 5 },
-    'Operations': { savingsPercent: 9, profitPercent: 6 },
-    'Human Resources': { savingsPercent: 5, profitPercent: 3 },
-    'Finance': { savingsPercent: 4, profitPercent: 3 },
-    'IT': { savingsPercent: 10, profitPercent: 7 },
-    'Legal': { savingsPercent: 3, profitPercent: 2 },
-    'Manufacturing': { savingsPercent: 8, profitPercent: 5 },
-    'Supply Chain': { savingsPercent: 7, profitPercent: 4 },
-    'Research & Development': { savingsPercent: 5, profitPercent: 3 },
-    'Client Services': { savingsPercent: 6, profitPercent: 4 },
-    'Design Studio': { savingsPercent: 7, profitPercent: 5 },
-    'Project Management': { savingsPercent: 6, profitPercent: 4 },
-    'Resource Planning': { savingsPercent: 5, profitPercent: 3 }
+    'Customer Service': { savingsPercent: 15, profitPercent: 8 },
+    'Marketing': { savingsPercent: 12, profitPercent: 7 },
+    'Sales': { savingsPercent: 14, profitPercent: 9 },
+    'Operations': { savingsPercent: 18, profitPercent: 10 },
+    'Human Resources': { savingsPercent: 10, profitPercent: 6 },
+    'Finance': { savingsPercent: 8, profitPercent: 5 },
+    'IT': { savingsPercent: 20, profitPercent: 12 },
+    'Legal': { savingsPercent: 6, profitPercent: 4 },
+    'Manufacturing': { savingsPercent: 16, profitPercent: 9 },
+    'Supply Chain': { savingsPercent: 14, profitPercent: 8 },
+    'Research & Development': { savingsPercent: 10, profitPercent: 6 },
+    'Client Services': { savingsPercent: 12, profitPercent: 7 },
+    'Design Studio': { savingsPercent: 14, profitPercent: 8 },
+    'Project Management': { savingsPercent: 12, profitPercent: 7 },
+    'Resource Planning': { savingsPercent: 10, profitPercent: 6 }
   };
-  return factors[department] || { savingsPercent: 5, profitPercent: 3 };
+  return factors[department] || { savingsPercent: 10, profitPercent: 6 };
 };
 
 const getIndustryMultiplier = (industry: string): number => {
   const multipliers: { [key: string]: number } = {
-    'Technology': 1.15,
-    'Healthcare': 1.1,
-    'Manufacturing': 1.1,
-    'Retail': 0.95,
-    'Financial Services': 1.2,
-    'Education': 0.9,
-    'Real Estate': 1.0,
-    'Construction': 1.05,
-    'Transportation': 1.05,
-    'Energy': 1.15,
-    'Agriculture': 0.9,
-    'Hospitality': 0.95,
-    'Professional Services': 1.1,
-    'Media & Entertainment': 1.05,
-    'Telecommunications': 1.1,
-    'Architecture & Design': 1.05
+    'Technology': 1.2,
+    'Healthcare': 1.15,
+    'Manufacturing': 1.15,
+    'Retail': 1.0,
+    'Financial Services': 1.25,
+    'Education': 0.95,
+    'Real Estate': 1.05,
+    'Construction': 1.1,
+    'Transportation': 1.1,
+    'Energy': 1.2,
+    'Agriculture': 0.95,
+    'Hospitality': 1.0,
+    'Professional Services': 1.15,
+    'Media & Entertainment': 1.1,
+    'Telecommunications': 1.15,
+    'Architecture & Design': 1.1
   };
   return multipliers[industry] || 1.0;
 };
 
 const getScalingFactor = (revenue: number) => {
-  if (revenue >= 10000000) return 0.8; // Very large enterprise
-  if (revenue >= 5000000) return 0.85; // Large enterprise
-  if (revenue >= 1000000) return 0.9; // Medium-large business
-  if (revenue >= 500000) return 0.95; // Medium business
-  if (revenue >= 100000) return 1.0; // Small-medium business
-  return 1.05; // Small business
+  if (revenue >= 10000000) return 0.85; // Very large enterprise
+  if (revenue >= 5000000) return 0.9; // Large enterprise
+  if (revenue >= 1000000) return 0.95; // Medium-large business
+  if (revenue >= 500000) return 1.0; // Medium business
+  if (revenue >= 100000) return 1.05; // Small-medium business
+  return 1.1; // Small business
 };
 
 export const calculateFinancials = (revenue: number, department: string, industry?: string) => {
