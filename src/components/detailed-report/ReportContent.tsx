@@ -1,4 +1,3 @@
-import { DetailedFormData } from "@/types/analysis";
 import { CompanyInformation } from "./CompanyInformation";
 import { CurrentOperations } from "./CurrentOperations";
 import { ImplementationPlan } from "./ImplementationPlan";
@@ -8,6 +7,7 @@ import { ReportActions } from "./sections/ReportActions";
 import { AnalysisOverview } from "./sections/AnalysisOverview";
 import { StrategySection } from "./sections/StrategySection";
 import { FinancialAnalysisGrid } from "./FinancialAnalysisGrid";
+import { DetailedFormData } from "@/types/analysis";
 
 interface ReportContentProps {
   formData: DetailedFormData;
@@ -31,7 +31,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         onBookDemo={onBookDemo}
       />
       
-      <div id="detailed-report" className="space-y-8 print:space-y-6 mt-20">
+      <div id="detailed-report" className="space-y-8 print:space-y-6">
         <ReportHeader />
         <CompanyInformation data={formData} industry={analysis.industry} />
         <CurrentOperations data={formData} />

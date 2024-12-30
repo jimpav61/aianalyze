@@ -50,7 +50,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   };
 
   return (
-    <div className="fixed top-0 right-0 z-50 flex gap-4 bg-white py-4 px-6 border-b shadow-sm">
+    <div className="sticky top-0 right-0 z-50 flex gap-4 bg-white py-4 px-6 border-b shadow-sm">
       <Button
         onClick={onBookDemo}
         size="sm"
