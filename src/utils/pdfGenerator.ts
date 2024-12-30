@@ -21,7 +21,7 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   
   try {
     const doc = new jsPDF();
-    const greenColor = [34, 163, 74]; // #22A34A in RGB
+    const greenColor = [34, 163, 74] as const; // Type as readonly tuple
     
     // Logo and Title
     doc.addImage("/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png", "PNG", 20, 15, 30, 30);
