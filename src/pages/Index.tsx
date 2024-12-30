@@ -22,17 +22,19 @@ const Index = () => {
       return;
     }
 
+    console.log("Index - Starting analysis for industry:", selectedIndustry);
     setIsLoading(true);
+    
     try {
       const results = await generateAnalysis(selectedIndustry);
-      console.log("Analysis results:", results);
+      console.log("Index - Analysis results:", results);
       setAnalyses(results);
 
       if (analysisGridRef.current) {
         analysisGridRef.current.scrollIntoView({ behavior: "smooth" });
       }
     } catch (error) {
-      console.error("Error generating analysis:", error);
+      console.error("Index - Error generating analysis:", error);
       toast({
         title: "Error",
         description: "Failed to generate analysis. Please try again.",

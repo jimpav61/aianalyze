@@ -27,7 +27,10 @@ export const Hero = ({
 
   useEffect(() => {
     if (analyses && analyses.length > 0) {
-      console.log("Hero - Setting up analysis with data:", analyses);
+      console.log("Hero - Setting up analysis with data:", {
+        analyses,
+        selectedIndustry
+      });
       
       const primaryAnalysis = {
         industry: selectedIndustry,
@@ -40,6 +43,7 @@ export const Hero = ({
         allAnalyses: analyses
       };
       
+      console.log("Hero - Created primary analysis:", primaryAnalysis);
       setCurrentAnalysis(primaryAnalysis);
       setShowDetailedDialog(true);
 
@@ -52,7 +56,7 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
-    console.log("Hero - Analyze button clicked");
+    console.log("Hero - Analyze button clicked with industry:", selectedIndustry);
     handleAnalyze();
   };
 
