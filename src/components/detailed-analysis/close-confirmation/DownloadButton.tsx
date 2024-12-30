@@ -19,37 +19,42 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
     }
 
     try {
-      console.log("DownloadButton - Download attempt starting with data:", {
+      console.log("CloseConfirmation DownloadButton - Download attempt starting with data:", {
         hasFormData: !!formData,
         hasAnalysis: !!analysis,
+        formDataContent: formData,
         analysisContent: analysis,
       });
 
       if (!formData || !analysis) {
-        console.error("DownloadButton - Download failed - Missing required data");
+        console.error("CloseConfirmation DownloadButton - Download failed - Missing required data");
         throw new Error("Report data not available");
       }
 
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      console.log("DownloadButton - Generating PDF with filename:", fileName);
+      console.log("CloseConfirmation DownloadButton - Generating PDF with filename:", fileName);
+      
+      // Wait a brief moment to ensure the report element is ready
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       const pdf = await generateAnalysisReport({ formData, analysis });
-      console.log("DownloadButton - PDF generated successfully, saving file");
+      console.log("CloseConfirmation DownloadButton - PDF generated successfully, saving file");
       
       pdf.save(fileName);
-      console.log("DownloadButton - PDF saved successfully");
+      console.log("CloseConfirmation DownloadButton - PDF saved successfully");
       
       toast({
         title: "Success",
         description: "Report downloaded successfully",
-        duration: 1500,
+        duration: 3000,
       });
     } catch (error) {
-      console.error("DownloadButton - Download error:", error);
+      console.error("CloseConfirmation DownloadButton - Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
+        duration: 5000,
       });
     }
   };
