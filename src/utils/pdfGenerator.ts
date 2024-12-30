@@ -1,6 +1,5 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
-import { calculateFinancials, calculateRevenue } from "./financialCalculations";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -21,7 +20,6 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   
   try {
     const doc = new jsPDF();
-    const revenue = calculateRevenue(formData.revenue);
     
     // Title
     doc.setFontSize(24);
@@ -47,10 +45,9 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     doc.text(`Function: ${analysis.bot_function}`, 20, 140);
     
     // Financial Projections
-    const financials = calculateFinancials(revenue, analysis.department, analysis.industry);
     doc.setTextColor(22, 163, 74); // text-green-600
-    doc.text(`Projected Annual Savings: $${financials.savingsAmount.toLocaleString()}`, 20, 155);
-    doc.text(`Projected Profit Increase: ${financials.profitPercentage}%`, 20, 165);
+    doc.text(`Projected Annual Savings: $${analysis.savings.toLocaleString()}`, 20, 155);
+    doc.text(`Projected Profit Increase: ${analysis.profit_increase}%`, 20, 165);
     
     // Implementation Details
     doc.setTextColor(64, 62, 67);
@@ -62,54 +59,8 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
     const splitExplanation = doc.splitTextToSize(analysis.explanation, 170);
     doc.text(splitExplanation, 20, 200);
     
-    // Add new page if needed for marketing strategy
-    if (doc.getTextDimensions(splitExplanation).h > 50) {
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text("Marketing Strategy", 20, 20);
-      doc.setFontSize(12);
-      const splitStrategy = doc.splitTextToSize(analysis.marketing_strategy, 170);
-      doc.text(splitStrategy, 20, 35);
-    } else {
-      doc.setFontSize(16);
-      doc.text("Marketing Strategy", 20, doc.getTextDimensions(splitExplanation).h + 210);
-      doc.setFontSize(12);
-      const splitStrategy = doc.splitTextToSize(analysis.marketing_strategy, 170);
-      doc.text(splitStrategy, 20, doc.getTextDimensions(splitExplanation).h + 225);
-    }
-
-    // Additional Analyses if available
-    if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
-      doc.addPage();
-      doc.setFontSize(20);
-      doc.text("Additional Department Analyses", 20, 20);
-      
-      let yPos = 40;
-      analysis.allAnalyses.slice(1).forEach((additionalAnalysis: any) => {
-        if (yPos > 250) {
-          doc.addPage();
-          yPos = 20;
-        }
-        
-        const deptFinancials = calculateFinancials(revenue, additionalAnalysis.department, analysis.industry);
-        
-        doc.setFontSize(16);
-        doc.setTextColor(64, 62, 67);
-        doc.text(additionalAnalysis.department, 20, yPos);
-        doc.setFontSize(12);
-        doc.text(`Function: ${additionalAnalysis.function}`, 20, yPos + 10);
-        
-        doc.setTextColor(22, 163, 74); // text-green-600
-        doc.text(`Annual Savings: $${deptFinancials.savingsAmount.toLocaleString()}`, 20, yPos + 20);
-        doc.text(`Profit Increase: ${deptFinancials.profitPercentage}%`, 20, yPos + 30);
-        
-        doc.setTextColor(64, 62, 67);
-        const splitDeptExplanation = doc.splitTextToSize(additionalAnalysis.explanation, 170);
-        doc.text(splitDeptExplanation, 20, yPos + 45);
-        
-        yPos += 80;
-      });
-    }
+    const splitStrategy = doc.splitTextToSize(analysis.marketing_strategy, 170);
+    doc.text(splitStrategy, 20, doc.getTextDimensions(splitExplanation).h + 210);
 
     console.log('PDF Generation - PDF created successfully');
     return doc;
