@@ -44,11 +44,16 @@ export const useBookingSuccess = ({
     }
 
     try {
-      // Use the same report generation as the main download button
+      // Use the main detailed report element to ensure identical output
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        throw new Error("Report element not found");
+      }
+
       const pdf = await generateAnalysisReport({ 
         formData, 
         analysis,
-        reportElement: document.getElementById('detailed-report')
+        reportElement
       });
       
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
