@@ -17,6 +17,12 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
 
   const handleDownload = async () => {
     try {
+      console.log("ReportActions - Starting download with data:", {
+        hasFormData: !!formData,
+        formDataContent: formData,
+        hasAnalysis: !!analysis
+      });
+
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
