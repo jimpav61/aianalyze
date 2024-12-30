@@ -16,6 +16,14 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     throw new Error("Report element not found");
   }
 
+  // Hide action buttons before capture
+  const actionButtons = document.querySelectorAll('[data-report-actions]');
+  const originalButtonStyles = new Map();
+  actionButtons.forEach((button) => {
+    originalButtonStyles.set(button, (button as HTMLElement).style.display);
+    (button as HTMLElement).style.display = 'none';
+  });
+
   console.log('[ReportHandler] Report element found with dimensions:', {
     offsetWidth: reportElement.offsetWidth,
     offsetHeight: reportElement.offsetHeight,
@@ -47,7 +55,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   reportElement.style.margin = '0';
   reportElement.style.whiteSpace = 'pre-line';
   
-  // Process all child elements
+  // Process all child elements for proper formatting
   const allElements = reportElement.getElementsByTagName('*');
   Array.from(allElements).forEach((el) => {
     const elem = el as HTMLElement;
@@ -57,12 +65,20 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     elem.style.position = 'relative';
     elem.style.transform = 'none';
     
+    // Ensure proper line breaks
     if (elem.classList.contains('whitespace-pre-line')) {
       elem.style.whiteSpace = 'pre-line';
     }
     
+    // Convert <br> tags to newlines for proper PDF rendering
     if (elem.innerHTML.includes('<br>')) {
       elem.innerHTML = elem.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+    }
+
+    // Add proper spacing for text elements
+    if (elem.tagName === 'P' || elem.tagName === 'DIV') {
+      elem.style.marginBottom = '8px';
+      elem.style.lineHeight = '1.5';
     }
   });
 
@@ -78,6 +94,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     width: 900,
     height: reportElement.scrollHeight,
     onclone: (_, clonedElement) => {
+      // Process text elements in the cloned document
       const textElements = clonedElement.getElementsByTagName('*');
       Array.from(textElements).forEach((el) => {
         if (el.innerHTML.includes('<br>')) {
@@ -90,6 +107,11 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   // Restore original styles
   Object.entries(originalStyles).forEach(([property, value]) => {
     (reportElement.style as any)[property] = value;
+  });
+
+  // Restore action buttons visibility
+  actionButtons.forEach((button) => {
+    (button as HTMLElement).style.display = originalButtonStyles.get(button);
   });
 
   console.log('[ReportHandler] Canvas created with dimensions:', {
