@@ -28,8 +28,9 @@ export const Hero = ({
   useEffect(() => {
     if (analyses && analyses.length > 0) {
       console.log("Hero - Setting up analysis with data:", {
-        analyses,
-        selectedIndustry
+        analysesCount: analyses.length,
+        selectedIndustry,
+        firstAnalysis: analyses[0]
       });
       
       const primaryAnalysis = {
@@ -56,6 +57,17 @@ export const Hero = ({
   }, [analyses, selectedIndustry, toast]);
 
   const handleAnalyzeClick = () => {
+    if (!selectedIndustry) {
+      console.log("Hero - No industry selected");
+      toast({
+        title: "Please select an industry",
+        description: "Select your industry to begin the analysis",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+
     console.log("Hero - Analyze button clicked with industry:", selectedIndustry);
     handleAnalyze();
   };

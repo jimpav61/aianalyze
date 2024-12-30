@@ -14,10 +14,19 @@ interface CalendarEmbedProps {
 
 export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
+  
+  console.log("CalendarEmbed - Initializing with data:", {
+    hasFormData: !!formData,
+    hasAnalysis: !!analysis,
+    hasOnSubmit: !!onSubmit
+  });
+
   const { getPrefillData } = useCalendlyConfig(formData || undefined);
   const { handleEventScheduled } = useCalendlyEvents({ 
     formData: formData || undefined, 
-    onBookingSuccess: onSubmit || (() => {}) 
+    onBookingSuccess: onSubmit || (() => {
+      console.log("CalendarEmbed - No onSubmit callback provided");
+    })
   });
 
   useCalendarInitialization({

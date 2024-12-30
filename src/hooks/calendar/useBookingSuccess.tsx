@@ -92,8 +92,8 @@ export const useBookingSuccess = ({
 
   const handleBookingSuccess = useCallback(() => {
     console.log("BookingSuccess - Booking success handler triggered with data:", {
-      formData,
-      analysis
+      hasFormData: !!formData,
+      hasAnalysis: !!analysis
     });
 
     toast({
@@ -113,7 +113,8 @@ export const useBookingSuccess = ({
     });
 
     if (onSubmit) {
-      setTimeout(onSubmit, 5000);
+      console.log("BookingSuccess - Calling onSubmit callback");
+      onSubmit();
     }
   }, [formData, analysis, toast, handleDownload, onSubmit]);
 

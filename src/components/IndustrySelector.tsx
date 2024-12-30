@@ -13,16 +13,21 @@ export const IndustrySelector = ({ onSelect, value }: IndustrySelectorProps) => 
   const [customIndustry, setCustomIndustry] = useState("");
 
   const handleSelectChange = (selectedValue: string) => {
+    console.log("IndustrySelector - Industry selected:", selectedValue);
+    
     if (selectedValue === "Other") {
+      console.log("IndustrySelector - Showing custom input");
       setShowCustomInput(true);
       setCustomIndustry("");
     } else {
+      console.log("IndustrySelector - Using predefined industry");
       setShowCustomInput(false);
       onSelect(selectedValue);
     }
   };
 
   const handleCustomInputChange = (value: string) => {
+    console.log("IndustrySelector - Custom industry input:", value);
     setCustomIndustry(value);
     onSelect(value);
   };
