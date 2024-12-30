@@ -6,20 +6,12 @@ import { ImplementationDetails } from "./analysis-results/ImplementationDetails"
 import { AdditionalAnalyses } from "./analysis-results/AdditionalAnalyses";
 
 interface AnalysisResultsProps {
-  analyses: Array<{
-    department: string;
-    function: string;
-    savings: string;
-    profit_increase: string;
-    explanation: string;
-    marketingStrategy: string;
-  }>;
-  revenue: string;
+  analysis: any;
 }
 
-export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => {
-  const primaryAnalysis = analyses[0];
-  const revenueAmount = calculateRevenue(revenue);
+export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
+  const primaryAnalysis = analysis;
+  const revenueAmount = calculateRevenue(analysis.revenue);
   const financials = calculateFinancials(revenueAmount, primaryAnalysis.department);
 
   const formatCurrency = (value: string | number) => {
@@ -40,25 +32,18 @@ export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PrimaryDepartment 
             department={primaryAnalysis.department}
-            function={primaryAnalysis.function}
+            function={primaryAnalysis.bot_function}
           />
           <ProjectedMetrics 
             savingsAmount={formatCurrency(financials.savingsAmount)}
             profitPercentage={formatPercentage(financials.profitPercentage)}
-            revenue={revenue}
+            revenue={analysis.revenue}
           />
         </div>
         
         <ImplementationDetails 
           explanation={primaryAnalysis.explanation}
-          marketingStrategy={primaryAnalysis.marketingStrategy}
-        />
-        
-        <AdditionalAnalyses 
-          analyses={analyses}
-          revenueAmount={revenueAmount}
-          formatCurrency={formatCurrency}
-          formatPercentage={formatPercentage}
+          marketingStrategy={primaryAnalysis.marketing_strategy}
         />
       </Card>
     </div>
