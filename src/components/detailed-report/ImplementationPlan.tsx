@@ -1,15 +1,16 @@
 import { Card } from "../ui/card";
+import { DetailedFormData } from "@/types/analysis";
 
 interface ImplementationPlanProps {
-  data: {
-    objectives: string;
-    timeline: string;
-    budget: string;
-    additionalInfo?: string;
-  };
+  data: DetailedFormData;
 }
 
 export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
+  if (!data) {
+    console.error("ImplementationPlan - Missing required data");
+    return null;
+  }
+
   const implementationPhases = [
     {
       phase: "Phase 1: Discovery & Planning",
@@ -59,15 +60,15 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="font-medium">Primary Objective:</p>
-              <p className="text-gray-600">{data.objectives}</p>
+              <p className="text-gray-600">{data.objectives || "Not specified"}</p>
             </div>
             <div>
               <p className="font-medium">Timeline:</p>
-              <p className="text-gray-600">{data.timeline}</p>
+              <p className="text-gray-600">{data.timeline || "Not specified"}</p>
             </div>
             <div>
               <p className="font-medium">Budget Allocation:</p>
-              <p className="text-gray-600">{data.budget}</p>
+              <p className="text-gray-600">{data.budget || "Not specified"}</p>
             </div>
           </div>
         </div>
