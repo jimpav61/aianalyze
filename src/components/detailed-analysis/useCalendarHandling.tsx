@@ -36,8 +36,13 @@ export const useCalendarHandling = ({
     if (formData && analysis) {
       toast({
         title: "Success",
-        description: "Your demo has been scheduled successfully!",
-        duration: 1500,
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Your demo has been scheduled successfully!</p>
+            <p className="text-sm text-muted-foreground">You can now download your report or continue reviewing it.</p>
+          </div>
+        ),
+        duration: 5000,
       });
     }
   }, [formData, analysis, toast]);
