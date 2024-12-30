@@ -1,3 +1,4 @@
+import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createPdfDocument } from "./config/pdfConfig";
 import { createReportCanvas } from "./handlers/canvasHandler";
