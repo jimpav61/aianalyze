@@ -28,9 +28,7 @@ export const useBookingSuccess = ({
       hasFormData: !!formData,
       formDataContent: formData,
       hasAnalysis: !!analysis,
-      analysisContent: analysis,
-      hasAllAnalyses: !!analysis?.allAnalyses,
-      analysesCount: analysis?.allAnalyses?.length || 1
+      analysisContent: analysis
     });
 
     if (!formData || !analysis) {
@@ -48,25 +46,57 @@ export const useBookingSuccess = ({
     }
 
     try {
-      // Wait a brief moment to ensure the report element is ready
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      console.log("BookingSuccess - Generating PDF with data:", {
-        formData,
-        analysis
-      });
-      
-      const doc = await generateAnalysisReport({ formData, analysis });
-      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      console.log("BookingSuccess - PDF generated successfully, attempting save as:", fileName);
-      doc.save(fileName);
-      console.log("BookingSuccess - PDF saved successfully");
-      
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-      });
+      // Create a temporary container for the report
+      const tempContainer = document.createElement('div');
+      tempContainer.id = 'temp-detailed-report';
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      document.body.appendChild(tempContainer);
+
+      // Add minimal content for PDF generation
+      tempContainer.innerHTML = `
+        <div class="space-y-8">
+          <h2 class="text-2xl font-bold">AI Implementation Analysis</h2>
+          <div class="space-y-4">
+            <h3 class="text-xl">Company Information</h3>
+            <p>Company: ${formData.companyName}</p>
+            <p>Industry: ${analysis.industry}</p>
+            <p>Department: ${analysis.department}</p>
+            <h3 class="text-xl">Analysis Results</h3>
+            <p>Projected Savings: $${analysis.savings.toLocaleString()}</p>
+            <p>Profit Increase: ${analysis.profit_increase}%</p>
+            <p>${analysis.explanation}</p>
+            <p>${analysis.marketing_strategy}</p>
+          </div>
+        </div>
+      `;
+
+      try {
+        console.log("BookingSuccess - Generating PDF...");
+        const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+        
+        // Wait for the temporary container to be ready
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const pdf = await generateAnalysisReport({ 
+          formData, 
+          analysis,
+          reportElement: tempContainer 
+        });
+        
+        console.log("BookingSuccess - PDF generated successfully");
+        pdf.save(fileName);
+        
+        toast({
+          title: "Success",
+          description: "Report downloaded successfully!",
+          duration: 3000,
+        });
+      } finally {
+        // Clean up the temporary container
+        document.body.removeChild(tempContainer);
+      }
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
       toast({
@@ -89,7 +119,7 @@ export const useBookingSuccess = ({
         <div className="space-y-2">
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
           <Button 
-            onClick={(e) => handleDownload(e)}
+            onClick={handleDownload}
             variant="outline" 
             className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
           >
