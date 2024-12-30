@@ -17,7 +17,10 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     console.log("BookingSuccess - Download attempt starting with data:", {
       hasFormData: !!formData,
       formDataContent: formData,

@@ -1,19 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { DetailedFormData } from "@/types/analysis";
 
 interface DownloadReportButtonProps {
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
 }
 
 export const DownloadReportButton = ({ onClick }: DownloadReportButtonProps) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(e);
+  };
+
   return (
     <Button 
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onClick();
-      }}
+      onClick={handleClick}
       variant="outline" 
       className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
     >
