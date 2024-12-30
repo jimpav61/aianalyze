@@ -8,7 +8,10 @@ interface AnalysisOverviewProps {
 }
 
 export const AnalysisOverview = ({ analysis, formData }: AnalysisOverviewProps) => {
+  // Use the same revenue calculation logic as other components
   const revenueAmount = calculateRevenue(formData.revenue);
+  
+  // Calculate financials using the same logic as other components
   const financials = calculateFinancials(revenueAmount, analysis.department, analysis.industry);
 
   return (
