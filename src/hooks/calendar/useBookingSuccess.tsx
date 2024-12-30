@@ -33,7 +33,19 @@ export const useBookingSuccess = ({
         return;
       }
 
-      // Delay the onSubmit callback until after download completes
+      // Get the report element before any state changes
+      const reportElement = document.getElementById('detailed-report');
+      if (!reportElement) {
+        console.error("BookingSuccess - Report element not found");
+        toast({
+          title: "Error",
+          description: "Could not generate report. Please try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
+      }
+
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
@@ -45,7 +57,7 @@ export const useBookingSuccess = ({
         duration: 3000,
       });
 
-      // Only call onSubmit after download completes
+      // Only call onSubmit after successful download
       if (onSubmit) {
         onSubmit();
       }
