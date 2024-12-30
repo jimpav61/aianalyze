@@ -1,6 +1,8 @@
 import { DetailedFormData } from "@/types/analysis";
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
+import { hideActionButtons, restoreActionButtons } from './handlers/actionButtonsHandler';
+import { processAllElements } from './handlers/elementProcessor';
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -17,10 +19,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   }
 
   // Hide action buttons before capture
-  const actionButtons = document.querySelectorAll('[data-report-actions]');
-  actionButtons.forEach((button) => {
-    (button as HTMLElement).style.display = 'none';
-  });
+  hideActionButtons(document);
 
   console.log('[ReportHandler] Report element found with dimensions:', {
     offsetWidth: reportElement.offsetWidth,
@@ -53,48 +52,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   reportElement.style.margin = '0';
   reportElement.style.whiteSpace = 'pre-line';
   
-  // Process all child elements for proper formatting
-  const allElements = reportElement.getElementsByTagName('*');
-  Array.from(allElements).forEach((el) => {
-    const elem = el as HTMLElement;
-    
-    // Basic visibility and positioning
-    elem.style.display = 'block';
-    elem.style.visibility = 'visible';
-    elem.style.opacity = '1';
-    elem.style.position = 'relative';
-    elem.style.transform = 'none';
-    
-    // Handle text formatting
-    if (elem.tagName === 'P' || elem.tagName === 'DIV') {
-      elem.style.marginBottom = '12px';
-      elem.style.lineHeight = '1.6';
-      elem.style.whiteSpace = 'pre-line';
-    }
-
-    // Special handling for headings
-    if (elem.tagName.match(/^H[1-6]$/)) {
-      elem.style.marginTop = '24px';
-      elem.style.marginBottom = '16px';
-      elem.style.lineHeight = '1.4';
-    }
-
-    // Handle lists
-    if (elem.tagName === 'UL' || elem.tagName === 'OL') {
-      elem.style.marginBottom = '16px';
-      elem.style.paddingLeft = '24px';
-    }
-
-    if (elem.tagName === 'LI') {
-      elem.style.marginBottom = '8px';
-      elem.style.lineHeight = '1.5';
-    }
-
-    // Convert <br> tags to proper line breaks
-    if (elem.innerHTML.includes('<br>')) {
-      elem.innerHTML = elem.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-    }
-  });
+  // Process all elements for proper formatting
+  processAllElements(reportElement);
 
   // Wait for rendering
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -109,18 +68,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     height: reportElement.scrollHeight,
     onclone: (_, clonedElement) => {
       // Hide action buttons in cloned document
-      const clonedButtons = clonedElement.querySelectorAll('[data-report-actions]');
-      clonedButtons.forEach((button) => {
-        (button as HTMLElement).style.display = 'none';
-      });
-
-      // Process text elements
-      const textElements = clonedElement.getElementsByTagName('*');
-      Array.from(textElements).forEach((el) => {
-        if (el.innerHTML.includes('<br>')) {
-          el.innerHTML = el.innerHTML.replace(/<br\s*\/?>/gi, '\n');
-        }
-      });
+      hideActionButtons(clonedElement);
+      processAllElements(clonedElement);
     }
   });
 
@@ -130,9 +79,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   });
 
   // Restore action buttons visibility
-  actionButtons.forEach((button) => {
-    (button as HTMLElement).style.display = 'block';
-  });
+  restoreActionButtons(document);
 
   console.log('[ReportHandler] Canvas created with dimensions:', {
     width: canvas.width,
