@@ -35,8 +35,16 @@ export const useBookingSuccess = ({
 
       console.log("BookingSuccess - Starting download with data:", {
         hasFormData: !!formData,
-        hasAnalysis: !!analysis
+        hasAnalysis: !!analysis,
+        formDataContent: formData,
+        analysisContent: analysis
       });
+
+      // Hide the actions bar before generating PDF
+      const actionsBar = document.querySelector('[data-report-actions]');
+      if (actionsBar instanceof HTMLElement) {
+        actionsBar.style.display = 'none';
+      }
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
@@ -49,6 +57,11 @@ export const useBookingSuccess = ({
         description: "Report downloaded successfully!",
         duration: 3000,
       });
+
+      // Show the actions bar again after PDF generation
+      if (actionsBar instanceof HTMLElement) {
+        actionsBar.style.display = 'flex';
+      }
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
       toast({
@@ -72,7 +85,11 @@ export const useBookingSuccess = ({
         <div className="space-y-2">
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
           <button
-            onClick={handleDownload}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleDownload();
+            }}
             className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
           >
             Download Report
