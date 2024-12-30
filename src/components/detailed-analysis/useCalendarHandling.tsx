@@ -41,18 +41,12 @@ export const useCalendarHandling = ({
 
       toast({
         title: "Success",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Your demo has been scheduled successfully!</p>
-            <p className="text-sm text-muted-foreground">You can now download your report or continue reviewing it.</p>
-          </div>
-        ),
-        duration: 5000,
+        description: "Your demo has been scheduled successfully!",
+        duration: 3000,
       });
       
       // Keep the report visible
       setShowReport(true);
-      console.log("useCalendarHandling - Report visibility maintained");
     }
   }, [formData, analysis, toast, setShowReport]);
 
@@ -62,20 +56,9 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    console.log("useCalendarHandling - Download initiated with data:", {
-      hasFormData: !!formData,
-      hasAnalysis: !!analysis,
-      formDataContent: formData,
-      analysisContent: analysis
-    });
-
     try {
       if (!formData || !analysis) {
-        console.error("useCalendarHandling - Download failed - Missing required data:", {
-          formData,
-          analysis
-        });
-        
+        console.error("useCalendarHandling - Download failed - Missing required data");
         toast({
           title: "Error",
           description: "Report data not available. Please try again.",
@@ -85,38 +68,14 @@ export const useCalendarHandling = ({
         return;
       }
 
-      // Store data in local variables to ensure it's available throughout the process
-      const currentFormData = { ...formData };
-      const currentAnalysis = { ...analysis };
-
-      console.log("useCalendarHandling - Starting download with stored data:", {
-        currentFormData,
-        currentAnalysis
-      });
-
-      const pdf = await generateFullReport({ 
-        formData: currentFormData, 
-        analysis: currentAnalysis 
-      });
-      const fileName = getReportFileName(currentFormData.companyName);
-      
-      console.log("useCalendarHandling - PDF generated successfully, saving as:", fileName);
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
       pdf.save(fileName);
       
       toast({
         title: "Success",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Report downloaded successfully!</p>
-            <button
-              onClick={(e) => handleDownload(e)}
-              className="px-4 py-2 bg-white text-primary border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
-            >
-              Download Again
-            </button>
-          </div>
-        ),
-        duration: 5000,
+        description: "Report downloaded successfully!",
+        duration: 3000,
       });
 
     } catch (error) {
