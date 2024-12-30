@@ -53,15 +53,22 @@ export const useCalendarHandling = ({
     }
 
     try {
-      // Store data in local variables to ensure it's available
-      const currentFormData = { ...formData };
-      const currentAnalysis = { ...analysis };
+      // Create deep copies of the data to ensure it's available throughout the process
+      const currentFormData = JSON.parse(JSON.stringify(formData));
+      const currentAnalysis = JSON.parse(JSON.stringify(analysis));
+
+      console.log("Calendar - Generating PDF with data:", {
+        formData: currentFormData,
+        analysis: currentAnalysis
+      });
 
       const pdf = await generateFullReport({ 
         formData: currentFormData, 
         analysis: currentAnalysis 
       });
+      
       const fileName = getReportFileName(currentFormData.companyName);
+      console.log("Calendar - Saving PDF with filename:", fileName);
       
       pdf.save(fileName);
       
@@ -92,11 +99,7 @@ export const useCalendarHandling = ({
       <div className="space-y-2">
         <p>Your demo has been scheduled successfully!</p>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleDownload(e);
-          }}
+          onClick={(e) => handleDownload(e)}
           className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
         >
           Download Report
