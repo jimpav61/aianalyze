@@ -25,11 +25,13 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div className="relative">
-      <ReportActions 
-        formData={formData}
-        analysis={analysis}
-        onBookDemo={onBookDemo}
-      />
+      <div className="print:hidden">
+        <ReportActions 
+          formData={formData}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
+      </div>
       
       <div id="detailed-report" className="space-y-8 print:space-y-6">
         <ReportHeader />
