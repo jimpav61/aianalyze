@@ -27,7 +27,7 @@ export const ContactFields = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="phoneNumber" className="text-gray-700">
-          Phone Number
+          Phone Number <span className="text-red-500 ml-1">*</span>
         </Label>
         <Input
           id="phoneNumber"
@@ -37,6 +37,7 @@ export const ContactFields = ({
           onChange={handlePhoneChange}
           placeholder="(555) 555-5555"
           className={`bg-white ${phoneError || errors.phoneNumber ? 'border-red-500' : ''}`}
+          required
         />
         {(phoneError || errors.phoneNumber) && (
           <p className="text-sm text-red-500 mt-1">{errors.phoneNumber || phoneError}</p>

@@ -61,6 +61,7 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
       case 1:
         validateField("companyName", "Company name");
         validateField("ownerName", "Owner name");
+        validateField("phoneNumber", "Phone number");
         validateField("email", "Email");
         validateField("revenue", "Annual revenue");
         // Validate email format
