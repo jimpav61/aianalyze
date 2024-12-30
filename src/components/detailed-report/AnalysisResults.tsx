@@ -10,6 +10,11 @@ interface AnalysisResultsProps {
 }
 
 export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
+  if (!analysis) {
+    console.error("AnalysisResults - Missing required analysis data");
+    return null;
+  }
+
   const primaryAnalysis = analysis;
   const revenueAmount = calculateRevenue(analysis.revenue);
   const financials = calculateFinancials(revenueAmount, primaryAnalysis.department);
@@ -35,8 +40,8 @@ export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
             function={primaryAnalysis.bot_function}
           />
           <ProjectedMetrics 
-            savingsAmount={formatCurrency(financials.savingsAmount)}
-            profitPercentage={formatPercentage(financials.profitPercentage)}
+            savingsAmount={formatCurrency(primaryAnalysis.savings)}
+            profitPercentage={formatPercentage(primaryAnalysis.profit_increase)}
             revenue={analysis.revenue}
           />
         </div>
@@ -45,6 +50,15 @@ export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
           explanation={primaryAnalysis.explanation}
           marketingStrategy={primaryAnalysis.marketing_strategy}
         />
+
+        {analysis.allAnalyses && analysis.allAnalyses.length > 1 && (
+          <AdditionalAnalyses 
+            analyses={analysis.allAnalyses.slice(1)}
+            revenueAmount={revenueAmount}
+            formatCurrency={formatCurrency}
+            formatPercentage={formatPercentage}
+          />
+        )}
       </Card>
     </div>
   );
