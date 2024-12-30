@@ -25,18 +25,15 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div className="relative">
-      {/* Action buttons fixed at the top right with proper spacing and responsive positioning */}
-      <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm py-4 mb-8">
-        <div className="flex justify-end space-x-4 px-4 md:px-0">
-          <ReportActions 
-            formData={formData}
-            analysis={analysis}
-            onBookDemo={onBookDemo}
-          />
-        </div>
+      <div className="fixed top-4 right-4 z-50">
+        <ReportActions 
+          formData={formData}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
       </div>
 
-      <div id="detailed-report" className="space-y-8 print:space-y-6">
+      <div id="detailed-report" className="space-y-8 print:space-y-6 mt-16">
         <ReportHeader />
         <CompanyInformation data={formData} industry={analysis.industry} />
         <CurrentOperations data={formData} />
