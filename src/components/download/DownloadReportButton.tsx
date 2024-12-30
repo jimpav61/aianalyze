@@ -35,7 +35,7 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
           title: "Error",
           description: "Report data not available. Please try again.",
           variant: "destructive",
-          duration: 5000,
+          duration: 2000,
         });
         return;
       }
@@ -48,7 +48,7 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
       toast({
         title: "Success",
         description: "Report downloaded successfully!",
-        duration: 3000,
+        duration: 1500,
       });
     } catch (error) {
       console.error("DownloadReportButton - Error:", error);
@@ -56,7 +56,7 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
-        duration: 5000,
+        duration: 2000,
       });
     }
   };

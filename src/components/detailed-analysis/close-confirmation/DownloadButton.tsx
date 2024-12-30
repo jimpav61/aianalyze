@@ -26,6 +26,7 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
       toast({
         title: "Success",
         description: "Report downloaded successfully",
+        duration: 1500,
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -33,6 +34,7 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };

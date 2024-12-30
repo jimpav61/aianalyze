@@ -34,7 +34,7 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
         variant: "destructive",
-        duration: 5000,
+        duration: 2000,
       });
     }
   };

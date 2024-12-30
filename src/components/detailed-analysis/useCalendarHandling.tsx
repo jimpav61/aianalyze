@@ -64,7 +64,7 @@ export const useCalendarHandling = ({
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
-        duration: 5000,
+        duration: 2000,
       });
     }
   }, [formData, analysis, toast]);

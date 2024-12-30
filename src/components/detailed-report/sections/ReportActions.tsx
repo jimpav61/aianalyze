@@ -42,7 +42,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         title: "Error",
         description: "Failed to download report. Please try again.",
         variant: "destructive",
-        duration: 5000,
+        duration: 2000,
       });
     } finally {
       setIsDownloading(false);
