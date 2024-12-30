@@ -18,20 +18,10 @@ export const useCalendarHandling = ({
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
-  // Store the data when booking is successful
-  const [bookingData, setBookingData] = useState<{
+  const [storedData, setStoredData] = useState<{
     formData: DetailedFormData | null;
     analysis: any;
   } | null>(null);
-
-  const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
-    if (!formData) {
-      console.warn("useCalendarHandling - No form data available");
-      return false;
-    }
-    setShowCalendar(true);
-    return true;
-  }, []);
 
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
@@ -39,8 +29,8 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    // Use the stored booking data for download
-    const dataToUse = bookingData || { formData, analysis };
+    // Use stored data if available, otherwise use props
+    const dataToUse = storedData || { formData, analysis };
 
     console.log("Calendar - Download initiated with data:", {
       hasFormData: !!dataToUse.formData,
@@ -94,13 +84,22 @@ export const useCalendarHandling = ({
         duration: 3000,
       });
     }
-  }, [bookingData, formData, analysis, toast]);
+  }, [storedData, formData, analysis, toast]);
+
+  const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
+    if (!formData) {
+      console.warn("useCalendarHandling - No form data available");
+      return false;
+    }
+    setShowCalendar(true);
+    return true;
+  }, []);
 
   const handleBookingSubmit = useCallback(() => {
-    console.log("Calendar - Booking submitted, maintaining report view");
+    console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
     // Store the current data for later use
-    setBookingData({ formData, analysis });
+    setStoredData({ formData, analysis });
     
     // Hide calendar but keep report visible
     setShowCalendar(false);
