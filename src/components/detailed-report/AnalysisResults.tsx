@@ -6,17 +6,22 @@ import { ImplementationDetails } from "./analysis-results/ImplementationDetails"
 import { AdditionalAnalyses } from "./analysis-results/AdditionalAnalyses";
 
 interface AnalysisResultsProps {
-  analysis: any;
+  analyses: Array<{
+    department: string;
+    function: string;
+    savings: string;
+    profit_increase: string;
+    explanation: string;
+    marketingStrategy: string;
+    actualProfitIncrease: string;
+    savingsPercentage: string;
+  }>;
+  revenue: string;
 }
 
-export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
-  if (!analysis) {
-    console.error("AnalysisResults - Missing required analysis data");
-    return null;
-  }
-
-  const primaryAnalysis = analysis;
-  const revenueAmount = calculateRevenue(analysis.revenue);
+export const AnalysisResults = ({ analyses, revenue }: AnalysisResultsProps) => {
+  const primaryAnalysis = analyses[0];
+  const revenueAmount = calculateRevenue(revenue);
   const financials = calculateFinancials(revenueAmount, primaryAnalysis.department);
 
   const formatCurrency = (value: string | number) => {
@@ -37,28 +42,26 @@ export const AnalysisResults = ({ analysis }: AnalysisResultsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PrimaryDepartment 
             department={primaryAnalysis.department}
-            function={primaryAnalysis.bot_function}
+            function={primaryAnalysis.function}
           />
           <ProjectedMetrics 
-            savingsAmount={formatCurrency(primaryAnalysis.savings)}
-            profitPercentage={formatPercentage(primaryAnalysis.profit_increase)}
-            revenue={analysis.revenue}
+            savingsAmount={formatCurrency(financials.savingsAmount)}
+            profitPercentage={formatPercentage(financials.profitPercentage)}
+            revenue={revenue}
           />
         </div>
         
         <ImplementationDetails 
           explanation={primaryAnalysis.explanation}
-          marketingStrategy={primaryAnalysis.marketing_strategy}
+          marketingStrategy={primaryAnalysis.marketingStrategy}
         />
-
-        {analysis.allAnalyses && analysis.allAnalyses.length > 1 && (
-          <AdditionalAnalyses 
-            analyses={analysis.allAnalyses.slice(1)}
-            revenueAmount={revenueAmount}
-            formatCurrency={formatCurrency}
-            formatPercentage={formatPercentage}
-          />
-        )}
+        
+        <AdditionalAnalyses 
+          analyses={analyses}
+          revenueAmount={revenueAmount}
+          formatCurrency={formatCurrency}
+          formatPercentage={formatPercentage}
+        />
       </Card>
     </div>
   );

@@ -22,11 +22,8 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600">Annual Savings</p>
-                <p className="text-green-600 text-xl font-semibold flex items-center gap-1">
+                <p className="text-xl font-semibold text-[#f65228]">
                   ${deptFinancials.savingsAmount.toLocaleString()}
-                  <svg className="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 19V5M5 12l7-7 7 7"/>
-                  </svg>
                 </p>
                 <p className="text-sm text-gray-500">
                   ({deptFinancials.savingsPercentage}% of revenue)
@@ -34,11 +31,8 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
               </div>
               <div>
                 <p className="text-sm text-gray-600">Profit Increase</p>
-                <p className="text-green-600 text-xl font-semibold flex items-center gap-1">
+                <p className="text-xl font-semibold text-[#f65228]">
                   ${deptFinancials.profitAmount.toLocaleString()}
-                  <svg className="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 19V5M5 12l7-7 7 7"/>
-                  </svg>
                 </p>
                 <p className="text-sm text-gray-500">
                   ({deptFinancials.profitPercentage}% increase)

@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
-import { calculateFinancials, calculateRevenue } from "./financialCalculations";
+import html2canvas from 'html2canvas';
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -20,140 +20,136 @@ export const generateAnalysisReport = async ({ formData, analysis }: GenerateRep
   console.log('PDF Generation - Starting with data:', { formData, analysis });
   
   try {
-    const doc = new jsPDF();
-    const greenColor = [34, 163, 74] as const; // Type as readonly tuple
-    
-    // Logo and Title
-    doc.addImage("/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png", "PNG", 20, 15, 30, 30);
-    doc.setFontSize(24);
-    doc.setTextColor(26, 31, 44); // #1A1F2C
-    doc.text("AI Implementation Analysis Report", 60, 35);
-    
-    // Company Information Section
-    doc.setFontSize(18);
-    doc.setTextColor(26, 31, 44);
-    doc.text("Company Information", 20, 60);
-    
-    doc.setFontSize(12);
-    doc.setTextColor(64, 62, 67);
-    const companyInfo = [
-      [`Company Name: ${formData.companyName}`, `Industry: ${analysis.industry}`],
-      [`Contact Email: ${formData.email}`, `Phone: ${formData.phoneNumber || 'N/A'}`],
-      [`Number of Employees: ${formData.employees}`, `Annual Revenue: ${formData.revenue}`]
-    ];
-    
-    let yPos = 75;
-    companyInfo.forEach(row => {
-      doc.text(row[0], 20, yPos);
-      doc.text(row[1], 120, yPos);
-      yPos += 15;
-    });
-
-    // Current Operations Section
-    yPos += 10;
-    doc.setFontSize(18);
-    doc.setTextColor(26, 31, 44);
-    doc.text("Current Operations", 20, yPos);
-    
-    doc.setFontSize(12);
-    doc.setTextColor(64, 62, 67);
-    yPos += 15;
-    const operations = [
-      `Service Channels: ${formData.serviceChannels}`,
-      `Monthly Interactions: ${formData.monthlyInteractions}`,
-      `Current Tools: ${formData.currentTools}`,
-      `Pain Points: ${formData.painPoints}`
-    ];
-    
-    operations.forEach(line => {
-      doc.text(line, 20, yPos);
-      yPos += 10;
-    });
-
-    // Analysis Results Section
-    yPos += 10;
-    doc.setFontSize(18);
-    doc.setTextColor(26, 31, 44);
-    doc.text("Analysis Results", 20, yPos);
-    
-    // Primary Department Analysis
-    yPos += 20;
-    doc.setFontSize(14);
-    doc.text(analysis.department, 20, yPos);
-    doc.setFontSize(12);
-    doc.setTextColor(246, 82, 40); // #f65228
-    doc.text(analysis.bot_function, 20, yPos + 10);
-    
-    // Financial metrics in green
-    doc.setTextColor(...greenColor);
-    doc.setFontSize(16);
-    doc.text(`$${analysis.savings.toLocaleString()}`, 20, yPos + 30);
-    doc.setFontSize(12);
-    doc.text(`(${calculateFinancials(calculateRevenue(formData.revenue), analysis.department).savingsPercentage}% of revenue)`, 20, yPos + 40);
-    
-    doc.setFontSize(16);
-    doc.text(`${analysis.profit_increase}%`, 20, yPos + 60);
-    doc.setFontSize(12);
-    doc.text("profit increase", 20, yPos + 70);
-
-    // Implementation Strategy
-    doc.setTextColor(64, 62, 67);
-    yPos += 90;
-    doc.text("Implementation Strategy:", 20, yPos);
-    const splitExplanation = doc.splitTextToSize(analysis.explanation, 170);
-    doc.text(splitExplanation, 20, yPos + 10);
-
-    // Marketing Strategy
-    yPos += doc.getTextDimensions(splitExplanation).h + 20;
-    doc.text("Marketing Strategy:", 20, yPos);
-    const splitMarketing = doc.splitTextToSize(analysis.marketing_strategy, 170);
-    doc.text(splitMarketing, 20, yPos + 10);
-
-    // Additional Analyses
-    if (analysis.allAnalyses && analysis.allAnalyses.length > 1) {
-      doc.addPage();
-      doc.setFontSize(18);
-      doc.setTextColor(26, 31, 44);
-      doc.text("Additional Department Analyses", 20, 30);
-      
-      let currentY = 50;
-      analysis.allAnalyses.slice(1).forEach((dept: any) => {
-        if (currentY > 250) {
-          doc.addPage();
-          currentY = 30;
-        }
-        
-        doc.setFontSize(14);
-        doc.setTextColor(64, 62, 67);
-        doc.text(dept.department, 20, currentY);
-        
-        doc.setFontSize(12);
-        doc.setTextColor(246, 82, 40); // #f65228
-        doc.text(dept.function, 20, currentY + 10);
-        
-        // Financial metrics in green
-        doc.setTextColor(...greenColor);
-        doc.setFontSize(16);
-        doc.text(`$${Number(dept.savings).toLocaleString()}`, 20, currentY + 30);
-        doc.setFontSize(12);
-        doc.text(`(${calculateFinancials(calculateRevenue(formData.revenue), dept.department).savingsPercentage}% of revenue)`, 20, currentY + 40);
-        
-        doc.setFontSize(16);
-        doc.text(`${dept.profit_increase}%`, 20, currentY + 60);
-        doc.setFontSize(12);
-        doc.text("profit increase", 20, currentY + 70);
-        
-        currentY += 90;
-      });
+    const reportElement = document.getElementById('detailed-report');
+    if (!reportElement) {
+      console.error("PDF Generation - Report element not found in DOM");
+      throw new Error("Report element not found");
     }
 
-    // Footer
-    doc.setTextColor(64, 62, 67);
-    doc.setFontSize(10);
-    doc.text("Generated by ChatSites AI Analysis Tool", 20, 280);
-    doc.text("www.chatsites.ai", 20, 287);
+    console.log('PDF Generation - Report element found with dimensions:', {
+      offsetWidth: reportElement.offsetWidth,
+      offsetHeight: reportElement.offsetHeight,
+      scrollWidth: reportElement.scrollWidth,
+      scrollHeight: reportElement.scrollHeight
+    });
 
-    return doc;
+    // Store original styles
+    const originalStyles = {
+      display: reportElement.style.display,
+      visibility: reportElement.style.visibility,
+      opacity: reportElement.style.opacity,
+      position: reportElement.style.position,
+      transform: reportElement.style.transform,
+      margin: reportElement.style.margin,
+      padding: reportElement.style.padding
+    };
+
+    // Create temporary container
+    const tempContainer = document.createElement('div');
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
+    tempContainer.style.width = '900px';
+    tempContainer.style.backgroundColor = 'white';
+    
+    // Clone and prepare the report
+    const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+    clonedReport.style.width = '100%';
+    clonedReport.style.padding = '40px';
+    clonedReport.style.backgroundColor = 'white';
+    clonedReport.style.position = 'relative';
+    clonedReport.style.opacity = '1';
+    clonedReport.style.visibility = 'visible';
+    clonedReport.style.display = 'block';
+    clonedReport.style.transform = 'none';
+    clonedReport.style.margin = '0';
+    
+    // Process all child elements
+    const allElements = clonedReport.getElementsByTagName('*');
+    Array.from(allElements).forEach((el) => {
+      const element = el as HTMLElement;
+      element.style.display = 'block';
+      element.style.visibility = 'visible';
+      element.style.opacity = '1';
+      element.style.position = 'relative';
+      element.style.transform = 'none';
+      
+      // Preserve text formatting
+      if (element.classList.contains('whitespace-pre-line')) {
+        element.style.whiteSpace = 'pre-line';
+      }
+    });
+
+    tempContainer.appendChild(clonedReport);
+    document.body.appendChild(tempContainer);
+
+    // Wait for rendering and log dimensions
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    console.log('PDF Generation - Cloned report dimensions:', {
+      offsetWidth: clonedReport.offsetWidth,
+      offsetHeight: clonedReport.offsetHeight,
+      scrollWidth: clonedReport.scrollWidth,
+      scrollHeight: clonedReport.scrollHeight
+    });
+
+    console.log('PDF Generation - Creating canvas');
+    const canvas = await html2canvas(clonedReport, {
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      backgroundColor: '#ffffff',
+      width: 900,
+      height: clonedReport.scrollHeight
+    });
+
+    // Cleanup
+    document.body.removeChild(tempContainer);
+    
+    // Restore original styles
+    Object.entries(originalStyles).forEach(([property, value]) => {
+      (reportElement.style as any)[property] = value;
+    });
+
+    console.log('PDF Generation - Canvas created with dimensions:', {
+      width: canvas.width,
+      height: canvas.height
+    });
+
+    // Calculate PDF dimensions (A4)
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    // Calculate number of pages needed
+    const pageCount = Math.ceil(imgHeight / pageHeight);
+    console.log('PDF Generation - Pages needed:', pageCount);
+    
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    // Add content page by page
+    for (let i = 0; i < pageCount; i++) {
+      if (i > 0) {
+        pdf.addPage();
+      }
+      
+      const position = -i * pageHeight;
+      console.log(`PDF Generation - Adding page ${i + 1} at position:`, position);
+      
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        0,
+        position,
+        imgWidth,
+        imgHeight,
+        '',
+        'FAST'
+      );
+    }
+
+    console.log('PDF Generation - PDF created successfully with', pageCount, 'pages');
+    return pdf;
   } catch (error) {
     console.error('PDF Generation - Error:', error);
     throw error;

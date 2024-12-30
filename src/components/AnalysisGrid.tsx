@@ -25,19 +25,9 @@ export const AnalysisGrid = ({ analyses }: AnalysisGridProps) => {
             
             <div className="mb-4">
               <p className="font-medium text-gray-700">Projected Annual Savings:</p>
-              <p className="text-green-600 font-bold flex items-center gap-1">
-                ${analysis.savings}
-                <svg className="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 19V5M5 12l7-7 7 7"/>
-                </svg>
-              </p>
+              <p className="text-green-600 font-bold">${analysis.savings}</p>
               <p className="font-medium text-gray-700 mt-2">Profit Increase:</p>
-              <p className="text-green-600 font-bold flex items-center gap-1">
-                {analysis.profit_increase}%
-                <svg className="w-4 h-4 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 19V5M5 12l7-7 7 7"/>
-                </svg>
-              </p>
+              <p className="text-green-600 font-bold">{analysis.profit_increase}%</p>
             </div>
             
             <div>
