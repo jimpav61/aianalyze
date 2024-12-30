@@ -26,7 +26,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       toast({
         title: "Success",
         description: "Report downloaded successfully",
-        duration: 3000,
+        duration: 1500,
       });
     } catch (error) {
       console.error("ReportContent - Download error:", error);
