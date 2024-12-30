@@ -18,7 +18,7 @@ export const useCalendarHandling = ({
   analysis 
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-  const { showSuccessToast } = useSuccessToast();
+  const [hasDownloaded, setHasDownloaded] = useState(false);
   const { toast } = useToast();
 
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
@@ -48,6 +48,7 @@ export const useCalendarHandling = ({
       
       console.log("PDF generated successfully, saving file");
       pdf.save(fileName);
+      setHasDownloaded(true);
       
       toast({
         title: "Success",
@@ -72,10 +73,31 @@ export const useCalendarHandling = ({
     setShowCalendar(false);
     
     if (formData && analysis) {
-      showSuccessToast();
-      await handleDownload();
+      if (!hasDownloaded) {
+        toast({
+          title: "Success",
+          description: (
+            <div className="space-y-2">
+              <p>Your demo has been scheduled successfully!</p>
+              <button
+                onClick={handleDownload}
+                className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+              >
+                Download Report
+              </button>
+            </div>
+          ),
+          duration: 5000,
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Your demo has been scheduled successfully!",
+          duration: 1500,
+        });
+      }
     }
-  }, [showSuccessToast, formData, analysis, handleDownload]);
+  }, [formData, analysis, hasDownloaded, handleDownload, toast]);
 
   return {
     showCalendar,
