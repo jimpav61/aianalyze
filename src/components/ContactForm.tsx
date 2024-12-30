@@ -38,10 +38,11 @@ export const ContactForm = () => {
       console.log('[ContactForm] Starting form submission with values:', values);
       
       const { data, error } = await supabase.functions.invoke('sendemail', {
-        body: JSON.stringify(values),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          type: 'contact'
+        }),
       });
 
       console.log('[ContactForm] Supabase response:', { data, error });
@@ -52,9 +53,11 @@ export const ContactForm = () => {
       }
 
       toast({
-        title: "Form submitted!",
+        title: "Success!",
         description: "Thank you for your interest. We'll be in touch soon.",
+        duration: 5000,
       });
+      
       form.reset();
       console.log('[ContactForm] Form submitted successfully');
     } catch (error) {
@@ -63,6 +66,7 @@ export const ContactForm = () => {
         title: "Error",
         description: "There was a problem submitting your form. Please try again.",
         variant: "destructive",
+        duration: 5000,
       });
     }
   }
@@ -96,8 +100,12 @@ export const ContactForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full bg-[#f65228] hover:bg-[#f65228]/90 text-white">
-          Submit
+        <Button 
+          type="submit" 
+          className="w-full bg-[#f65228] hover:bg-[#f65228]/90 text-white"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </form>
     </Form>
