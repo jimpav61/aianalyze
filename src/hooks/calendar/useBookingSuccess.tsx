@@ -18,7 +18,12 @@ export const useBookingSuccess = ({
 }: UseBookingSuccessProps) => {
   const { toast } = useToast();
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     console.log("BookingSuccess - Download attempt starting with data:", {
       hasFormData: !!formData,
       formDataContent: formData,
@@ -43,19 +48,6 @@ export const useBookingSuccess = ({
     }
 
     try {
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        console.error("BookingSuccess - Report element not found in DOM");
-        throw new Error("Report element not found");
-      }
-
-      console.log("BookingSuccess - Found report element, checking content:", {
-        childNodes: reportElement.childNodes.length,
-        cards: reportElement.getElementsByClassName('card').length,
-        height: reportElement.offsetHeight,
-        scrollHeight: reportElement.scrollHeight
-      });
-
       console.log("BookingSuccess - Generating PDF with data:", {
         formData,
         analysis
@@ -94,7 +86,7 @@ export const useBookingSuccess = ({
         <div className="space-y-2">
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
           <Button 
-            onClick={handleDownload}
+            onClick={(e) => handleDownload(e)}
             variant="outline" 
             className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
           >
