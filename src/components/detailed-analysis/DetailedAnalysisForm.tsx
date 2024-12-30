@@ -33,11 +33,15 @@ export const DetailedAnalysisForm = ({
     const stepValidation = validateStep(currentStep);
     if (!stepValidation.isValid) {
       setErrors(stepValidation.errors);
+      const missingFields = Object.keys(stepValidation.errors)
+        .map(field => field.replace(/([A-Z])/g, ' $1').toLowerCase())
+        .join(', ');
+      
       toast({
         title: "Required Fields Missing",
-        description: "Please fill out all required fields before proceeding.",
+        description: `Please fill out: ${missingFields}`,
         variant: "destructive",
-        duration: 2000,
+        duration: 3000,
       });
       return;
     }
@@ -54,11 +58,15 @@ export const DetailedAnalysisForm = ({
     const stepValidation = validateStep(currentStep);
     if (!stepValidation.isValid) {
       setErrors(stepValidation.errors);
+      const missingFields = Object.keys(stepValidation.errors)
+        .map(field => field.replace(/([A-Z])/g, ' $1').toLowerCase())
+        .join(', ');
+      
       toast({
         title: "Required Fields Missing",
-        description: "Please fill out all required fields before submitting.",
+        description: `Please fill out: ${missingFields}`,
         variant: "destructive",
-        duration: 2000,
+        duration: 3000,
       });
       return;
     }
