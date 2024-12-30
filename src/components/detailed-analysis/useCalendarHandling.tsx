@@ -18,6 +18,11 @@ export const useCalendarHandling = ({
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
+  // Store the data when booking is successful
+  const [bookingData, setBookingData] = useState<{
+    formData: DetailedFormData | null;
+    analysis: any;
+  } | null>(null);
 
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
     if (!formData) {
@@ -34,14 +39,17 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
+    // Use the stored booking data for download
+    const dataToUse = bookingData || { formData, analysis };
+
     console.log("Calendar - Download initiated with data:", {
-      hasFormData: !!formData,
-      hasAnalysis: !!analysis,
-      formDataContent: formData,
-      analysisContent: analysis
+      hasFormData: !!dataToUse.formData,
+      hasAnalysis: !!dataToUse.analysis,
+      formDataContent: dataToUse.formData,
+      analysisContent: dataToUse.analysis
     });
 
-    if (!formData || !analysis) {
+    if (!dataToUse.formData || !dataToUse.analysis) {
       console.error("Calendar - Download failed: Missing data");
       toast({
         title: "Error",
@@ -53,9 +61,9 @@ export const useCalendarHandling = ({
     }
 
     try {
-      // Create deep copies of the data to ensure it's available throughout the process
-      const currentFormData = JSON.parse(JSON.stringify(formData));
-      const currentAnalysis = JSON.parse(JSON.stringify(analysis));
+      // Create deep copies of the data
+      const currentFormData = JSON.parse(JSON.stringify(dataToUse.formData));
+      const currentAnalysis = JSON.parse(JSON.stringify(dataToUse.analysis));
 
       console.log("Calendar - Generating PDF with data:", {
         formData: currentFormData,
@@ -86,10 +94,13 @@ export const useCalendarHandling = ({
         duration: 3000,
       });
     }
-  }, [formData, analysis, toast]);
+  }, [bookingData, formData, analysis, toast]);
 
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted, maintaining report view");
+    
+    // Store the current data for later use
+    setBookingData({ formData, analysis });
     
     // Hide calendar but keep report visible
     setShowCalendar(false);
@@ -112,7 +123,7 @@ export const useCalendarHandling = ({
       description: <ToastContent />,
       duration: 5000
     });
-  }, [setShowReport, toast, handleDownload]);
+  }, [setShowReport, toast, handleDownload, formData, analysis]);
 
   return {
     showCalendar,
