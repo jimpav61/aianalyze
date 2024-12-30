@@ -34,6 +34,11 @@ export const useCalendarHandling = ({
     setShowCalendar(false);
     
     if (formData && analysis) {
+      console.log("useCalendarHandling - Showing success toast with report data:", {
+        hasFormData: !!formData,
+        hasAnalysis: !!analysis
+      });
+
       toast({
         title: "Success",
         description: (
@@ -47,6 +52,7 @@ export const useCalendarHandling = ({
       
       // Keep the report visible
       setShowReport(true);
+      console.log("useCalendarHandling - Report visibility maintained");
     }
   }, [formData, analysis, toast, setShowReport]);
 
@@ -79,16 +85,38 @@ export const useCalendarHandling = ({
         return;
       }
 
-      const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
+      // Store data in local variables to ensure it's available throughout the process
+      const currentFormData = { ...formData };
+      const currentAnalysis = { ...analysis };
+
+      console.log("useCalendarHandling - Starting download with stored data:", {
+        currentFormData,
+        currentAnalysis
+      });
+
+      const pdf = await generateFullReport({ 
+        formData: currentFormData, 
+        analysis: currentAnalysis 
+      });
+      const fileName = getReportFileName(currentFormData.companyName);
       
       console.log("useCalendarHandling - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
       
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
-        duration: 1500,
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Report downloaded successfully!</p>
+            <button
+              onClick={(e) => handleDownload(e)}
+              className="px-4 py-2 bg-white text-primary border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
+            >
+              Download Again
+            </button>
+          </div>
+        ),
+        duration: 5000,
       });
 
     } catch (error) {
