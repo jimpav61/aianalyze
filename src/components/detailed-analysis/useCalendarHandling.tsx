@@ -75,25 +75,40 @@ export const useCalendarHandling = ({
     setShowCalendar(false);
     setShowReport(true);
     
+    // Create a container div to prevent event bubbling
+    const ToastContent = () => (
+      <div 
+        className="space-y-2" 
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <p>Your demo has been scheduled successfully!</p>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleDownload(e);
+          }}
+          className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+        >
+          Download Report
+        </button>
+      </div>
+    );
+
     // Show success toast with download option
     const toastInstance = toast({
       title: "Success!",
-      description: (
-        <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
-          <p>Your demo has been scheduled successfully!</p>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleDownload();
-            }}
-            className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-          >
-            Download Report
-          </button>
-        </div>
-      ),
+      description: <ToastContent />,
       duration: 5000,
+      onDismiss: (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
     });
 
     return () => {
