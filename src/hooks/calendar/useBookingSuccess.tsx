@@ -54,12 +54,6 @@ export const useBookingSuccess = ({
         currentAnalysis
       });
 
-      // Hide the actions bar before generating PDF
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.display = 'none';
-      }
-
       const pdf = await generateFullReport({ 
         formData: currentFormData, 
         analysis: currentAnalysis 
@@ -71,14 +65,20 @@ export const useBookingSuccess = ({
       
       toast({
         title: "Success",
-        description: "Report downloaded successfully!",
-        duration: 3000,
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Report downloaded successfully!</p>
+            <button
+              onClick={(e) => handleDownload(e)}
+              className="px-4 py-2 bg-white text-primary border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
+            >
+              Download Again
+            </button>
+          </div>
+        ),
+        duration: 5000,
       });
 
-      // Show the actions bar again after PDF generation
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.display = 'flex';
-      }
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
       toast({
@@ -102,10 +102,7 @@ export const useBookingSuccess = ({
         <div className="space-y-2">
           <p>Your demo has been scheduled. Check your email for confirmation.</p>
           <button
-            onClick={(e) => {
-              console.log("BookingSuccess - Download button clicked in toast");
-              handleDownload(e);
-            }}
+            onClick={(e) => handleDownload(e)}
             className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
           >
             Download Report
@@ -115,11 +112,10 @@ export const useBookingSuccess = ({
       duration: 5000,
     });
 
-    // Only call onSubmit after showing the toast
     if (onSubmit) {
       setTimeout(onSubmit, 5000);
     }
   }, [formData, analysis, toast, handleDownload, onSubmit]);
 
-  return { handleBookingSuccess };
+  return { handleBookingSuccess, handleDownload };
 };

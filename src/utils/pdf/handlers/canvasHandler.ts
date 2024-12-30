@@ -12,7 +12,8 @@ export const createReportCanvas = async (reportElement: HTMLElement): Promise<HT
     transform: reportElement.style.transform,
     margin: reportElement.style.margin,
     padding: reportElement.style.padding,
-    whiteSpace: reportElement.style.whiteSpace
+    whiteSpace: reportElement.style.whiteSpace,
+    width: reportElement.style.width
   };
 
   // Prepare element for capture
@@ -27,19 +28,21 @@ export const createReportCanvas = async (reportElement: HTMLElement): Promise<HT
   reportElement.style.margin = '0';
   reportElement.style.whiteSpace = 'pre-line';
 
-  // Process elements for proper formatting
+  // Hide action buttons and process elements
+  hideActionButtons(reportElement);
   processAllElements(reportElement);
 
-  // Wait for rendering
-  await new Promise(resolve => setTimeout(resolve, 100));
+  // Wait for rendering and fonts to load
+  await new Promise(resolve => setTimeout(resolve, 500));
 
   const canvas = await html2canvas(reportElement, {
     scale: 2,
     useCORS: true,
-    logging: true,
+    logging: false,
     backgroundColor: '#ffffff',
     width: 900,
     height: reportElement.scrollHeight,
+    windowWidth: 900,
     onclone: (_, clonedElement) => {
       hideActionButtons(clonedElement);
       processAllElements(clonedElement);
@@ -50,6 +53,9 @@ export const createReportCanvas = async (reportElement: HTMLElement): Promise<HT
   Object.entries(originalStyles).forEach(([property, value]) => {
     (reportElement.style as any)[property] = value;
   });
+
+  // Restore action buttons
+  restoreActionButtons(reportElement);
 
   return canvas;
 };
