@@ -13,10 +13,13 @@ interface ReportActionsProps {
 
 export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
   const { toast } = useToast();
-  const [hasDownloaded, setHasDownloaded] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
+    if (isDownloading) return;
+    
     try {
+      setIsDownloading(true);
       console.log("ReportActions - Starting download with data:", {
         hasFormData: !!formData,
         formDataContent: formData,
@@ -27,7 +30,6 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       const fileName = getReportFileName(formData.companyName);
       
       pdf.save(fileName);
-      setHasDownloaded(true);
       
       toast({
         title: "Success",
@@ -42,6 +44,8 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         variant: "destructive",
         duration: 5000,
       });
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -56,12 +60,13 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       </Button>
       <Button 
         onClick={handleDownload}
+        disabled={isDownloading}
         variant="outline" 
         size="sm" 
         className="min-w-[160px] bg-white hover:bg-gray-50 flex items-center gap-2"
       >
         <Download className="h-4 w-4 text-[#f65228]" />
-        Download Report
+        {isDownloading ? 'Downloading...' : 'Download Report'}
       </Button>
     </div>
   );

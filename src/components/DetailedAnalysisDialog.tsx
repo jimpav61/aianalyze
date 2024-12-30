@@ -32,7 +32,7 @@ export const DetailedAnalysisDialog = ({
   } = useDialogHandling({ 
     onClose, 
     showFormOnly,
-    resetOnClose: true // Add this to ensure proper cleanup
+    resetOnClose: true
   });
 
   const {
@@ -42,8 +42,8 @@ export const DetailedAnalysisDialog = ({
   } = useCalendarHandling({ 
     onClose, 
     setShowReport,
-    formData, // Pass formData to ensure it's available for the calendar
-    analysis // Pass analysis to ensure it's available for the calendar
+    formData,
+    analysis
   });
 
   console.log("DetailedAnalysisDialog - Current state:", {
@@ -62,16 +62,25 @@ export const DetailedAnalysisDialog = ({
       analysis
     });
     
-    const success = handleBookDemo(formData);
-    if (!success) {
+    if (!formData) {
       console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
       toast({
         title: "Error",
         description: "Please complete the form first.",
         variant: "destructive",
+        duration: 5000,
       });
-    } else {
+      return;
+    }
+
+    const success = handleBookDemo(formData);
+    if (success) {
       console.log("DetailedAnalysisDialog - Book demo successful");
+      toast({
+        title: "Success",
+        description: "Redirecting to calendar...",
+        duration: 1500,
+      });
     }
   };
 
