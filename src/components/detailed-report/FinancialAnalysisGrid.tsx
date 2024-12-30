@@ -17,24 +17,30 @@ export const FinancialAnalysisGrid = ({ analysis, formData }: FinancialAnalysisG
         return (
           <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
             <h4 className="font-medium text-gray-700 mb-2">{dept.department}</h4>
-            <p className="text-[#f65228] mb-4">{dept.function}</p>
+            <p className="text-[#22A34A] mb-4">{dept.function}</p>
             
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-gray-600">Annual Savings</p>
-                <p className="text-xl font-semibold text-[#f65228]">
-                  ${deptFinancials.savingsAmount.toLocaleString()}
-                </p>
-                <p className="text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-[#22A34A]" />
+                  <p className="text-xl font-semibold text-[#22A34A]">
+                    ${deptFinancials.savingsAmount.toLocaleString()}
+                  </p>
+                </div>
+                <p className="text-sm text-[#22A34A]">
                   ({deptFinancials.savingsPercentage}% of revenue)
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Profit Increase</p>
-                <p className="text-xl font-semibold text-[#f65228]">
-                  ${deptFinancials.profitAmount.toLocaleString()}
-                </p>
-                <p className="text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-[#22A34A]" />
+                  <p className="text-xl font-semibold text-[#22A34A]">
+                    ${deptFinancials.profitAmount.toLocaleString()}
+                  </p>
+                </div>
+                <p className="text-sm text-[#22A34A]">
                   ({deptFinancials.profitPercentage}% increase)
                 </p>
               </div>
