@@ -33,22 +33,15 @@ export const useBookingSuccess = ({
         return;
       }
 
-      // Get the report element before any state changes
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
-        console.error("BookingSuccess - Report element not found");
-        toast({
-          title: "Error",
-          description: "Could not generate report. Please try again.",
-          variant: "destructive",
-          duration: 5000,
-        });
-        return;
-      }
+      console.log("BookingSuccess - Starting download with data:", {
+        hasFormData: !!formData,
+        hasAnalysis: !!analysis
+      });
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
+      console.log("BookingSuccess - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
       
       toast({

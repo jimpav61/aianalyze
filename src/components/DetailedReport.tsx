@@ -24,11 +24,13 @@ export const DetailedReport = ({ data, analysis, analyses, onBookDemo }: Detaile
 
   return (
     <div className="relative w-full bg-white p-8 rounded-lg shadow-sm">
-      <ReportContent 
-        formData={data}
-        analysis={analysis}
-        onBookDemo={onBookDemo}
-      />
+      <div id="detailed-report" className="space-y-8">
+        <ReportContent 
+          formData={data}
+          analysis={analysis}
+          onBookDemo={onBookDemo}
+        />
+      </div>
     </div>
   );
 };
