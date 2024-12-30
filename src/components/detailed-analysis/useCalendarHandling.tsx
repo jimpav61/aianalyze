@@ -29,13 +29,12 @@ export const useCalendarHandling = ({
   }, []);
 
   const handleBookingSubmit = useCallback(() => {
-    console.log("Calendar - Booking submitted");
+    console.log("Calendar - Booking submitted, maintaining report view");
     
-    // Hide calendar but ensure report stays visible
+    // Hide calendar but keep report visible
     setShowCalendar(false);
     setShowReport(true);
     
-    // Show success toast with download option
     toast({
       title: "Success!",
       description: (
