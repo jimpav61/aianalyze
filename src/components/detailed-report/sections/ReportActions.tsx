@@ -40,7 +40,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   };
 
   return (
-    <div className="flex justify-end space-x-4 mb-6">
+    <div className="flex justify-end space-x-4">
       <Button
         onClick={onBookDemo}
         size="sm"
