@@ -15,7 +15,10 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   const { toast } = useToast();
   const [hasDownloaded, setHasDownloaded] = useState(false);
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     try {
       console.log("ReportContent - Starting download with data:", {
         formData,
@@ -31,7 +34,6 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       pdf.save(fileName);
       setHasDownloaded(true);
       
-      // Show different toast based on whether this is first download
       if (!hasDownloaded) {
         toast({
           title: "Success",
@@ -70,11 +72,11 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
   };
 
   return (
-    <div className="flex justify-end space-x-4 mb-6">
+    <div className="flex gap-4">
       <Button
         onClick={onBookDemo}
         size="sm"
-        className="bg-[#f65228] hover:bg-[#d43d16] text-white"
+        className="bg-[#f65228] hover:bg-[#d43d16] text-white whitespace-nowrap"
       >
         Book Demo
       </Button>
@@ -82,7 +84,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         onClick={handleDownload}
         variant="outline" 
         size="sm" 
-        className="bg-white hover:bg-gray-50 flex items-center gap-2"
+        className="bg-white hover:bg-gray-50 flex items-center gap-2 whitespace-nowrap"
       >
         <Download className="h-4 w-4 text-[#f65228]" />
         Download Report

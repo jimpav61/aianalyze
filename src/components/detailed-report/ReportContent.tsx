@@ -25,7 +25,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
 
   return (
     <div className="relative">
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-[100]">
         <ReportActions 
           formData={formData}
           analysis={analysis}
