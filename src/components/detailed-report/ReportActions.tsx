@@ -15,17 +15,21 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
 
   const handleDownload = async () => {
     try {
-      console.log("ReportContent - Starting download with data:", {
+      console.log("ReportActions - Starting download with data:", {
         formData,
         analysis,
         hasAllAnalyses: !!analysis.allAnalyses,
         analysesCount: analysis.allAnalyses?.length || 1
       });
 
+      if (!formData || !analysis) {
+        throw new Error("Missing required data for report generation");
+      }
+
       const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       const pdf = await generateAnalysisReport({ formData, analysis });
       
-      console.log("ReportContent - PDF generated successfully, saving as:", fileName);
+      console.log("ReportActions - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
       
       toast({
@@ -34,7 +38,7 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         duration: 3000,
       });
     } catch (error) {
-      console.error("ReportContent - Download error:", error);
+      console.error("ReportActions - Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download report. Please try again.",
