@@ -6,6 +6,7 @@ import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
 import { useDialogHandling } from "./detailed-analysis/useDialogHandling";
 import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
 import { useToast } from "@/hooks/use-toast";
+import { ReportView } from "./detailed-analysis/ReportView";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -87,22 +88,37 @@ export const DetailedAnalysisDialog = ({
   return (
     <>
       <DialogWrapper isOpen={isOpen} onClose={handleClose}>
-        {showCalendar ? (
-          <CalendarView
-            onSubmit={handleBookingSubmit}
-            formData={formData}
-            analysis={analysis}
-          />
-        ) : (
-          <DialogContent
-            showReport={showReport && !showFormOnly}
-            formData={formData}
-            onSubmit={handleSubmit}
-            industry={industry}
-            analysis={analysis}
-            onBookDemo={onBookDemo}
-          />
-        )}
+        <div className="relative">
+          {showCalendar ? (
+            <>
+              <CalendarView
+                onSubmit={handleBookingSubmit}
+                formData={formData}
+                analysis={analysis}
+              />
+              {/* Keep report content available but hidden for PDF generation */}
+              <div className="hidden">
+                {formData && analysis && (
+                  <ReportView
+                    formData={formData}
+                    analysis={analysis}
+                    onBookDemo={onBookDemo}
+                    industry={industry}
+                  />
+                )}
+              </div>
+            </>
+          ) : (
+            <DialogContent
+              showReport={showReport && !showFormOnly}
+              formData={formData}
+              onSubmit={handleSubmit}
+              industry={industry}
+              analysis={analysis}
+              onBookDemo={onBookDemo}
+            />
+          )}
+        </div>
       </DialogWrapper>
 
       <CloseConfirmationDialog

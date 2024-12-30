@@ -25,13 +25,11 @@ export const CalendarView = ({
   });
   
   useEffect(() => {
-    // Remove any existing Calendly scripts
     const existingScript = document.getElementById('calendly-script');
     if (existingScript) {
       existingScript.remove();
     }
 
-    // Create and add the script
     const script = document.createElement('script');
     script.id = 'calendly-script';
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
