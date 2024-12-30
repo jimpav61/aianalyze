@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { DownloadReportButton } from "@/components/download/DownloadReportButton";
-import { generateReportPDF } from "@/utils/pdf/reportGenerator";
+import { generateAnalysisReport } from "@/utils/pdfGenerator";
 
 interface UseBookingSuccessProps {
   formData?: DetailedFormData;
@@ -44,8 +44,14 @@ export const useBookingSuccess = ({
     }
 
     try {
-      const { pdf, fileName } = await generateReportPDF({ formData, analysis });
-      console.log("BookingSuccess - PDF generated successfully");
+      // Use the same report generation as the main download button
+      const pdf = await generateAnalysisReport({ 
+        formData, 
+        analysis,
+        reportElement: document.getElementById('detailed-report')
+      });
+      
+      const fileName = `AI_Analysis_Report_${formData.companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
       pdf.save(fileName);
       
       toast({
