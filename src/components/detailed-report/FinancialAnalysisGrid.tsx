@@ -1,5 +1,6 @@
 import { DetailedFormData } from "@/types/analysis";
 import { calculateFinancials, calculateRevenue } from "@/utils/financialCalculations";
+import { TrendingUp } from "lucide-react";
 
 interface FinancialAnalysisGridProps {
   analysis: any;
