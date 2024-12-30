@@ -14,6 +14,20 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
+  if (!formData || !analysis) {
+    console.error("ReportContent - Missing required data:", { formData, analysis });
+    return null;
+  }
+
+  const analysisArray = analysis.allAnalyses || [{
+    department: analysis.department,
+    function: analysis.bot_function,
+    savings: analysis.savings,
+    profit_increase: analysis.profit_increase,
+    explanation: analysis.explanation,
+    marketingStrategy: analysis.marketing_strategy
+  }];
+
   return (
     <div id="detailed-report" className="space-y-8">
       <ReportActions 
@@ -22,10 +36,15 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         onBookDemo={onBookDemo}
       />
       <ReportHeader />
-      <CompanyInformation formData={formData} />
-      <CurrentOperations formData={formData} />
-      <AnalysisResults analysis={analysis} />
-      <ImplementationPlan formData={formData} />
+      <CompanyInformation data={formData} industry={analysis.industry} />
+      <CurrentOperations data={formData} />
+      <AnalysisResults analyses={analysisArray} revenue={formData.revenue} />
+      <ImplementationPlan data={{
+        objectives: formData.objectives,
+        timeline: formData.timeline,
+        budget: formData.budget,
+        additionalInfo: formData.additionalInfo
+      }} />
       <ReportFooter />
     </div>
   );

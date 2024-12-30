@@ -13,8 +13,6 @@ interface AnalysisResultsProps {
     profit_increase: string;
     explanation: string;
     marketingStrategy: string;
-    actualProfitIncrease: string;
-    savingsPercentage: string;
   }>;
   revenue: string;
 }
