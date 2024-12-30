@@ -12,7 +12,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   
   const reportElement = document.getElementById('detailed-report');
   if (!reportElement) {
-    console.error("[ReportHandler] Report element not found in DOM");
+    console.error("[ReportHandler] Report element not found");
     throw new Error("Report element not found");
   }
 

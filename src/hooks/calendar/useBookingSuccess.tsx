@@ -49,11 +49,6 @@ export const useBookingSuccess = ({
         description: "Report downloaded successfully!",
         duration: 3000,
       });
-
-      // Only call onSubmit after successful download
-      if (onSubmit) {
-        onSubmit();
-      }
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
       toast({
@@ -63,7 +58,7 @@ export const useBookingSuccess = ({
         duration: 5000,
       });
     }
-  }, [formData, analysis, toast, onSubmit]);
+  }, [formData, analysis, toast]);
 
   const handleBookingSuccess = useCallback(() => {
     console.log("BookingSuccess - Booking success handler triggered with data:", {
@@ -86,7 +81,12 @@ export const useBookingSuccess = ({
       ),
       duration: 5000,
     });
-  }, [formData, analysis, toast, handleDownload]);
+
+    // Only call onSubmit after showing the toast
+    if (onSubmit) {
+      setTimeout(onSubmit, 5000);
+    }
+  }, [formData, analysis, toast, handleDownload, onSubmit]);
 
   return { handleBookingSuccess };
 };
