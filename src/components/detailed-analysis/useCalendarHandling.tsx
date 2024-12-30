@@ -34,7 +34,12 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    console.log("Calendar - Download initiated", { formData, analysis });
+    console.log("Calendar - Download initiated with data:", {
+      hasFormData: !!formData,
+      hasAnalysis: !!analysis,
+      formDataContent: formData,
+      analysisContent: analysis
+    });
 
     if (!formData || !analysis) {
       console.error("Calendar - Download failed: Missing data");
@@ -48,8 +53,16 @@ export const useCalendarHandling = ({
     }
 
     try {
-      const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
+      // Store data in local variables to ensure it's available
+      const currentFormData = { ...formData };
+      const currentAnalysis = { ...analysis };
+
+      const pdf = await generateFullReport({ 
+        formData: currentFormData, 
+        analysis: currentAnalysis 
+      });
+      const fileName = getReportFileName(currentFormData.companyName);
+      
       pdf.save(fileName);
       
       toast({
@@ -82,7 +95,7 @@ export const useCalendarHandling = ({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            handleDownload();
+            handleDownload(e);
           }}
           className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
         >
