@@ -17,29 +17,22 @@ export const useBookingSuccess = ({
   const { toast } = useToast();
 
   const handleDownload = useCallback(async () => {
-    console.log("BookingSuccess - Download attempt starting with data:", {
-      hasFormData: !!formData,
-      formDataContent: formData,
-      hasAnalysis: !!analysis,
-      analysisContent: analysis
-    });
-
-    if (!formData || !analysis) {
-      console.error("BookingSuccess - Download failed - Missing required data:", {
-        formData,
-        analysis
-      });
-      
-      toast({
-        title: "Error",
-        description: "Report data not available. Please try again.",
-        variant: "destructive",
-        duration: 5000,
-      });
-      return;
-    }
-
     try {
+      if (!formData || !analysis) {
+        console.error("BookingSuccess - Download failed - Missing required data:", {
+          formData,
+          analysis
+        });
+        
+        toast({
+          title: "Error",
+          description: "Report data not available. Please try again.",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
+      }
+
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
