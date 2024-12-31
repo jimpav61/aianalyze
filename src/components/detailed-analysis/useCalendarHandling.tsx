@@ -20,37 +20,46 @@ interface DownloadOptions {
   toast: any;
 }
 
-// Utility function to handle PDF generation and download
 const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
   try {
-    // First ensure the report view is visible
     const reportElement = document.getElementById('detailed-report');
     if (!reportElement) {
       console.error("[ReportHandler] Report element not found");
       throw new Error("Report element not found");
     }
 
-    // Store original display value
-    const hiddenParent = reportElement.closest('.hidden') as HTMLElement;
-    const originalDisplay = hiddenParent?.style.display;
-
-    // Make report visible
-    if (hiddenParent) {
+    // Find hidden parent and ensure proper type casting
+    const hiddenParent = reportElement.closest('.hidden');
+    if (hiddenParent && hiddenParent instanceof HTMLElement) {
+      const originalDisplay = hiddenParent.style.display;
+      
+      // Make report visible
       hiddenParent.style.display = 'block';
+
+      // Wait for the report to be fully rendered and visible
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const pdf = await generateFullReport(currentData);
+      const fileName = getReportFileName(currentData.formData?.companyName || 'report');
+      
+      // Restore original display value
+      hiddenParent.style.display = originalDisplay;
+      
+      console.log("[Calendar] Saving PDF with filename:", fileName);
+      pdf.save(fileName);
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+        duration: 1500,
+      });
+
+      return true;
     }
 
-    // Wait for the report to be fully rendered and visible
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    // If no hidden parent found, just generate the PDF
     const pdf = await generateFullReport(currentData);
     const fileName = getReportFileName(currentData.formData?.companyName || 'report');
-    
-    // Restore original display value
-    if (hiddenParent && originalDisplay !== undefined) {
-      hiddenParent.style.display = originalDisplay;
-    }
-
-    console.log("[Calendar] Saving PDF with filename:", fileName);
     pdf.save(fileName);
     
     toast({
@@ -72,7 +81,6 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
   }
 };
 
-// Custom hook for managing calendar state and actions
 export const useCalendarHandling = ({ 
   onClose, 
   setShowReport,
