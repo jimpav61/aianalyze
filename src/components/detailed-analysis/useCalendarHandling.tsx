@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { UseCalendarHandlingProps } from "./calendar/types";
-import { useCalendarData } from "./calendar/useCalendarData";
-import { useDownloadHandler } from "./calendar/useDownloadHandler";
+import { useCalendarData } from "./hooks/useCalendarData";
+import { handlePdfDownload } from "./calendar/pdfHandler";
 
 export const useCalendarHandling = ({ 
   onClose, 
@@ -13,7 +13,16 @@ export const useCalendarHandling = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
   const { setCalendarData, getCalendarData } = useCalendarData(formData, analysis);
-  const handleDownload = useDownloadHandler(getCalendarData);
+
+  const handleDownload = useCallback(async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    const currentData = getCalendarData();
+    await handlePdfDownload({ currentData, toast });
+  }, [getCalendarData, toast]);
 
   const handleBookDemo = useCallback((formData: any) => {
     if (!formData) {

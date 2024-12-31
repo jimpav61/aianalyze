@@ -1,12 +1,11 @@
 import { DetailedAnalysisProps } from "./detailed-analysis/types";
 import { DialogContent } from "./detailed-analysis/DialogContent";
 import { DialogWrapper } from "./detailed-analysis/DialogWrapper";
-import { CalendarView } from "./detailed-analysis/CalendarView";
-import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
-import { useDialogHandling } from "./detailed-analysis/useDialogHandling";
+import { CalendarViewWrapper } from "./detailed-analysis/calendar/CalendarViewWrapper";
 import { CloseConfirmationDialog } from "./detailed-analysis/CloseConfirmationDialog";
 import { useToast } from "@/hooks/use-toast";
-import { ReportView } from "./detailed-analysis/ReportView";
+import { useDialogHandling } from "./detailed-analysis/useDialogHandling";
+import { useCalendarHandling } from "./detailed-analysis/useCalendarHandling";
 
 interface ExtendedDetailedAnalysisProps extends DetailedAnalysisProps {
   showFormOnly?: boolean;
@@ -52,17 +51,10 @@ export const DetailedAnalysisDialog = ({
     showCalendar,
     hasFormData: !!formData,
     showFormOnly,
-    hasAnalysis: !!analysis,
-    formDataContent: formData,
-    analysisContent: analysis
+    hasAnalysis: !!analysis
   });
 
   const onBookDemo = () => {
-    console.log("DetailedAnalysisDialog - Book demo clicked with data:", {
-      formData,
-      analysis
-    });
-    
     if (!formData) {
       console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
       toast({
@@ -90,24 +82,12 @@ export const DetailedAnalysisDialog = ({
       <DialogWrapper isOpen={isOpen} onClose={handleClose}>
         <div className="relative">
           {showCalendar ? (
-            <>
-              <CalendarView
-                onSubmit={handleBookingSubmit}
-                formData={formData}
-                analysis={analysis}
-              />
-              {/* Keep report content available but hidden for PDF generation */}
-              <div className="hidden">
-                {formData && analysis && (
-                  <ReportView
-                    formData={formData}
-                    analysis={analysis}
-                    onBookDemo={onBookDemo}
-                    industry={industry}
-                  />
-                )}
-              </div>
-            </>
+            <CalendarViewWrapper
+              onSubmit={handleBookingSubmit}
+              formData={formData}
+              analysis={analysis}
+              onBookDemo={onBookDemo}
+            />
           ) : (
             <DialogContent
               showReport={showReport && !showFormOnly}

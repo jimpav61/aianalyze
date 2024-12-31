@@ -30,4 +30,4 @@ export const handlePdfDownload = async ({ currentData, toast }: DownloadOptions)
     });
     return false;
   }
-}
+};
