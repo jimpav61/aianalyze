@@ -1,55 +1,8 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { DetailedFormData } from "@/types/analysis";
-import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
-
-interface UseCalendarHandlingProps {
-  onClose: () => void;
-  setShowReport: (show: boolean) => void;
-  formData: DetailedFormData | null;
-  analysis?: any;
-}
-
-interface StoredData {
-  formData: DetailedFormData | null;
-  analysis: any;
-}
-
-interface DownloadOptions {
-  currentData: StoredData;
-  toast: any;
-}
-
-const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
-  try {
-    const reportElement = document.getElementById('detailed-report');
-    if (!reportElement) {
-      console.error("[ReportHandler] Report element not found");
-      throw new Error("Report element not found");
-    }
-
-    const pdf = await generateFullReport(currentData);
-    const fileName = getReportFileName(currentData.formData?.companyName || 'report');
-    pdf.save(fileName);
-    
-    toast({
-      title: "Success",
-      description: "Report downloaded successfully!",
-      duration: 1500,
-    });
-
-    return true;
-  } catch (error) {
-    console.error("[Calendar] PDF Generation error:", error);
-    toast({
-      title: "Error",
-      description: "Failed to download report. Please try again.",
-      variant: "destructive",
-      duration: 3000,
-    });
-    return false;
-  }
-};
+import { UseCalendarHandlingProps } from "./calendar/types";
+import { handlePdfDownload } from "./calendar/pdfHandler";
+import { useCalendarState } from "./calendar/useCalendarState";
 
 export const useCalendarHandling = ({ 
   onClose, 
@@ -59,19 +12,7 @@ export const useCalendarHandling = ({
 }: UseCalendarHandlingProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
-  const storedDataRef = useRef<StoredData | null>(null);
-
-  const storeData = useCallback((data: StoredData) => {
-    storedDataRef.current = {
-      formData: data.formData ? structuredClone(data.formData) : null,
-      analysis: data.analysis ? structuredClone(data.analysis) : null
-    };
-    console.log("[Calendar] Data stored:", storedDataRef.current);
-  }, []);
-
-  const getCurrentData = useCallback((): StoredData => {
-    return storedDataRef.current || { formData, analysis };
-  }, [formData, analysis]);
+  const { storeData, getCurrentData } = useCalendarState(formData, analysis);
 
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
@@ -102,19 +43,7 @@ export const useCalendarHandling = ({
     await handlePdfDownload({ currentData, toast });
   }, [getCurrentData, toast]);
 
-  const ToastContent = useCallback(() => (
-    <div className="space-y-2">
-      <p>Your demo has been scheduled successfully!</p>
-      <button
-        onClick={(e) => handleDownload(e)}
-        className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-      >
-        Download Report
-      </button>
-    </div>
-  ), [handleDownload]);
-
-  const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
+  const handleBookDemo = useCallback((formData: any) => {
     if (!formData) {
       console.warn("[useCalendarHandling] No form data available");
       return false;
@@ -132,13 +61,12 @@ export const useCalendarHandling = ({
     console.log("[Calendar] Booking submitted with data:", { formData, analysis });
     
     storeData({ formData, analysis });
-    
     setShowCalendar(false);
     setShowReport(true);
     
     toast({
       title: "Success!",
-      description: <ToastContent />,
+      description: "Your demo has been scheduled successfully!",
       duration: 5000,
       onOpenChange: (open) => {
         if (!open) {
@@ -147,7 +75,7 @@ export const useCalendarHandling = ({
         }
       }
     });
-  }, [formData, analysis, setShowReport, toast, storeData, ToastContent]);
+  }, [formData, analysis, setShowReport, toast, storeData]);
 
   return {
     showCalendar,
