@@ -23,12 +23,29 @@ interface DownloadOptions {
 // Utility function to handle PDF generation and download
 const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
   try {
-    // Ensure we wait for the hidden report to be fully rendered
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // First ensure the report view is visible
+    const reportElement = document.getElementById('detailed-report');
+    if (reportElement) {
+      const hiddenParent = reportElement.closest('.hidden');
+      if (hiddenParent) {
+        hiddenParent.classList.remove('hidden');
+      }
+    }
+
+    // Wait for the report to be fully rendered
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     const pdf = await generateFullReport(currentData);
     const fileName = getReportFileName(currentData.formData.companyName);
     
+    // Restore hidden class if it was removed
+    if (reportElement) {
+      const hiddenParent = reportElement.closest('[class*="hidden"]');
+      if (hiddenParent) {
+        hiddenParent.classList.add('hidden');
+      }
+    }
+
     console.log("Calendar - Saving PDF with filename:", fileName);
     pdf.save(fileName);
     
