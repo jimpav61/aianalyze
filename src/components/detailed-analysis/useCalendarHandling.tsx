@@ -30,34 +30,35 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
 
     // Find hidden parent and ensure proper type casting
     const hiddenParent = reportElement.closest('.hidden');
-    if (hiddenParent && hiddenParent instanceof HTMLElement) {
+    if (hiddenParent instanceof HTMLElement) {
       const originalDisplay = hiddenParent.style.display;
       
       // Make report visible
       hiddenParent.style.display = 'block';
 
-      // Wait for the report to be fully rendered and visible
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const pdf = await generateFullReport(currentData);
-      const fileName = getReportFileName(currentData.formData?.companyName || 'report');
-      
-      // Restore original display value
-      hiddenParent.style.display = originalDisplay;
-      
-      console.log("[Calendar] Saving PDF with filename:", fileName);
-      pdf.save(fileName);
-      
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-        duration: 1500,
-      });
+      try {
+        // Wait for the report to be fully rendered and visible
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        const pdf = await generateFullReport(currentData);
+        const fileName = getReportFileName(currentData.formData?.companyName || 'report');
+        
+        pdf.save(fileName);
+        
+        toast({
+          title: "Success",
+          description: "Report downloaded successfully!",
+          duration: 1500,
+        });
 
-      return true;
+        return true;
+      } finally {
+        // Always restore original display value
+        hiddenParent.style.display = originalDisplay;
+      }
     }
 
-    // If no hidden parent found, just generate the PDF
+    // If no hidden parent found, generate PDF directly
     const pdf = await generateFullReport(currentData);
     const fileName = getReportFileName(currentData.formData?.companyName || 'report');
     pdf.save(fileName);
