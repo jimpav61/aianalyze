@@ -25,7 +25,6 @@ export const useCalendarHandling = ({
   const { toast } = useToast();
   const storedDataRef = useRef<StoredData | null>(null);
 
-  // Function to safely clone and store data
   const storeData = useCallback((data: StoredData) => {
     storedDataRef.current = {
       formData: data.formData ? structuredClone(data.formData) : null,
@@ -34,25 +33,10 @@ export const useCalendarHandling = ({
     console.log("Calendar - Data stored:", storedDataRef.current);
   }, []);
 
-  // Function to get the current data
   const getCurrentData = useCallback((): StoredData => {
     return storedDataRef.current || { formData, analysis };
   }, [formData, analysis]);
 
-  // Function to show download toast content
-  const ToastContent = useCallback(() => (
-    <div className="space-y-2">
-      <p>Your demo has been scheduled successfully!</p>
-      <button
-        onClick={(e) => handleDownload(e)}
-        className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-      >
-        Download Report
-      </button>
-    </div>
-  ), []);
-
-  // Handle PDF download
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
@@ -80,6 +64,9 @@ export const useCalendarHandling = ({
     }
 
     try {
+      // Ensure we wait a moment for the hidden report to be rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const pdf = await generateFullReport(currentData);
       const fileName = getReportFileName(currentData.formData.companyName);
       
@@ -102,7 +89,18 @@ export const useCalendarHandling = ({
     }
   }, [getCurrentData, toast]);
 
-  // Handle booking demo request
+  const ToastContent = useCallback(() => (
+    <div className="space-y-2">
+      <p>Your demo has been scheduled successfully!</p>
+      <button
+        onClick={(e) => handleDownload(e)}
+        className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
+      >
+        Download Report
+      </button>
+    </div>
+  ), [handleDownload]);
+
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
     if (!formData) {
       console.warn("useCalendarHandling - No form data available");
@@ -112,14 +110,11 @@ export const useCalendarHandling = ({
     return true;
   }, []);
 
-  // Handle successful booking submission
   const handleBookingSubmit = useCallback(() => {
     console.log("Calendar - Booking submitted with data:", { formData, analysis });
     
-    // Store the data immediately when booking is submitted
     storeData({ formData, analysis });
     
-    // Hide calendar but keep report visible
     setShowCalendar(false);
     setShowReport(true);
     
