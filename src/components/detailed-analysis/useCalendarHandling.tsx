@@ -31,7 +31,7 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
     }
 
     // Store original display value
-    const hiddenParent = reportElement.closest('.hidden');
+    const hiddenParent = reportElement.closest('.hidden') as HTMLElement;
     const originalDisplay = hiddenParent?.style.display;
 
     // Make report visible
