@@ -48,9 +48,12 @@ export const useCalendarHandling = ({
       console.warn("[useCalendarHandling] No form data available");
       return false;
     }
+    
+    console.log("[Calendar] Storing data before showing calendar:", { formData, analysis });
+    storeData({ formData, analysis });
     setShowCalendar(true);
     return true;
-  }, []);
+  }, [analysis, storeData]);
 
   const handleBookingSubmit = useCallback((e?: React.MouseEvent) => {
     if (e) {
@@ -58,24 +61,22 @@ export const useCalendarHandling = ({
       e.stopPropagation();
     }
 
-    console.log("[Calendar] Booking submitted with data:", { formData, analysis });
+    const currentData = getCurrentData();
+    console.log("[Calendar] Booking submitted with data:", currentData);
     
-    storeData({ formData, analysis });
     setShowCalendar(false);
-    setShowReport(true);
     
     toast({
       title: "Success!",
       description: "Your demo has been scheduled successfully!",
-      duration: 5000,
-      onOpenChange: (open) => {
-        if (!open) {
-          console.log("[Calendar] Toast closed, showing report");
-          setShowReport(true);
-        }
-      }
+      duration: 3000,
     });
-  }, [formData, analysis, setShowReport, toast, storeData]);
+
+    // Ensure we show the report after the toast
+    setTimeout(() => {
+      setShowReport(true);
+    }, 100);
+  }, [getCurrentData, setShowReport, toast]);
 
   return {
     showCalendar,
