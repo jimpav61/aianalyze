@@ -26,8 +26,16 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         hasAnalysis: !!analysis
       });
 
-      // Hide the actions bar before generating PDF
+      // Find the report element using the closest parent
       const actionsBar = document.querySelector('[data-report-actions]');
+      const reportElement = actionsBar?.closest('#detailed-report');
+
+      if (!reportElement) {
+        console.error("ReportActions - Report element not found");
+        throw new Error("Report element not found");
+      }
+
+      // Hide the actions bar before generating PDF
       if (actionsBar instanceof HTMLElement) {
         actionsBar.style.display = 'none';
       }
