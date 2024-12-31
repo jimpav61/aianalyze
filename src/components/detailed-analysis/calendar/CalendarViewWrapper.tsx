@@ -14,9 +14,11 @@ export const CalendarViewWrapper = ({
   analysis,
   onBookDemo
 }: CalendarViewWrapperProps) => {
-  console.log("CalendarViewWrapper - Render:", {
+  console.log("CalendarViewWrapper - Render with data:", {
     hasFormData: !!formData,
-    hasAnalysis: !!analysis
+    formDataContent: formData,
+    hasAnalysis: !!analysis,
+    analysisContent: analysis
   });
 
   return (

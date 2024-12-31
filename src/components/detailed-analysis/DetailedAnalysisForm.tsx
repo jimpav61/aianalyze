@@ -29,6 +29,9 @@ export const DetailedAnalysisForm = ({
     setErrors,
   } = useDetailedFormState(initialData);
 
+  console.log("DetailedAnalysisForm - Current form data:", formData);
+  console.log("DetailedAnalysisForm - Current step:", currentStep);
+
   const handleNext = () => {
     const stepValidation = validateStep(currentStep);
     if (!stepValidation.isValid) {
@@ -36,6 +39,8 @@ export const DetailedAnalysisForm = ({
       const missingFields = Object.keys(stepValidation.errors)
         .map(field => field.replace(/([A-Z])/g, ' $1').toLowerCase())
         .join(', ');
+      
+      console.error("DetailedAnalysisForm - Validation failed:", stepValidation.errors);
       
       toast({
         title: "Required Fields Missing",
@@ -45,11 +50,13 @@ export const DetailedAnalysisForm = ({
       });
       return;
     }
+    console.log("DetailedAnalysisForm - Moving to next step:", currentStep + 1);
     setCurrentStep((prev) => prev + 1);
     setErrors({});
   };
 
   const handleBack = () => {
+    console.log("DetailedAnalysisForm - Moving to previous step:", currentStep - 1);
     setCurrentStep((prev) => prev - 1);
     setErrors({});
   };
@@ -62,6 +69,8 @@ export const DetailedAnalysisForm = ({
         .map(field => field.replace(/([A-Z])/g, ' $1').toLowerCase())
         .join(', ');
       
+      console.error("DetailedAnalysisForm - Final validation failed:", stepValidation.errors);
+      
       toast({
         title: "Required Fields Missing",
         description: `Please fill out: ${missingFields}`,
@@ -70,7 +79,7 @@ export const DetailedAnalysisForm = ({
       });
       return;
     }
-    console.log("Form submitted with data:", formData);
+    console.log("DetailedAnalysisForm - Form submitted with data:", formData);
     onSubmit(formData);
   };
 

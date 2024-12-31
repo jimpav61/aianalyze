@@ -6,36 +6,43 @@ interface ValidationResult {
   errors: { [key: string]: string };
 }
 
+const DEFAULT_FORM_DATA: DetailedFormData = {
+  companyName: "Test Company",
+  ownerName: "John Doe",
+  phoneNumber: "(555) 555-5555",
+  email: "test@example.com",
+  employees: "10-20",
+  revenue: "100k-500k",
+  serviceChannels: "email",
+  monthlyInteractions: "500-1000",
+  currentTools: "zendesk",
+  painPoints: "Long customer wait times",
+  objectives: "Reduce operational costs",
+  timeline: "3-6",
+  budget: "5000-10000",
+  additionalInfo: "Testing the full flow",
+};
+
 export const useDetailedFormState = (initialData: DetailedFormData | null) => {
+  console.log("useDetailedFormState - Initializing with data:", initialData);
+
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formData, setFormData] = useState<DetailedFormData>(
-    initialData || {
-      companyName: "",
-      ownerName: "",
-      phoneNumber: "",
-      email: "",
-      employees: "",
-      revenue: "",
-      serviceChannels: "",
-      monthlyInteractions: "",
-      currentTools: "",
-      painPoints: "",
-      objectives: "",
-      timeline: "",
-      budget: "",
-      additionalInfo: "",
-    }
+    initialData || DEFAULT_FORM_DATA // Using test data for development
   );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    console.log("useDetailedFormState - Input change:", { name, value });
+    
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    
     // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => {
@@ -47,6 +54,8 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
   };
 
   const validateStep = (step: number): ValidationResult => {
+    console.log("useDetailedFormState - Validating step:", step);
+    
     const newErrors: { [key: string]: string } = {};
     let isValid = true;
 
@@ -85,7 +94,7 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
         break;
     }
 
-    console.log("Validation result:", { isValid, errors: newErrors });
+    console.log("useDetailedFormState - Validation result:", { isValid, errors: newErrors });
     return { isValid, errors: newErrors };
   };
 
