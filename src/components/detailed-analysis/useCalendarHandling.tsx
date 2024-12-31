@@ -123,7 +123,12 @@ export const useCalendarHandling = ({
     return true;
   }, []);
 
-  const handleBookingSubmit = useCallback(() => {
+  const handleBookingSubmit = useCallback((e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     console.log("[Calendar] Booking submitted with data:", { formData, analysis });
     
     storeData({ formData, analysis });
