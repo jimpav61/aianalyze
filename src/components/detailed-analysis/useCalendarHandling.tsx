@@ -10,12 +10,12 @@ export const useCalendarHandling = ({
   formData,
   analysis 
 }: UseCalendarHandlingProps) => {
-  // Define all hooks at the top level
+  // All hooks at the top level
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
   const { storeData, getCurrentData } = useCalendarState(formData, analysis);
 
-  // Define all callbacks after hooks
+  // All callbacks defined after hooks, with proper dependencies
   const handleDownload = useCallback(async (e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
