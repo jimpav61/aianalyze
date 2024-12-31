@@ -28,15 +28,15 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
       throw new Error("Report element not found");
     }
 
-    // Find hidden parent and ensure proper type casting
+    // Find hidden parent
     const hiddenParent = reportElement.closest('.hidden');
     if (hiddenParent instanceof HTMLElement) {
       const originalDisplay = hiddenParent.style.display;
       
-      // Make report visible
-      hiddenParent.style.display = 'block';
-
       try {
+        // Make report visible
+        hiddenParent.style.display = 'block';
+        
         // Wait for the report to be fully rendered and visible
         await new Promise(resolve => setTimeout(resolve, 1000));
         
