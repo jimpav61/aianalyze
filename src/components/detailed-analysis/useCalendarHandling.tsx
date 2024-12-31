@@ -25,28 +25,32 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
   try {
     // First ensure the report view is visible
     const reportElement = document.getElementById('detailed-report');
-    if (reportElement) {
-      const hiddenParent = reportElement.closest('.hidden');
-      if (hiddenParent) {
-        hiddenParent.classList.remove('hidden');
-      }
+    if (!reportElement) {
+      console.error("[ReportHandler] Report element not found");
+      throw new Error("Report element not found");
     }
 
-    // Wait for the report to be fully rendered
+    // Store original display value
+    const hiddenParent = reportElement.closest('.hidden');
+    const originalDisplay = hiddenParent?.style.display;
+
+    // Make report visible
+    if (hiddenParent) {
+      hiddenParent.style.display = 'block';
+    }
+
+    // Wait for the report to be fully rendered and visible
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     const pdf = await generateFullReport(currentData);
-    const fileName = getReportFileName(currentData.formData.companyName);
+    const fileName = getReportFileName(currentData.formData?.companyName || 'report');
     
-    // Restore hidden class if it was removed
-    if (reportElement) {
-      const hiddenParent = reportElement.closest('[class*="hidden"]');
-      if (hiddenParent) {
-        hiddenParent.classList.add('hidden');
-      }
+    // Restore original display value
+    if (hiddenParent && originalDisplay !== undefined) {
+      hiddenParent.style.display = originalDisplay;
     }
 
-    console.log("Calendar - Saving PDF with filename:", fileName);
+    console.log("[Calendar] Saving PDF with filename:", fileName);
     pdf.save(fileName);
     
     toast({
@@ -57,7 +61,7 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
 
     return true;
   } catch (error) {
-    console.error("Calendar - PDF Generation error:", error);
+    console.error("[Calendar] PDF Generation error:", error);
     toast({
       title: "Error",
       description: "Failed to download report. Please try again.",
@@ -84,7 +88,7 @@ export const useCalendarHandling = ({
       formData: data.formData ? structuredClone(data.formData) : null,
       analysis: data.analysis ? structuredClone(data.analysis) : null
     };
-    console.log("Calendar - Data stored:", storedDataRef.current);
+    console.log("[Calendar] Data stored:", storedDataRef.current);
   }, []);
 
   const getCurrentData = useCallback((): StoredData => {
@@ -99,7 +103,7 @@ export const useCalendarHandling = ({
 
     const currentData = getCurrentData();
     
-    console.log("Calendar - Download initiated with data:", {
+    console.log("[Calendar] Download initiated with data:", {
       hasFormData: !!currentData.formData,
       hasAnalysis: !!currentData.analysis,
       formDataContent: currentData.formData,
@@ -107,7 +111,7 @@ export const useCalendarHandling = ({
     });
 
     if (!currentData.formData || !currentData.analysis) {
-      console.error("Calendar - Download failed: Missing data");
+      console.error("[Calendar] Download failed: Missing data");
       toast({
         title: "Error",
         description: "Report data not available. Please try again.",
@@ -134,7 +138,7 @@ export const useCalendarHandling = ({
 
   const handleBookDemo = useCallback((formData: DetailedFormData | null) => {
     if (!formData) {
-      console.warn("useCalendarHandling - No form data available");
+      console.warn("[useCalendarHandling] No form data available");
       return false;
     }
     setShowCalendar(true);
@@ -142,7 +146,7 @@ export const useCalendarHandling = ({
   }, []);
 
   const handleBookingSubmit = useCallback(() => {
-    console.log("Calendar - Booking submitted with data:", { formData, analysis });
+    console.log("[Calendar] Booking submitted with data:", { formData, analysis });
     
     storeData({ formData, analysis });
     
