@@ -28,37 +28,6 @@ const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
       throw new Error("Report element not found");
     }
 
-    // Find hidden parent
-    const hiddenParent = reportElement.closest('.hidden');
-    if (hiddenParent instanceof HTMLElement) {
-      const originalDisplay = hiddenParent.style.display;
-      
-      try {
-        // Make report visible
-        hiddenParent.style.display = 'block';
-        
-        // Wait for the report to be fully rendered and visible
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const pdf = await generateFullReport(currentData);
-        const fileName = getReportFileName(currentData.formData?.companyName || 'report');
-        
-        pdf.save(fileName);
-        
-        toast({
-          title: "Success",
-          description: "Report downloaded successfully!",
-          duration: 1500,
-        });
-
-        return true;
-      } finally {
-        // Always restore original display value
-        hiddenParent.style.display = originalDisplay;
-      }
-    }
-
-    // If no hidden parent found, generate PDF directly
     const pdf = await generateFullReport(currentData);
     const fileName = getReportFileName(currentData.formData?.companyName || 'report');
     pdf.save(fileName);
@@ -165,7 +134,11 @@ export const useCalendarHandling = ({
     toast({
       title: "Success!",
       description: <ToastContent />,
-      duration: 5000
+      duration: 5000,
+      onDismiss: () => {
+        console.log("[Calendar] Toast dismissed, showing report");
+        setShowReport(true);
+      }
     });
   }, [formData, analysis, setShowReport, toast, storeData, ToastContent]);
 
