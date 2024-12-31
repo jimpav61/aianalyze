@@ -15,6 +15,43 @@ interface StoredData {
   analysis: any;
 }
 
+interface DownloadOptions {
+  currentData: StoredData;
+  toast: any;
+}
+
+// Utility function to handle PDF generation and download
+const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
+  try {
+    // Ensure we wait a moment for the hidden report to be rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    const pdf = await generateFullReport(currentData);
+    const fileName = getReportFileName(currentData.formData.companyName);
+    
+    console.log("Calendar - Saving PDF with filename:", fileName);
+    pdf.save(fileName);
+    
+    toast({
+      title: "Success",
+      description: "Report downloaded successfully!",
+      duration: 1500,
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Calendar - PDF Generation error:", error);
+    toast({
+      title: "Error",
+      description: "Failed to download report. Please try again.",
+      variant: "destructive",
+      duration: 3000,
+    });
+    return false;
+  }
+};
+
+// Custom hook for managing calendar state and actions
 export const useCalendarHandling = ({ 
   onClose, 
   setShowReport,
@@ -63,30 +100,7 @@ export const useCalendarHandling = ({
       return;
     }
 
-    try {
-      // Ensure we wait a moment for the hidden report to be rendered
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const pdf = await generateFullReport(currentData);
-      const fileName = getReportFileName(currentData.formData.companyName);
-      
-      console.log("Calendar - Saving PDF with filename:", fileName);
-      pdf.save(fileName);
-      
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully!",
-        duration: 1500,
-      });
-    } catch (error) {
-      console.error("Calendar - PDF Generation error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-        duration: 3000,
-      });
-    }
+    await handlePdfDownload({ currentData, toast });
   }, [getCurrentData, toast]);
 
   const ToastContent = useCallback(() => (
