@@ -23,8 +23,8 @@ interface DownloadOptions {
 // Utility function to handle PDF generation and download
 const handlePdfDownload = async ({ currentData, toast }: DownloadOptions) => {
   try {
-    // Ensure we wait a moment for the hidden report to be rendered
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Ensure we wait for the hidden report to be fully rendered
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     const pdf = await generateFullReport(currentData);
     const fileName = getReportFileName(currentData.formData.companyName);
