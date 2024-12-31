@@ -135,9 +135,11 @@ export const useCalendarHandling = ({
       title: "Success!",
       description: <ToastContent />,
       duration: 5000,
-      onDismiss: () => {
-        console.log("[Calendar] Toast dismissed, showing report");
-        setShowReport(true);
+      onOpenChange: (open) => {
+        if (!open) {
+          console.log("[Calendar] Toast closed, showing report");
+          setShowReport(true);
+        }
       }
     });
   }, [formData, analysis, setShowReport, toast, storeData, ToastContent]);
