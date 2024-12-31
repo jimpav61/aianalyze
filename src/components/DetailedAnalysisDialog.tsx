@@ -46,17 +46,19 @@ export const DetailedAnalysisDialog = ({
     analysis
   });
 
-  console.log("DetailedAnalysisDialog - Current state:", {
+  console.log("[TEST] DetailedAnalysisDialog - Current state:", {
     showReport,
     showCalendar,
     hasFormData: !!formData,
+    formDataContent: formData,
     showFormOnly,
-    hasAnalysis: !!analysis
+    hasAnalysis: !!analysis,
+    analysisContent: analysis
   });
 
   const onBookDemo = () => {
     if (!formData) {
-      console.warn("DetailedAnalysisDialog - Book demo failed: No form data");
+      console.warn("[TEST] DetailedAnalysisDialog - Book demo failed: No form data");
       toast({
         title: "Error",
         description: "Please complete the form first.",
@@ -66,9 +68,10 @@ export const DetailedAnalysisDialog = ({
       return;
     }
 
+    console.log("[TEST] DetailedAnalysisDialog - Attempting to book demo with data:", formData);
     const success = handleBookDemo(formData);
     if (success) {
-      console.log("DetailedAnalysisDialog - Book demo successful");
+      console.log("[TEST] DetailedAnalysisDialog - Book demo successful");
       toast({
         title: "Success",
         description: "Redirecting to calendar...",

@@ -15,9 +15,11 @@ interface CalendarEmbedProps {
 export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarEmbedProps) => {
   const calendarRef = useRef<HTMLDivElement>(null);
   
-  console.log("CalendarEmbed - Initializing with data:", {
+  console.log("[TEST] CalendarEmbed - Initializing with data:", {
     hasFormData: !!formData,
+    formDataContent: formData,
     hasAnalysis: !!analysis,
+    analysisContent: analysis,
     hasOnSubmit: !!onSubmit
   });
 
@@ -25,7 +27,7 @@ export const CalendarEmbed = ({ onSubmit, formData = null, analysis }: CalendarE
   const { handleEventScheduled } = useCalendlyEvents({ 
     formData: formData || undefined, 
     onBookingSuccess: onSubmit || (() => {
-      console.log("CalendarEmbed - No onSubmit callback provided");
+      console.log("[TEST] CalendarEmbed - No onSubmit callback provided");
     })
   });
 
