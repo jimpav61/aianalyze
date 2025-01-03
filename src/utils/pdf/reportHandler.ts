@@ -26,13 +26,44 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(reportElement);
     
-    // Create PDF document
-    const pdf = createPdfDocument();
-    
-    // Add pages to PDF
-    addPagesToDocument(pdf, canvas);
+    // Create PDF document with A4 format
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: true
+    });
 
-    console.log('[ReportHandler] PDF created successfully');
+    // Get dimensions
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const pageCount = Math.ceil(imgHeight / pageHeight);
+
+    // Add pages to document
+    for (let i = 0; i < pageCount; i++) {
+      if (i > 0) {
+        pdf.addPage();
+      }
+
+      // Calculate position for current page
+      const position = -(i * pageHeight);
+      
+      console.log(`[PdfPageHandler] Adding page ${i + 1} at position:`, position);
+
+      pdf.addImage(
+        canvas.toDataURL('image/png', 1.0),
+        'PNG',
+        0,
+        position,
+        imgWidth,
+        imgHeight,
+        '',
+        'FAST'
+      );
+    }
+
+    console.log('[ReportHandler] PDF created successfully with', pageCount, 'pages');
     return pdf;
   } finally {
     // Always restore action buttons visibility
