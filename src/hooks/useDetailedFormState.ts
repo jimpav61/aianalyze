@@ -1,27 +1,7 @@
 import { useState } from "react";
 import { DetailedFormData } from "@/types/analysis";
-
-interface ValidationResult {
-  isValid: boolean;
-  errors: { [key: string]: string };
-}
-
-const DEFAULT_FORM_DATA: DetailedFormData = {
-  companyName: "",
-  ownerName: "",
-  phoneNumber: "",
-  email: "",
-  employees: "",
-  revenue: "",
-  serviceChannels: "",
-  monthlyInteractions: "",
-  currentTools: "",
-  painPoints: "",
-  objectives: "",
-  timeline: "",
-  budget: "",
-  additionalInfo: "",
-};
+import { DEFAULT_FORM_DATA } from "./detailed-form/defaultFormData";
+import { useFormValidation } from "./detailed-form/useFormValidation";
 
 export const useDetailedFormState = (initialData: DetailedFormData | null) => {
   console.log("useDetailedFormState - Initializing with data:", initialData);
@@ -31,6 +11,8 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
   const [formData, setFormData] = useState<DetailedFormData>(
     initialData || DEFAULT_FORM_DATA
   );
+
+  const { validateStep } = useFormValidation();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -53,51 +35,6 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
     }
   };
 
-  const validateStep = (step: number): ValidationResult => {
-    console.log("useDetailedFormState - Validating step:", step);
-    
-    const newErrors: { [key: string]: string } = {};
-    let isValid = true;
-
-    const validateField = (field: string, label: string) => {
-      if (!formData[field as keyof DetailedFormData]?.trim()) {
-        newErrors[field] = `${label} is required`;
-        isValid = false;
-      }
-    };
-
-    switch (step) {
-      case 1:
-        validateField("companyName", "Company name");
-        validateField("ownerName", "Owner name");
-        validateField("phoneNumber", "Phone number");
-        validateField("email", "Email");
-        validateField("revenue", "Annual revenue");
-        // Validate email format
-        if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-          newErrors.email = "Please enter a valid email address";
-          isValid = false;
-        }
-        break;
-
-      case 2:
-        validateField("serviceChannels", "Service channels");
-        validateField("monthlyInteractions", "Monthly interactions");
-        validateField("currentTools", "Current tools");
-        validateField("painPoints", "Pain points");
-        break;
-
-      case 3:
-        validateField("objectives", "Business objectives");
-        validateField("timeline", "Implementation timeline");
-        validateField("budget", "Budget range");
-        break;
-    }
-
-    console.log("useDetailedFormState - Validation result:", { isValid, errors: newErrors });
-    return { isValid, errors: newErrors };
-  };
-
   return {
     currentStep,
     setCurrentStep,
@@ -105,6 +42,6 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
     errors,
     setErrors,
     handleInputChange,
-    validateStep,
+    validateStep: (step: number) => validateStep(step, formData),
   };
 };
