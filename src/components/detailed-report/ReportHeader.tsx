@@ -1,18 +1,22 @@
-import { Brain } from "lucide-react";
+import { DetailedFormData } from "@/types/analysis";
 
-export const ReportHeader = () => {
+interface ReportHeaderProps {
+  formData: DetailedFormData;
+  onBookDemo?: () => void;
+}
+
+export const ReportHeader = ({ formData, onBookDemo }: ReportHeaderProps) => {
   return (
-    <div className="flex items-center justify-between mb-8 p-6 bg-white rounded-lg shadow-sm">
-      <div className="flex items-center gap-2">
-        <Brain className="w-10 h-10 text-[#f65228]" />
-        <span className="text-2xl font-bold text-[#f65228]">ChatSites</span>
-      </div>
-      <div className="text-right text-sm text-gray-600 space-y-1">
-        <p className="font-semibold">Contact us:</p>
-        <p>info@chatsites.ai</p>
-        <p>+1 480 862 0288</p>
-        <p>chatsites.ai</p>
-      </div>
+    <div className="flex justify-between items-center">
+      <h1 className="text-2xl font-bold">AI Implementation Analysis Report</h1>
+      {onBookDemo && (
+        <button
+          onClick={onBookDemo}
+          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90"
+        >
+          Book Demo
+        </button>
+      )}
     </div>
   );
 };
