@@ -18,6 +18,12 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         throw new Error("Report data not available");
       }
 
+      console.log("Toast DownloadButton - Starting download with data:", {
+        hasFormData: !!formData,
+        formDataContent: formData,
+        hasAnalysis: !!analysis
+      });
+
       // Find the report element
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
@@ -40,7 +46,7 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         }
       });
 
-      // Wait for content to be fully rendered
+      // Wait longer for content to be fully rendered
       await new Promise(resolve => setTimeout(resolve, 3000));
 
       const pdf = await generateFullReport({ formData, analysis });
@@ -48,13 +54,15 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
       
       pdf.save(fileName);
       
+      console.log("Toast DownloadButton - PDF generated successfully");
+      
       toast({
         title: "Success",
         description: "Report downloaded successfully",
         duration: 1500,
       });
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      console.error('Toast DownloadButton - Error generating PDF:', error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
