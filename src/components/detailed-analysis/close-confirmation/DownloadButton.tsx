@@ -12,7 +12,10 @@ interface DownloadButtonProps {
 export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     try {
       if (!formData || !analysis) {
         throw new Error("Report data not available");
@@ -21,16 +24,17 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
       console.log("Toast DownloadButton - Starting download with data:", {
         hasFormData: !!formData,
         formDataContent: formData,
-        hasAnalysis: !!analysis,
-        reportElement: !!document.getElementById('detailed-report')
+        hasAnalysis: !!analysis
       });
 
-      // Find the report element
-      const reportElement = document.getElementById('detailed-report');
+      // Find the report element in the main document
+      const reportElement = document.querySelector('[data-report-content="true"]');
       if (!reportElement) {
-        console.error("Report element not found");
+        console.error("Toast DownloadButton - Report element not found");
         throw new Error("Report element not found");
       }
+
+      console.log("Toast DownloadButton - Found report element with children:", reportElement.children.length);
 
       // Temporarily hide the action buttons for PDF generation
       const actionsBar = document.querySelector('[data-report-actions]');
@@ -47,7 +51,7 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         }
       });
 
-      // Wait longer for content to be fully rendered
+      // Wait for content to be fully rendered
       await new Promise(resolve => setTimeout(resolve, 3000));
 
       // Generate and save PDF
@@ -70,7 +74,7 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         duration: 1500,
       });
     } catch (error) {
-      console.error('Toast DownloadButton - Error generating PDF:', error);
+      console.error("Toast DownloadButton - Download error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
@@ -87,8 +91,12 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
   };
 
   return (
-    <Button onClick={handleDownload} variant="outline" size="sm" className="bg-white hover:bg-gray-50">
-      <Download className="mr-2 h-4 w-4 text-[#9b87f5]" />
+    <Button 
+      onClick={handleDownload}
+      variant="outline" 
+      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50"
+    >
+      <Download className="h-4 w-4 text-[#f65228]" />
       Download Report
     </Button>
   );
