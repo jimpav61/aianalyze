@@ -21,7 +21,8 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
       console.log("Toast DownloadButton - Starting download with data:", {
         hasFormData: !!formData,
         formDataContent: formData,
-        hasAnalysis: !!analysis
+        hasAnalysis: !!analysis,
+        reportElement: !!document.getElementById('detailed-report')
       });
 
       // Find the report element
@@ -49,12 +50,19 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
       // Wait longer for content to be fully rendered
       await new Promise(resolve => setTimeout(resolve, 3000));
 
+      // Generate and save PDF
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
+      console.log("Toast DownloadButton - About to save PDF with data:", {
+        pdfGenerated: !!pdf,
+        fileName,
+        reportElementChildren: reportElement.children.length
+      });
+      
       pdf.save(fileName);
       
-      console.log("Toast DownloadButton - PDF generated successfully");
+      console.log("Toast DownloadButton - PDF saved successfully");
       
       toast({
         title: "Success",
