@@ -48,8 +48,8 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         }
       });
 
-      // Wait for content to be fully rendered
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait longer for content to be fully rendered
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
