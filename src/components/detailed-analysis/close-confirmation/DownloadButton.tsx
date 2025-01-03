@@ -25,21 +25,6 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         throw new Error("Report element not found");
       }
 
-      // Temporarily hide the action buttons for PDF generation
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.visibility = 'hidden';
-      }
-
-      // Set all elements to be visible and wait for rendering
-      const elementsToShow = reportElement.querySelectorAll('*');
-      elementsToShow.forEach((element) => {
-        if (element instanceof HTMLElement) {
-          element.style.visibility = 'visible';
-          element.style.display = element.style.display === 'none' ? 'block' : element.style.display;
-        }
-      });
-
       // Wait for content to be fully rendered
       await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -61,12 +46,6 @@ export const DownloadButton = ({ formData, analysis }: DownloadButtonProps) => {
         variant: "destructive",
         duration: 2000,
       });
-    } finally {
-      // Restore the action buttons visibility
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.visibility = 'visible';
-      }
     }
   };
 
