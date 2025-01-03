@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { DetailedFormData } from "@/types/analysis";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
@@ -10,8 +9,6 @@ interface DownloadReportButtonProps {
 }
 
 export const DownloadReportButton = ({ formData, analysis }: DownloadReportButtonProps) => {
-  const { toast } = useToast();
-
   const handleDownload = async () => {
     try {
       if (!formData || !analysis) {
@@ -22,20 +19,8 @@ export const DownloadReportButton = ({ formData, analysis }: DownloadReportButto
       const fileName = getReportFileName(formData.companyName);
       
       pdf.save(fileName);
-      
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully",
-        duration: 1500,
-      });
     } catch (error) {
       console.error('Error generating PDF:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to generate PDF. Please try again.",
-        variant: "destructive",
-        duration: 2000,
-      });
     }
   };
 

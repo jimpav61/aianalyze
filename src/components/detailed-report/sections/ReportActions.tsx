@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 import { DetailedFormData } from "@/types/analysis";
 import { useState } from "react";
@@ -12,7 +11,6 @@ interface ReportActionsProps {
 }
 
 export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsProps) => {
-  const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
@@ -26,18 +24,14 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         hasAnalysis: !!analysis
       });
 
-      // Find the report element using the closest parent
-      const actionsBar = document.querySelector('[data-report-actions]');
-      const reportElement = actionsBar?.closest('#detailed-report');
+      // Wait for the report element to be fully rendered
+      await new Promise(resolve => setTimeout(resolve, 100));
 
+      // Find the report element
+      const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
         console.error("ReportActions - Report element not found");
         throw new Error("Report element not found");
-      }
-
-      // Hide the actions bar before generating PDF
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.display = 'none';
       }
 
       const pdf = await generateFullReport({ formData, analysis });
@@ -45,25 +39,9 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       
       pdf.save(fileName);
       
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully",
-        duration: 1500,
-      });
     } catch (error) {
-      console.error("ReportContent - Download error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-        duration: 2000,
-      });
+      console.error("ReportActions - Download error:", error);
     } finally {
-      // Show the actions bar again after PDF generation
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.display = 'flex';
-      }
       setIsDownloading(false);
     }
   };
