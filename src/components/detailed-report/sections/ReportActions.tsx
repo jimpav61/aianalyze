@@ -1,9 +1,9 @@
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 import { DetailedFormData } from "@/types/analysis";
-import { useState } from "react";
 
 interface ReportActionsProps {
   formData: DetailedFormData;
@@ -39,8 +39,17 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         actionsBar.style.visibility = 'hidden';
       }
 
-      // Wait for any images and content to be fully loaded
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Set all elements to be visible and wait for rendering
+      const elementsToShow = reportElement.querySelectorAll('*');
+      elementsToShow.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          element.style.visibility = 'visible';
+          element.style.display = element.style.display === 'none' ? 'block' : element.style.display;
+        }
+      });
+
+      // Wait for content to be fully rendered
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);

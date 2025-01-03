@@ -69,17 +69,7 @@ export const useBookingSuccess = ({
 
     toast({
       title: "Success!",
-      description: (
-        <div className="space-y-2">
-          <p>Your demo has been scheduled. Check your email for confirmation.</p>
-          <button
-            onClick={(e) => handleDownload(e)}
-            className="w-full mt-2 inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium border border-gray-200 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-          >
-            Download Report
-          </button>
-        </div>
-      ),
+      description: "Your demo has been scheduled. Check your email for confirmation.",
       duration: 5000,
     });
 
@@ -87,7 +77,7 @@ export const useBookingSuccess = ({
       console.log("BookingSuccess - Calling onSubmit callback");
       onSubmit();
     }
-  }, [formData, analysis, toast, handleDownload, onSubmit]);
+  }, [formData, analysis, toast, onSubmit]);
 
   return { handleBookingSuccess, handleDownload };
 };
