@@ -26,9 +26,6 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
         hasAnalysis: !!analysis
       });
 
-      // Wait for any images and content to be fully loaded
-      await new Promise(resolve => setTimeout(resolve, 500));
-
       // Find the report element
       const reportElement = document.getElementById('detailed-report');
       if (!reportElement) {
@@ -41,6 +38,9 @@ export const ReportActions = ({ formData, analysis, onBookDemo }: ReportActionsP
       if (actionsBar instanceof HTMLElement) {
         actionsBar.style.visibility = 'hidden';
       }
+
+      // Wait for any images and content to be fully loaded
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
