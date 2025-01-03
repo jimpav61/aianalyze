@@ -35,13 +35,6 @@ export const useBookingSuccess = ({
           formData,
           analysis
         });
-        
-        toast({
-          title: "Error",
-          description: "Report data not available. Please try again.",
-          variant: "destructive",
-          duration: 5000,
-        });
         return;
       }
 
@@ -63,32 +56,10 @@ export const useBookingSuccess = ({
       console.log("BookingSuccess - PDF generated successfully, saving as:", fileName);
       pdf.save(fileName);
       
-      toast({
-        title: "Success",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Report downloaded successfully!</p>
-            <button
-              onClick={(e) => handleDownload(e)}
-              className="px-4 py-2 bg-white text-primary border border-input rounded-md hover:bg-accent hover:text-accent-foreground"
-            >
-              Download Again
-            </button>
-          </div>
-        ),
-        duration: 5000,
-      });
-
     } catch (error) {
       console.error("BookingSuccess - PDF Generation/Download error:", error);
-      toast({
-        title: "Error",
-        description: "Failed to download report. Please try again.",
-        variant: "destructive",
-        duration: 5000,
-      });
     }
-  }, [formData, analysis, toast]);
+  }, [formData, analysis]);
 
   const handleBookingSuccess = useCallback(() => {
     console.log("BookingSuccess - Booking success handler triggered with data:", {
