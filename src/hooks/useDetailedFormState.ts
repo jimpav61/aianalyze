@@ -7,20 +7,20 @@ interface ValidationResult {
 }
 
 const DEFAULT_FORM_DATA: DetailedFormData = {
-  companyName: "Test Company",
-  ownerName: "John Doe",
-  phoneNumber: "(555) 555-5555",
-  email: "test@example.com",
-  employees: "10-20",
-  revenue: "100k-500k",
-  serviceChannels: "email",
-  monthlyInteractions: "500-1000",
-  currentTools: "zendesk",
-  painPoints: "Long customer wait times",
-  objectives: "Reduce operational costs",
-  timeline: "3-6",
-  budget: "5000-10000",
-  additionalInfo: "Testing the full flow",
+  companyName: "",
+  ownerName: "",
+  phoneNumber: "",
+  email: "",
+  employees: "",
+  revenue: "",
+  serviceChannels: "",
+  monthlyInteractions: "",
+  currentTools: "",
+  painPoints: "",
+  objectives: "",
+  timeline: "",
+  budget: "",
+  additionalInfo: "",
 };
 
 export const useDetailedFormState = (initialData: DetailedFormData | null) => {
@@ -29,7 +29,7 @@ export const useDetailedFormState = (initialData: DetailedFormData | null) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formData, setFormData] = useState<DetailedFormData>(
-    initialData || DEFAULT_FORM_DATA // Using test data for development
+    initialData || DEFAULT_FORM_DATA
   );
 
   const handleInputChange = (
