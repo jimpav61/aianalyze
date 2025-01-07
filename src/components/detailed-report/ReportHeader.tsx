@@ -21,10 +21,19 @@ export const ReportHeader = ({ formData, onBookDemo, industry, analysis }: Repor
         throw new Error("Report element not found");
       }
 
+      // Clone the element to prevent layout shifts
+      const clonedElement = reportElement.cloneNode(true) as HTMLElement;
+      clonedElement.style.position = 'absolute';
+      clonedElement.style.left = '-9999px';
+      document.body.appendChild(clonedElement);
+
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName);
       
       pdf.save(fileName);
+      
+      // Clean up
+      document.body.removeChild(clonedElement);
       
       toast({
         title: "Success",
