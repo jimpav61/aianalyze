@@ -1,4 +1,4 @@
-export const generateHeaderSection = (doc: HTMLDivElement) => {
+export const generateHeaderSection = (doc: HTMLElement) => {
   const header = document.createElement('div');
   header.innerHTML = `
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 24px; background: #F1F0FB; border-radius: 8px; margin-bottom: 32px;">
