@@ -10,6 +10,10 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
         />
         <span style="font-size: 24px; font-weight: bold; color: #9b87f5;">ChatSites Analysis Report</span>
       </div>
+      <div style="text-align: right;">
+        <p style="margin: 0; font-size: 14px; color: #666;">www.chatsites.ai</p>
+        <p style="margin: 4px 0 0; font-size: 14px; color: #666;">Contact: support@chatsites.ai</p>
+      </div>
     </div>
   `;
   doc.appendChild(header);
