@@ -5,7 +5,6 @@ import { CurrentOperations } from "./CurrentOperations";
 import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
 import { ReportFooter } from "./ReportFooter";
-import { ReportActions } from "./ReportActions";
 import { Download } from "lucide-react";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -76,10 +75,17 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         additionalInfo: formData.additionalInfo
       }} />
       <ReportFooter />
-      <ReportActions 
-        formData={formData}
-        analysis={analysis}
-      />
+      <div className="flex justify-end gap-4">
+        <Button
+          onClick={handleDownload}
+          variant="outline" 
+          size="sm"
+          className="bg-white hover:bg-gray-50 flex items-center gap-2"
+        >
+          <Download className="h-4 w-4 text-[#f65228]" />
+          Download Report
+        </Button>
+      </div>
     </div>
   );
 };
