@@ -5,7 +5,7 @@ import { DetailedFormData } from "@/types/analysis";
 import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface DownloadReportButtonProps {
-  onClick: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
   formData?: DetailedFormData;
   analysis?: any;
 }
@@ -14,49 +14,52 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
   const { toast } = useToast();
 
   const handleDownload = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     try {
       if (!formData || !analysis) {
         throw new Error("Report data not available");
       }
 
+      toast({
+        title: "Generating PDF",
+        description: "Please wait while we prepare your report...",
+        duration: 3000,
+      });
+
       // Find the report element
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
+      const reportElement = document.querySelector('[data-report-content="true"]');
+      if (!reportElement || !(reportElement instanceof HTMLElement)) {
         console.error("Report element not found");
         throw new Error("Report element not found");
       }
 
-      // Temporarily hide the action buttons for PDF generation
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.visibility = 'hidden';
-      }
+      // Create a clone for PDF generation
+      const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+      clonedReport.style.position = 'absolute';
+      clonedReport.style.left = '-9999px';
+      clonedReport.style.top = '-9999px';
+      document.body.appendChild(clonedReport);
 
-      // Set all elements to be visible and wait for rendering
-      const elementsToShow = reportElement.querySelectorAll('*');
-      elementsToShow.forEach((element) => {
-        if (element instanceof HTMLElement) {
-          element.style.visibility = 'visible';
-          element.style.display = element.style.display === 'none' ? 'block' : element.style.display;
+      try {
+        const pdf = await generateFullReport({ formData, analysis });
+        const fileName = getReportFileName(formData.companyName);
+        pdf.save(fileName);
+
+        toast({
+          title: "Success",
+          description: "Report downloaded successfully",
+          duration: 1500,
+        });
+      } finally {
+        // Clean up
+        if (clonedReport.parentNode) {
+          clonedReport.parentNode.removeChild(clonedReport);
         }
-      });
-
-      // Wait for content to be fully rendered
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
-      
-      pdf.save(fileName);
-      
-      toast({
-        title: "Success",
-        description: "Report downloaded successfully",
-        duration: 1500,
-      });
+      }
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast({
@@ -65,12 +68,6 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
         variant: "destructive",
         duration: 2000,
       });
-    } finally {
-      // Restore the action buttons visibility
-      const actionsBar = document.querySelector('[data-report-actions]');
-      if (actionsBar instanceof HTMLElement) {
-        actionsBar.style.visibility = 'visible';
-      }
     }
   };
 

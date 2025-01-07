@@ -1,7 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createReportCanvas } from "./handlers/canvasHandler";
-import { hideActionButtons, restoreActionButtons } from './handlers/actionButtonsHandler';
 import { generateHeaderSection } from "./sections/HeaderSection";
 
 interface GenerateReportParams {
@@ -55,9 +54,6 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
 
       // Calculate position for current page
       const position = -(i * pageHeight);
-      
-      console.log(`[PdfPageHandler] Adding page ${i + 1} at position:`, position);
-
       pdf.addImage(
         canvas.toDataURL('image/png', 1.0),
         'PNG',
@@ -70,11 +66,10 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       );
     }
 
-    console.log('[ReportHandler] PDF created successfully with', pageCount, 'pages');
     return pdf;
   } finally {
     // Clean up the cloned element
-    if (clonedReport && clonedReport.parentNode) {
+    if (clonedReport.parentNode) {
       clonedReport.parentNode.removeChild(clonedReport);
     }
   }
