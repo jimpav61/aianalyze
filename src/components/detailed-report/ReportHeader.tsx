@@ -1,12 +1,47 @@
 import { DetailedFormData } from "@/types/analysis";
+import { Button } from "../ui/button";
+import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { generateFullReport, getReportFileName } from "@/utils/pdf/reportHandler";
 
 interface ReportHeaderProps {
   formData: DetailedFormData;
   onBookDemo?: () => void;
   industry?: string;
+  analysis?: any;
 }
 
-export const ReportHeader = ({ formData, onBookDemo, industry }: ReportHeaderProps) => {
+export const ReportHeader = ({ formData, onBookDemo, industry, analysis }: ReportHeaderProps) => {
+  const { toast } = useToast();
+  
+  const handleDownload = async () => {
+    try {
+      const reportElement = document.querySelector('[data-report-content="true"]');
+      if (!reportElement || !(reportElement instanceof HTMLElement)) {
+        throw new Error("Report element not found");
+      }
+
+      const pdf = await generateFullReport({ formData, analysis });
+      const fileName = getReportFileName(formData.companyName);
+      
+      pdf.save(fileName);
+      
+      toast({
+        title: "Success",
+        description: "Report downloaded successfully!",
+        duration: 1500,
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Error",
+        description: "Failed to download report. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
+  };
+
   return (
     <div className="flex justify-between items-start mb-8">
       <div>
@@ -15,14 +50,26 @@ export const ReportHeader = ({ formData, onBookDemo, industry }: ReportHeaderPro
           <p className="text-gray-600">Industry: {industry}</p>
         )}
       </div>
-      {onBookDemo && (
-        <button
-          onClick={onBookDemo}
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 ml-4"
+      <div className="flex items-center gap-4">
+        <Button
+          onClick={handleDownload}
+          variant="outline" 
+          size="sm"
+          className="bg-white hover:bg-gray-50 flex items-center gap-2 min-w-[160px]"
         >
-          Book Demo
-        </button>
-      )}
+          <Download className="h-4 w-4 text-[#f65228]" />
+          Download Report
+        </Button>
+        {onBookDemo && (
+          <Button
+            onClick={onBookDemo}
+            size="sm"
+            className="bg-[#f65228] hover:bg-[#d43d16] text-white min-w-[120px]"
+          >
+            Book Demo
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
