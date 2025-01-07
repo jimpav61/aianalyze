@@ -9,7 +9,8 @@ export const generateHeaderSection = (doc: HTMLElement) => {
   header.style.justifyContent = 'space-between';
   header.style.alignItems = 'center';
   
-  const logoUrl = '/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png';
+  // Use absolute URL for logo
+  const logoUrl = window.location.origin + '/lovable-uploads/23135d22-4ba2-4f66-a179-9bd803c29569.png';
   
   header.innerHTML = `
     <div style="display: flex; align-items: center; gap: 16px;">
@@ -28,6 +29,7 @@ export const generateHeaderSection = (doc: HTMLElement) => {
 
   // Preload the image
   const img = new Image();
+  img.crossOrigin = 'anonymous';
   img.src = logoUrl;
   
   // Insert at the beginning of the document

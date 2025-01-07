@@ -25,33 +25,60 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   clonedReport.style.left = '-9999px';
   clonedReport.style.width = '900px';
   clonedReport.style.backgroundColor = '#ffffff';
-  clonedReport.style.padding = '0';
+  clonedReport.style.padding = '40px';
   clonedReport.style.margin = '0';
   
   // Add the cloned element to the document
   document.body.appendChild(clonedReport);
 
   try {
+    console.log('[ReportHandler] Adding header section');
     // Add branding header before canvas creation
     generateHeaderSection(clonedReport);
 
-    // Wait for all images to load
+    // Pre-load all images
     const images = clonedReport.getElementsByTagName('img');
+    console.log('[ReportHandler] Loading images:', images.length);
+    
     await Promise.all(
       Array.from(images).map(img => 
-        img.complete ? Promise.resolve() : new Promise(resolve => {
-          img.onload = resolve;
-          img.onerror = resolve;
+        new Promise((resolve, reject) => {
+          if (img.complete) {
+            console.log('[ReportHandler] Image already loaded:', img.src);
+            resolve(null);
+            return;
+          }
+
+          img.onload = () => {
+            console.log('[ReportHandler] Image loaded successfully:', img.src);
+            resolve(null);
+          };
+          
+          img.onerror = (error) => {
+            console.error('[ReportHandler] Image failed to load:', img.src, error);
+            resolve(null); // Resolve anyway to not block the PDF generation
+          };
+
+          // Force reload the image
+          const currentSrc = img.src;
+          img.src = '';
+          img.src = currentSrc;
         })
       )
     );
 
     // Additional wait to ensure complete rendering
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
+    console.log('[ReportHandler] Creating canvas');
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(clonedReport);
     
+    console.log('[ReportHandler] Canvas created, dimensions:', {
+      width: canvas.width,
+      height: canvas.height
+    });
+
     // Create PDF document with A4 format
     const pdf = new jsPDF({
       orientation: 'portrait',
@@ -83,8 +110,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       // Calculate position for current page
       const position = -(i * pageHeight);
       pdf.addImage(
-        canvas.toDataURL('image/png', 1.0),
-        'PNG',
+        canvas.toDataURL('image/jpeg', 1.0),
+        'JPEG',
         0,
         position,
         imgWidth,
@@ -94,7 +121,11 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       );
     }
 
+    console.log('[ReportHandler] PDF generation completed successfully');
     return pdf;
+  } catch (error) {
+    console.error('[ReportHandler] Error generating PDF:', error);
+    throw error;
   } finally {
     // Clean up the cloned element
     if (clonedReport.parentNode) {
