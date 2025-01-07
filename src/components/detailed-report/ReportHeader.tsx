@@ -16,15 +16,23 @@ export const ReportHeader = ({ formData, onBookDemo, industry, analysis }: Repor
   
   const handleDownload = async () => {
     try {
+      toast({
+        title: "Generating PDF",
+        description: "Please wait while we prepare your report...",
+        duration: 3000,
+      });
+
       const reportElement = document.querySelector('[data-report-content="true"]');
       if (!reportElement || !(reportElement instanceof HTMLElement)) {
         throw new Error("Report element not found");
       }
 
-      // Clone the element to prevent layout shifts
+      // Create an invisible clone for PDF generation
       const clonedElement = reportElement.cloneNode(true) as HTMLElement;
-      clonedElement.style.position = 'absolute';
+      clonedElement.style.position = 'fixed';
+      clonedElement.style.top = '-9999px';
       clonedElement.style.left = '-9999px';
+      clonedElement.style.width = '900px';
       document.body.appendChild(clonedElement);
 
       const pdf = await generateFullReport({ formData, analysis });
