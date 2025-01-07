@@ -35,8 +35,19 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     // Add branding header before canvas creation
     generateHeaderSection(clonedReport);
 
-    // Wait for images to load
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait for all images to load
+    const images = clonedReport.getElementsByTagName('img');
+    await Promise.all(
+      Array.from(images).map(img => 
+        img.complete ? Promise.resolve() : new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        })
+      )
+    );
+
+    // Additional wait to ensure complete rendering
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(clonedReport);

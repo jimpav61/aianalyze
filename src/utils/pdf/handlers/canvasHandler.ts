@@ -23,7 +23,7 @@ export const createReportCanvas = async (reportElement: HTMLElement): Promise<HT
 
   try {
     // Prepare element for capture
-    reportElement.style.width = '900px';  // Fixed width for consistent rendering
+    reportElement.style.width = '900px';
     reportElement.style.padding = '40px';
     reportElement.style.backgroundColor = 'white';
     reportElement.style.position = 'relative';
@@ -38,14 +38,25 @@ export const createReportCanvas = async (reportElement: HTMLElement): Promise<HT
     hideActionButtons(reportElement);
     processAllElements(reportElement);
 
-    // Wait for rendering and fonts to load
+    // Wait for all images to load
+    const images = reportElement.getElementsByTagName('img');
+    await Promise.all(
+      Array.from(images).map(img => 
+        img.complete ? Promise.resolve() : new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve; // Handle failed loads
+        })
+      )
+    );
+
+    // Additional wait to ensure rendering
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Create canvas with high quality settings
     const canvas = await html2canvas(reportElement, {
       scale: 2,  // Higher scale for better quality
       useCORS: true,
-      logging: true,  // Enable logging for debugging
+      logging: true,
       backgroundColor: '#ffffff',
       width: 900,
       height: reportElement.scrollHeight,
