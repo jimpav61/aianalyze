@@ -23,6 +23,10 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   clonedReport.style.position = 'absolute';
   clonedReport.style.left = '-9999px';
   clonedReport.style.top = '-9999px';
+  
+  // Add branding header to the cloned report
+  generateHeaderSection(clonedReport);
+  
   document.body.appendChild(clonedReport);
 
   try {
