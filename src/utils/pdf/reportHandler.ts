@@ -17,18 +17,22 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     throw new Error("Report element not found");
   }
 
-  // Create a clone for PDF generation to prevent UI shifts
+  // Create a clone for PDF generation
   const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+  
+  // Ensure proper styling for PDF generation
   clonedReport.style.position = 'absolute';
   clonedReport.style.left = '-9999px';
-  clonedReport.style.top = '-9999px';
+  clonedReport.style.width = '900px'; // Fixed width for consistent PDF generation
+  clonedReport.style.backgroundColor = '#ffffff';
   
-  // Add branding header to the cloned report
-  generateHeaderSection(clonedReport);
-  
+  // Add the cloned element to the document
   document.body.appendChild(clonedReport);
 
   try {
+    // Add branding header
+    generateHeaderSection(clonedReport);
+
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(clonedReport);
     
@@ -45,6 +49,14 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const pageCount = Math.ceil(imgHeight / pageHeight);
+
+    console.log('[ReportHandler] Generating PDF with dimensions:', {
+      imgWidth,
+      imgHeight,
+      pageCount,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height
+    });
 
     // Add pages to document
     for (let i = 0; i < pageCount; i++) {
