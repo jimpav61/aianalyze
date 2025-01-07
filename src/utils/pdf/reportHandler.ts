@@ -1,8 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
-import { createPdfDocument } from "./config/pdfConfig";
 import { createReportCanvas } from "./handlers/canvasHandler";
-import { addPagesToDocument } from "./handlers/pdfPageHandler";
 import { hideActionButtons, restoreActionButtons } from './handlers/actionButtonsHandler';
 
 interface GenerateReportParams {
@@ -13,8 +11,8 @@ interface GenerateReportParams {
 export const generateFullReport = async ({ formData, analysis }: GenerateReportParams): Promise<jsPDF> => {
   console.log('[ReportHandler] Starting PDF generation with data:', { formData, analysis });
   
-  const reportElement = document.getElementById('detailed-report');
-  if (!reportElement) {
+  const reportElement = document.querySelector('[data-report-content="true"]');
+  if (!reportElement || !(reportElement instanceof HTMLElement)) {
     console.error("[ReportHandler] Report element not found");
     throw new Error("Report element not found");
   }
