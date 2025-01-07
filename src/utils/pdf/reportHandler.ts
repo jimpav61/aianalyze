@@ -1,7 +1,6 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createReportCanvas } from "./handlers/canvasHandler";
-import { generateHeaderSection } from "./sections/HeaderSection";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -23,16 +22,13 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   // Ensure proper styling for PDF generation
   clonedReport.style.position = 'absolute';
   clonedReport.style.left = '-9999px';
-  clonedReport.style.width = '900px'; // Fixed width for consistent PDF generation
+  clonedReport.style.width = '900px';
   clonedReport.style.backgroundColor = '#ffffff';
   
   // Add the cloned element to the document
   document.body.appendChild(clonedReport);
 
   try {
-    // Add branding header
-    generateHeaderSection(clonedReport);
-
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(clonedReport);
     
@@ -88,5 +84,6 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
 };
 
 export const getReportFileName = (companyName: string): string => {
-  return `AI_Analysis_Report_${companyName.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+  const sanitizedName = companyName.replace(/[^a-zA-Z0-9]/g, '_');
+  return `AI_Analysis_Report_${sanitizedName}_${new Date().toISOString().split('T')[0]}.pdf`;
 };

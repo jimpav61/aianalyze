@@ -36,8 +36,11 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
         hasAnalysis: !!analysis
       });
 
+      // Wait for any pending UI updates
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const pdf = await generateFullReport({ formData, analysis });
-      const fileName = getReportFileName(formData.companyName);
+      const fileName = getReportFileName(formData.companyName || 'report');
       
       console.log('[DownloadReportButton] PDF generated successfully, saving as:', fileName);
       
