@@ -22,8 +22,8 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
   
   const handleDownload = async () => {
     try {
-      const reportElement = document.getElementById('detailed-report');
-      if (!reportElement) {
+      const reportElement = document.querySelector('[data-report-content="true"]');
+      if (!reportElement || !(reportElement instanceof HTMLElement)) {
         console.error("Report element not found");
         throw new Error("Report element not found");
       }
@@ -49,33 +49,24 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
     }
   };
 
-  const analyses = analysis.allAnalyses || [{
-    department: analysis.department,
-    function: analysis.bot_function,
-    savings: analysis.savings.toString(),
-    profit_increase: analysis.profit_increase.toString(),
-    explanation: analysis.explanation,
-    marketingStrategy: analysis.marketing_strategy
-  }];
-
   return (
     <div data-report-content="true" className="space-y-8 print:space-y-6">
-      <div className="flex justify-between items-center mb-6">
-        <ReportHeader formData={formData} onBookDemo={onBookDemo} />
-        <Button
-          onClick={handleDownload}
-          variant="outline"
-          size="sm"
-          className="bg-white hover:bg-gray-50 flex items-center gap-2"
-        >
-          <Download className="h-4 w-4 text-[#f65228]" />
-          Download Report
-        </Button>
-      </div>
-      <CompanyInformation data={formData} />
+      <ReportHeader 
+        formData={formData} 
+        onBookDemo={onBookDemo} 
+        industry={analysis.industry}
+      />
+      <CompanyInformation data={formData} industry={analysis.industry} />
       <CurrentOperations data={formData} />
       <AnalysisResults 
-        analyses={analyses}
+        analyses={analysis.allAnalyses || [{
+          department: analysis.department,
+          function: analysis.bot_function,
+          savings: analysis.savings.toString(),
+          profit_increase: analysis.profit_increase.toString(),
+          explanation: analysis.explanation,
+          marketingStrategy: analysis.marketing_strategy
+        }]}
         revenue={formData.revenue || '0'}
       />
       <ImplementationPlan data={{
@@ -85,6 +76,10 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         additionalInfo: formData.additionalInfo
       }} />
       <ReportFooter />
+      <ReportActions 
+        formData={formData}
+        analysis={analysis}
+      />
     </div>
   );
 };

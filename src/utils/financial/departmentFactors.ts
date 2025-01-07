@@ -6,17 +6,17 @@ interface DepartmentFactors {
 
 export const getBaseFactors = (department: string): DepartmentFactors => {
   const factors: { [key: string]: DepartmentFactors } = {
-    'Customer Service': { savingsPercent: 25, profitPercent: 12 },
-    'Marketing': { savingsPercent: 20, profitPercent: 15 },
-    'Sales': { savingsPercent: 30, profitPercent: 20 },
-    'Operations': { savingsPercent: 35, profitPercent: 18 },
-    'Human Resources': { savingsPercent: 22, profitPercent: 10 },
-    'Finance': { savingsPercent: 18, profitPercent: 12 },
-    'IT': { savingsPercent: 40, profitPercent: 25 },
-    'Legal': { savingsPercent: 15, profitPercent: 8 },
-    'Manufacturing': { savingsPercent: 28, profitPercent: 16 },
-    'Supply Chain': { savingsPercent: 32, profitPercent: 18 },
-    'Research & Development': { savingsPercent: 20, profitPercent: 15 }
+    'Customer Service': { savingsPercent: 15, profitPercent: 8 },
+    'Marketing': { savingsPercent: 12, profitPercent: 10 },
+    'Sales': { savingsPercent: 18, profitPercent: 12 },
+    'Operations': { savingsPercent: 20, profitPercent: 15 },
+    'Human Resources': { savingsPercent: 12, profitPercent: 6 },
+    'Finance': { savingsPercent: 10, profitPercent: 8 },
+    'IT': { savingsPercent: 25, profitPercent: 18 },
+    'Legal': { savingsPercent: 8, profitPercent: 5 },
+    'Manufacturing': { savingsPercent: 15, profitPercent: 10 },
+    'Supply Chain': { savingsPercent: 18, profitPercent: 12 },
+    'Research & Development': { savingsPercent: 12, profitPercent: 8 }
   };
-  return factors[department] || { savingsPercent: 20, profitPercent: 10 };
+  return factors[department] || { savingsPercent: 12, profitPercent: 8 };
 };
