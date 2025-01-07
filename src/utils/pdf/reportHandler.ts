@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createReportCanvas } from "./handlers/canvasHandler";
 import { hideActionButtons, restoreActionButtons } from './handlers/actionButtonsHandler';
+import { generateHeaderSection } from "./sections/HeaderSection";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -17,12 +18,16 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     throw new Error("Report element not found");
   }
 
-  // Hide action buttons before capture
-  hideActionButtons(document);
+  // Create a clone for PDF generation to prevent UI shifts
+  const clonedReport = reportElement.cloneNode(true) as HTMLElement;
+  clonedReport.style.position = 'absolute';
+  clonedReport.style.left = '-9999px';
+  clonedReport.style.top = '-9999px';
+  document.body.appendChild(clonedReport);
 
   try {
     // Create canvas with proper formatting
-    const canvas = await createReportCanvas(reportElement);
+    const canvas = await createReportCanvas(clonedReport);
     
     // Create PDF document with A4 format
     const pdf = new jsPDF({
@@ -64,8 +69,10 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     console.log('[ReportHandler] PDF created successfully with', pageCount, 'pages');
     return pdf;
   } finally {
-    // Always restore action buttons visibility
-    restoreActionButtons(document);
+    // Clean up the cloned element
+    if (clonedReport && clonedReport.parentNode) {
+      clonedReport.parentNode.removeChild(clonedReport);
+    }
   }
 };
 

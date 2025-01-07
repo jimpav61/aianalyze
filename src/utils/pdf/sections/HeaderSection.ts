@@ -8,11 +8,13 @@ export const generateHeaderSection = (doc: HTMLDivElement) => {
           alt="ChatSites Logo" 
           style="height: 40px; width: auto;"
         />
-        <span style="font-size: 24px; font-weight: bold; color: #9b87f5;">ChatSites Analysis Report</span>
-      </div>
-      <div style="text-align: right;">
-        <p style="margin: 0; font-size: 14px; color: #666;">www.chatsites.ai</p>
-        <p style="margin: 4px 0 0; font-size: 14px; color: #666;">Contact: support@chatsites.ai</p>
+        <div>
+          <span style="font-size: 24px; font-weight: bold; color: #9b87f5;">ChatSites Analysis Report</span>
+          <div style="margin-top: 4px;">
+            <p style="margin: 0; font-size: 14px; color: #666;">www.chatsites.ai</p>
+            <p style="margin: 2px 0 0; font-size: 14px; color: #666;">Contact: support@chatsites.ai</p>
+          </div>
+        </div>
       </div>
     </div>
   `;
