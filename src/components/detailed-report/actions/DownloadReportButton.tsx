@@ -37,7 +37,7 @@ export const DownloadReportButton = ({ onClick, formData, analysis }: DownloadRe
       });
 
       // Wait for any pending UI updates
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const pdf = await generateFullReport({ formData, analysis });
       const fileName = getReportFileName(formData.companyName || 'report');

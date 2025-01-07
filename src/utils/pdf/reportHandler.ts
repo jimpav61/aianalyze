@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createReportCanvas } from "./handlers/canvasHandler";
+import { generateHeaderSection } from "./sections/HeaderSection";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
@@ -24,11 +25,19 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   clonedReport.style.left = '-9999px';
   clonedReport.style.width = '900px';
   clonedReport.style.backgroundColor = '#ffffff';
+  clonedReport.style.padding = '0';
+  clonedReport.style.margin = '0';
   
   // Add the cloned element to the document
   document.body.appendChild(clonedReport);
 
   try {
+    // Add branding header before canvas creation
+    generateHeaderSection(clonedReport);
+
+    // Wait for images to load
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     // Create canvas with proper formatting
     const canvas = await createReportCanvas(clonedReport);
     
