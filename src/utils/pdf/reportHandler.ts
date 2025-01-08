@@ -36,13 +36,13 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     // Add branding header before canvas creation
     generateHeaderSection(clonedReport);
 
-    // Pre-load all images
+    // Pre-load all images with proper error handling
     const images = clonedReport.getElementsByTagName('img');
     console.log('[ReportHandler] Loading images:', images.length);
     
     await Promise.all(
       Array.from(images).map(img => 
-        new Promise((resolve, reject) => {
+        new Promise((resolve) => {
           if (img.complete) {
             console.log('[ReportHandler] Image already loaded:', img.src);
             resolve(null);
@@ -68,10 +68,10 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     );
 
     // Additional wait to ensure complete rendering
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('[ReportHandler] Creating canvas');
-    // Create canvas with proper formatting
+    // Create canvas with proper formatting and higher quality
     const canvas = await createReportCanvas(clonedReport);
     
     console.log('[ReportHandler] Canvas created, dimensions:', {
@@ -101,7 +101,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       canvasHeight: canvas.height
     });
 
-    // Add pages to document
+    // Add pages to document with high quality settings
     for (let i = 0; i < pageCount; i++) {
       if (i > 0) {
         pdf.addPage();
