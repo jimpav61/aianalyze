@@ -24,14 +24,8 @@ export const generateHeaderSection = (doc: HTMLElement) => {
         <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 16px;">Generated on ${new Date().toLocaleDateString()}</p>
       </div>
     </div>
-    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-      <p style="margin: 0; color: #4b5563; font-size: 14px;">Contact Information:</p>
-      <p style="margin: 4px 0; color: #6b7280; font-size: 14px;">Email: contact@chatsites.ai</p>
-      <p style="margin: 4px 0; color: #6b7280; font-size: 14px;">Phone: (800) 123-4567</p>
-      <p style="margin: 4px 0; color: #6b7280; font-size: 14px;">Website: www.chatsites.ai</p>
-    </div>
   `;
-
+  
   // Preload the image
   const img = new Image();
   img.src = logoUrl;
