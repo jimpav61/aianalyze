@@ -49,10 +49,10 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
       const position = -i * pdfHeight;
       pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pageHeight);
 
-      // Add padding between pages to prevent content from being cut off
+      // Add significant padding between pages to prevent content from being cut off
       if (i < pages - 1) {
         pdf.setFillColor(255, 255, 255);
-        pdf.rect(0, pdfHeight - 20, pdfWidth, 40, 'F');
+        pdf.rect(0, pdfHeight - 30, pdfWidth, 60, 'F');
       }
     }
 
