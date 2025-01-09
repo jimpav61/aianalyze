@@ -46,22 +46,22 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         <Button
           data-pdf-cta="true"
           onClick={() => window.location.href = 'tel:+14808620288'}
-          className="bg-[#f65228] hover:bg-[#d43d16] text-white flex items-center gap-2 px-6 py-3 print:bg-[#f65228] print:inline-flex print:mx-auto"
+          className="bg-[#f65228] hover:bg-[#d43d16] text-white flex items-center gap-2 px-6 py-3 print:bg-[#f65228] print:inline-flex print:mx-auto pdf-cta-button"
           style={{
-            display: 'flex !important',
-            alignItems: 'center !important',
-            justifyContent: 'center !important',
-            backgroundColor: '#f65228 !important',
-            color: '#ffffff !important',
-            padding: '12px 24px !important',
-            borderRadius: '4px !important',
-            margin: '20px auto !important',
-            width: 'fit-content !important',
-            fontWeight: 'bold !important',
-            fontSize: '16px !important',
-            opacity: '1 !important',
-            visibility: 'visible !important',
-            position: 'relative !important'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#f65228',
+            color: '#ffffff',
+            padding: '12px 24px',
+            borderRadius: '4px',
+            margin: '20px auto',
+            width: 'fit-content',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            opacity: 1,
+            visibility: 'visible' as const,
+            position: 'relative' as const
           }}
         >
           <Phone className="h-4 w-4" />
