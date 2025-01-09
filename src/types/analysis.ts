@@ -26,5 +26,12 @@ export interface AnalysisData {
   marketing_strategy: string;
 }
 
+export interface ImplementationData {
+  objectives?: string;
+  timeline?: string;
+  budget?: string;
+  additionalInfo?: string;
+}
+
 // New type for calendar-specific form data
 export type CalendarFormData = Partial<DetailedFormData>;
