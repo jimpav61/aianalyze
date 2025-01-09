@@ -38,6 +38,12 @@ export const createPDF = async (
     if (i > 0) pdf.addPage();
     const position = -i * pdfHeight;
     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pageHeight);
+    
+    // Add padding between pages
+    if (i < pages - 1) {
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(0, pdfHeight - 15, pdfWidth, 30, 'F');
+    }
   }
 
   return pdf;
