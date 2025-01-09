@@ -43,15 +43,15 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
       }} />
       <div className="print:break-inside-avoid w-full print:mt-8">
         <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4">
-          <div className="w-full flex flex-col items-center">
+          <div className="w-full flex flex-col items-center justify-center">
             <a 
               href="tel:+14808620288"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:no-underline print:w-[200px] print:mx-auto print:text-center print:block print:py-3"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:no-underline print:w-[200px] print:mx-auto print:text-center print:block print:py-3 print:!visible print:!block"
             >
               <Phone className="w-5 h-5 print:hidden" />
-              <span className="print:block print:text-center print:text-base">+1 (480) 862-0288</span>
+              <span className="print:block print:text-center print:text-base print:!visible">+1 (480) 862-0288</span>
             </a>
-            <p className="text-sm text-gray-600 text-center mt-2">
+            <p className="text-sm text-gray-600 text-center mt-2 print:!visible print:!block">
               Talk to Our AI Implementation Expert and Test the Magic
             </p>
           </div>
