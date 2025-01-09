@@ -5,16 +5,20 @@ export const processElement = (elem: HTMLElement) => {
   elem.style.opacity = '1';
   elem.style.position = 'relative';
   elem.style.transform = 'none';
+  elem.style.overflow = 'visible';
+  elem.style.wordBreak = 'break-word';
+  elem.style.whiteSpace = 'normal';
 
   // Handle text formatting
   if (elem.tagName === 'P' || elem.tagName === 'DIV') {
     elem.style.marginBottom = '12px';
     elem.style.lineHeight = '1.6';
-    elem.style.whiteSpace = 'pre-line';
+    elem.style.maxWidth = '100%';
+    elem.style.wordWrap = 'break-word';
     
-    // Convert <br> tags to actual line breaks
+    // Convert <br> tags to proper spacing
     if (elem.innerHTML.includes('<br>')) {
-      elem.innerHTML = elem.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+      elem.innerHTML = elem.innerHTML.replace(/<br\s*\/?>/gi, ' ');
     }
   }
 
@@ -23,6 +27,7 @@ export const processElement = (elem: HTMLElement) => {
     elem.style.marginTop = '24px';
     elem.style.marginBottom = '16px';
     elem.style.lineHeight = '1.4';
+    elem.style.wordBreak = 'break-word';
   }
 
   // Handle lists
@@ -34,6 +39,7 @@ export const processElement = (elem: HTMLElement) => {
   if (elem.tagName === 'LI') {
     elem.style.marginBottom = '8px';
     elem.style.lineHeight = '1.5';
+    elem.style.wordBreak = 'break-word';
   }
 };
 
