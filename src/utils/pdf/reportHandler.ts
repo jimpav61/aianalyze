@@ -27,6 +27,29 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   clonedReport.style.backgroundColor = '#ffffff';
   clonedReport.style.padding = '40px';
   clonedReport.style.margin = '0';
+
+  // Fix line breaks and ensure CTA button visibility
+  const textElements = clonedReport.querySelectorAll('p, div, span');
+  textElements.forEach(element => {
+    if (element instanceof HTMLElement) {
+      element.style.whiteSpace = 'normal';
+      element.style.lineHeight = '1.5';
+    }
+  });
+
+  // Ensure CTA button is visible and styled correctly
+  const ctaButton = clonedReport.querySelector('[data-pdf-cta="true"]');
+  if (ctaButton instanceof HTMLElement) {
+    ctaButton.style.display = 'flex';
+    ctaButton.style.alignItems = 'center';
+    ctaButton.style.justifyContent = 'center';
+    ctaButton.style.backgroundColor = '#f65228';
+    ctaButton.style.color = '#ffffff';
+    ctaButton.style.padding = '12px 24px';
+    ctaButton.style.borderRadius = '4px';
+    ctaButton.style.margin = '20px auto';
+    ctaButton.style.width = 'fit-content';
+  }
   
   // Add the cloned element to the document
   document.body.appendChild(clonedReport);
@@ -57,26 +80,46 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
             console.error('[ReportHandler] Image failed to load:', img.src, error);
             resolve(null);
           };
-
-          const currentSrc = img.src;
-          img.src = '';
-          img.src = currentSrc;
         })
       )
     );
 
-    // Additional wait to ensure complete rendering
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    console.log('[ReportHandler] Creating canvas');
-    const canvas = await createReportCanvas(clonedReport);
+    // Create canvas with proper settings for PDF
+    const canvas = await html2canvas(clonedReport, {
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      backgroundColor: '#ffffff',
+      width: 900,
+      height: clonedReport.scrollHeight,
+      windowWidth: 900,
+      onclone: (_, element) => {
+        // Ensure all elements are visible
+        element.style.height = 'auto';
+        element.style.overflow = 'visible';
+        
+        // Force CTA button visibility
+        const pdfCta = element.querySelector('[data-pdf-cta="true"]');
+        if (pdfCta instanceof HTMLElement) {
+          pdfCta.style.display = 'flex';
+          pdfCta.style.alignItems = 'center';
+          pdfCta.style.justifyContent = 'center';
+          pdfCta.style.backgroundColor = '#f65228';
+          pdfCta.style.color = '#ffffff';
+          pdfCta.style.padding = '12px 24px';
+          pdfCta.style.borderRadius = '4px';
+          pdfCta.style.margin = '20px auto';
+          pdfCta.style.width = 'fit-content';
+        }
+      }
+    });
     
     console.log('[ReportHandler] Canvas created, dimensions:', {
       width: canvas.width,
       height: canvas.height
     });
 
-    // Create PDF with better quality and formatting settings
+    // Create PDF with better quality settings
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -85,7 +128,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       hotfixes: ['px_scaling']
     });
 
-    // Calculate dimensions with better page break handling
+    // Calculate dimensions
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -99,7 +142,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       canvasHeight: canvas.height
     });
 
-    // Add pages with improved quality and positioning
+    // Add pages with improved quality
     for (let i = 0; i < pageCount; i++) {
       if (i > 0) {
         pdf.addPage();
