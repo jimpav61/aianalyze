@@ -33,10 +33,9 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
 
   try {
     console.log('[ReportHandler] Adding header section');
-    // Add branding header before canvas creation
     generateHeaderSection(clonedReport);
 
-    // Pre-load all images with proper error handling
+    // Pre-load all images
     const images = clonedReport.getElementsByTagName('img');
     console.log('[ReportHandler] Loading images:', images.length);
     
@@ -56,10 +55,9 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
           
           img.onerror = (error) => {
             console.error('[ReportHandler] Image failed to load:', img.src, error);
-            resolve(null); // Resolve anyway to not block the PDF generation
+            resolve(null);
           };
 
-          // Force reload the image
           const currentSrc = img.src;
           img.src = '';
           img.src = currentSrc;
@@ -71,7 +69,6 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     console.log('[ReportHandler] Creating canvas');
-    // Create canvas with proper formatting and higher quality
     const canvas = await createReportCanvas(clonedReport);
     
     console.log('[ReportHandler] Canvas created, dimensions:', {
@@ -79,15 +76,16 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       height: canvas.height
     });
 
-    // Create PDF document with A4 format
+    // Create PDF with better quality and formatting settings
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4',
-      compress: true
+      compress: true,
+      hotfixes: ['px_scaling']
     });
 
-    // Get dimensions
+    // Calculate dimensions with better page break handling
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -101,13 +99,12 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       canvasHeight: canvas.height
     });
 
-    // Add pages to document with high quality settings
+    // Add pages with improved quality and positioning
     for (let i = 0; i < pageCount; i++) {
       if (i > 0) {
         pdf.addPage();
       }
 
-      // Calculate position for current page
       const position = -(i * pageHeight);
       pdf.addImage(
         canvas.toDataURL('image/jpeg', 1.0),
@@ -119,6 +116,12 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
         '',
         'FAST'
       );
+
+      // Add padding between pages
+      if (i < pageCount - 1) {
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(0, pageHeight - 10, imgWidth, 20, 'F');
+      }
     }
 
     console.log('[ReportHandler] PDF generation completed successfully');
@@ -127,7 +130,6 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     console.error('[ReportHandler] Error generating PDF:', error);
     throw error;
   } finally {
-    // Clean up the cloned element
     if (clonedReport.parentNode) {
       clonedReport.parentNode.removeChild(clonedReport);
     }
