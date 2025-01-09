@@ -14,26 +14,6 @@ interface ReportContentProps {
 }
 
 export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
-  const handlePhoneClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // For PDF context, we need to handle the click differently
-    if (window.location.protocol === 'file:' || window.location.protocol === 'blob:') {
-      e.preventDefault();
-      const phoneNumber = '+14808620288';
-      // Try multiple approaches to initiate the call
-      try {
-        window.location.href = `tel:${phoneNumber}`;
-      } catch (error) {
-        // Fallback for PDF viewers that don't support tel: protocol
-        console.log('Attempting to call:', phoneNumber);
-        // Create a visible link as fallback
-        const link = document.createElement('a');
-        link.href = `tel:${phoneNumber}`;
-        link.click();
-      }
-    }
-    // In web context, let the default tel: behavior work
-  };
-
   return (
     <div data-report-content="true" className="space-y-8 print:space-y-6 overflow-visible">
       <ReportHeader 
@@ -67,7 +47,6 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
             <a 
               href="tel:+14808620288"
               className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:no-underline print:w-[200px] print:mx-auto print:text-center"
-              onClick={handlePhoneClick}
             >
               <Phone className="w-5 h-5 print:hidden" />
               <span>+1 (480) 862-0288</span>
