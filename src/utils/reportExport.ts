@@ -11,7 +11,19 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
         .map(img => img.complete ? Promise.resolve() : new Promise(resolve => img.onload = resolve))
     );
 
-    const canvas = await html2canvas(reportElement, {
+    // Clone the element to modify it for PDF generation
+    const clonedElement = reportElement.cloneNode(true) as HTMLElement;
+    
+    // Ensure all text content is properly formatted
+    const textElements = clonedElement.querySelectorAll('p, div, span');
+    textElements.forEach(element => {
+      if (element instanceof HTMLElement) {
+        element.style.whiteSpace = 'normal';
+        element.style.lineHeight = '1.5';
+      }
+    });
+
+    const canvas = await html2canvas(clonedElement, {
       scale: 2,
       useCORS: true,
       logging: false,
@@ -22,6 +34,18 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
         // Ensure all elements are visible for capture
         element.style.height = 'auto';
         element.style.overflow = 'visible';
+        
+        // Force CTA button to be visible in PDF
+        const ctaButton = element.querySelector('[data-pdf-cta]');
+        if (ctaButton instanceof HTMLElement) {
+          ctaButton.style.backgroundColor = '#f65228';
+          ctaButton.style.color = '#ffffff';
+          ctaButton.style.display = 'flex';
+          ctaButton.style.alignItems = 'center';
+          ctaButton.style.justifyContent = 'center';
+          ctaButton.style.padding = '12px 24px';
+          ctaButton.style.borderRadius = '4px';
+        }
       }
     });
     
@@ -37,19 +61,16 @@ export const exportReportAsPDF = async (reportElement: HTMLElement, fileName: st
     const imgWidth = canvas.width;
     const imgHeight = canvas.height;
     
-    // Calculate the number of pages needed
     const ratio = imgHeight / imgWidth;
     const pageHeight = (pdfWidth * ratio);
     const pages = Math.ceil(pageHeight / pdfHeight);
     
-    // Add pages and split content
     for (let i = 0; i < pages; i++) {
       if (i > 0) pdf.addPage();
       
       const position = -i * pdfHeight;
       pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pageHeight);
 
-      // Add significant padding between pages to prevent content from being cut off
       if (i < pages - 1) {
         pdf.setFillColor(255, 255, 255);
         pdf.rect(0, pdfHeight - 30, pdfWidth, 60, 'F');
