@@ -33,26 +33,32 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   const textElements = clonedReport.querySelectorAll('p, div, span');
   textElements.forEach(element => {
     if (element instanceof HTMLElement) {
-      element.style.whiteSpace = 'normal';
-      element.style.lineHeight = '1.5';
+      element.style.whiteSpace = 'pre-wrap'; // Changed from 'normal' to 'pre-wrap'
+      element.style.lineHeight = '1.6';
       element.style.wordBreak = 'break-word';
+      element.style.maxWidth = '100%';
+      element.style.overflow = 'hidden';
     }
   });
 
   // Ensure CTA button is visible and styled correctly
   const ctaButton = clonedReport.querySelector('[data-pdf-cta="true"]');
   if (ctaButton instanceof HTMLElement) {
-    ctaButton.style.display = 'flex';
-    ctaButton.style.alignItems = 'center';
-    ctaButton.style.justifyContent = 'center';
-    ctaButton.style.backgroundColor = '#f65228';
-    ctaButton.style.color = '#ffffff';
-    ctaButton.style.padding = '12px 24px';
-    ctaButton.style.borderRadius = '4px';
-    ctaButton.style.margin = '20px auto';
-    ctaButton.style.width = 'fit-content';
-    ctaButton.style.fontWeight = 'bold';
-    ctaButton.style.fontSize = '16px';
+    console.log('[ReportHandler] Styling CTA button for PDF');
+    ctaButton.style.display = 'flex !important';
+    ctaButton.style.alignItems = 'center !important';
+    ctaButton.style.justifyContent = 'center !important';
+    ctaButton.style.backgroundColor = '#f65228 !important';
+    ctaButton.style.color = '#ffffff !important';
+    ctaButton.style.padding = '12px 24px !important';
+    ctaButton.style.borderRadius = '4px !important';
+    ctaButton.style.margin = '20px auto !important';
+    ctaButton.style.width = 'fit-content !important';
+    ctaButton.style.fontWeight = 'bold !important';
+    ctaButton.style.fontSize = '16px !important';
+    ctaButton.style.opacity = '1 !important';
+    ctaButton.style.visibility = 'visible !important';
+    ctaButton.style.position = 'relative !important';
   }
   
   // Add the cloned element to the document
@@ -98,24 +104,31 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       height: clonedReport.scrollHeight,
       windowWidth: 900,
       onclone: (_, element) => {
+        console.log('[ReportHandler] Cloning element for canvas generation');
         // Ensure all elements are visible
         element.style.height = 'auto';
         element.style.overflow = 'visible';
         
-        // Force CTA button visibility
+        // Force CTA button visibility with !important
         const pdfCta = element.querySelector('[data-pdf-cta="true"]');
         if (pdfCta instanceof HTMLElement) {
-          pdfCta.style.display = 'flex';
-          pdfCta.style.alignItems = 'center';
-          pdfCta.style.justifyContent = 'center';
-          pdfCta.style.backgroundColor = '#f65228';
-          pdfCta.style.color = '#ffffff';
-          pdfCta.style.padding = '12px 24px';
-          pdfCta.style.borderRadius = '4px';
-          pdfCta.style.margin = '20px auto';
-          pdfCta.style.width = 'fit-content';
-          pdfCta.style.fontWeight = 'bold';
-          pdfCta.style.fontSize = '16px';
+          console.log('[ReportHandler] Applying final CTA button styles');
+          pdfCta.style.cssText = `
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background-color: #f65228 !important;
+            color: #ffffff !important;
+            padding: 12px 24px !important;
+            border-radius: 4px !important;
+            margin: 20px auto !important;
+            width: fit-content !important;
+            font-weight: bold !important;
+            font-size: 16px !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+          `;
         }
       }
     });
