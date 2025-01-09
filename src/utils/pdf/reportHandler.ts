@@ -35,6 +35,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     if (element instanceof HTMLElement) {
       element.style.whiteSpace = 'normal';
       element.style.lineHeight = '1.5';
+      element.style.wordBreak = 'break-word';
     }
   });
 
@@ -50,6 +51,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     ctaButton.style.borderRadius = '4px';
     ctaButton.style.margin = '20px auto';
     ctaButton.style.width = 'fit-content';
+    ctaButton.style.fontWeight = 'bold';
+    ctaButton.style.fontSize = '16px';
   }
   
   // Add the cloned element to the document
@@ -111,6 +114,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
           pdfCta.style.borderRadius = '4px';
           pdfCta.style.margin = '20px auto';
           pdfCta.style.width = 'fit-content';
+          pdfCta.style.fontWeight = 'bold';
+          pdfCta.style.fontSize = '16px';
         }
       }
     });
