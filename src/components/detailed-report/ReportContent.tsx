@@ -41,25 +41,26 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget || '',
         additionalInfo: formData.additionalInfo
       }} />
-      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4 print:mb-8">
-        <div className="print:break-inside-avoid-page w-full flex flex-col items-center">
-          <a 
-            href="tel:+14808620288"
-            className="flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:block print:w-[200px] print:mx-auto print:text-center print:bg-[#f65228] print:text-white"
-            onClick={(e) => {
-              if (window.location.protocol === 'file:') {
-                e.preventDefault();
-                const phoneNumber = '+14808620288';
-                window.location.href = `tel:${phoneNumber}`;
-              }
-            }}
-          >
-            <Phone className="w-5 h-5 print:hidden" />
-            <span>+1 (480) 862-0288</span>
-          </a>
-          <p className="text-sm text-gray-600 text-center print:mt-2">
-            Talk to Our AI Implementation Expert and Test the Magic
-          </p>
+      <div className="print:break-inside-avoid-page w-full print:mt-12">
+        <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4">
+          <div className="w-full flex flex-col items-center">
+            <a 
+              href="tel:+14808620288"
+              className="flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:w-[200px] print:mx-auto print:text-center"
+              onClick={(e) => {
+                if (window.location.protocol === 'file:') {
+                  e.preventDefault();
+                  window.location.href = 'tel:+14808620288';
+                }
+              }}
+            >
+              <Phone className="w-5 h-5 print:hidden" />
+              <span>+1 (480) 862-0288</span>
+            </a>
+            <p className="text-sm text-gray-600 text-center mt-2">
+              Talk to Our AI Implementation Expert and Test the Magic
+            </p>
+          </div>
         </div>
       </div>
       <ReportFooter />
