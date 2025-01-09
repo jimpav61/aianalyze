@@ -48,6 +48,7 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
               href="tel:+14808620288"
               className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:no-underline print:w-[200px] print:mx-auto print:text-center"
               onClick={(e) => {
+                // Only prevent default and handle click if we're in a PDF context
                 if (window.location.protocol === 'file:') {
                   e.preventDefault();
                   window.location.href = 'tel:+14808620288';
