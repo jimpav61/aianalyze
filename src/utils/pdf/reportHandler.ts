@@ -1,7 +1,5 @@
 import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
-import { createReportCanvas } from "./handlers/canvasHandler";
-import { generateHeaderSection } from "./sections/HeaderSection";
 import html2canvas from 'html2canvas';
 
 interface GenerateReportParams {
@@ -21,6 +19,14 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   // Create a clone for PDF generation
   const clonedReport = reportElement.cloneNode(true) as HTMLElement;
   
+  // Hide screen-only elements in the clone
+  const screenOnlyElements = clonedReport.querySelectorAll('.screen-only');
+  screenOnlyElements.forEach(element => {
+    if (element instanceof HTMLElement) {
+      element.style.display = 'none';
+    }
+  });
+  
   // Ensure proper styling for PDF generation
   clonedReport.style.position = 'absolute';
   clonedReport.style.left = '-9999px';
@@ -28,46 +34,11 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
   clonedReport.style.backgroundColor = '#ffffff';
   clonedReport.style.padding = '40px';
   clonedReport.style.margin = '0';
-
-  // Fix line breaks and ensure CTA button visibility
-  const textElements = clonedReport.querySelectorAll('p, div, span');
-  textElements.forEach(element => {
-    if (element instanceof HTMLElement) {
-      element.style.whiteSpace = 'pre-wrap'; // Changed from 'normal' to 'pre-wrap'
-      element.style.lineHeight = '1.6';
-      element.style.wordBreak = 'break-word';
-      element.style.maxWidth = '100%';
-      element.style.overflow = 'hidden';
-    }
-  });
-
-  // Ensure CTA button is visible and styled correctly
-  const ctaButton = clonedReport.querySelector('[data-pdf-cta="true"]');
-  if (ctaButton instanceof HTMLElement) {
-    console.log('[ReportHandler] Styling CTA button for PDF');
-    ctaButton.style.display = 'flex !important';
-    ctaButton.style.alignItems = 'center !important';
-    ctaButton.style.justifyContent = 'center !important';
-    ctaButton.style.backgroundColor = '#f65228 !important';
-    ctaButton.style.color = '#ffffff !important';
-    ctaButton.style.padding = '12px 24px !important';
-    ctaButton.style.borderRadius = '4px !important';
-    ctaButton.style.margin = '20px auto !important';
-    ctaButton.style.width = 'fit-content !important';
-    ctaButton.style.fontWeight = 'bold !important';
-    ctaButton.style.fontSize = '16px !important';
-    ctaButton.style.opacity = '1 !important';
-    ctaButton.style.visibility = 'visible !important';
-    ctaButton.style.position = 'relative !important';
-  }
   
-  // Add the cloned element to the document
+  // Add the cloned element to the document temporarily
   document.body.appendChild(clonedReport);
 
   try {
-    console.log('[ReportHandler] Adding header section');
-    generateHeaderSection(clonedReport);
-
     // Pre-load all images
     const images = clonedReport.getElementsByTagName('img');
     console.log('[ReportHandler] Loading images:', images.length);
@@ -105,31 +76,8 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
       windowWidth: 900,
       onclone: (_, element) => {
         console.log('[ReportHandler] Cloning element for canvas generation');
-        // Ensure all elements are visible
         element.style.height = 'auto';
         element.style.overflow = 'visible';
-        
-        // Force CTA button visibility with !important
-        const pdfCta = element.querySelector('[data-pdf-cta="true"]');
-        if (pdfCta instanceof HTMLElement) {
-          console.log('[ReportHandler] Applying final CTA button styles');
-          pdfCta.style.cssText = `
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background-color: #f65228 !important;
-            color: #ffffff !important;
-            padding: 12px 24px !important;
-            border-radius: 4px !important;
-            margin: 20px auto !important;
-            width: fit-content !important;
-            font-weight: bold !important;
-            font-size: 16px !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-            position: relative !important;
-          `;
-        }
       }
     });
     
@@ -192,6 +140,7 @@ export const generateFullReport = async ({ formData, analysis }: GenerateReportP
     console.error('[ReportHandler] Error generating PDF:', error);
     throw error;
   } finally {
+    // Clean up the cloned element
     if (clonedReport.parentNode) {
       clonedReport.parentNode.removeChild(clonedReport);
     }
