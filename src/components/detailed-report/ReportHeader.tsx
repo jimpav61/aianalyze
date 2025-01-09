@@ -60,14 +60,14 @@ export const ReportHeader = ({ formData, onBookDemo, industry, analysis }: Repor
   };
 
   return (
-    <div className="flex justify-between items-start mb-8">
+    <div className="flex justify-between items-start mb-8 print:block">
       <div>
         <h1 className="text-2xl font-bold mb-2">AI Implementation Analysis Report</h1>
         {industry && (
           <p className="text-gray-600">Industry: {industry}</p>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 print:hidden">
         <Button
           onClick={handleDownload}
           variant="outline" 
