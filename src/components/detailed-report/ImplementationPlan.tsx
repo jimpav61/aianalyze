@@ -51,15 +51,15 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
         
         <div className="mb-8">
           <h3 className="font-medium text-lg mb-4">Timeline and Objectives</h3>
-          <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words">{data.timeline || "Timeline to be determined based on specific requirements"}</p>
+          <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words max-w-full overflow-visible">{data.timeline || "Timeline to be determined based on specific requirements"}</p>
           
           <h3 className="font-medium text-lg mb-4">Budget Considerations</h3>
-          <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words">{data.budget || "Budget to be determined based on implementation scope"}</p>
+          <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words max-w-full overflow-visible">{data.budget || "Budget to be determined based on implementation scope"}</p>
           
           {data.additionalInfo && (
             <>
               <h3 className="font-medium text-lg mb-4">Additional Information</h3>
-              <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words">{data.additionalInfo}</p>
+              <p className="text-gray-600 mb-4 whitespace-pre-wrap break-words max-w-full overflow-visible">{data.additionalInfo}</p>
             </>
           )}
         </div>
@@ -73,7 +73,7 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
               </div>
               <ul className="list-disc pl-6 space-y-2">
                 {phase.activities.map((activity, actIndex) => (
-                  <li key={actIndex} className="text-gray-600 ml-2 break-normal">{activity}</li>
+                  <li key={actIndex} className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">{activity}</li>
                 ))}
               </ul>
             </div>
@@ -83,19 +83,19 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
         <div className="bg-blue-50 p-6 rounded-lg mt-8">
           <h3 className="font-medium text-lg mb-4">Expected Outcomes</h3>
           <ul className="list-disc pl-6 space-y-3">
-            <li className="text-gray-600 ml-2 break-normal">
+            <li className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">
               Improved operational efficiency through automated workflows, reducing manual workload by up to 40% and enabling staff to focus on high-value tasks
             </li>
-            <li className="text-gray-600 ml-2 break-normal">
+            <li className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">
               Enhanced customer satisfaction with 24/7 availability, instant response times, and personalized interactions leading to increased customer retention
             </li>
-            <li className="text-gray-600 ml-2 break-normal">
+            <li className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">
               Substantial cost savings in customer service operations through reduced handling time and optimized resource allocation
             </li>
-            <li className="text-gray-600 ml-2 break-normal">
+            <li className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">
               Future-proof scalable solution that adapts to growing business needs with built-in analytics and learning capabilities
             </li>
-            <li className="text-gray-600 ml-2 break-normal">
+            <li className="text-gray-600 ml-2 break-normal whitespace-pre-wrap">
               Quantifiable ROI through comprehensive analytics, including customer satisfaction scores, resolution rates, and operational cost reduction metrics
             </li>
           </ul>
