@@ -43,30 +43,18 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         additionalInfo: formData.additionalInfo
       }} />
       <div className="flex flex-col items-center gap-4 py-8 print:py-8 print:block print:text-center">
-        <Button
-          data-pdf-cta="true"
-          onClick={() => window.location.href = 'tel:+14808620288'}
-          className="bg-[#f65228] hover:bg-[#d43d16] text-white flex items-center gap-2 px-6 py-3 print:bg-[#f65228] print:inline-flex print:mx-auto pdf-cta-button"
+        <a 
+          href="tel:+14808620288"
+          className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white"
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f65228',
-            color: '#ffffff',
-            padding: '12px 24px',
-            borderRadius: '4px',
-            margin: '20px auto',
-            width: 'fit-content',
-            fontWeight: 'bold',
             fontSize: '16px',
-            opacity: 1,
-            visibility: 'visible' as const,
-            position: 'relative' as const
+            width: 'fit-content',
+            margin: '20px auto'
           }}
         >
           <Phone className="h-4 w-4" />
           +1 (480) 862-0288
-        </Button>
+        </a>
         <p className="text-sm text-gray-600 text-center print:text-gray-600 print:mt-2">
           Talk to Our AI Implementation Expert and Test the Magic
         </p>
