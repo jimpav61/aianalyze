@@ -39,10 +39,10 @@ export const createPDF = async (
     const position = -i * pdfHeight;
     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pageHeight);
     
-    // Add padding between pages
+    // Add padding between pages with increased space
     if (i < pages - 1) {
       pdf.setFillColor(255, 255, 255);
-      pdf.rect(0, pdfHeight - 15, pdfWidth, 30, 'F');
+      pdf.rect(0, pdfHeight - 20, pdfWidth, 40, 'F');
     }
   }
 
