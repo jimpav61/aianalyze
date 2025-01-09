@@ -5,7 +5,6 @@ import { CurrentOperations } from "./CurrentOperations";
 import { AnalysisResults } from "./AnalysisResults";
 import { ImplementationPlan } from "./ImplementationPlan";
 import { ReportFooter } from "./ReportFooter";
-import { Button } from "../ui/button";
 import { Phone } from "lucide-react";
 
 interface ReportContentProps {
@@ -14,12 +13,11 @@ interface ReportContentProps {
   onBookDemo?: () => void;
 }
 
-export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentProps) => {
+export const ReportContent = ({ formData, analysis }: ReportContentProps) => {
   return (
-    <div data-report-content="true" className="space-y-8 print:space-y-6">
+    <div data-report-content="true" className="space-y-8 print:space-y-6 overflow-visible">
       <ReportHeader 
         formData={formData} 
-        onBookDemo={onBookDemo} 
         industry={analysis.industry}
         analysis={analysis}
       />
@@ -45,11 +43,11 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
       <div className="flex flex-col items-center gap-4 py-8 print:py-8 print:block print:text-center">
         <a 
           href="tel:+14808620288"
-          className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white"
+          className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white w-auto"
           style={{
             fontSize: '16px',
-            width: 'fit-content',
-            margin: '20px auto'
+            margin: '20px auto',
+            minWidth: '200px'
           }}
         >
           <Phone className="h-4 w-4" />
