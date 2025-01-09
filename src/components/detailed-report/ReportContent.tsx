@@ -41,10 +41,10 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget || '',
         additionalInfo: formData.additionalInfo
       }} />
-      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4 print:mb-8">
+      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4 print:mb-8 print:page-break-inside-avoid">
         <a 
           href="tel:+14808620288"
-          className="flex items-center justify-center w-auto mx-auto gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:w-[200px] print:mx-auto print:bg-[#f65228] print:text-white print:no-underline print:block"
+          className="flex items-center justify-center w-auto gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:w-[200px] print:mx-auto print:bg-[#f65228] print:text-white print:no-underline print:block print:text-center"
           onClick={(e) => {
             if (window.location.protocol === 'file:') {
               e.preventDefault();
@@ -52,8 +52,8 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
             }
           }}
         >
-          <Phone className="w-5 h-5 print:inline-block" />
-          <span className="print:inline-block">+1 (480) 862-0288</span>
+          <Phone className="w-5 h-5 print:inline-block print:align-middle" />
+          <span className="print:inline-block print:align-middle">+1 (480) 862-0288</span>
         </a>
         <p className="text-sm text-gray-600 text-center print:mt-2">
           Talk to Our AI Implementation Expert and Test the Magic
