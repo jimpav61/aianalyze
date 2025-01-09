@@ -79,9 +79,9 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
               <div className="flex justify-between items-center mb-2">
                 <h4 className="font-medium text-primary">{phase.phase}</h4>
               </div>
-              <ul className="list-disc list-inside space-y-1">
+              <ul className="list-disc pl-5 space-y-2">
                 {phase.activities.map((activity, actIndex) => (
-                  <li key={actIndex} className="text-gray-600">{activity}</li>
+                  <li key={actIndex} className="text-gray-600 ml-2">{activity}</li>
                 ))}
               </ul>
             </div>
@@ -90,12 +90,12 @@ export const ImplementationPlan = ({ data }: ImplementationPlanProps) => {
 
         <div className="bg-blue-50 p-4 rounded-lg">
           <h3 className="font-medium text-lg mb-2">Expected Outcomes</h3>
-          <ul className="list-disc list-inside space-y-2 text-gray-600">
-            <li>Improved operational efficiency through automated workflows, reducing manual workload by up to 40% and enabling staff to focus on high-value tasks</li>
-            <li>Enhanced customer satisfaction with 24/7 availability, instant response times, and personalized interactions leading to increased customer retention</li>
-            <li>Substantial cost savings in customer service operations through reduced handling time and optimized resource allocation</li>
-            <li>Future-proof scalable solution that adapts to growing business needs with built-in analytics and learning capabilities</li>
-            <li>Quantifiable ROI through comprehensive analytics, including customer satisfaction scores, resolution rates, and operational cost reduction metrics</li>
+          <ul className="list-disc pl-5 space-y-2">
+            <li className="text-gray-600 ml-2">Improved operational efficiency through automated workflows, reducing manual workload by up to 40% and enabling staff to focus on high-value tasks</li>
+            <li className="text-gray-600 ml-2">Enhanced customer satisfaction with 24/7 availability, instant response times, and personalized interactions leading to increased customer retention</li>
+            <li className="text-gray-600 ml-2">Substantial cost savings in customer service operations through reduced handling time and optimized resource allocation</li>
+            <li className="text-gray-600 ml-2">Future-proof scalable solution that adapts to growing business needs with built-in analytics and learning capabilities</li>
+            <li className="text-gray-600 ml-2">Quantifiable ROI through comprehensive analytics, including customer satisfaction scores, resolution rates, and operational cost reduction metrics</li>
           </ul>
         </div>
 

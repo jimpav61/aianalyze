@@ -41,15 +41,15 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget || '',
         additionalInfo: formData.additionalInfo
       }} />
-      <div className="flex flex-col items-center gap-4 py-8 print:py-4">
+      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4">
         <a 
           href="tel:+14808620288"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white w-auto mx-auto"
+          className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white w-auto mx-auto shadow-sm"
         >
-          <Phone className="h-4 w-4" />
+          <Phone className="h-5 w-5" />
           +1 (480) 862-0288
         </a>
-        <p className="text-sm text-gray-600 text-center mt-2">
+        <p className="text-sm text-gray-600 text-center">
           Talk to Our AI Implementation Expert and Test the Magic
         </p>
       </div>
