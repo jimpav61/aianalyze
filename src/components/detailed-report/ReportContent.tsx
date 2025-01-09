@@ -42,15 +42,15 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget || '',
         additionalInfo: formData.additionalInfo
       }} />
-      <div className="flex flex-col items-center gap-4 mt-12 mb-8">
+      <div className="flex flex-col items-center gap-4 py-8">
         <Button
           onClick={() => window.location.href = 'tel:8001234567'}
-          className="bg-[#f65228] hover:bg-[#d43d16] text-white flex items-center gap-2"
+          className="bg-[#f65228] hover:bg-[#d43d16] text-white flex items-center gap-2 px-6 py-3"
         >
           <Phone className="h-4 w-4" />
           (800) 123-4567
         </Button>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 text-center">
           Talk to Our AI Implementation Expert and Test the Magic
         </p>
       </div>
