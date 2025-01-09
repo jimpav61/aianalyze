@@ -41,12 +41,12 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
         budget: formData.budget || '',
         additionalInfo: formData.additionalInfo
       }} />
-      <div className="print:break-inside-avoid-page w-full print:mt-12">
+      <div className="print:break-inside-avoid w-full print:mt-8">
         <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4">
           <div className="w-full flex flex-col items-center">
             <a 
               href="tel:+14808620288"
-              className="flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:w-[200px] print:mx-auto print:text-center"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors shadow-sm print:bg-[#f65228] print:text-white print:no-underline print:w-[200px] print:mx-auto print:text-center"
               onClick={(e) => {
                 if (window.location.protocol === 'file:') {
                   e.preventDefault();
