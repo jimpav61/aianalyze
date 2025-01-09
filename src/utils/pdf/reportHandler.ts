@@ -3,6 +3,7 @@ import { applyPdfStyles, hideScreenOnlyElements } from "./handlers/pdfStyling";
 import { preloadImages } from "./handlers/imageLoader";
 import { createCanvas } from "./handlers/canvasConfig";
 import { createPdf } from "./handlers/pdfConfig";
+import { jsPDF } from "jspdf";
 
 interface GenerateReportParams {
   formData: DetailedFormData;
