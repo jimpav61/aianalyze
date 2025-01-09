@@ -44,19 +44,13 @@ export const ReportContent = ({ formData, analysis, onBookDemo }: ReportContentP
       <div className="flex flex-col items-center justify-center w-full gap-4 py-8 print:py-4">
         <a 
           href="tel:+14808620288"
-          className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white print:w-[200px] mx-auto shadow-sm"
+          className="inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold text-white rounded-md bg-[#f65228] hover:bg-[#d43d16] transition-colors print:bg-[#f65228] print:text-white print:w-[200px] mx-auto shadow-sm w-auto print:flex print:justify-center print:items-center"
           style={{
             display: 'inline-flex',
             justifyContent: 'center',
             alignItems: 'center',
             gap: '0.5rem',
-            margin: '0 auto',
-            width: 'auto',
-            '@media print': {
-              width: '200px',
-              margin: '0 auto',
-              display: 'flex'
-            }
+            margin: '0 auto'
           }}
         >
           <Phone className="h-5 w-5" />
