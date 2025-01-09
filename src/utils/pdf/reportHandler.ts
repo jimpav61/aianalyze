@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import { DetailedFormData } from "@/types/analysis";
 import { createReportCanvas } from "./handlers/canvasHandler";
 import { generateHeaderSection } from "./sections/HeaderSection";
+import html2canvas from 'html2canvas';
 
 interface GenerateReportParams {
   formData: DetailedFormData;
